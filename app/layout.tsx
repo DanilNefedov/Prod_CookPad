@@ -23,7 +23,9 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
       <body suppressHydrationWarning={true} className={IBM.className}>
         <ThemeRegistry options={{ key: 'mui' }}>
           <ProviderStore>
-            {children}
+            <div className="wrapper">
+              {children}
+            </div>
           </ProviderStore>
         </ThemeRegistry>
       </body>

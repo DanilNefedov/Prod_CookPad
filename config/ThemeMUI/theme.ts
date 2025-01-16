@@ -1,6 +1,14 @@
 import { createTheme, outlinedInputClasses } from '@mui/material';
 
 
+
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    darkButton: true;
+  }
+}
+
+
 // Augment the palette to include an ochre color
 declare module '@mui/material/styles' {
   interface Palette {
@@ -11,6 +19,13 @@ declare module '@mui/material/styles' {
   interface PaletteOptions {
     ochre?: PaletteOptions['primary'];
     // greyBtn?: PaletteOptions['primary'];
+  }
+
+
+  
+
+  interface PaletteOptions{
+    darkButton?:PaletteOptions['primary']
   }
 }
 
@@ -64,11 +79,18 @@ export const theme = createTheme({
       dark: '#A29415',
       contrastText: '#8E94A4',
     },
+    darkButton:{
+      main: '#A5514F',
+      light: "#ffc2b3",
+      contrastText: '#FFFFFF',
+      dark:'#FF7269',
+    }
   },
   shape: {
     borderRadius: 20,
   },
   components: {
+    
     MuiContainer: {
       defaultProps: {
         color: 'red'
