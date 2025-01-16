@@ -1,6 +1,7 @@
 import ThemeRegistry from "@/config/ThemeMUI/provider-theme-mui";
 import "./globals.css";
 import { Roboto } from 'next/font/google'
+import { ProviderStore } from "@/state/provider-store";
 
 
 const IBM = Roboto({
@@ -16,12 +17,14 @@ export const metadata = {
 }
 
 
-export default function RootLayout({children,}: Readonly<{children: React.ReactNode;}>) {
+export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   return (
     <html lang="en">
       <body suppressHydrationWarning={true} className={IBM.className}>
         <ThemeRegistry options={{ key: 'mui' }}>
-          {children}
+          <ProviderStore>
+            {children}
+          </ProviderStore>
         </ThemeRegistry>
       </body>
     </html>
