@@ -2,6 +2,7 @@ import ThemeRegistry from "@/config/ThemeMUI/provider-theme-mui";
 import "./globals.css";
 import { Roboto } from 'next/font/google'
 import { ProviderStore } from "@/state/provider-store";
+import { ProviderAuth } from "@/config/auth/provider-auth";
 
 
 const IBM = Roboto({
@@ -23,9 +24,12 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
       <body suppressHydrationWarning={true} className={IBM.className}>
         <ThemeRegistry options={{ key: 'mui' }}>
           <ProviderStore>
-            <div className="wrapper">
-              {children}
-            </div>
+            <ProviderAuth>
+              <div className="wrapper">
+                {children}
+              </div>
+            </ProviderAuth>
+
           </ProviderStore>
         </ThemeRegistry>
       </body>

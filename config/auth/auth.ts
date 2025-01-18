@@ -28,25 +28,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ account, profile }) {
-      console.log(account, '22222222222222', profile);
-  
       if (account) {
         await connectDB();
-  
         const existingUser = await User.findOne({ connection_id: account.providerAccountId });
-        console.log(existingUser, '444444444444444444');
-  
+        
         if (!existingUser) {
           const isGoogle = account.provider === 'google';
           const dataUser = {
             name: isGoogle ? profile?.name : profile?.username,
             email: profile?.email,
             provider: account.provider,
-            img: isGoogle ? profile?.picture : profile?.avatar,
+            img: isGoogle ? profile?.picture : profile?.image_url,
             connection_id: account.providerAccountId,
             popular_config: [],
           };
-  
+          
           try {
             const response = await postCall({
               url: 'http://localhost:3000/api/user',
@@ -59,9 +55,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
         }
       }
-  
       return true;
     },
+    session: async ({ session, token }) => {
+      if (session?.user) {
+        session.user.connection_id = token.connection_id;
+      }
+      return session;
+    },
+    jwt: async ({  token, account }) => {
+      if (account) {
+        token.connection_id = account.providerAccountId;
+      }
+      return token;
+    },
+  
   }
   
 })

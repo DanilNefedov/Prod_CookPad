@@ -41,55 +41,48 @@ const initialState: initUserStateType = {
 }
 
 
-// export const fetchUser = createAsyncThunk<collectionUser, string, { rejectValue: string }>(
-//     'user/fetchUser',
-//     async function (id, { rejectWithValue, dispatch }) {
-//         try {
-//             const response = await fetch(`/api/user?connection_id=${id}`);
+export const fetchUser = createAsyncThunk<collectionUser, string, { rejectValue: string }>(
+    'user/fetchUser',
+    async function (connection_id, { rejectWithValue, dispatch }) {
+        try {
+            const response = await fetch(`/api/user?connection_id=${connection_id}`);
 
-//             if (!response.ok) {
-//                 return rejectWithValue('Server Error!');
-//             }
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
 
-//             const data = await response.json();
-//             // console.log(data)
+            const data = await response.json();
+            console.log(data)
+            return data;
 
-//             // if (data.user.length === 0) {
-//             //     // dispatch(addUser())
-//             //     console.error('Object User is empty')
-//             // } else {
-//             return data;
-//             // }
-            
+        } catch (error) {
+            console.error(error)
+            throw error
+        }
+    }
+);
 
-//         } catch (error) {
-//             console.error(error)
-//             throw error
-//         }
-//     }
-// );//clear
+export const fetchClearUser = createAsyncThunk<[], {rejectValue: string}>(
+    'user/fetchClearUser',
+    async function (_, {rejectWithValue}){
+        try{
+            const data: [] = []
 
-// export const fetchClearUser = createAsyncThunk<[], {rejectValue: string}>(
-//     'user/fetchClearUser',
-//     async function (_, {rejectWithValue}){
-//         try{
-//             const data: [] = []
+            return data
+        }catch(error){
+            console.error(error)
+            throw error
+        }
+    }
+)
 
-//             return data
-//         }catch(error){
-//             console.error(error)
-//             throw error
-//         }
-//     }
-// )
-
-// interface dataConfigUser {
-//     like: boolean,
-//     comment: number,
-//     save_recipe: boolean,
-//     id_video: string,
-//     id_user: string
-// }
+interface dataConfigUser {
+    like: boolean,
+    comment: number,
+    save_recipe: boolean,
+    id_video: string,
+    id_user: string
+}
 
 
 
@@ -103,32 +96,32 @@ const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // .addCase(fetchUser.pending, (state) => {
-            //     state.status = true;
-            //     state.error = false;
-            // })
-            // .addCase(fetchUser.fulfilled, (state, action: PayloadAction<collectionUser, string>) => {
-            //     if (action.payload) {
-            //         state.status = false;
-            //         state.error = false;
-            //         const payload = action.payload;
+            .addCase(fetchUser.pending, (state) => {
+                state.status = true;
+                state.error = false;
+            })
+            .addCase(fetchUser.fulfilled, (state, action: PayloadAction<collectionUser, string>) => {
+                if (action.payload) {
+                    state.status = false;
+                    state.error = false;
+                    const payload = action.payload;
 
-            //         state.user.name = payload.name;
-            //         state.user.email = payload.email;
-            //         state.user.provider = payload.provider;
-            //         state.user.img = payload.img;
-            //         state.user.connection_id = payload.connection_id;
+                    state.user.name = payload.name;
+                    state.user.email = payload.email;
+                    state.user.provider = payload.provider;
+                    state.user.img = payload.img;
+                    state.user.connection_id = payload.connection_id;
 
-            //         payload.popular_config.forEach(el => {
-            //             state.user.popular_config.push(el)
-            //         })
+                    payload.popular_config.forEach(el => {
+                        state.user.popular_config.push(el)
+                    })
                   
-            //     }
-            // })
-            // .addCase(fetchClearUser.rejected, (state) => {
-            //     state.status = false;
-            //     state.error = true;
-            // })
+                }
+            })
+            .addCase(fetchClearUser.rejected, (state) => {
+                state.status = false;
+                state.error = true;
+            })
 
 
     }
