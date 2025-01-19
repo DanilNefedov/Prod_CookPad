@@ -1,12 +1,11 @@
-import { signOut } from 'next-auth/react'
 import NextLink from 'next/link'
 import { Button } from '@mui/material'
+import { signOut } from '@/config/auth/auth'
 
 
 export function LogOut() {
 
     const styleLink = {
-        // fontWeight:'400', 
         lineHeight: 'inherit',
         textTransform: 'initial',
         color: 'text.secondary',
@@ -24,14 +23,12 @@ export function LogOut() {
                 await signOut({ redirectTo: '/login' })
             }}
         >
-            <button type="submit">Sign Out</button>
+            <Button 
+            variant="contained" 
+            color='secondary' 
+            type="submit"
+            sx={styleLink}
+            >Sign Out</Button>
         </form>
-        
-        // <Button variant="contained" color='secondary' 
-        // sx={styleLink} 
-        // component={NextLink} 
-        // href='/' onClick={() => signOut()}>
-        //     Sign Out
-        // </Button>
     )
 }

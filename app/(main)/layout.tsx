@@ -1,8 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { fetchUser } from "@/state/slices/user-slice";
 import { Container, Paper } from "@mui/material";
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
 import { NavigationSite } from "../components/navigation-site/navigation";
 import { ClientUser } from "../components/client-side-handler/client-user";
 
@@ -14,7 +10,6 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
     color: 'text.primary',
     width: "calc(100% - 140px)",
   }
-  //change to use hook (method)
 
   return (
     <>
