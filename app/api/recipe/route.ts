@@ -129,59 +129,59 @@ export async function GET(request: Request) {
 
 
 
-// export async function DELETE(req: Request) {
-//   try {
-//       await connectDB();
+export async function DELETE(req: Request) {
+  try {
+      await connectDB();
 
-//       const data = await req.json();
-//       const { connection_id, recipe_id } = data;
+      const data = await req.json();
+      const { connection_id, recipe_id } = data;
 
-//       const recipe = await Recipe.findOne(
-//           {
-//               connection_id: connection_id,
-//               recipe_id: recipe_id,
-//           },
-//           { recipe_popular_config: 1 }
-//       );
+      const recipe = await Recipe.findOne(
+          {
+              connection_id: connection_id,
+              recipe_id: recipe_id,
+          },
+          { recipe_popular_config: 1 }
+      );
 
-//       if (!recipe || !recipe.recipe_popular_config || !recipe.recipe_popular_config.length) {
-//           return NextResponse.json({ status: 404, message: "Recipe or recipe config not found" });
-//       }
+      if (!recipe || !recipe.recipe_popular_config || !recipe.recipe_popular_config.length) {
+          return NextResponse.json({ status: 404, message: "Recipe or recipe config not found" });
+      }
 
-//       const recipePopularConfigId = recipe.recipe_popular_config[0];
+      const recipePopularConfigId = recipe.recipe_popular_config[0];
 
-//       await Promise.all([
-//           LikesPopular.deleteMany({ config_id: recipePopularConfigId.toString() }),
-//           SavePopular.deleteMany({ config_id: recipePopularConfigId.toString() }),
-//           LikedComments.deleteMany({ config_id: recipePopularConfigId.toString() }),
-//       ]);
+      // await Promise.all([
+      //     LikesPopular.deleteMany({ config_id: recipePopularConfigId.toString() }),
+      //     SavePopular.deleteMany({ config_id: recipePopularConfigId.toString() }),
+      //     LikedComments.deleteMany({ config_id: recipePopularConfigId.toString() }),
+      // ]);
 
-//       const comments = await CommentPopular.find(
-//           { config_id: recipePopularConfigId.toString() },
-//           { _id: 0, id_comment: 1 }
-//       );
+      // const comments = await CommentPopular.find(
+      //     { config_id: recipePopularConfigId.toString() },
+      //     { _id: 0, id_comment: 1 }
+      // );
 
-//       await Promise.all(
-//           comments.map(async (comment) => {
-//               await ReplyComment.deleteMany({ id_branch: comment.id_comment });
-//           })
-//       );
+      // await Promise.all(
+      //     comments.map(async (comment) => {
+      //         await ReplyComment.deleteMany({ id_branch: comment.id_comment });
+      //     })
+      // );
 
-//       await Promise.all([
-//           CommentPopular.deleteMany({ config_id: recipePopularConfigId.toString() }),
-//           RecipePopularConfig.deleteOne({ _id: recipePopularConfigId })
-//       ]);
+      // await Promise.all([
+      //     CommentPopular.deleteMany({ config_id: recipePopularConfigId.toString() }),
+      //     RecipePopularConfig.deleteOne({ _id: recipePopularConfigId })
+      // ]);
 
-//       await Recipe.deleteOne({
-//           connection_id: connection_id,
-//           recipe_id: recipe_id
-//       });
+      await Recipe.deleteOne({
+          connection_id: connection_id,
+          recipe_id: recipe_id
+      });
 
-//       return NextResponse.json({ status: 201, message: 'Recipe successfully deleted' });
-//   } catch (error) {
-//       return NextResponse.json({
-//           status: 500,
-//           body: { message: 'Internal Server Error', error: error },
-//       });
-//   }
-// }
+      return NextResponse.json({ status: 201, message: 'Recipe successfully deleted' });
+  } catch (error) {
+      return NextResponse.json({
+          status: 500,
+          body: { message: 'Internal Server Error', error: error },
+      });
+  }
+}

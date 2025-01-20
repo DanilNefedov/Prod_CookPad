@@ -1,4 +1,3 @@
-// import { deleteRecipe, setFavoriteRecipe } from "@/app/Redux/Slices/recipeSlice";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
@@ -24,11 +23,11 @@ import './swiper-media.css';
 
 // import required modules
 import { Navigation } from 'swiper/modules';
-// import { newListRecipe } from "@/app/Redux/Slices/listRecipeSlice";
 import { useState } from "react";
 import { TempalateRecipe } from "@/app/types/types";
-import { useAppDispatch, useAppSelector } from '@/state/hook';
+import { useAppDispatch } from '@/state/hook';
 import { SwiperMediaCard } from './swiper-media-card';
+import { deleteRecipe, setFavoriteRecipe } from '@/state/slices/recipe-slice';
 
 
 
@@ -39,7 +38,6 @@ interface propsData extends TempalateRecipe {
 export function CardContentBlock({ props }: { props: propsData }) {
     const { recipe_id, media, name, time, recipe_type, description, favorite, id } = props
     const dispatch = useAppDispatch()
-    const recipeStore = useAppSelector(state => state.recipe)
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -48,7 +46,7 @@ export function CardContentBlock({ props }: { props: propsData }) {
     const handlerFavorite = (recipe_id: string, favorite: boolean): void => {
         if (recipe_id && id !== '') {
             const data = { connection_id: id, recipe_id, favorite }
-            // dispatch(setFavoriteRecipe(data))
+            dispatch(setFavoriteRecipe(data))
         }
     }
 
@@ -60,7 +58,7 @@ export function CardContentBlock({ props }: { props: propsData }) {
 
     function handleDelete(recipe_id: string) {
         if (id !== '' && recipe_id) {
-            // dispatch(deleteRecipe({recipe_id, connection_id:id}))
+            dispatch(deleteRecipe({recipe_id, connection_id:id}))
         }
     }
 
@@ -76,12 +74,11 @@ export function CardContentBlock({ props }: { props: propsData }) {
                     <CardHeader
                         title={name}
                         sx={{
-                            fontSize: '16px',
                             padding: '0',
-                            textTransform: 'capitalize', 
-                            '&: MuiTypography-root':{
-                                fontSize: '16px',
-                            }
+                        }}
+                        titleTypographyProps={{
+                            fontSize: '16px',
+                            textTransform: 'capitalize',
                         }}
                         
                     />

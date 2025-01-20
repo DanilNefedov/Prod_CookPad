@@ -45,7 +45,7 @@ export function NavigationSite() {
                 </Box>
                 <Box sx={{display:'flex', flexDirection:'column'}}>
                     {pages.map((page) => (
-                        <BtnLinks page={page}></BtnLinks>
+                        <BtnLinks key={page.path[0]} page={page}></BtnLinks>
                     ))}
                 </Box>
 

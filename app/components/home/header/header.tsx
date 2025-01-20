@@ -14,7 +14,6 @@ import TabsRenderer from './tabs';
     minHeight: '0',
     minWidth: '0',
     mr: '15px',
-    color: 'text.primary',
     borderRadius: '10px',
   }
 
@@ -64,7 +63,7 @@ export default function Header() {
           />
         </Box>
         <Box sx={{ display: { xs: 'none', sm: 'block' }, flexGrow: '0' }}>
-          <Button variant="contained" sx={styleLink} component={NextLink} href="/new-recipe">
+          <Button variant="contained" color='darkButton' sx={styleLink} component={NextLink} href="/new-recipe">
             New Recipe
           </Button>
         </Box>

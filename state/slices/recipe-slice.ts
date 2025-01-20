@@ -42,61 +42,61 @@ export interface favoriteDataRecipeT {
 }
 
 
-// export const setFavoriteRecipe = createAsyncThunk<favoriteDataRecipeT, favoriteDataRecipeT, {rejectValue: string}> (
-//     'recipe/setFavoriteRecipe',
-//     async function (data, {rejectWithValue, dispatch}){
-//         try{
-//             // console.log(data)
-//             const response = await fetch(`/api/recipe/favorite`, {
-//                 method: 'PATCH',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                 },
-//                 body: JSON.stringify(data),
-//             });
+export const setFavoriteRecipe = createAsyncThunk<favoriteDataRecipeT, favoriteDataRecipeT, {rejectValue: string}> (
+    'recipe/setFavoriteRecipe',
+    async function (data, {rejectWithValue, dispatch}){
+        try{
+            // console.log(data)
+            const response = await fetch(`/api/recipe/favorite`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
 
-//             if (!response.ok) {
-//                 return rejectWithValue('Server Error!');
-//             }
-//             // dispatch(setFavoriteCook(data))
-//            //DES COMMIT THIS DISPATCH
-//             return data;
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+            // dispatch(setFavoriteCook(data))
+           //DES COMMIT THIS DISPATCH
+            return data;
 
-//         }catch(error){
-//             console.error(error)
-//             throw error
-//         }
-//     }
-// )
+        }catch(error){
+            console.error(error)
+            throw error
+        }
+    }
+)
 
 
-// export const deleteRecipe = createAsyncThunk<{connection_id:string, recipe_id:string}, {connection_id:string, recipe_id:string}, {rejectValue: string}> (
-//     'recipe/deleteRecipe',
-//     async function (data, {rejectWithValue, dispatch}){
-//         try{
-//             console.log(data)
-//             const response = await fetch(`/api/recipe`, {
-//                 method: 'DELETE',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                 },
-//                 body: JSON.stringify(data),
-//             });
+export const deleteRecipe = createAsyncThunk<{connection_id:string, recipe_id:string}, {connection_id:string, recipe_id:string}, {rejectValue: string}> (
+    'recipe/deleteRecipe',
+    async function (data, {rejectWithValue, dispatch}){
+        try{
+            console.log(data)
+            const response = await fetch(`/api/recipe`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
 
-//             if (!response.ok) {
-//                 return rejectWithValue('Server Error!');
-//             }
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
 
-//             const recipeData = await response.json();
-//             console.log(recipeData)
-//             return  data;
+            const recipeData = await response.json();
+            console.log(recipeData)
+            return  data;
 
-//         }catch(error){
-//             console.error(error)
-//             throw error
-//         }
-//     }
-// )
+        }catch(error){
+            console.error(error)
+            throw error
+        }
+    }
+)
 
 
 
@@ -140,35 +140,35 @@ const recipeSlice = createSlice({
             })
 
 
-            // .addCase(setFavoriteRecipe.fulfilled, (state, action: PayloadAction<favoriteDataRecipeT, string>)=>{
-            //     state.status = false;
-            //     state.error = false;
-            //     const payload = action.payload;
+            .addCase(setFavoriteRecipe.fulfilled, (state, action: PayloadAction<favoriteDataRecipeT, string>)=>{
+                state.status = false;
+                state.error = false;
+                const payload = action.payload;
 
-            //     const findRecipe = state.recipes.find(el => el.recipe_id === payload.recipe_id)
+                const findRecipe = state.recipes.find(el => el.recipe_id === payload.recipe_id)
 
-            //     if(findRecipe){
-            //         findRecipe.favorite = !payload.favorite
-            //     }
-            // })
-            // .addCase(setFavoriteRecipe.rejected, (state) => {
-            //     state.status = false;
-            //     state.error = true;
-            // })
+                if(findRecipe){
+                    findRecipe.favorite = !payload.favorite
+                }
+            })
+            .addCase(setFavoriteRecipe.rejected, (state) => {
+                state.status = false;
+                state.error = true;
+            })
 
 
-            // .addCase(deleteRecipe.fulfilled, (state, action: PayloadAction<{connection_id:string, recipe_id:string}, string>)=>{
-            //     state.status = false;
-            //     state.error = false;
-            //     const payload = action.payload;
+            .addCase(deleteRecipe.fulfilled, (state, action: PayloadAction<{connection_id:string, recipe_id:string}, string>)=>{
+                state.status = false;
+                state.error = false;
+                const payload = action.payload;
 
-            //     state.recipes = state.recipes.filter(recipe => recipe.recipe_id !== payload.recipe_id);
+                state.recipes = state.recipes.filter(recipe => recipe.recipe_id !== payload.recipe_id);
 
-            // })
-            // .addCase(deleteRecipe.rejected, (state) => {
-            //     state.status = false;
-            //     state.error = true;
-            // })
+            })
+            .addCase(deleteRecipe.rejected, (state) => {
+                state.status = false;
+                state.error = true;
+            })
            
     }
 })
