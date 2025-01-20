@@ -214,17 +214,17 @@ export interface IngredientForState{
 }
 
 export type TempalateRecipe = {
-    recipe_id:string | null , 
-    name:string | null , 
+    recipe_id:string  , 
+    name:string , 
     time: {
-        hours:null | string ,
-        minutes:null | string 
+        hours:string ,
+        minutes:string 
     }, 
     media:MediaObj[], 
-    recipe_type:string | null , 
+    recipe_type:string , 
     // instruction:string | null ,
     // sorting:string[],
-    description: string | null 
+    description: string, 
     // ingredients:IngredientForState[],
     favorite:boolean
 }

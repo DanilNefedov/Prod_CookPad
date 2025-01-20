@@ -10,10 +10,7 @@ export function MainContent(){
         <Paper sx={mainContent} elevation={0}>
             <Container sx={mainContainer} maxWidth={false}>
                 <BlockContent></BlockContent>
-                
-                
             </Container>
         </Paper>
     )
 }
-{/*  */}

@@ -9,11 +9,11 @@ export type popConfig = {
 }
 
 export type collectionUser =  {
-    name: string | null,
-    email: string | null,
-    provider: string | null,
+    name: string ,
+    email: string ,
+    provider: string ,
     img: string ,
-    connection_id: string | null,
+    connection_id: string ,
     popular_config: popConfig[] 
 }
 
@@ -28,11 +28,11 @@ const initialState: initUserStateType = {
     status: false,
     error: false,
     user: {
-        name: null,
-        email: null,
-        provider: null,
+        name: '',
+        email: '',
+        provider: '',
         img: '',
-        connection_id: null,
+        connection_id: '',
         popular_config: [
            
         ]

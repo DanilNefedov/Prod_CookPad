@@ -2,9 +2,9 @@
 
 import { useEffect } from "react";
 import { useNavigationState } from "../context-navigation";
-// import { CardContentBlock } from "./card-content-block";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { fetchRecipes } from "@/state/slices/recipe-slice";
+import { CardContentBlock } from "./card-content-block";
 
 
 
@@ -19,7 +19,7 @@ export function BlockContent() {
     async function fetchData() {
       const url = `api/recipe?connection_id=${id}`
 
-      if (id !== null && id !== '') {
+      if (id !== '') {
         dispatch(fetchRecipes(url))
       }
     }
@@ -33,19 +33,16 @@ export function BlockContent() {
   return (
     (!recipeStore.status ?
       nav === 'all' ?
-        // recipeStore.recipes.map(({ recipe_id, media, name, time, recipe_type, description, favorite }) => (
-        //   <CardContentBlock key={recipe_id}
-        //     props={{recipe_id, media, name, time, recipe_type, description, favorite, id}}
-        //   ></CardContentBlock>
-        // )) : filteredRecipes.map(({ recipe_id, media, name, time, recipe_type, description, favorite }) => (
-        //   <CardContentBlock key={recipe_id}
-        //     props={{recipe_id, media, name, time, recipe_type, description, favorite, id}}
-        //   ></CardContentBlock>
-        // )
-        // )
-        <></>
-        :
-        <></>
+        recipeStore.recipes.map(({ recipe_id, media, name, time, recipe_type, description, favorite }) => (
+          <CardContentBlock key={recipe_id}
+            props={{recipe_id, media, name, time, recipe_type, description, favorite, id}}
+          ></CardContentBlock>
+        )) : filteredRecipes.map(({ recipe_id, media, name, time, recipe_type, description, favorite }) => (
+          <CardContentBlock key={recipe_id}
+            props={{recipe_id, media, name, time, recipe_type, description, favorite, id}}
+          ></CardContentBlock>
+        )
+        )
       :
       <></>
 

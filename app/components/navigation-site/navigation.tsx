@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import { LogOut } from './log-out'
 import { dataPage, paperNavigation } from '@/app/main-styles'
 import { BtnLinks } from './btn-links'
+import { AboutUser } from './user-info';
 
 
 
@@ -40,7 +41,7 @@ export function NavigationSite() {
                 }
             }}>
                 <Box>
-                    {/* <AboutUser></AboutUser> */}
+                    <AboutUser></AboutUser>
                 </Box>
                 <Box sx={{display:'flex', flexDirection:'column'}}>
                     {pages.map((page) => (
