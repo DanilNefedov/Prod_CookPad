@@ -21,6 +21,7 @@ export const fetchRecipes = createAsyncThunk<MainRecipeT[], string, { rejectValu
     'recipe/fetchRecipes',
     async function (url, { rejectWithValue, dispatch, getState }) {
         try {
+            console.log(url)
             const response = await fetch(url);
             if (!response.ok) return rejectWithValue('Server Error!');
             const data = await response.json()

@@ -2,32 +2,25 @@
 
 import { useEffect } from "react";
 import { useNavigationState } from "../context-navigation";
-import { useAppDispatch, useAppSelector } from "@/state/hook";
+import { useAppSelector } from "@/state/hook";
 import { fetchRecipes } from "@/state/slices/recipe-slice";
 import { CardContentBlock } from "./card-content-block";
+import { useFetchOnDependency } from "@/app/hooks/useReduxGet";
 
 
 
 export function BlockContent() {
-  const dispatch = useAppDispatch()
   const recipeStore = useAppSelector(state => state.recipe)
   const userStore = useAppSelector(state => state.user)
   const { nav } = useNavigationState()
   const id = userStore?.user?.connection_id
+  useFetchOnDependency({ 
+    url: `api/recipe?connection_id=${id}`, 
+    data: null, 
+    dep: [id], 
+    actionName: fetchRecipes, 
+  })
 
-  useEffect(() => {
-    async function fetchData() {
-      const url = `api/recipe?connection_id=${id}`
-
-      if (id !== '') {
-        dispatch(fetchRecipes(url))
-      }
-    }
-
-    fetchData();
-  }, [id]);
-
-  console.log(recipeStore)
   const filteredRecipes = recipeStore.recipes.filter(recipe => recipe.sorting.includes(nav));
 
   return (

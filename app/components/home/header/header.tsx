@@ -20,11 +20,11 @@ import TabsRenderer from './tabs';
 
 
 export default function Header() {
-  const renderedNavigation = [
-    { typeNav: 'Breakfast', _id: '1' },
-    { typeNav: 'Lunch', _id: '2' },
-    { typeNav: 'Dinner', _id: '3' },
-  ];
+  // const renderedNavigation = [
+  //   { typeNav: 'Breakfast', _id: '1' },
+  //   { typeNav: 'Lunch', _id: '2' },
+  //   { typeNav: 'Dinner', _id: '3' },
+  // ];
 
   return (
     <AppBar
@@ -58,7 +58,7 @@ export default function Header() {
           }}
         >
           <TabsRenderer
-            renderedNavigation={renderedNavigation}
+            // renderedNavigation={renderedNavigation}
             styleLink={styleLink}
           />
         </Box>
