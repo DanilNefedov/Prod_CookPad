@@ -1,5 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { TypeDish } from "./steps/type-dish";
+import { NameAndTime } from "./steps/name-and-time";
+import { Media } from "./steps/media";
 
 
 export function SelectPage(){
@@ -10,9 +12,10 @@ export function SelectPage(){
             return <TypeDish></TypeDish>;
             // return <StepMedia></StepMedia>
             // return <StepIngredients></StepIngredients>
-            
-        // case 2:
-            // return <StepType/>;
+        case 2:
+            return <NameAndTime></NameAndTime>
+        case 3: 
+            return <Media></Media>
         default:
             return null
     }

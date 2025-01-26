@@ -106,6 +106,21 @@ type TypePayload = {
     error_status: boolean
 }
 
+type NamePayload = {
+    step: number,
+    name_recipe: string,
+    error_status: boolean
+}
+type MediaPayload = {
+    media: MediaObj[],
+    error_status: boolean,
+    step: number
+}
+interface BtnsMediaSwiper {
+    step:number,
+    media_id:string
+}
+
 
 
 const stepByStep = createSlice({
@@ -135,6 +150,83 @@ const stepByStep = createSlice({
                 thisState.recommendation = !action.payload
             }
         },
+
+        changeName(state, action: PayloadAction<NamePayload>) {
+            state.steps_info.map(el => {
+                if (el.step === action.payload.step && el.second_option) {
+                    el.second_option.name_recipe = action.payload.name_recipe;
+                    el.second_option.error_status = action.payload.error_status;
+
+                }
+            })
+        },
+
+        changeHours(state, action: PayloadAction<string>) {
+            const thisState = state.steps_info.find(el => el.step === 2)
+            if (thisState) {
+                thisState.hours = action.payload
+                if (thisState.hours === '0' && thisState.minutes === '0') {
+                    thisState.error_status = false
+                } else {
+                    thisState.error_status = true
+                }
+
+            }
+        },
+
+        changeMinutes(state, action: PayloadAction<string>) {
+            const thisState = state.steps_info.find(el => el.step === 2)
+            if (thisState) {
+                thisState.minutes = action.payload
+                if (thisState.hours === '0' && thisState.minutes === '0') {
+                    thisState.error_status = false
+                } else {
+                    thisState.error_status = true
+                }
+            }
+        },
+        
+        changeMedia(state, action: PayloadAction<MediaPayload>) {
+            const thisState = state.steps_info.find(el => el.step === action.payload.step)
+            if (thisState) {
+                console.log(action.payload.media)
+                // const newMedia = action.payload.media.map(mediaItem => ({
+                //     main: mediaItem.main,
+                //     media_url: mediaItem.media_url,
+                //     media_id: mediaItem.media_id,
+                //     media_type:mediaItem.media_type
+                // }));
+                thisState.media?.push(...action.payload.media)
+                thisState.error_status = action.payload.error_status
+            }
+        },
+
+        deleteMediaState(state, action: PayloadAction<BtnsMediaSwiper>){
+            const thisStep = state.steps_info.find(el => el.step === action.payload.step)
+            if (thisStep) {
+                thisStep.media = thisStep.media?.filter(item => item.media_id !== action.payload.media_id);
+            }
+        },
+
+        setMainMedia(state, action: PayloadAction<BtnsMediaSwiper>){
+            const thisStep = state.steps_info.find(el => el.step === action.payload.step);
+            if (thisStep) {
+                const clickedElement = thisStep.media?.find(el => el.media_id === action.payload.media_id);
+
+                if (clickedElement) {
+                    if (clickedElement.main) {
+                        thisStep.media?.forEach(el => {
+                            el.main = false;
+                        });
+                    } else {
+                        thisStep.media?.forEach(el => {
+                            el.main = el.media_id === action.payload.media_id;
+                        });
+                    }
+                }
+            }
+        },
+
         
         resetState: () => initialState,
 
@@ -147,6 +239,12 @@ export const {
     hasOpen,
     changeType,
     openRecommendation,
+    changeName,
+    changeHours,
+    changeMinutes,
+    changeMedia,
+    deleteMediaState,
+    setMainMedia,
 
     
     resetState,
