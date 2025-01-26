@@ -326,7 +326,13 @@ export interface INavigationContext {
 
 
 
-
+export interface ingredintFetch {
+    _id: string;
+    ingr_type: string;
+    name: string;
+    units: string[];
+    media: string;
+}
 
 
 

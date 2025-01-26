@@ -1,4 +1,4 @@
-import { IngredientForState } from '@/app/types/types';
+import { IngredientForState, unitsState } from '@/app/types/types';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -116,11 +116,26 @@ type MediaPayload = {
     error_status: boolean,
     step: number
 }
-interface BtnsMediaSwiper {
+type BtnsMediaSwiper = {
     step:number,
     media_id:string
 }
-
+type Amount = {
+    ingr_id: string,
+    amount: number
+}
+type Autocompite = {
+    ingr_id: string,
+    name: string,
+    media: string,
+    new_ingredient:boolean,
+    check_open_link:string,
+    units: string[]
+}
+type Units = {
+    ingr_id: string,
+    choice: string
+}
 
 
 const stepByStep = createSlice({
@@ -190,12 +205,6 @@ const stepByStep = createSlice({
             const thisState = state.steps_info.find(el => el.step === action.payload.step)
             if (thisState) {
                 console.log(action.payload.media)
-                // const newMedia = action.payload.media.map(mediaItem => ({
-                //     main: mediaItem.main,
-                //     media_url: mediaItem.media_url,
-                //     media_id: mediaItem.media_id,
-                //     media_type:mediaItem.media_type
-                // }));
                 thisState.media?.push(...action.payload.media)
                 thisState.error_status = action.payload.error_status
             }
@@ -227,6 +236,91 @@ const stepByStep = createSlice({
             }
         },
 
+        addIngredient(state) {
+            const newIngredient = {
+                ingredient_id: uuidv4(),
+                name: '',
+                new_ingredient:false,
+                media: '',
+                units: { choice: '', amount: 0, list: [] },
+            };
+            const thisStep = state.steps_info.find((el) => el.step === 4);
+            if (thisStep && thisStep.ingredients) {
+                thisStep.ingredients.push(newIngredient);
+            }
+        },
+
+
+        deleteIngredient(state, action: PayloadAction<{ ingredient_id: string }>) {
+            const thisStep = state.steps_info.find((el) => el.step === 4);
+            if (thisStep && thisStep.ingredients) {
+                const indexToDelete = thisStep.ingredients.findIndex(
+                    (ingredient) => ingredient.ingredient_id === action.payload.ingredient_id
+                );
+
+                if (indexToDelete !== -1) {
+                    thisStep.ingredients.splice(indexToDelete, 1);
+                }
+            }
+        },
+
+        errorAutocomplite(state) {
+            const thisStep = state.steps_info.find(el => el.step === 4);
+            if (thisStep && thisStep.ingredients) {
+                const hasAtLeastOneIngredient = thisStep.ingredients.some(ingredient => {
+                    return ingredient.name.trim() !== "";
+                });
+
+                const hasEmptyChoiceAndNonZeroAmount = thisStep.ingredients.some(ingredient => {
+                    if ('units' in ingredient) {
+                        const units = ingredient.units as unitsState;
+                        return units.amount !== 0 && units.choice?.trim() !== "";
+                    }
+                    return false;
+                });
+                thisStep.error_status = hasAtLeastOneIngredient && hasEmptyChoiceAndNonZeroAmount;
+            }
+        },
+
+        ingredientAmount(state, action: PayloadAction<Amount>) {
+            const thisStep = state.steps_info.find(el => el.step === 4)
+            if (thisStep && thisStep.ingredients) {
+                const findIngr = thisStep.ingredients.find(el => el.ingredient_id === action.payload.ingr_id)
+                if (findIngr) {
+                    if ('list' in findIngr.units) {
+                        findIngr.units.amount = action.payload.amount;
+                    }
+                }
+            }
+        },
+
+        choiceAutocomplite(state, action: PayloadAction<Autocompite>) {
+            console.log(action.payload)
+            const thisStep = state.steps_info.find(el => el.step === 4)
+            if (thisStep && thisStep.ingredients) {
+                const findIngr = thisStep.ingredients.find(el => el.ingredient_id === action.payload.ingr_id)
+                if (findIngr) {
+                    findIngr.name = action.payload.name
+                    findIngr.media = action.payload.media
+                    findIngr.new_ingredient = action.payload.new_ingredient
+                    if ('list' in findIngr.units) {
+                        findIngr.units.list = action.payload.units;
+                    }
+                }
+            }
+        },
+
+        choiceUnits(state, action: PayloadAction<Units>) {
+            const thisStep = state.steps_info.find(el => el.step === 4)
+            if (thisStep && thisStep.ingredients) {
+                const findIngr = thisStep.ingredients.find(el => el.ingredient_id === action.payload.ingr_id)
+                if (findIngr) {
+                    if ('list' in findIngr.units) {
+                        findIngr.units.choice = action.payload.choice;
+                    }
+                }
+            }
+        },
         
         resetState: () => initialState,
 
@@ -245,7 +339,13 @@ export const {
     changeMedia,
     deleteMediaState,
     setMainMedia,
-
+    addIngredient,
+    deleteIngredient,
+    errorAutocomplite,
+    ingredientAmount,
+    choiceAutocomplite,
+    choiceUnits,
+    
     
     resetState,
 } = stepByStep.actions
