@@ -82,7 +82,7 @@ export function NameAndTime() {
     }
  
 
-    console.log(stepperState)
+    // console.log(stepperState)
     return (
         <>
             <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px' }}>Enter the name of the recipe</Typography>

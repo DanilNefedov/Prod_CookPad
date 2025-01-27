@@ -51,7 +51,7 @@ export function TypeDish() {
       dispatch(openRecommendation(infoPageState?.recommendation))
     }
   }
-  console.log(infoPageState?.recommendation)
+  // console.log(infoPageState?.recommendation)
   return (
     <>
       <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px' }}>Type of dish</Typography>

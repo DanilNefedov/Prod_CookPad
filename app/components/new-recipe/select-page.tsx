@@ -1,8 +1,10 @@
-import { useAppDispatch, useAppSelector } from "@/state/hook"
+import { useAppSelector } from "@/state/hook"
 import { TypeDish } from "./steps/type-dish";
 import { NameAndTime } from "./steps/name-and-time";
 import { Media } from "./steps/media";
 import { Ingredients } from "./steps/ingredients";
+import { Description } from "./steps/description";
+import { Instruction } from "./steps/instruction";
 
 
 export function SelectPage(){
@@ -17,6 +19,10 @@ export function SelectPage(){
             return <Media></Media>
         case 4:
             return <Ingredients></Ingredients>
+        case 5:
+            return <Description></Description>
+        case 6:
+            return <Instruction></Instruction>
         default:
             return null
     }

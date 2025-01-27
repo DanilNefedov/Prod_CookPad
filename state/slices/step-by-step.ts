@@ -136,6 +136,14 @@ type Units = {
     ingr_id: string,
     choice: string
 }
+type Description = {
+    step: number,
+    description: string
+}
+type Instruction = {
+    step: number,
+    instruction: string
+}
 
 
 const stepByStep = createSlice({
@@ -321,6 +329,32 @@ const stepByStep = createSlice({
                 }
             }
         },
+
+        descriptionChange(state, action: PayloadAction<Description>) {
+            const thisStep = state.steps_info.find(el => el.step === action.payload.step)
+            if (thisStep) {
+                thisStep.description = action.payload.description
+
+                if (thisStep.description === '' && thisStep.open) {
+                    thisStep.error_status = false
+                } else {
+                    thisStep.error_status = true
+                }
+            }
+        },
+
+        instructionChange(state, action: PayloadAction<Instruction>) {
+            const thisStep = state.steps_info.find(el => el.step === action.payload.step)
+            if (thisStep) {
+                thisStep.instruction = action.payload.instruction
+
+                if (thisStep.instruction === '' && thisStep.open) {
+                    thisStep.error_status = false
+                } else {
+                    thisStep.error_status = true
+                }
+            }
+        },
         
         resetState: () => initialState,
 
@@ -345,7 +379,8 @@ export const {
     ingredientAmount,
     choiceAutocomplite,
     choiceUnits,
-    
+    descriptionChange,
+    instructionChange,
     
     resetState,
 } = stepByStep.actions

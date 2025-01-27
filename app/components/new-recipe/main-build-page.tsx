@@ -52,7 +52,7 @@ export function MainBuildPage() {
                     const newPage = stepperState.page_step - 1
                     dispatch(changeSteps(newPage))
                     dispatch(hasOpen(stepperState.page_step))
-                    console.log('111', stepperState)
+                    // console.log('111', stepperState)
                 }}>Back</Button>
                 <Button variant="contained" color='ochre' sx={{ ...styleLink, display: stepperState.page_step === 6 ? 'none' : 'block', ml: 'auto' }} onClick={(e) => {
                     e.preventDefault()
@@ -60,7 +60,7 @@ export function MainBuildPage() {
                     const newPage = stepperState.page_step + 1
                     dispatch(changeSteps(newPage))
                     dispatch(hasOpen(stepperState.page_step))
-                    console.log('111', stepperState)
+                    // console.log('111', stepperState)
                 }}>Next</Button>
             </Box>
         </>

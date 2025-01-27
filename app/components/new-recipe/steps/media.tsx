@@ -69,7 +69,7 @@ export function Media() {
         }
     }
 
-    console.log(infoPageState)
+    // console.log(infoPageState)
     return (
         <>
             <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px' }}>Select media</Typography>
