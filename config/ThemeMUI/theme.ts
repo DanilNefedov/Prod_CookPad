@@ -6,6 +6,11 @@ declare module '@mui/material/Button' {
   interface ButtonPropsColorOverrides {
     darkButton: true;
   }
+  interface ButtonPropsColorOverrides {
+    blackRedBtn: true;
+  }
+
+  
 }
 
 
@@ -27,6 +32,10 @@ declare module '@mui/material/styles' {
   interface PaletteOptions{
     darkButton?:PaletteOptions['primary']
   }
+  interface PaletteOptions{
+    blackRedBtn?:PaletteOptions['primary']
+  }
+  
 }
 
 // Update the Button's color options to include an ochre option
@@ -84,6 +93,10 @@ export const theme = createTheme({
       light: "#ffc2b3",
       contrastText: '#FFFFFF',
       dark:'#FF7269',
+    },
+    blackRedBtn:{
+      main:'#1F2128',
+      dark: "#FF7269",
     }
   },
   shape: {

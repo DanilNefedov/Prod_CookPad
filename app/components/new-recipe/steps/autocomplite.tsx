@@ -74,10 +74,10 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
 
 
 
-    console.log(ingredient)
+    console.log(ingredient, inputValue)
     function changeAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const newValue = e.target.value;
-        if (newValue === '' || (newValue.length <= 3 && parseFloat(newValue) >= 0)) {
+        if (newValue === '' || (newValue.length <= 5 && parseFloat(newValue) >= 0)) {
             dispatch(
                 ingredientAmount({
                     ingr_id: ingredient.ingredient_id,
@@ -87,6 +87,20 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
             dispatch(errorAutocomplite());
         }
     }
+
+    function isDisabled() {
+
+        if (Array.isArray(ingredient.units)) {
+            return ingredient.units.length > 0;
+        } 
+        
+        const hasUnits = inputValue !== '' && ingredient.units.amount !== 0;
+        return !hasUnits && ingredient.units.list.length === 0;
+        
+
+        // return Array.isArray(ingredient.units) ? ingredient.units.length > 0 : inputValue !== '' && ingredient.units.amount !== 0 ? false : ingredient.units.list.length === 0
+    }
+    
 
     return (
         <>
@@ -220,7 +234,11 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                 placeholder="Amount"
                 variant="outlined"
                 type="number"
-                inputProps={{ maxLength: 3, inputMode: 'numeric' }}
+                onKeyDown={(e) => {
+                    if (['-', '+', 'e'].includes(e.key)) {
+                        e.preventDefault();
+                    }
+                }}
                 value={'list' in ingredient.units && ingredient.units.amount !== 0 ? ingredient.units.amount : ''}
                 onChange={(e) => changeAmount(e)}
                 sx={{
@@ -247,12 +265,16 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                 }}
             />
             <Autocomplete
-                disabled={Array.isArray(ingredient.units) ? ingredient.units.length > 0 : ingredient.units.list.length === 0}
+                disabled={isDisabled()}
                 freeSolo
                 options={'list' in ingredient.units && ingredient.units.list || []}
                 value={'list' in ingredient.units && ingredient.units.choice || ''}
                 onInputChange={(event, newValue) => {
-                    dispatch(choiceUnits({ ingr_id: ingredient.ingredient_id, choice: newValue || '' }));
+                    // if(isDisabled()){
+                        // dispatch(choiceUnits({ ingr_id: ingredient.ingredient_id, choice: '' }))
+                    // }else{
+                        dispatch(choiceUnits({ ingr_id: ingredient.ingredient_id, choice: newValue || '' }));
+                    // }
                 }}
                 renderInput={(params) => (
                     <TextField

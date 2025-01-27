@@ -2,9 +2,9 @@ import { btnMain } from "@/app/main-styles"
 import { IngredientForState } from "@/app/types/types"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { addIngredient, deleteIngredient } from "@/state/slices/step-by-step"
-import { Box, Button, Container, Typography } from "@mui/material"
+import { Box, Button, Container, Tooltip, Typography } from "@mui/material"
 import { Autocomplite } from "./autocomplite"
-
+import InfoIcon from '@mui/icons-material/Info';
 
 
 export function Ingredients() {
@@ -20,7 +20,14 @@ export function Ingredients() {
                 paddingRight: '10px',
             }
         }}>
-            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mb: '10px' }}>Specify the ingredients</Typography>
+            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mb: '10px' }}>
+                Specify the ingredients    
+            </Typography>
+            <Tooltip title="Press enter for new ingredients">
+                {/* <IconButton> */}
+                    <InfoIcon />
+                {/* </IconButton> */}
+            </Tooltip>
             <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', backgroundColor: 'background.paper', p: '20px', borderRadius: '10px' }}>
 
                 {infoPageState?.ingredients?.map((ingredient: IngredientForState) => (

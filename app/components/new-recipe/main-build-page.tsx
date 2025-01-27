@@ -33,7 +33,7 @@ export function MainBuildPage() {
             }}>
                 <SelectPage></SelectPage>
 
-                {stepperState.page_step === 6 ? <Button variant="contained" color='secondary' sx={{ ...styleLink, width: '150px', m: '0 auto' }} onClick={(e) => {
+                {stepperState.page_step === 6 ? <Button variant="contained" color='darkButton' sx={{ ...styleLink, width: '150px', m: '0 auto' }} onClick={(e) => {
                     e.preventDefault()
                     // saveForm(stepperState, id, dispatch, namaUser)
                     // savePhoto()
@@ -45,7 +45,7 @@ export function MainBuildPage() {
 
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: '20px' }}>
-                <Button variant="contained" color='ochre' sx={{ ...styleLink, display: stepperState.page_step === 1 ? 'none' : 'block' }} onClick={(e) => {
+                <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: stepperState.page_step === 1 ? 'none' : 'block' }} onClick={(e) => {
                     e.preventDefault()
                     if (stepperState.page_step === 1) return false
                     // onHandlePrev()
@@ -54,7 +54,7 @@ export function MainBuildPage() {
                     dispatch(hasOpen(stepperState.page_step))
                     // console.log('111', stepperState)
                 }}>Back</Button>
-                <Button variant="contained" color='ochre' sx={{ ...styleLink, display: stepperState.page_step === 6 ? 'none' : 'block', ml: 'auto' }} onClick={(e) => {
+                <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: stepperState.page_step === 6 ? 'none' : 'block', ml: 'auto' }} onClick={(e) => {
                     e.preventDefault()
                     // onHandleNext()
                     const newPage = stepperState.page_step + 1

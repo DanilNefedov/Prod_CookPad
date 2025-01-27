@@ -7,10 +7,13 @@ import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 import { useAppSelector } from '@/state/hook';
 
-const nameErrors = [
+const namesErrors = [
     'Choose a recipe type', 
-    'Create an ad group', 
-    'Create an ad'
+    'Put a name and time', 
+    'Insert media',
+    'Insert ingredients',
+    'Write a description',
+    'Write the instructions',
 ];
 
 export function StepperProgress() {
@@ -36,7 +39,6 @@ export function StepperProgress() {
                 }}
             >
                 {stepperState.steps_info.map((elem) => {
-                    console.log(elem)
                     const labelProps: {
                         optional?: React.ReactNode;
                         error?: boolean;
@@ -44,7 +46,7 @@ export function StepperProgress() {
                     if (isStepFailed(elem.step)) {
                         labelProps.optional = (
                             <Typography variant="caption" color="error">
-                                Alert message
+                                {namesErrors[elem.step - 1]}
                             </Typography>
                         );
                         labelProps.error = true;
@@ -52,7 +54,7 @@ export function StepperProgress() {
 
                     return (
                         <Step key={elem.step}>
-                            <StepLabel {...labelProps}>{elem.step}</StepLabel>
+                            <StepLabel {...labelProps}></StepLabel>
                         </Step>
                     );
                 })}
