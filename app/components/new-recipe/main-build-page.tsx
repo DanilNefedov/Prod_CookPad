@@ -4,6 +4,7 @@ import { styleLink } from "../home/header/header"
 import { changeSteps, hasOpen } from "@/state/slices/step-by-step"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { SelectPage } from "./select-page"
+import { saveForm } from "./saveForm"
 
 
 
@@ -35,7 +36,7 @@ export function MainBuildPage() {
 
                 {stepperState.page_step === 6 ? <Button variant="contained" color='darkButton' sx={{ ...styleLink, width: '150px', m: '0 auto' }} onClick={(e) => {
                     e.preventDefault()
-                    // saveForm(stepperState, id, dispatch, namaUser)
+                    saveForm(stepperState, id, dispatch, namaUser)
                     // savePhoto()
                 }}>Save</Button> : <></>}
             </Paper>

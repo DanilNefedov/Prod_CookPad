@@ -134,3 +134,47 @@ export async function POST(req: Request) {
         );
     }
 }
+
+
+
+
+
+export async function PATCH(req: Request) {
+  try {
+
+    await connectDB();
+    const toUpdate = [];
+
+    const data = await req.json();
+
+    for (const ingredient of data) {
+      if (ingredient.new_ingredient) {
+        const updatedDoc = await Ingredients.findOneAndUpdate(
+          { name: new RegExp(`^${ingredient.name}$`, 'i') },
+          {
+            $inc: { count: 1 },
+            $addToSet: { units: ingredient.unit } //ADD LIMIT
+          },
+          { new: true }
+        );
+
+        const newOpenForLink = updatedDoc.count > 1 ? true : false;
+
+        await Ingredients.updateOne(
+          { _id: updatedDoc._id },
+          { $set: { open_for_link: newOpenForLink } }
+        );
+      } else {
+        toUpdate.push(ingredient);
+      }
+
+    }
+
+    return NextResponse.json({ message: 'Success', body: toUpdate });
+  } catch (error) {
+    return NextResponse.json(
+      { message: 'An internal error occurred' },
+      { status: 500 }
+    );
+  }
+}

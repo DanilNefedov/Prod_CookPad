@@ -1,54 +1,59 @@
 import connectDB from "@/app/lib/mongoose";
 import Recipe from "@/app/models/recipe";
+import RecipePopularConfig from "@/app/models/recipe-popular-config";
 import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server"
 
 
-// export async function POST(req: Request) {
-//   try {
-//     await connectDB();
+export async function POST(req: Request) {
+  try {
+    await connectDB();
 
-//     const data = await req.json();
-//     const { recipeData, recData } = data;
+    const data = await req.json();
+    const { recipeData, recomData } = data;
 
-//     if (!recipeData) {
-//       return NextResponse.json({
-//         status: 400,
-//         body: { message: 'Invalid recipe data' },
-//       });
-//     }
+    if (!recipeData) {
+      return NextResponse.json({
+        status: 400,
+        body: { message: 'Invalid recipe data' },
+      });
+    }
 
-//     const newRecipe = new Recipe(recipeData);
-//     await newRecipe.save();
+    const newRecipe = new Recipe(recipeData);
+    await newRecipe.save();
 
 
-//     if (recData !== null) {
-//       recData.creator = newRecipe._id;
-//       const saveData = new RecipePopularConfig(recData);
-//       await saveData.save();
+    if (recomData !== null) {
+      recomData.creator = newRecipe._id;
+      const saveData = new RecipePopularConfig(recomData);
+      await saveData.save();
 
-//       await Recipe.updateOne(
-//         { _id: newRecipe._id },
-//         { $push: { recipe_popular_config: saveData._id } }
-//       );
-//     }
+      await Recipe.updateOne(
+        { _id: newRecipe._id },
+        { $push: { recipe_popular_config: saveData._id } }
+      );
+    }
 
-//     return NextResponse.json({
-//       status: 201,
-//       body: {
-//         message: 'Recipe created successfully',
-//         data: newRecipe,
-//       },
-//     });
-//   } catch (error) {
-//     console.error('Error creating recipe:', error);
-//     return NextResponse.json({
-//       status: 500,
-//       body: { message: 'Error creating recipe', error: error },
-//     });
-//   }
-// }
+    return NextResponse.json({
+      status: 201,
+      body: {
+        message: 'Recipe created successfully',
+        data: newRecipe,
+      },
+    });
+  } catch (error) {
+    console.error('Error creating recipe:', error);
+    return NextResponse.json({
+      status: 500,
+      body: { message: 'Error creating recipe', error: error },
+    });
+  }
+}
+
+
+
+
 export async function GET(request: Request) {
     try {
       const { searchParams } = new URL(request.url);
