@@ -80,7 +80,7 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
         if (newValue === '' || (newValue.length <= 5 && parseFloat(newValue) >= 0)) {
             dispatch(
                 ingredientAmount({
-                    ingr_id: ingredient.ingredient_id,
+                    ingredient_id: ingredient.ingredient_id,
                     amount: newValue === '' ? 0 : parseFloat(newValue),
                 })
             );
@@ -152,28 +152,23 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                             units: ['kg', 'g', 'ml', 'l'],
                         };
                         setValue(newIngredient);
+                        console.log(newIngredient, 'wwwwwwwwwwwwwwwwwwwww')
                         setOptions([newIngredient, ...options]);
                         dispatch(
-                            choiceAutocomplite({
-                                ingr_id: newIngredient.ingredient_id,
-                                name: newIngredient.name,
-                                new_ingredient: newIngredient.new_ingredient,
-                                media: newIngredient.media,
-                                units: newIngredient.units,
-                                check_open_link: ''
-                            })
+                            choiceAutocomplite(newIngredient)
                         );
                     } else {
                         setOptions(newValue ? [newValue, ...options] : options);
                         setValue(newValue);
+                        console.log(newValue, '111111111111111111111111')
                         dispatch(
                             choiceAutocomplite({
-                                ingr_id: ingredient.ingredient_id,
+                                ingredient_id: ingredient.ingredient_id,
                                 name: newValue?.name || '',
-                                new_ingredient: newValue?.new_ingredient || false,
+                                new_ingredient: newValue?.new_ingredient || false, // maybe only need to change it to false
                                 media: newValue?.media || '',
                                 units: newValue?.units as string[] || [],
-                                check_open_link: newValue?.ingredient_id || ''
+                                // check_open_link: newValue?.ingredient_id || ''
                             })
                         );
                     }
@@ -271,9 +266,9 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                 value={'list' in ingredient.units && ingredient.units.choice || ''}
                 onInputChange={(event, newValue) => {
                     // if(isDisabled()){
-                        // dispatch(choiceUnits({ ingr_id: ingredient.ingredient_id, choice: '' }))
+                        // dispatch(choiceUnits({ ingredient_id: ingredient.ingredient_id, choice: '' }))
                     // }else{
-                        dispatch(choiceUnits({ ingr_id: ingredient.ingredient_id, choice: newValue || '' }));
+                        dispatch(choiceUnits({ ingredient_id: ingredient.ingredient_id, choice: newValue || '' }));
                     // }
                 }}
                 renderInput={(params) => (

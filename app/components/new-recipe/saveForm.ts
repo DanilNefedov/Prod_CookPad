@@ -111,7 +111,7 @@ export async function saveForm(state: StateStepper, id: string, dispatch: AppDis
                     const ingredientsCopy = _.map(ingredientsWithNames, ingredient => _.omit(ingredient, ['new_ingredient']));
 
 
-                    console.log(ingredientsWithNames, ingredientsCopy)
+                    console.log(ingredientsWithNames, ingredientsCopy, state.steps_info[3].ingredients)
 
                     const mediaArray = state.steps_info[2].media?.map((mediaObj, index) => {
                         return {
@@ -169,8 +169,8 @@ export async function saveForm(state: StateStepper, id: string, dispatch: AppDis
                                 namaUser,
                                 state.steps_info[0].type_recipe as string,
                                 ...ingredientNames
-                            ], (item) => item !== null)
-
+                            ], (item) => item !== null),
+                            creator: null
                         }
                         const addNewRecipe = async () => {
                             try {
@@ -214,6 +214,8 @@ export async function saveForm(state: StateStepper, id: string, dispatch: AppDis
                         }))
 
                         const processIngredients = async (ingredients: fetchIngredients[]) => {
+
+                            console.log(ingredients, 'ingredientsingredientsingredientsingredients')
                             try {
                                 const response = await fetch('/api/ingredients', {
                                     method: 'PATCH',
@@ -225,6 +227,7 @@ export async function saveForm(state: StateStepper, id: string, dispatch: AppDis
                                
 
                                 const result = await response.json();
+                                console.log(result, 'resultresultresultresultresultresult')
 
                                 if (result.body && result.body.length > 0) {
                                     const response = await fetch('/api/ingredients', {
@@ -258,7 +261,7 @@ export async function saveForm(state: StateStepper, id: string, dispatch: AppDis
                                     },
                                     body: JSON.stringify({
                                         recipeData: data,
-                                        recData: null
+                                        recomData: null
                                     }),
                                 });
 

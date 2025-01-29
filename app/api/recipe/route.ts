@@ -23,7 +23,6 @@ export async function POST(req: Request) {
     const newRecipe = new Recipe(recipeData);
     await newRecipe.save();
 
-
     if (recomData !== null) {
       recomData.creator = newRecipe._id;
       const saveData = new RecipePopularConfig(recomData);

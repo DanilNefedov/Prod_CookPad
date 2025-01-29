@@ -113,25 +113,26 @@ export async function GET(request: Request) {
 
 export async function POST(req: Request) {
     try {
-        await connectDB();
-        const data = await req.json();
+      await connectDB();
+      const data = await req.json();
 
-        for (const ingredient of data) {
-            await Ingredients.create({
-                name: ingredient.name,
-                units: ingredient.units,
-                count: 1,
-                open_for_link: false,
-                deletedAt: new Date()
-            });
-        }
+      for (const ingredient of data) {
+        console.log(ingredient,[ingredient.unit], '1231312312312312312312312312132')
+        await Ingredients.create({
+          name: ingredient.name,
+          units: [ingredient.unit],
+          count: 1,
+          open_for_link: false,
+          deletedAt: new Date()
+        });
+      }
 
-        return NextResponse.json({ message: 'Success' });
+      return NextResponse.json({ message: 'Success' });
     } catch (error) {
-        return NextResponse.json(
-            { message: 'An internal error occurred' },
-            { status: 500 }
-        );
+      return NextResponse.json(
+        { message: 'An internal error occurred' },
+        { status: 500 }
+      );
     }
 }
 
@@ -146,20 +147,21 @@ export async function PATCH(req: Request) {
     const toUpdate = [];
 
     const data = await req.json();
+    console.log(data, 'datadatadatadatadatadata');
 
     for (const ingredient of data) {
-      if (ingredient.new_ingredient) {
+      if (!ingredient.new_ingredient) {
         const updatedDoc = await Ingredients.findOneAndUpdate(
           { name: new RegExp(`^${ingredient.name}$`, 'i') },
           {
             $inc: { count: 1 },
-            $addToSet: { units: ingredient.unit } //ADD LIMIT
+            $addToSet: { units: ingredient.unit } //add a limit. for now it is possible to add a large number of units
           },
           { new: true }
         );
 
         const newOpenForLink = updatedDoc.count > 1 ? true : false;
-
+        console.log(newOpenForLink, 'newOpenForLinknewOpenForLinknewOpenForLinknewOpenForLinknewOpenForLink');
         await Ingredients.updateOne(
           { _id: updatedDoc._id },
           { $set: { open_for_link: newOpenForLink } }
@@ -169,7 +171,7 @@ export async function PATCH(req: Request) {
       }
 
     }
-
+    console.log(toUpdate, 'toUpdatetoUpdatetoUpdatetoUpdatetoUpdatetoUpdate');
     return NextResponse.json({ message: 'Success', body: toUpdate });
   } catch (error) {
     return NextResponse.json(

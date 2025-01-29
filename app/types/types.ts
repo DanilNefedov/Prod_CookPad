@@ -209,7 +209,7 @@ export interface IngredientForState{
     name: string;
     media: string;
     new_ingredient?:boolean,
-    check_open_link?:string,
+    // check_open_link?:string,
     units: (string[] | unitsState);
 }
 

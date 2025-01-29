@@ -80,7 +80,7 @@ const initialState: StateStepper = {
                         amount: 0,
                         list: []
                     },
-                    check_open_link:''
+                    // check_open_link:''
                 }
             ]
         },
@@ -121,19 +121,19 @@ type BtnsMediaSwiper = {
     media_id:string
 }
 type Amount = {
-    ingr_id: string,
+    ingredient_id: string,
     amount: number
 }
 type Autocompite = {
-    ingr_id: string,
+    ingredient_id: string,
     name: string,
     media: string,
     new_ingredient:boolean,
-    check_open_link:string,
+    // check_open_link:string,
     units: string[]
 }
 type Units = {
-    ingr_id: string,
+    ingredient_id: string,
     choice: string
 }
 type Description = {
@@ -293,7 +293,7 @@ const stepByStep = createSlice({
         ingredientAmount(state, action: PayloadAction<Amount>) {
             const thisStep = state.steps_info.find(el => el.step === 4)
             if (thisStep && thisStep.ingredients) {
-                const findIngr = thisStep.ingredients.find(el => el.ingredient_id === action.payload.ingr_id)
+                const findIngr = thisStep.ingredients.find(el => el.ingredient_id === action.payload.ingredient_id)
                 if (findIngr) {
                     if ('list' in findIngr.units) {
                         findIngr.units.amount = action.payload.amount;
@@ -306,7 +306,7 @@ const stepByStep = createSlice({
             console.log(action.payload)
             const thisStep = state.steps_info.find(el => el.step === 4)
             if (thisStep && thisStep.ingredients) {
-                const findIngr = thisStep.ingredients.find(el => el.ingredient_id === action.payload.ingr_id)
+                const findIngr = thisStep.ingredients.find(el => el.ingredient_id === action.payload.ingredient_id)
                 if (findIngr) {
                     findIngr.name = action.payload.name
                     findIngr.media = action.payload.media
@@ -321,7 +321,7 @@ const stepByStep = createSlice({
         choiceUnits(state, action: PayloadAction<Units>) {
             const thisStep = state.steps_info.find(el => el.step === 4)
             if (thisStep && thisStep.ingredients) {
-                const findIngr = thisStep.ingredients.find(el => el.ingredient_id === action.payload.ingr_id)
+                const findIngr = thisStep.ingredients.find(el => el.ingredient_id === action.payload.ingredient_id)
                 if (findIngr) {
                     if ('list' in findIngr.units) {
                         findIngr.units.choice = action.payload.choice;
