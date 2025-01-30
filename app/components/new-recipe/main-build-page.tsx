@@ -4,7 +4,7 @@ import { styleLink } from "../home/header/header"
 import { changeSteps, hasOpen } from "@/state/slices/step-by-step"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { SelectPage } from "./select-page"
-import { saveForm } from "./saveForm"
+import { saveForm } from "./save-form"
 
 
 
@@ -49,11 +49,12 @@ export function MainBuildPage() {
                 <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: stepperState.page_step === 1 ? 'none' : 'block' }} onClick={(e) => {
                     e.preventDefault()
                     if (stepperState.page_step === 1) return false
+                    
                     // onHandlePrev()
                     const newPage = stepperState.page_step - 1
                     dispatch(changeSteps(newPage))
                     dispatch(hasOpen(stepperState.page_step))
-                    // console.log('111', stepperState)
+                    console.log('111', stepperState)
                 }}>Back</Button>
                 <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: stepperState.page_step === 6 ? 'none' : 'block', ml: 'auto' }} onClick={(e) => {
                     e.preventDefault()
@@ -61,7 +62,7 @@ export function MainBuildPage() {
                     const newPage = stepperState.page_step + 1
                     dispatch(changeSteps(newPage))
                     dispatch(hasOpen(stepperState.page_step))
-                    // console.log('111', stepperState)
+                    console.log('111', stepperState)
                 }}>Next</Button>
             </Box>
         </>

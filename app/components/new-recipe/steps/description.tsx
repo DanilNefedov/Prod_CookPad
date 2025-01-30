@@ -14,6 +14,7 @@ export function Description(){
     function handleDescription (e:ChangeEvent<HTMLInputElement>){
         if(infoPageState?.step){
             dispatch(descriptionChange({step:infoPageState?.step, description: e.target.value }))
+            
         }
     }
 

@@ -167,10 +167,10 @@ const stepByStep = createSlice({
             }
         },
 
-        openRecommendation(state, action: PayloadAction<boolean>){
-            const thisState = state.steps_info.find(el => el.step === 1)
+        openRecommendation(state, action: PayloadAction<{recommendation:boolean, step:number}>) {
+            const thisState = state.steps_info.find(el => el.step === action.payload.step)
             if (thisState) {
-                thisState.recommendation = !action.payload
+                thisState.recommendation = !action.payload.recommendation
             }
         },
 
@@ -272,30 +272,28 @@ const stepByStep = createSlice({
             }
         },
 
-        errorAutocomplite(state) {
+        errorAutocomplite(state, action: PayloadAction<string>) {
             const thisStep = state.steps_info.find(el => el.step === 4);
             if (thisStep && thisStep.ingredients) {
-                const hasAtLeastOneIngredient = thisStep.ingredients.some(ingredient => {
-                    return ingredient.name.trim() !== "";
-                });
 
-                const hasEmptyChoiceAndNonZeroAmount = thisStep.ingredients.some(ingredient => {
-                    if ('units' in ingredient) {
-                        const units = ingredient.units as unitsState;
-                        return units.amount !== 0 && units.choice?.trim() !== "";
-                    }
-                    return false;
-                });
-                thisStep.error_status = hasAtLeastOneIngredient && hasEmptyChoiceAndNonZeroAmount;
+                const thisIngredient = thisStep.ingredients.find(el => el.ingredient_id === action.payload)
+
+                if(thisIngredient && 'list' in thisIngredient.units){
+                    const hasAllFieldsFilled = Boolean(thisIngredient.name?.trim() && thisIngredient.units.amount !== 0 && thisIngredient.units.choice?.trim());
+                    const res = hasAllFieldsFilled;
+                    thisStep.error_status = res;
+                }
             }
+            
         },
-
+        
         ingredientAmount(state, action: PayloadAction<Amount>) {
             const thisStep = state.steps_info.find(el => el.step === 4)
             if (thisStep && thisStep.ingredients) {
                 const findIngr = thisStep.ingredients.find(el => el.ingredient_id === action.payload.ingredient_id)
                 if (findIngr) {
-                    if ('list' in findIngr.units) {
+
+                    if ('list' in findIngr.units ) {
                         findIngr.units.amount = action.payload.amount;
                     }
                 }
@@ -303,7 +301,6 @@ const stepByStep = createSlice({
         },
 
         choiceAutocomplite(state, action: PayloadAction<Autocompite>) {
-            console.log(action.payload)
             const thisStep = state.steps_info.find(el => el.step === 4)
             if (thisStep && thisStep.ingredients) {
                 const findIngr = thisStep.ingredients.find(el => el.ingredient_id === action.payload.ingredient_id)
@@ -314,6 +311,7 @@ const stepByStep = createSlice({
                     if ('list' in findIngr.units) {
                         findIngr.units.list = action.payload.units;
                     }
+
                 }
             }
         },
@@ -323,7 +321,7 @@ const stepByStep = createSlice({
             if (thisStep && thisStep.ingredients) {
                 const findIngr = thisStep.ingredients.find(el => el.ingredient_id === action.payload.ingredient_id)
                 if (findIngr) {
-                    if ('list' in findIngr.units) {
+                    if ('list' in findIngr.units ) {
                         findIngr.units.choice = action.payload.choice;
                     }
                 }
@@ -346,6 +344,7 @@ const stepByStep = createSlice({
         instructionChange(state, action: PayloadAction<Instruction>) {
             const thisStep = state.steps_info.find(el => el.step === action.payload.step)
             if (thisStep) {
+                if (!thisStep.open) thisStep.open = true
                 thisStep.instruction = action.payload.instruction
 
                 if (thisStep.instruction === '' && thisStep.open) {

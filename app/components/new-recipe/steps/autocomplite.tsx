@@ -47,7 +47,7 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
 
         if (inputValue === '') {
             setOptions(value ? [value] : []);
-            dispatch(errorAutocomplite());
+            dispatch(errorAutocomplite(ingredient.ingredient_id));
             return undefined;
         }
 
@@ -63,7 +63,7 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                     };
                 });
                 setOptions(value ? [value, ...newOptions] : newOptions);
-                dispatch(errorAutocomplite());
+                dispatch(errorAutocomplite(ingredient.ingredient_id));
             }
         });
 
@@ -74,7 +74,6 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
 
 
 
-    console.log(ingredient, inputValue)
     function changeAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const newValue = e.target.value;
         if (newValue === '' || (newValue.length <= 5 && parseFloat(newValue) >= 0)) {
@@ -84,21 +83,22 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                     amount: newValue === '' ? 0 : parseFloat(newValue),
                 })
             );
-            dispatch(errorAutocomplite());
+            dispatch(errorAutocomplite(ingredient.ingredient_id));
         }
     }
 
     function isDisabled() {
-
         if (Array.isArray(ingredient.units)) {
             return ingredient.units.length > 0;
         } 
-        
+
         const hasUnits = inputValue !== '' && ingredient.units.amount !== 0;
         return !hasUnits && ingredient.units.list.length === 0;
-        
+    }
 
-        // return Array.isArray(ingredient.units) ? ingredient.units.length > 0 : inputValue !== '' && ingredient.units.amount !== 0 ? false : ingredient.units.list.length === 0
+    function cahngeUnits(newValue:string) {
+        dispatch(choiceUnits({ ingredient_id: ingredient.ingredient_id, choice: newValue || '' }));
+        dispatch(errorAutocomplite(ingredient.ingredient_id));
     }
     
 
@@ -142,7 +142,6 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                 value={value}
                 noOptionsText="No ingredients"
                 onChange={(event: any, newValue: IngredientForState | string | null) => {
-                    console.log(newValue)
                     if (typeof newValue === 'string') {
                         const newIngredient = {
                             ingredient_id: ingredient.ingredient_id,
@@ -152,15 +151,14 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                             units: ['kg', 'g', 'ml', 'l'],
                         };
                         setValue(newIngredient);
-                        console.log(newIngredient, 'wwwwwwwwwwwwwwwwwwwww')
                         setOptions([newIngredient, ...options]);
                         dispatch(
                             choiceAutocomplite(newIngredient)
                         );
+                        dispatch(errorAutocomplite(ingredient.ingredient_id));
                     } else {
                         setOptions(newValue ? [newValue, ...options] : options);
                         setValue(newValue);
-                        console.log(newValue, '111111111111111111111111')
                         dispatch(
                             choiceAutocomplite({
                                 ingredient_id: ingredient.ingredient_id,
@@ -234,7 +232,7 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                         e.preventDefault();
                     }
                 }}
-                value={'list' in ingredient.units && ingredient.units.amount !== 0 ? ingredient.units.amount : ''}
+                value={'list' in ingredient.units && ingredient.units.amount !== 0 ? ingredient.units.amount : ''}//
                 onChange={(e) => changeAmount(e)}
                 sx={{
                     ...secondTextInput,
@@ -265,11 +263,7 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                 options={'list' in ingredient.units && ingredient.units.list || []}
                 value={'list' in ingredient.units && ingredient.units.choice || ''}
                 onInputChange={(event, newValue) => {
-                    // if(isDisabled()){
-                        // dispatch(choiceUnits({ ingredient_id: ingredient.ingredient_id, choice: '' }))
-                    // }else{
-                        dispatch(choiceUnits({ ingredient_id: ingredient.ingredient_id, choice: newValue || '' }));
-                    // }
+                    cahngeUnits(newValue)
                 }}
                 renderInput={(params) => (
                     <TextField

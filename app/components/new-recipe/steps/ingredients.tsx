@@ -13,6 +13,8 @@ export function Ingredients() {
     const dispatch = useAppDispatch()
 
 
+
+
     return (
         <Container sx={{
             p: '20px 10px', '&.MuiContainer-root': {
@@ -41,6 +43,7 @@ export function Ingredients() {
 
                 <Button sx={{ ...btnMain, m: '20px auto 0 ', display: 'block', width: '140px', backgroundColor: 'background.default' }} onClick={(e) => {
                     e.preventDefault()
+                    
                     dispatch(addIngredient())
                 }}>Add ingredient</Button>
 

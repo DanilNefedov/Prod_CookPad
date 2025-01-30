@@ -48,7 +48,7 @@ export function TypeDish() {
 
   function handleOpenRecommendation(){
     if(infoPageState?.recommendation !== undefined){
-      dispatch(openRecommendation(infoPageState?.recommendation))
+      dispatch(openRecommendation({recommendation:infoPageState?.recommendation, step:stepperState.page_step}))
     }
   }
   // console.log(infoPageState?.recommendation)
