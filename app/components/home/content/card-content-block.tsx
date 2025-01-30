@@ -63,6 +63,7 @@ export function CardContentBlock({ props }: { props: propsData }) {
     }
 
 
+
     return (
         <Card sx={mainCard}>
             <CardContent sx={contentPostionAbsolute}>
@@ -113,12 +114,16 @@ export function CardContentBlock({ props }: { props: propsData }) {
                 spaceBetween={1}
             // lazy={true}
             >
-                {media.map(el => (
-                    <SwiperSlide key={el.media_id} className='media-main-slide'>
-                        <SwiperMediaCard props={{ el, name }}></SwiperMediaCard>
-                    </SwiperSlide>
+                {media
+                    .slice() 
+                    .sort((a, b) => Number(b.main) - Number(a.main))
+                    .map(el => (
+                        <SwiperSlide key={el.media_id} className="media-main-slide">
+                            <SwiperMediaCard props={{ el, name }} />
+                        </SwiperSlide>
+                    )
+                )}
 
-                ))}
 
                 <Box className='btn-next-media'>
                     <ArrowRightIcon viewBox="3 3 17 17" sx={{ fontSize: 35, opacity: '0.5' }}></ArrowRightIcon>

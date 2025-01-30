@@ -5,6 +5,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 import _ from "lodash";
 import { IFetchDataRecipe, IngredientForState } from "@/app/types/types";
+import { resetStateRecipes } from "@/state/slices/recipe-slice";
 
 
 
@@ -276,6 +277,8 @@ export async function saveForm(state: StateStepper, id: string, dispatch: AppDis
                         }
                         addNewRecipe()
                     }
+
+                    dispatch(resetStateRecipes())
                 }
             })
             .catch(error => {

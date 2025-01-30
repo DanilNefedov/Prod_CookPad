@@ -16,8 +16,6 @@ export function MainBuildPage() {
     const id = userStore?.user?.connection_id
     const namaUser = userStore?.user?.name
 
-
-
     return (
         <>
             <Paper sx={{

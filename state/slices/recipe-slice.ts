@@ -104,7 +104,11 @@ export const deleteRecipe = createAsyncThunk<{connection_id:string, recipe_id:st
 const recipeSlice = createSlice({
     name: 'recipe',
     initialState,
-    reducers: {},
+    reducers:{
+        resetStateRecipes(state) {
+            return initialState; 
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchRecipes.pending, (state) => {
@@ -173,6 +177,6 @@ const recipeSlice = createSlice({
            
     }
 })
-
+export const { resetStateRecipes } = recipeSlice.actions;
 
 export default recipeSlice.reducer

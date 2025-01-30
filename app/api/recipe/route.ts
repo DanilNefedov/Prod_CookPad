@@ -68,7 +68,9 @@ export async function GET(request: Request) {
       await connectDB();
   
       const recipes = await Recipe.find({ connection_id })
+        .sort({ createdAt: -1 })
         .select("-_id -__v -createdAt -updatedAt -connection_id") 
+        .limit(12)
         .lean(); // for faster queries
   
       if (!recipes.length) {
