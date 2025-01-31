@@ -21,9 +21,28 @@ export async function PATCH(request: Request) {
             );
         }
 
+        const recipe = await Recipe.findOne({ connection_id, recipe_id });
+
+        if (!recipe) {
+            return NextResponse.json(
+                { message: 'Recipe not found' },
+                { status: 404 }
+            );
+        }
+
+        const updateData: any = {
+            $set: { favorite: !favorite },
+        };
+
+        if (!recipe.sorting.includes('favorite')) {
+            updateData.$push = { sorting: 'favorite' };
+        } else {
+            updateData.$pull = { sorting: 'favorite' };
+        }
+
         const result = await Recipe.updateOne(
             { connection_id, recipe_id },
-            { $set: { favorite: !favorite } }
+            updateData
         );
 
         if (result.modifiedCount === 0) {

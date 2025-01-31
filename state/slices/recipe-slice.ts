@@ -12,22 +12,23 @@ type MyAsyncThunkReturn = {
 const initialState: IRecipeSlice = {
     status: false,
     error: false,
+    page: 0,
     recipes: [
     ]
 }
 
 
-export const fetchRecipes = createAsyncThunk<MainRecipeT[], string, { rejectValue: string }>(
+export const fetchRecipes = createAsyncThunk<{recipes:MainRecipeT[], page:number, totalCount:number}, string, { rejectValue: string }>(
     'recipe/fetchRecipes',
     async function (url, { rejectWithValue, dispatch, getState }) {
         try {
-            console.log(url)
             const response = await fetch(url);
-            if (!response.ok) return rejectWithValue('Server Error!');
-            const data = await response.json()
-            console.log(data)
-            return data
 
+            if (!response.ok) return rejectWithValue('Server Error!');
+
+            const data = await response.json()
+
+            return data
         } catch (error) {
             console.error(error)
             throw error
@@ -115,30 +116,28 @@ const recipeSlice = createSlice({
                 state.status = true,
                 state.error = false
             })
-            .addCase(fetchRecipes.fulfilled, (state, action: PayloadAction<MainRecipeT[], string>) => {
-                if (action.payload) {
-                    state.status = false;
-                    state.error = false;
-                    const payload = action.payload;
-
-                    payload.map(recipe => {
-                        const findeRecipe = state.recipes.find(el => el.recipe_id === recipe.recipe_id)
-                        if (!findeRecipe) {
-                            const { recipe_id, name, time, media, recipe_type, description, favorite, sorting, } = recipe
-                            const { minutes, hours } = time
-                            const trimmedMedia = media.map(item => {
-                                const { main, media_id, media_type, media_url } = item;
-                                return {main, media_id, media_type, media_url}
-                            })
-                           
-                            const sortedSorting = sorting?.map(item => item ? item : '');
-
-                            state.recipes.push({ recipe_id, name, time: { minutes, hours }, media:trimmedMedia, recipe_type, favorite, description, sorting: sortedSorting,})
-                        }
-                    })
-
+            .addCase(fetchRecipes.fulfilled, (state, action: PayloadAction<{ recipes: MainRecipeT[], page: number, totalCount:number }, string>) => {
+                if (!action.payload) return;
+            
+                state.status = false;
+                state.error = false;
+            
+                const { recipes, page, totalCount } = action.payload;
+            
+                const newRecipes = recipes.filter(recipe => 
+                    !state.recipes.some(existing => existing.recipe_id === recipe.recipe_id)
+                );
+            
+                state.recipes = [...state.recipes, ...newRecipes];
+                
+                if(totalCount === state.recipes.length) {
+                    state.page = NaN;
+                }else{
+                    state.page = page;
                 }
+                
             })
+            
             .addCase(fetchRecipes.rejected, (state) => {
                 state.status = false;
                 state.error = true;
@@ -154,6 +153,14 @@ const recipeSlice = createSlice({
 
                 if(findRecipe){
                     findRecipe.favorite = !payload.favorite
+
+                    const favoriteIndex = findRecipe.sorting.indexOf("favorite");
+
+                    if (favoriteIndex === -1) {
+                        findRecipe.sorting.push('favorite')
+                    } else {
+                        findRecipe.sorting.splice(favoriteIndex, 1);
+                    }
                 }
             })
             .addCase(setFavoriteRecipe.rejected, (state) => {

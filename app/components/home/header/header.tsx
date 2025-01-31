@@ -62,11 +62,7 @@ export default function Header() {
             styleLink={styleLink}
           />
         </Box>
-        <Box sx={{ display: { xs: 'none', sm: 'block' }, flexGrow: '0' }}>
-          <Button variant="contained" color='darkButton' sx={styleLink} component={NextLink} href="/new-recipe">
-            New Recipe
-          </Button>
-        </Box>
+
       </Toolbar>
     </AppBar>
   );

@@ -57,7 +57,10 @@ export async function GET(request: Request) {
     try {
       const { searchParams } = new URL(request.url);
       const connection_id = searchParams.get("connection_id");
-  
+      const page = parseInt(searchParams.get("page") || "1", 10);
+      const limit = 12;
+      const skip = (page - 1) * limit;
+      
       if (!connection_id) {
         return NextResponse.json(
           { error: "connection_id is required" },
@@ -70,7 +73,8 @@ export async function GET(request: Request) {
       const recipes = await Recipe.find({ connection_id })
         .sort({ createdAt: -1 })
         .select("-_id -__v -createdAt -updatedAt -connection_id") 
-        .limit(12)
+        .skip(skip)
+        .limit(limit)
         .lean(); // for faster queries
   
       if (!recipes.length) {
@@ -79,8 +83,10 @@ export async function GET(request: Request) {
           { status: 404 }
         );
       }
+      const totalCount = await Recipe.countDocuments({ connection_id });
+      console.log(totalCount)
   
-      return NextResponse.json(recipes, { status: 200 });
+      return NextResponse.json({recipes, page, totalCount}, { status: 200 });
     } catch (error) {
       console.error("Error fetching recipes:", error);
   

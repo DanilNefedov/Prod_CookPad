@@ -22,49 +22,54 @@ export default function TabsRenderer({ styleLink }: TabsRendererProps) {
     setValue(newValue);
   };
 
+  function capitalizeFirstLetter(str:string) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
 
   const recipeStore = useAppSelector(state => state.recipe);
   const renderedNavigation = recipeStore.recipes.map((el) => ({
-    typeNav: el.recipe_type,
+    sorting: el.sorting, 
     _id: el.recipe_id,
   }));
 
-  const { handlerNavigation } = useNavigationState()
+  const { handlerNavigation } = useNavigationState();
 
-  const uniqueTypeNavs: string[] = [];
+  const uniqueTabs: string[] = [];
   const tabs = renderedNavigation
-    .filter((el: RenderedNavigationItem) => el.typeNav !== null)
-    .map((el: RenderedNavigationItem) => {
-      const typeNavLower = el.typeNav!.toLowerCase();
-      if (!uniqueTypeNavs.includes(typeNavLower)) {
-        uniqueTypeNavs.push(typeNavLower);
+  .flatMap((el) => 
+    el.sorting
+      .filter((sortingItem) => sortingItem && !uniqueTabs.includes(sortingItem.toLowerCase())) 
+      .map((sortingItem) => {
+        uniqueTabs.push(sortingItem.toLowerCase()); 
         return (
           <Tab
-          key={el._id}
-          label={el.typeNav}
-          sx={styleLink}
-          component={NextLink}
-          href="#"
-          onClick={(e) => handlerNavigation(el.typeNav)}
+            key={sortingItem}
+            label={capitalizeFirstLetter(sortingItem)}
+            sx={styleLink}
+            component={NextLink}
+            href="#"
+            onClick={(e) => handlerNavigation(sortingItem)}
           />
         );
-      }
-      return null;
-    });
+      })
+  );
+
 
   return (
     <Tabs
-    value={value}
-    onChange={handleChange}
-    variant="scrollable"
-    scrollButtons
-    allowScrollButtonsMobile
-    aria-label="scrollable force tabs"
-    sx={{
-      minHeight: '0', '.MuiTabScrollButton-root': {
-        width: '25px'
-      }
-    }}
+      value={value}
+      onChange={handleChange}
+      variant="scrollable"
+      scrollButtons
+      allowScrollButtonsMobile
+      aria-label="scrollable force tabs"
+      sx={{
+        minHeight: '0', 
+        '.MuiTabScrollButton-root': {
+          width: '25px'
+        }
+      }}
     >   
       <Tab
         key="all"
@@ -73,14 +78,6 @@ export default function TabsRenderer({ styleLink }: TabsRendererProps) {
         component={NextLink}
         href="#"
         onClick={(e) => handlerNavigation('all')}
-       />
-      <Tab
-        key="favorite"
-        label="Favorite"
-        sx={styleLink}
-        component={NextLink}
-        href="#"
-        onClick={(e) => handlerNavigation('favorite')}
       />
       {tabs}
     </Tabs>

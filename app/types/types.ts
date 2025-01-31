@@ -293,6 +293,7 @@ export type INameLinks = {
 
 export type IRecipeSlice = ErrorStatus & {
     // connection_id:string | null,
+    page:number,
     recipes:MainRecipeT[]
 }
 

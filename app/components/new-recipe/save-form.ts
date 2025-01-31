@@ -130,7 +130,7 @@ export async function saveForm(state: StateStepper, id: string, dispatch: AppDis
                         media: mediaArray || [],
                         recipe_type: state.steps_info[0].type_recipe as string,
                         description: state.steps_info[4].description as string,
-                        sorting: [state.steps_info[0].type_recipe as string],
+                        sorting: [state.steps_info[0].type_recipe?.toLowerCase() as string],
                         instruction: state.steps_info[5].instruction as string,
                         ingredients: ingredientsCopy,
                         favorite: false
