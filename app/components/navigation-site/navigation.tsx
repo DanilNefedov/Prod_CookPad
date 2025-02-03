@@ -1,46 +1,75 @@
-import { Container, Paper } from '@mui/material'
+
+import { Container, Paper, styled } from '@mui/material'
 import Box from '@mui/material/Box';
 
 import { LogOut } from './log-out'
 import { dataPage, paperNavigation } from '@/app/main-styles'
 import { BtnLinks } from './btn-links'
 import { AboutUser } from './user-info';
-
-
-
-
+import HomeIcon from '@mui/icons-material/Home';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
+import RecommendIcon from '@mui/icons-material/Recommend';
+import { theme } from '@/config/ThemeMUI/theme';
 
 
 export function NavigationSite() {
     const pages:dataPage[] = [
         { 
             name: 'Home', 
-            path: ['/home', '/cook/:path*' ]
+            path: ['/home', '/cook/:path*' ],
+            icon: <HomeIcon sx={{mr:'5px'}}/>
         },
         { 
             name: 'Popular',
-            path: ['/popular'] 
+            path: ['/popular'],
+            icon:<RecommendIcon sx={{mr:'5px'}}/>
         },
         { 
             name: 'New Recipe', 
-            path: ['/new-recipe'] 
+            path: ['/new-recipe'],
+            icon:<AddCircleIcon sx={{mr:'5px'}}/>
         },
         { 
             name: 'List', 
-            path: ['/list', '/list-recipe'] 
+            path: ['/list', '/list-recipe'],
+            icon:<ChecklistRtlIcon sx={{mr:'5px'}}/>
         },
     ];
 
    
     return (
-        <Paper sx={paperNavigation}>
-            <Container sx={{
-                display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', paddingTop: '17px', paddingBottom: '25px', '&.MuiContainer-root': {
+        <Paper 
+        sx={{
+            backgroundColor: 'background.default',
+            flexGrow: 0,
+            borderRadius: '0',
+            width: '100%',
+            maxWidth: '165px',
+            [theme.breakpoints.down("md")]: {
+                maxWidth:'60px'
+            }
+        }}>
+            <Container 
+            
+            sx={{
+                display: 'flex', 
+                flexDirection: 'column', 
+                justifyContent: 'space-between', 
+                height: '100%', 
+                paddingTop: '17px',
+                paddingBottom: '25px', '&.MuiContainer-root': {
                     paddingLeft: '12px',
                     paddingRight: '12px',
-                }
+                    [theme.breakpoints.down("md")]: {
+                        pl:'0'
+                    }
+                },
+                // [theme.breakpoints.down("md")]: {
+                //    ml:"-100%"
+                // },
             }}>
-                <Box>
+                <Box sx={{[theme.breakpoints.down("md")]: {pl:'7px'}}}>
                     <AboutUser></AboutUser>
                 </Box>
                 <Box sx={{display:'flex', flexDirection:'column'}}>

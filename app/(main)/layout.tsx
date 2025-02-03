@@ -1,6 +1,7 @@
 import { Container, Paper } from "@mui/material";
 import { NavigationSite } from "../components/navigation-site/navigation";
 import { ClientUser } from "../components/client-side-handler/client-user";
+import { theme } from "@/config/ThemeMUI/theme";
 
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
@@ -8,7 +9,11 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
     backgroundColor: 'secondary.main',
     borderRadius: '20px 0 0 20px',
     color: 'text.primary',
-    width: "calc(100% - 140px)",
+    width: "calc(100% - 165px)",
+
+    [theme.breakpoints.down("md")]: {
+      width: "calc(100% - 60px)",
+    },
   }
 
   return (

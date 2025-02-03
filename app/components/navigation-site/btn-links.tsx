@@ -1,7 +1,7 @@
 'use client'
 
 import { btnLink, dataPage } from "@/app/main-styles";
-import { Button } from "@mui/material";
+import { Button, useTheme } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -9,6 +9,8 @@ import { usePathname } from "next/navigation";
 
 export function BtnLinks({ page }: { page: dataPage }) {
     const pathname = usePathname()
+
+
 
     return (
         <Button
@@ -18,7 +20,9 @@ export function BtnLinks({ page }: { page: dataPage }) {
             component={Link}
             href={page.path[0]}
         >
-            {page.name}
+            {page.icon}
+            <span>{page.name}</span>
+                   
         </Button>
     )
 

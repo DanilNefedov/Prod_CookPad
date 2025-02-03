@@ -79,6 +79,7 @@ export default function TabsRenderer({ styleLink }: TabsRendererProps) {
         href="#"
         onClick={(e) => handlerNavigation('all')}
       />
+      
       {tabs}
     </Tabs>
   );

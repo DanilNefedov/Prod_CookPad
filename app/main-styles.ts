@@ -1,7 +1,9 @@
+import { theme } from "@/config/ThemeMUI/theme";
 
 export interface dataPage {
     name: string
     path: string[]
+    icon:React.ReactNode
 }
 
 
@@ -17,6 +19,18 @@ export function btnLink(page: dataPage, pathname: string) {
         },
         mb: '20px',
         lineHeight: 'inherit',
+        alignItems:'center',
+        justifyContent: "flex-start",
+        [theme.breakpoints.down("md")]: {
+            ml:'-16px',
+            pl:'20px'
+        },
+
+        '& span':{
+            [theme.breakpoints.down("md")]: {
+                display:'none'
+            },
+        }
     }
 
 }
@@ -41,6 +55,7 @@ export const btnMain = {
     mb: '20px',
     lineHeight: 'inherit',
 }
+
 
 
 

@@ -42,7 +42,7 @@ export default function Header() {
       <Toolbar
         sx={{
           justifyContent: 'space-between',
-          mr: '25px',
+          // mr: '25px',
           '&.MuiToolbar-root': {
             paddingLeft: 0,
             paddingRight: 0,
@@ -52,7 +52,7 @@ export default function Header() {
       >
         <Box
           sx={{
-            maxWidth: '85%',
+            width: '100%',
             bgcolor: 'transparent',
             minHeight: '0',
           }}

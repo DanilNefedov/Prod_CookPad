@@ -1,9 +1,15 @@
+import { theme } from "@/config/ThemeMUI/theme"
+
 export const mainContent = {
-    backgroundColor: 'trasparent',
+    backgroundColor: 'transparent',
     flex: '1',
     overflowY: 'auto',
     mb: '20px',
-    borderRadius: '0'
+    borderRadius: '0',
+    scrollbarWidth: 'none',
+    '&::-webkit-scrollbar': {
+        display: 'none' 
+    }
 }
 
 export const mainContainer = {
@@ -13,12 +19,13 @@ export const mainContainer = {
         paddingLeft: 0,
         paddingRight: 0,
     },
-    borderRadius: '20px'
+    borderRadius: '20px',
+    justifyContent:'space-between'
 }
 
 
 export const mainCard = {
-    width: '32.85%',
+    width: '32%',
     backgroundColor: 'background.default',
     m: '4px',
     // height: 'fit-content',
@@ -32,6 +39,17 @@ export const mainCard = {
     alignItems: "stretch",
     height:'450px',
     position:'relative',
+
+    [theme.breakpoints.down(710)]: {
+        width: '48%',
+        '&:nth-child(3)': {
+            borderRadius: '0 0px 0 0',
+        },
+        '&:nth-child(2)': {
+            borderRadius: '0 20px 0 0',
+        },
+    }
+    
 }
 
 export const mainCardImg = { 
