@@ -22,15 +22,20 @@ export function btnLink(page: dataPage, pathname: string) {
         alignItems:'center',
         justifyContent: "flex-start",
         [theme.breakpoints.down("md")]: {
-            ml:'-16px',
-            pl:'20px'
+            p:'5px',
+            minWidth:'auto',
+            borderRadius:'0 20px 20px 0',
+
+            '& span':{
+                display:'none'
+            }
         },
 
-        '& span':{
-            [theme.breakpoints.down("md")]: {
-                display:'none'
-            },
-        }
+
+        // [theme.breakpoints.down(500)]: {
+        //     p:'5px 5px 5px 15px',
+        //     minWidth:'auto'
+        // }
     }
 
 }
@@ -73,6 +78,7 @@ export const inputText = {
         backgroundColor: '#1F2128',
         color: '#fff',
         '&.Mui-focused': {
+            
             backgroundColor: '#1F2128',
             color: '#fff',
             '& fieldset': {
@@ -81,16 +87,27 @@ export const inputText = {
         },
     },
     '& .MuiInputLabel-root': {
+        [theme.breakpoints.down('md')]: {
+            fontSize:'14px',
+            lineHeight:'12px',
+        },
         '&.Mui-focused': {
             color: '#fff',
         },
     },
     '& .MuiOutlinedInput-root': {
+        
         '& fieldset': {
             borderColor: '#353842',
         },
 
     },
+    '& .MuiInputBase-input':{
+        [theme.breakpoints.down('md')]: {
+            p:"10px",
+            fontSize:'14px'
+        },
+    }
 }
 
 

@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button'
 import TabsRenderer from './tabs';
+import { theme } from '@/config/ThemeMUI/theme';
 
 
 
@@ -15,6 +16,10 @@ import TabsRenderer from './tabs';
     minWidth: '0',
     mr: '15px',
     borderRadius: '10px',
+
+    [theme.breakpoints.down("md")]: {
+      fontSize:'12px'
+    },
   }
 
 
@@ -37,6 +42,11 @@ export default function Header() {
         borderRadius: '20px',
         backgroundColor: 'background.default',
         padding: '10px 10px',
+
+         [theme.breakpoints.down("md")]: {
+          padding: '5px 5px',
+          borderRadius: '10px',
+        },
       }}
     >
       <Toolbar

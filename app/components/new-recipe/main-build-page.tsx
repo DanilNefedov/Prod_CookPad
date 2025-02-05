@@ -23,7 +23,7 @@ export function MainBuildPage() {
                 display: 'flex',
                 backgroundColor: 'background.default',
                 flexGrow: '1',
-                height: '80vh',
+                // height: '80vh',
                 flexDirection: 'column',
                 overflowY: 'auto',
                 scrollbarColor: "#353842 #1F2128",

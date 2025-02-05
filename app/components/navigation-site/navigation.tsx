@@ -48,6 +48,9 @@ export function NavigationSite() {
             maxWidth: '165px',
             [theme.breakpoints.down("md")]: {
                 maxWidth:'60px'
+            },
+            [theme.breakpoints.down(500)]: {
+                maxWidth:'45px'
             }
         }}>
             <Container 
@@ -62,23 +65,40 @@ export function NavigationSite() {
                     paddingLeft: '12px',
                     paddingRight: '12px',
                     [theme.breakpoints.down("md")]: {
-                        pl:'0'
+                        pl:'0px',
+                        pr:'0',
+                        // ml:'-16px',
+                    },
+
+                    [theme.breakpoints.down(500)]: {
+                        pr:'0'
                     }
                 },
                 // [theme.breakpoints.down("md")]: {
                 //    ml:"-100%"
                 // },
             }}>
-                <Box sx={{[theme.breakpoints.down("md")]: {pl:'7px'}}}>
+                <Box sx={{
+                    // [theme.breakpoints.down("md")]: {
+                    //     pl:'7px'
+                    // },
+                    // [theme.breakpoints.down(500)]: {
+                    //     pl:'0px'
+                    // }
+                    }}>
                     <AboutUser></AboutUser>
                 </Box>
-                <Box sx={{display:'flex', flexDirection:'column'}}>
+                <Box sx={{display:'flex', flexDirection:'column', [theme.breakpoints.down("md")]: {
+                        display:'block'
+                    }}}>
                     {pages.map((page) => (
                         <BtnLinks key={page.path[0]} page={page}></BtnLinks>
                     ))}
                 </Box>
 
-                <Box sx={{display:'flex', justifyContent:'center'}}>
+                <Box sx={{display:'flex', justifyContent:'center',[theme.breakpoints.down("md")]: {
+                        justifyContent:'flex-start'
+                    }}}>
                     <LogOut></LogOut>
                 </Box>
             </Container>

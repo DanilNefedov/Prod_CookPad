@@ -17,15 +17,20 @@ export function LogOut() {
         width: '100%',
 
         [theme.breakpoints.down("md")]: {
-            ml:'-16px',
-            pl:'20px'
+            minWidth:'auto',
+            ml:'0px',
+            p:'5px',
+            borderRadius:'0 20px 20px 0',
+            '& span':{
+                display:'none'
+            }
         },
 
-        '& span':{
-            [theme.breakpoints.down("md")]: {
-                display:'none'
-            },
-        }
+        
+        // [theme.breakpoints.down(500)]: {
+        //     p:'5px 5px 5px 15px',
+        //     minWidth:'auto'
+        // }
     }
 
     return (
@@ -41,7 +46,9 @@ export function LogOut() {
                 type="submit"
                 sx={styleLink}
             >
-                <LogoutIcon sx={{mr:'5px'}}></LogoutIcon>
+                <LogoutIcon sx={{mr:'5px',  [theme.breakpoints.down("md")]: {
+                    mr:'0'
+                },}}></LogoutIcon>
                 <span>Sign Out</span> 
             </Button>
         </form>

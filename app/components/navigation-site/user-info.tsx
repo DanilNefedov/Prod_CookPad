@@ -20,9 +20,15 @@ export function AboutUser() {
                     width: 45, 
                     height: 45,
                     [theme.breakpoints.down("md")]: {
-                        width:40,
-                        height: 40,
-                    }
+                        width:35,
+                        height: 35,
+                    },
+
+                    // [theme.breakpoints.down(500)]: {
+                    //     width:,
+                    //     height: 30,
+                    // }
+
 
                 }}></Avatar>
             </Tooltip>

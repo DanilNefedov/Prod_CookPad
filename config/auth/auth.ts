@@ -70,6 +70,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return token;
     },
   
-  }
+  },
+  cookies: {
+    sessionToken: {
+      name: `authjs.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production", // Только в проде
+      },
+    },
+  },
   
 })

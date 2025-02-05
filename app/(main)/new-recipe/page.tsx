@@ -38,11 +38,15 @@ export default function FormBuild() {
         <Paper sx={{ display: "flex", alignItems: 'center', justifyContent: 'center', boxShadow: 'none', width: '100%', }}>
             <Container sx={{
                 // display: "flex", 
-                p: '0', width: '100%', maxWidth:'100%', 
+                width: '100%', maxWidth:'100%', 
                 '&.MuiContainer-root': {
                     paddingLeft: 0,
                     paddingRight: 0,
                 },
+                display: "flex",
+                flexDirection: "column",
+                height: "100vh",
+                padding: "10px 0",
             }}>
 
                 <StepperProgress></StepperProgress>

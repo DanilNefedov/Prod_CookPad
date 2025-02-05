@@ -1,4 +1,5 @@
 import { btnIncDec, inputText, secondTextInput } from "@/app/main-styles"
+import { theme } from "@/config/ThemeMUI/theme"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { changeHours, changeMinutes, changeName } from "@/state/slices/step-by-step"
 import { Box, Button, TextField, Typography } from "@mui/material"
@@ -85,7 +86,7 @@ export function NameAndTime() {
     // console.log(stepperState)
     return (
         <>
-            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px' }}>Enter the name of the recipe</Typography>
+            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px',[theme.breakpoints.down('md')]: {fontSize:'18px', mt:'10px'} }}>Enter the name of the recipe</Typography>
             <TextField 
                 error={infoPageState?.open && !infoPageState.second_option?.error_status ? true : false}
                 id="outlined-basic" label="Name" variant="outlined"

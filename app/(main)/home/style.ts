@@ -27,7 +27,7 @@ export const mainContainer = {
 export const mainCard = {
     width: '32%',
     backgroundColor: 'background.default',
-    m: '4px',
+    mb: '20px',
     // height: 'fit-content',
     borderRadius: '0',
     '&:nth-child(1)': {
@@ -41,13 +41,24 @@ export const mainCard = {
     position:'relative',
 
     [theme.breakpoints.down(710)]: {
+        height:'350px',
         width: '48%',
-        '&:nth-child(3)': {
-            borderRadius: '0 0px 0 0',
+
+        '&:nth-child(1)': {
+            borderRadius: '10px 0 0 0',
         },
         '&:nth-child(2)': {
-            borderRadius: '0 20px 0 0',
+            borderRadius: '0 10px 0 0',
         },
+        '&:nth-child(3)': {
+            borderRadius: '0 0 0 0',
+        },
+    },
+
+    [theme.breakpoints.down(500)]: {
+        height:'250px',
+        width: '48.5%',
+        m: '0 0 15px 0',
     }
     
 }
@@ -69,6 +80,10 @@ export const contentPostionAbsolute = {
     padding:'7px 15px',
     backdropFilter: 'blur(3px)',
     zIndex:'100',
+
+    [theme.breakpoints.down(500)]: {
+       p:"7px"
+    },
 }
 
 
@@ -89,14 +104,22 @@ export const favoriteBtnActive ={
     color: 'primary.main', 
     '&:hover': { 
         color: 'primary.main' 
-    } 
+    },
+    [theme.breakpoints.down("md")]: {
+        height:'17px',
+        width:'19px'
+    }, 
 }
 
 export const favoriteBtnDesactive = { 
     color: '#8E94A4', 
     '&:hover': { 
         color: 'primary.main' 
-    } 
+    },
+    [theme.breakpoints.down("md")]: {
+        height:'17px',
+        width:'19px'
+    }, 
 }
 
 
@@ -109,5 +132,11 @@ export const cookBtn = {
     "&:hover": { 
         backgroundColor: 'primary.main', 
         color: "text.primary" 
-    }
+    },
+
+    [theme.breakpoints.down("md")]: {
+        fontSize: '12px', 
+        padding: '2px 5px',
+        minWidth:'50px'
+    },
 }

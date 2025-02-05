@@ -14,6 +14,9 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
     [theme.breakpoints.down("md")]: {
       width: "calc(100% - 60px)",
     },
+    [theme.breakpoints.down(500)]: {
+      width:"calc(100% - 45px)",
+    }
   }
 
   return (
@@ -25,7 +28,11 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          [theme.breakpoints.down("md")]: {
+            pl:"10px",
+            pr:'10px'
+          },
         }}>
           {children}
         </Container>
