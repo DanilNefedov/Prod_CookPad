@@ -18,7 +18,7 @@
  .swiper-step-media-main{
     margin-left: inherit;
     margin-right: inherit;
-    width: 60%;
+    width: 90%;
     margin: 0 auto;
 }
 
@@ -45,8 +45,9 @@
 .step-media-main-slide-video, .step-media-main-slide{
     max-width: 100%;
     max-height: 700px;
+    background-color: #000;
     /* height: auto !important; */
-    min-height: 700px;
+    /* min-height: 700px; */
 
     
 }

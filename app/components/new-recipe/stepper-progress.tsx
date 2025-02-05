@@ -6,6 +6,9 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 import { useAppSelector } from '@/state/hook';
+import { Tooltip } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
+import { theme } from '@/config/ThemeMUI/theme';
 
 const namesErrors = [
     'Choose a recipe type', 
@@ -45,7 +48,7 @@ export function StepperProgress() {
                     } = {};
                     if (isStepFailed(elem.step)) {
                         labelProps.optional = (
-                            <Typography variant="caption" color="error">
+                            <Typography variant="caption" color="error" sx={{[theme.breakpoints.down(1250)]:{display:'none'}}}>
                                 {namesErrors[elem.step - 1]}
                             </Typography>
                         );

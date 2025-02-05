@@ -1,5 +1,6 @@
 
 import { MediaObj } from "@/app/types/types";
+import { theme } from "@/config/ThemeMUI/theme";
 import { Box, CardMedia, IconButton, Tooltip } from "@mui/material";
 
 
@@ -21,6 +22,8 @@ export function SwiperStepMedia({ props }: { props: propsData }) {
                 sx={{
                     height: '100%',
                     objectFit: 'cover',
+                    maxHeight:'600px',
+                    
                 }}
                 component='img'
                 src={el.media_url as string}
@@ -29,8 +32,9 @@ export function SwiperStepMedia({ props }: { props: propsData }) {
             :
             <CardMedia
                 sx={{
+                    maxHeight:'600px',
                     height: '100%',
-                    objectFit: 'cover',
+                    // objectFit: 'cover',
                 }}
                 component='video'
                 autoPlay

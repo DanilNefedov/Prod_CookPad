@@ -105,7 +105,8 @@ export const inputText = {
     '& .MuiInputBase-input':{
         [theme.breakpoints.down('md')]: {
             p:"10px",
-            fontSize:'14px'
+            fontSize:'14px',
+            height:'auto'
         },
     }
 }

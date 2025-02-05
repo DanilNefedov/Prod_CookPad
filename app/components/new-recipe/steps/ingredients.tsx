@@ -25,10 +25,10 @@ export function Ingredients() {
             <Typography variant="h6" component="h2" sx={{ textAlign: "center", mb: '10px' }}>
                 Specify the ingredients    
             </Typography>
-            <Tooltip title="Press enter for new ingredients">
-                {/* <IconButton> */}
-                    <InfoIcon />
-                {/* </IconButton> */}
+            <Tooltip title="Press enter for new ingredients"
+            enterTouchDelay={0}
+            >
+                <InfoIcon />
             </Tooltip>
             <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', backgroundColor: 'background.paper', p: '20px', borderRadius: '10px' }}>
 

@@ -5,6 +5,7 @@ import { changeSteps, hasOpen } from "@/state/slices/step-by-step"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { SelectPage } from "./select-page"
 import { saveForm } from "./save-form"
+import { theme } from "@/config/ThemeMUI/theme"
 
 
 
@@ -23,11 +24,13 @@ export function MainBuildPage() {
                 display: 'flex',
                 backgroundColor: 'background.default',
                 flexGrow: '1',
-                // height: '80vh',
+                // height: stepperState.page_step === 3 ? '80vh' : 'initial',
                 flexDirection: 'column',
                 overflowY: 'auto',
                 scrollbarColor: "#353842 #1F2128",
-
+                [theme.breakpoints.down('md')]:{
+                    borderRadius:'10px'
+                }
 
             }}>
                 <SelectPage></SelectPage>
@@ -54,7 +57,7 @@ export function MainBuildPage() {
                     dispatch(hasOpen(stepperState.page_step))
                     console.log('111', stepperState)
                 }}>Back</Button>
-                <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: stepperState.page_step === 6 ? 'none' : 'block', ml: 'auto' }} onClick={(e) => {
+                <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: stepperState.page_step === 6 ? 'none' : 'block', ml: 'auto', mr:'0' }} onClick={(e) => {
                     e.preventDefault()
                     // onHandleNext()
                     const newPage = stepperState.page_step + 1

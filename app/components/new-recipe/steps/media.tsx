@@ -16,6 +16,7 @@ import { Navigation } from 'swiper/modules';
 import { VisuallyHiddenInput, addMainMediaSwiper, btnsSwiperMedia, deleteMediaSwiper } from "@/app/(main)/new-recipe/style";
 import { SwiperStepMedia } from "./swiper-media";
 import { changeMedia, deleteMediaState, hasOpen, setMainMedia } from "@/state/slices/step-by-step";
+import { theme } from "@/config/ThemeMUI/theme";
 
 
 
@@ -72,9 +73,17 @@ export function Media() {
     // console.log(infoPageState)
     return (
         <>
-            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px' }}>Select media</Typography>
-            <Box sx={{ p: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
-                <Button component="label" variant="contained" startIcon={<CloudUploadIcon />} sx={{ maxWidth: '200px', m: '0 auto 20px' }}>
+            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: {fontSize:'18px', mt:'10px'}  }}>Select media</Typography>
+            <Box sx={{ p: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', [theme.breakpoints.down('md')]: {p:'10px'} }}>
+                <Button component="label" variant="contained" startIcon={<CloudUploadIcon />} sx={{
+                    maxWidth: '200px', m: '0 auto 20px',
+                    [theme.breakpoints.down('md')]: {
+                        padding: '5px 10px', 
+                        fontSize: '12px',
+                        
+                    }
+                    
+                }}>
                     Upload file
                     <VisuallyHiddenInput type="file" id="media" accept="image/*, video/*" multiple onChange={(e) => handleFileChange(e)} />
                 </Button>
@@ -83,7 +92,10 @@ export function Media() {
                     fontSize: 13,
                     textAlign: 'center',
                     mt: 2,
-                }} color={"error"} >upload the media file</Typography>
+                    [theme.breakpoints.down('md')]: {
+                        mt:"0"
+                    }
+                }} color={"error"} >Upload the media file</Typography>
 
 
 

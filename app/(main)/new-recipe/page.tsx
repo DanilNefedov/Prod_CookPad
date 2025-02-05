@@ -2,6 +2,7 @@ import Paper from '@mui/material/Paper';
 import { Box, Container } from "@mui/material";
 import { MainBuildPage } from '@/app/components/new-recipe/main-build-page';
 import { StepperProgress } from '@/app/components/new-recipe/stepper-progress';
+import { theme } from '@/config/ThemeMUI/theme';
 
 
 
@@ -35,7 +36,9 @@ export default function FormBuild() {
     // console.log(step, formData, ingredients)
 
     return (
-        <Paper sx={{ display: "flex", alignItems: 'center', justifyContent: 'center', boxShadow: 'none', width: '100%', }}>
+        <Paper sx={{ display: "flex", alignItems: 'center', justifyContent: 'center', boxShadow: 'none', width: '100%', 
+           
+         }}>
             <Container sx={{
                 // display: "flex", 
                 width: '100%', maxWidth:'100%', 
@@ -61,6 +64,7 @@ export default function FormBuild() {
                         // mr: '10px',
                         mt: '20px',
                         width: '100%',
+                        maxHeight:'84vh',
                     }}
                     noValidate
                     autoComplete="off"
