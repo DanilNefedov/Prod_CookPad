@@ -124,7 +124,9 @@ export function TypeDish() {
 
             [theme.breakpoints.down('md')]: {
               fontSize:'14px',
+              minHeight:'33px',
             },
+            
             '&.MuiMenuItem-root': {
               // backgroundColor: '#1F2128',
               color: '#fff',

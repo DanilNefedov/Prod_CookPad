@@ -39,6 +39,16 @@ export function StepperProgress() {
                     '& .MuiStepConnector-root.Mui-completed .MuiStepConnector-line': {
                         borderColor: '#FF7269', 
                     },
+                    '& .MuiStepLabel-iconContainer':{
+                        [theme.breakpoints.down(500)]: {
+                            p:'0',
+                            
+                            '& svg':{
+                                width:'19px',
+                                height:'19px',
+                            }
+                        }
+                    }
                 }}
             >
                 {stepperState.steps_info.map((elem) => {

@@ -73,16 +73,16 @@ export function Media() {
     // console.log(infoPageState)
     return (
         <>
-            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: {fontSize:'18px', mt:'10px'}  }}>Select media</Typography>
-            <Box sx={{ p: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', [theme.breakpoints.down('md')]: {p:'10px'} }}>
+            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px' } }}>Select media</Typography>
+            <Box sx={{ p: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', [theme.breakpoints.down('md')]: { p: '10px' } }}>
                 <Button component="label" variant="contained" startIcon={<CloudUploadIcon />} sx={{
                     maxWidth: '200px', m: '0 auto 20px',
                     [theme.breakpoints.down('md')]: {
-                        padding: '5px 10px', 
+                        padding: '5px 10px',
                         fontSize: '12px',
-                        
+
                     }
-                    
+
                 }}>
                     Upload file
                     <VisuallyHiddenInput type="file" id="media" accept="image/*, video/*" multiple onChange={(e) => handleFileChange(e)} />
@@ -93,7 +93,7 @@ export function Media() {
                     textAlign: 'center',
                     mt: 2,
                     [theme.breakpoints.down('md')]: {
-                        mt:"0"
+                        mt: "0"
                     }
                 }} color={"error"} >Upload the media file</Typography>
 
@@ -116,24 +116,70 @@ export function Media() {
                             {/* </SwiperStepMedia> */}
 
                             <Tooltip title="Main" >
-                                <IconButton sx={{ ...btnsSwiperMedia, ...deleteMediaSwiper, }} onClick={() => handleMain(el.media_id)}>
-                                    <GradeIcon sx={{ color: el.main ? 'primary.main' : 'text.primary', }} />
+                                <IconButton sx={{
+                                    ...btnsSwiperMedia, ...addMainMediaSwiper, [theme.breakpoints.down(500)]: {
+                                        width: '25px',
+                                        height: '25px'
+                                    }
+                                }} onClick={() => handleMain(el.media_id)}>
+                                    <GradeIcon sx={{
+                                        color: el.main ? 'primary.main' : 'text.primary', [theme.breakpoints.down(500)]: {
+                                            width: '18px',
+                                            height: '18px'
+                                        }
+                                    }} />
                                 </IconButton>
                             </Tooltip>
 
                             <Tooltip title="Delete" >
-                                <IconButton sx={{ ...btnsSwiperMedia, ...addMainMediaSwiper }} onClick={() => deleteMedia(el.media_id)}>
-                                    <ClearIcon sx={{ color: 'text.primary', }} />
+                                <IconButton sx={{
+                                    ...btnsSwiperMedia, ...deleteMediaSwiper, [theme.breakpoints.down(500)]: {
+                                        width: '25px',
+                                        height: '25px'
+                                    }
+                                }} onClick={() => deleteMedia(el.media_id)}>
+                                    <ClearIcon sx={{
+                                        color: 'text.primary', [theme.breakpoints.down(500)]: {
+                                            width: '18px',
+                                            height: '18px'
+                                        }
+                                    }} />
                                 </IconButton>
                             </Tooltip>
 
                         </SwiperSlide>
                     ))}
-                    <Box className='btn-next-step-media' sx={{borderRadius: '50%', backgroundColor: 'background.paper', width:'35px', height:'35px', right:'10px'}}> 
-                        <ArrowRightIcon viewBox="3 3 17 17" sx={{ fontSize: 35, right:'1px', bottom:'1px',position:'relative'}}></ArrowRightIcon>
+                    <Box className='btn-next-step-media' sx={{
+                        borderRadius: '50%', backgroundColor: 'background.paper', width: '35px', height: '35px', right: '10px',
+                        [theme.breakpoints.down(500)]: {
+                            width: '25px',
+                            height: '25px'
+                        }
+
+                    }}>
+                        <ArrowRightIcon viewBox="3 3 17 17" sx={{
+                            fontSize: 35, right: '1px', bottom: '1px', position: 'relative',
+                            [theme.breakpoints.down(500)]: {
+                                width: '25px',
+                                height: '25px'
+                            }
+                        }}></ArrowRightIcon>
                     </Box>
-                    <Box className='btn-prev-step-media' sx={{borderRadius: '50%', backgroundColor: 'background.paper', width:'35px', height:'35px', left:'10px'}}>
-                        <ArrowLeftIcon viewBox="3 3 17 17" sx={{ fontSize: 35, right:'3px', bottom:'1px',position:'relative'}}></ArrowLeftIcon>
+                    <Box className='btn-prev-step-media' sx={{
+                        borderRadius: '50%', backgroundColor: 'background.paper', width: '35px', height: '35px', left: '10px',
+                        [theme.breakpoints.down(500)]: {
+                            width: '25px',
+                            height: '25px'
+                        }
+                    }}>
+                        <ArrowLeftIcon viewBox="3 3 17 17" sx={{
+                            fontSize: 35, right: '3px', bottom: '1px', position: 'relative',
+                            [theme.breakpoints.down(500)]: {
+                                width: '25px',
+                                height: '25px',
+                                right: '2px'
+                            }
+                        }}></ArrowLeftIcon>
                     </Box>
 
                 </Swiper>

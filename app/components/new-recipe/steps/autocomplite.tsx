@@ -1,11 +1,12 @@
 import { IngredientForState, ingredintFetch } from "@/app/types/types";
 import { useAppDispatch } from "@/state/hook";
-import { Autocomplete, Box, debounce, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, debounce, ListItem, TextField, Typography } from "@mui/material";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { fetchLocationSuggestions } from "./request-search";
 import { secondTextInput } from "@/app/main-styles";
 import { v4 as uuidv4 } from 'uuid';
 import { choiceAutocomplite, choiceUnits, errorAutocomplite, ingredientAmount } from "@/state/slices/step-by-step";
+import { theme } from "@/config/ThemeMUI/theme";
 
 
 interface AutocompleteProps {
@@ -90,22 +91,34 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
     function isDisabled() {
         if (Array.isArray(ingredient.units)) {
             return ingredient.units.length > 0;
-        } 
+        }
 
         const hasUnits = inputValue !== '' && ingredient.units.amount !== 0;
         return !hasUnits && ingredient.units.list.length === 0;
     }
 
-    function cahngeUnits(newValue:string) {
+    function cahngeUnits(newValue: string) {
         dispatch(choiceUnits({ ingredient_id: ingredient.ingredient_id, choice: newValue || '' }));
         dispatch(errorAutocomplite(ingredient.ingredient_id));
     }
-    
+
 
     return (
         <>
-            <Box sx={{ width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'background.default' }}>
-                <Box sx={{ width: '100%', height: '100%', padding: '7px' }} component="img" src={ingredient.media !== '' ? ingredient.media : 'images/load-ingr.svg'} alt={ingredient.name} loading="lazy"></Box>
+            <Box sx={{
+                width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'background.default',
+                [theme.breakpoints.down('md')]: {
+                    width: '30px',
+                    height: '30px'
+                }
+            }}>
+                <Box sx={{
+                    width: '100%', height: '100%', padding: '7px', [theme.breakpoints.down('md')]: {
+                        p: '5px'
+                    }
+                }} component="img"
+                    src={ingredient.media !== '' ? ingredient.media : 'images/load-ingr.svg'} alt={ingredient.name}
+                    loading="lazy"></Box>
             </Box>
 
             <Autocomplete
@@ -114,6 +127,10 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                     ...secondTextInput,
                     '& .MuiInputBase-input': {
                         p: '6px 10px 6px',
+                        [theme.breakpoints.down('md')]: {
+                            fontSize: '14px',
+                            p: '5px 2px 5px !important'
+                        }
                     },
                     '& .MuiInputLabel-root': {
                         top: '-10px',
@@ -131,6 +148,9 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                         color: '#fff',
                     },
                     flexGrow: '1',
+                    [theme.breakpoints.down(500)]: {
+                        width: '80%'
+                    }
                 }}
                 getOptionLabel={(option) => (typeof option === 'string' ? option : option.name)}
                 filterOptions={(x) => x}
@@ -176,8 +196,16 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                 }}
                 renderInput={(params) => <TextField error={open && !error ? true : false} {...params} placeholder="Add an ingredient" fullWidth />}
                 renderOption={(props, option) => (
-                    <li
-                        style={{ color: '#fff', maxWidth: '100%' }}
+                    <ListItem
+                        sx={{
+                            color: '#fff', maxWidth: '100%',
+                            '&.MuiListItem-root.MuiListItem-gutters': {
+                                minHeight: '40px',
+                                [theme.breakpoints.down('md')]: {
+                                    minHeight: '33px'
+                                }
+                            }
+                        }}
                         {...props}
                         key={uuidv4()}
                     >
@@ -189,7 +217,6 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                                 width: '100%',
                             }}
                         >
-                            <Box sx={{ display: 'flex', width: 100 }}></Box>
 
                             <Box
                                 sx={{
@@ -217,7 +244,7 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                                 </Typography>
                             </Box>
                         </Box>
-                    </li>
+                    </ListItem>
 
                 )}
             />
@@ -238,6 +265,11 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                     ...secondTextInput,
                     '& .MuiInputBase-input': {
                         p: '7.5px 12px 7.5px',
+
+                        [theme.breakpoints.down('md')]: {
+                            fontSize: '14px',
+                            p: '5px 10px 5px '
+                        }
                     },
                     '& .MuiInputLabel-root': {
                         top: '-10px',
@@ -250,11 +282,19 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                     },
                     '&&': {
                         m: '4px',
+                        [theme.breakpoints.down(500)]: {
+                            ml: '0',
+
+                        }
                     },
                     '& .MuiButtonBase-root': {
                         color: '#fff',
                     },
                     width: '15%',
+                    [theme.breakpoints.down(500)]: {
+                        width: '37%',
+
+                    }
                 }}
             />
             <Autocomplete
@@ -266,20 +306,54 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                     cahngeUnits(newValue)
                 }}
                 renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        placeholder="Units"
-                        variant="outlined"
-                        inputProps={{
-                            ...params.inputProps,
-                            maxLength: 10,
-                        }}
-                    />
+                        <TextField
+                            {...params}
+                            placeholder="Units"
+                            variant="outlined"
+                            inputProps={{
+                                ...params.inputProps,
+                                maxLength: 10,
+                            }}
+                        // sx={{
+                            
+                        //     [theme.breakpoints.down('md')]: {
+                        //         minHeight:'33px'
+                        //     }
+                        // }}
+                        />
+
                 )}
+                slotProps={{
+                    popper: {
+                      modifiers: [
+                        {
+                          name: "preventOverflow",
+                          options: {
+                            boundary: "window",
+                          },
+                        },
+                      ],
+                    },
+                    paper: {
+                      sx: {
+                        "& .MuiAutocomplete-option": {
+                          [theme.breakpoints.down("md")]: {
+                            minHeight: "33px",
+                            fontSize:'14px'
+                          },
+                        },
+                      },
+                    },
+                  }}
                 sx={{
                     ...secondTextInput,
                     '& .MuiInputBase-input': {
                         p: '7.5px 12px 7.5px',
+
+                        [theme.breakpoints.down('md')]: {
+                            fontSize: '14px',
+                            p: '5px 0px 5px !important'
+                        }
                     },
                     '& .MuiInputLabel-root': {
                         top: '-10px',
@@ -297,6 +371,11 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                         color: '#fff',
                     },
                     width: '15%',
+                    [theme.breakpoints.down(500)]: {
+                        width: '37%',
+
+                    },
+
                 }}
             />
 

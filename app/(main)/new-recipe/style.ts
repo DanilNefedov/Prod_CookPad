@@ -29,11 +29,11 @@ export const btnsSwiperMedia = {
 }
 
 
-export const deleteMediaSwiper = {
+export const addMainMediaSwiper = {
     left: '10px'
 }
 
 
-export const addMainMediaSwiper = {
+export const  deleteMediaSwiper= {
     right: '10px'
 }

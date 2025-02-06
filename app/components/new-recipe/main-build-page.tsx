@@ -35,7 +35,12 @@ export function MainBuildPage() {
             }}>
                 <SelectPage></SelectPage>
 
-                {stepperState.page_step === 6 ? <Button variant="contained" color='darkButton' sx={{ ...styleLink, width: '150px', m: '0 auto' }} onClick={(e) => {
+                {stepperState.page_step === 6 ? <Button variant="contained" color='darkButton' sx={{ ...styleLink, 
+                width: '150px', m: '0 auto',
+                [theme.breakpoints.down(500)]: {
+                    width:"100px"
+                }
+                }} onClick={(e) => {
                     e.preventDefault()
                     saveForm(stepperState, id, dispatch, namaUser)
                     // savePhoto()
