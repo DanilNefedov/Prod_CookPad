@@ -4,10 +4,6 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { IFetchDataRecipe, IRecipeSlice, MainRecipeT } from "@/app/types/types";
 
 
-type MyAsyncThunkReturn = {
-    data: IFetchDataRecipe;
-    recipeData: IRecipeSlice;
-};
 
 const initialState: IRecipeSlice = {
     status: false,

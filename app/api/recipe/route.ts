@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
       await Recipe.updateOne(
         { _id: newRecipe._id },
-        { $push: { recipe_popular_config: saveData._id } }
+        { $set: { recipe_popular_config: saveData._id } }
       );
     }
 
@@ -72,7 +72,7 @@ export async function GET(request: Request) {
   
       const recipes = await Recipe.find({ connection_id })
         .sort({ createdAt: -1 })
-        .select("-_id -__v -createdAt -updatedAt -connection_id") 
+        .select("recipe_id name time media recipe_type description favorite sorting -_id") 
         .skip(skip)
         .limit(limit)
         .lean(); // for faster queries

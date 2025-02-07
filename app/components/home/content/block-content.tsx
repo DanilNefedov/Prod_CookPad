@@ -37,7 +37,7 @@ export function BlockContent() {
   }, [id]);
 
   const filteredRecipes = recipeStore.recipes.filter(recipe => recipe.sorting.includes(nav));
-
+  console.log(recipeStore)
   return (
     <>
       {recipeStore.recipes.length > 0 ? (

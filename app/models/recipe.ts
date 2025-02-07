@@ -80,10 +80,10 @@ const RecipeSchema = new Schema(
       type:[IngredientSchema],
       required:true
     },
-    recipe_popular_config:[{ 
+    recipe_popular_config:{ 
       type: mongoose.Schema.Types.ObjectId, 
       ref: 'RecipePopularConfig' 
-    }]
+    }
   },
   {
     timestamps:true
