@@ -1,0 +1,65 @@
+
+.swiper-cook > .swiper-wrapper{
+    margin: 10px 0;
+    flex-direction: inherit;
+}
+.cook-slide{
+    background-color: #353842;
+    margin: 0 10px 10px 0 !important; /*can be misstake*/
+    border-radius: 10px;
+
+}
+
+.btn-prev-cook, .btn-next-cook{
+    position: absolute;
+    height: 35px;
+    width: 35px;
+    top:calc(50% - 22px);
+    cursor: pointer;
+}
+
+.btn-next-cook{
+    right: -17px; 
+}
+
+.btn-prev-cook{
+    left: -17px; 
+}
+
+.swiper-cook .swiper-button-disabled svg{
+    color:#353842;
+    cursor: auto;
+}
+
+
+
+
+.cook-media-main-slide-video{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+}
+.cook-media-main-slide{
+    max-height: 700px;
+    
+}
+.swiper-cook-media-main{
+    /* background-color: brown; */
+    position: relative;
+    /* height: 100%; */
+}
+
+
+.btn-next-cook-media, .btn-prev-cook-media{
+    position: absolute;
+    z-index: 100;
+    top:calc(50% - 12px);
+}
+.btn-prev-cook-media{
+    left: 0px;
+}
+
+.btn-next-cook-media{
+    right: 0px;
+}

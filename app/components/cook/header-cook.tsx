@@ -49,13 +49,6 @@ export function HeaderCook({ recipe_id }: { recipe_id: string }) {
                             {el.recipe_name}
                         </Button>
 
-                        {/* // mb this need to delete
-                        <Button onClick={() => handleDeleteRecipe(el.recipe_id)} sx={deleteHeaderCook}>
-                            <ClearIcon sx={{color:'#8E94A4'}}></ClearIcon>
-                        </Button>
-                        // mb this need to delete */}
-                        
-                        
                         
                         <DeleteButton recipe_id={el.recipe_id}></DeleteButton>
                     </Box>

@@ -72,6 +72,7 @@ export async function PATCH(request: Request) {
         const data = await request.json();
         const { connection_id, history_links } = data;
 
+        console.log(history_links, 'history_linkshistory_linkshistory_linkshistory_linkshistory_links')
         const filter = {
             connection_id,
             'history_links.recipe_id': { $ne: history_links.recipe_id }

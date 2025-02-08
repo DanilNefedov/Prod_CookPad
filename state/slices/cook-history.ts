@@ -69,6 +69,7 @@ export const newCookHistory = createAsyncThunk<newCookHistoryT, newCookHistoryT,
             }
 
             const newHeader = await response.json();
+            console.log(data, newHeader)
             return data;
 
         }catch(error){

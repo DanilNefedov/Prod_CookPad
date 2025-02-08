@@ -240,13 +240,13 @@ export type TempalateRecipe = {
 
 // ---------------------------------- COOK PAGE --------------------------------//
 export type CookPageT = TempalateRecipe & {
-    instruction:string | null ,
+    instruction:string,
     sorting:string[],
     ingredients:IngredientForState[],
 }
 
 export type FetchCookPage = {
-    connection_id:string | null,
+    connection_id:string ,
     recipes:CookPageT[]
 }
 
