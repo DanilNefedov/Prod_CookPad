@@ -84,7 +84,7 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
             <ListItemAvatar >
                 <Avatar
                     alt={el.name}
-                    src={el.media}
+                    src={el.media !== '' ? el.media : '/images/load-ingr.svg'}
                     sx={avatartIngredient}
                 />
             </ListItemAvatar>

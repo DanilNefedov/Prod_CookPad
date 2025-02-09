@@ -167,7 +167,7 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                             ingredient_id: ingredient.ingredient_id,
                             name: newValue,
                             new_ingredient: true,
-                            media: 'images/load-ingr.svg',
+                            media: '',
                             units: ['kg', 'g', 'ml', 'l'],
                         };
                         setValue(newIngredient);

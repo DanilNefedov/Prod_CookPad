@@ -38,16 +38,16 @@ export function ContentCook({ recipe_id }: { recipe_id: string }) {
     useEffect(() => {
         async function fetchData() {
             if (!findCook && id !== '') {
-                // console.log(findCook)
+                console.log(findCook)
                 dispatch(fetchCook({ id, recipe_id}))
                 // dispatch(fetchNameLinks(id))
             }
         }
 
         fetchData();
-    }, [id]);
+    }, [id, recipe_id]);
 
-    // console.log(cookStore, findCook)
+    console.log(findCook, recipe_id)
 
 
     const handlerFavorite = ({ recipe_id }: { recipe_id: string | null | undefined }): void => {

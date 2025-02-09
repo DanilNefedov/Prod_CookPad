@@ -2,6 +2,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 // import { setFavoriteCook } from './cookSlice';
 import { IFetchDataRecipe, IRecipeSlice, MainRecipeT } from "@/app/types/types";
+import { setFavoriteCook } from "./cook";
 
 
 
@@ -56,8 +57,7 @@ export const setFavoriteRecipe = createAsyncThunk<favoriteDataRecipeT, favoriteD
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-            // dispatch(setFavoriteCook(data))
-           //DES COMMIT THIS DISPATCH
+            dispatch(setFavoriteCook(data))
             return data;
 
         }catch(error){

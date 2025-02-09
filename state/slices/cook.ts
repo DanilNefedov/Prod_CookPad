@@ -66,8 +66,13 @@ export const fetchCook = createAsyncThunk<fetchDataT, { id: string, recipe_id: s
 
             if (!responseCook.ok) return rejectWithValue('Server Error!');
 
-            const dataCook = await responseCook.json()
-            dispatch(newCookHistory({ connection_id: id, history_links: { recipe_id, recipe_name: dataCook.name } }))
+            const data = await responseCook.json()
+
+            const {dataCook, isInHistory} = data
+
+            if(!isInHistory){
+                dispatch(newCookHistory({ connection_id: id, history_links: { recipe_id, recipe_name: recipeExists ? recipeExists.name : dataCook.name } }))
+            }
 
             if(recipeExists){
                 const mergedRecipe = merge({}, recipeExists, dataCook);
@@ -124,8 +129,11 @@ const cookSlice = createSlice({
     name: 'cook',
     initialState,
     reducers: {
-        updateStatus(state, action: PayloadAction<string, string>) {
-            state.name_status = action.payload
+        // updateStatus(state, action: PayloadAction<string, string>) {
+        //     state.name_status = action.payload
+        // },
+        deleteCookRecipe(state, action: PayloadAction<string, string>){
+
         },
 
         setFavoriteCook(state, action: PayloadAction<favoriteDataRecipeT, string>) {
@@ -151,7 +159,7 @@ const cookSlice = createSlice({
                     const payload = action.payload;
 
                     state.connection_id = payload.connection_id
-
+                    console.log(payload)
                     state.recipes.push(payload.recipe)
                 }
             })

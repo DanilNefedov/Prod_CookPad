@@ -83,25 +83,22 @@ export const newCookHistory = createAsyncThunk<newCookHistoryT, newCookHistoryT,
 export const deleteCookHistory = createAsyncThunk<{connection_id:string, recipe_id:string}, {connection_id:string, recipe_id:string}, {rejectValue: string}>(
     'cook-history/deleteCookHistory',
     async function ({connection_id, recipe_id}, {rejectWithValue}){
-        try{
+        try {
             const response = await fetch(`/api/cook/history/${recipe_id}`, {
                 method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({connection_id, recipe_id}),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ connection_id, recipe_id }),
             });
 
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
 
-            const newHeader = await response.json();
-            return {connection_id, recipe_id};
+            return { connection_id, recipe_id };
 
-        }catch(error){
-            console.error(error)
-            throw error
+        } catch (error) {
+            console.error(error);
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -159,13 +156,13 @@ const CookHistorySlice = createSlice({
             state.status = true,
             state.error = false
         })
-        .addCase(deleteCookHistory.fulfilled, (state, action: PayloadAction<{connection_id:string, recipe_id:string}, string>) => {
+        .addCase(deleteCookHistory.fulfilled, (state, action: PayloadAction<{ connection_id: string, recipe_id: string }>) => {
             state.status = false;
             state.error = false;
-
+        
             state.history_links = state.history_links.filter(link => link.recipe_id !== action.payload.recipe_id);
-
-        })
+        });
+        
            
     }
 })

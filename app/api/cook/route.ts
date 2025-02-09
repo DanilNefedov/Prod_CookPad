@@ -1,4 +1,5 @@
 import connectDB from "@/app/lib/mongoose"
+import CookHistory from "@/app/models/cook-history";
 import Recipe from "@/app/models/recipe"
 import { NextResponse } from "next/server"
 
@@ -25,18 +26,25 @@ export async function GET(request: Request) {
             ? "instruction ingredients -_id"
             : "recipe_id name time media recipe_type description favorite sorting instruction ingredients -_id";
 
-        const cook = await Recipe.findOne({ recipe_id, connection_id })
+        const cookHistory = await CookHistory.findOne({
+            connection_id,
+            "history_links.recipe_id": recipe_id
+        }).select("_id").lean();
+
+        const isInHistory = !!cookHistory; // for new header cook
+
+        const dataCook = await Recipe.findOne({ recipe_id, connection_id })
             .select(selectedFields)
             .lean(); 
 
-        if (!cook) {
+        if (!dataCook) {
             return NextResponse.json(
                 { message: "Recipe not found" },
                 { status: 404 }
             );
         }
 
-        return NextResponse.json(cook, { status: 200 });
+        return NextResponse.json({dataCook, isInHistory}, { status: 200 });
 
     } catch (error) {
         console.error("GET /api/cook/recipe error:", error);
