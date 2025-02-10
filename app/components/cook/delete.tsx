@@ -1,18 +1,23 @@
 import { Button } from "@mui/material";
 import ClearIcon from '@mui/icons-material/Clear';
-import { usePathname, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { deleteCookHistory } from "@/state/slices/cook-history";
 import { deleteHeaderCook } from "@/app/(main)/cook/[recipe_id]/styles";
 
 
+interface PropsData { 
+    recipe_id: string, 
+    activePage:string 
+}
 
-export function DeleteButton({ recipe_id }: { recipe_id: string }) {
+
+export function DeleteButton({props}: {props:PropsData}) {
     const cookHistoryStore = useAppSelector(state => state.cookHistory)
     const dispatch = useAppDispatch()
     const router = useRouter();
-    const pathname = usePathname()
-    const activePage = pathname.split('/').pop();
+    const {recipe_id, activePage} = props
+    // const activePage = pathname.split('/').pop();
 
 
     function handleDeleteRecipe(recipe_id: string) {

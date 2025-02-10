@@ -26,28 +26,29 @@ import { SwiperMediaCook } from "./swiper-media";
 
 
 export function ContentCook({ recipe_id }: { recipe_id: string }) {
+    
     const dispatch = useAppDispatch()
     const cookStore = useAppSelector(state => state.cook)
     const userStore = useAppSelector(state => state.user)
     // const recipeStore = useAppSelector(state => state.recipe)
 
     // const thisRecipe = recipeStore.recipes.find(el => el.recipe_id === recipe_id)
-    const id = userStore?.user?.connection_id
+    const id = userStore.user.connection_id
     const findCook = cookStore.recipes.find(el => el.recipe_id === recipe_id)
 
     useEffect(() => {
-        async function fetchData() {
-            if (!findCook && id !== '') {
-                console.log(findCook)
-                dispatch(fetchCook({ id, recipe_id}))
-                // dispatch(fetchNameLinks(id))
-            }
+        console.log(findCook, userStore.user.connection_id, cookStore)
+        // async function fetchData() {
+        if (!findCook && userStore.user.connection_id !== '') {
+            console.log(findCook)
+            dispatch(fetchCook({ id, recipe_id}))
+            // dispatch(fetchNameLinks(id))
         }
+        // }
 
-        fetchData();
+        // fetchData();
     }, [id, recipe_id]);
-
-    console.log(findCook, recipe_id)
+    // console.log(findCook, recipe_id, cookStore)
 
 
     const handlerFavorite = ({ recipe_id }: { recipe_id: string | null | undefined }): void => {

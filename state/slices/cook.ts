@@ -61,7 +61,7 @@ export const fetchCook = createAsyncThunk<fetchDataT, { id: string, recipe_id: s
         try {
             const state = getState() as RootState
             const recipeExists = state.recipe.recipes.find(el => el.recipe_id === recipe_id)
-
+            console.log('createAsyncThunkcreateAsyncThunkcreateAsyncThunk')
             const responseCook = await fetch(`/api/cook?connection_id=${id}&recipe=${recipe_id}&recipeExists=${recipeExists ? true : false}`);
 
             if (!responseCook.ok) return rejectWithValue('Server Error!');
@@ -128,6 +128,7 @@ export const deleteRecipe = createAsyncThunk<DataDelete, DataDelete, { rejectVal
 const cookSlice = createSlice({
     name: 'cook',
     initialState,
+    
     reducers: {
         // updateStatus(state, action: PayloadAction<string, string>) {
         //     state.name_status = action.payload
@@ -157,12 +158,16 @@ const cookSlice = createSlice({
                     state.status = false;
                     state.error = false;
                     const payload = action.payload;
-
-                    state.connection_id = payload.connection_id
-                    console.log(payload)
-                    state.recipes.push(payload.recipe)
+            
+                    state.connection_id = payload.connection_id;
+                    
+                    const existingRecipe = state.recipes.find(el => el.recipe_id === payload.recipe.recipe_id);
+                    if (!existingRecipe) {
+                        state.recipes.push(payload.recipe);
+                    }
                 }
             })
+            
             .addCase(fetchCook.rejected, (state) => {
                 state.status = false;
                 state.error = true;

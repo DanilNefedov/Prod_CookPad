@@ -252,6 +252,7 @@ export type FetchCookPage = {
 
 export type CookSliceT = FetchCookPage & ErrorStatus & {
     name_status:string,
+    // activeRequests: Set<string>,
     // name_links:INameLinks[]
 }
 // export interface ICookSliceInit extends MainRecipePage{

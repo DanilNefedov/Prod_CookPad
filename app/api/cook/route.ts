@@ -19,7 +19,7 @@ export async function GET(request: Request) {
                 { status: 400 }
             );
         }
-
+        
         await connectDB();
 
         const selectedFields = recipeExists
@@ -43,7 +43,7 @@ export async function GET(request: Request) {
                 { status: 404 }
             );
         }
-
+        console.log('13123123123123123123123123123123123123123123123')
         return NextResponse.json({dataCook, isInHistory}, { status: 200 });
 
     } catch (error) {

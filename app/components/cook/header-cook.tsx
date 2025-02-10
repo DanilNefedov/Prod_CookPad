@@ -8,6 +8,7 @@ import { Box, Button } from "@mui/material";
 import Link from "next/link";
 import { useEffect } from "react";
 import { DeleteButton } from "./delete";
+import { fetchCook } from "@/state/slices/cook";
 
 
 
@@ -21,10 +22,12 @@ export function HeaderCook({ recipe_id }: { recipe_id: string }) {
 
 
     useEffect(() => {
-        if (!userStore.user.connection_id) return;
-        dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id }));
+        if (userStore.user.connection_id !== '' && cookHistoryStore.history_links.length <= 0){
+            dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id }));
+        };
+        
 
-    }, [recipe_id, userStore.user.connection_id])//cookHistoryStore.history_links, recipe_id
+    }, [userStore.user.connection_id])//cookHistoryStore.history_links, recipe_id
 
 
     return (
@@ -48,7 +51,7 @@ export function HeaderCook({ recipe_id }: { recipe_id: string }) {
                         </Button>
 
                         
-                        <DeleteButton recipe_id={el.recipe_id}></DeleteButton>
+                        <DeleteButton props={{recipe_id:el.recipe_id, activePage:recipe_id}}></DeleteButton>
                     </Box>
 
                 ))
