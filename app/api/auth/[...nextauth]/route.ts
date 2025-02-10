@@ -1,3 +1,6 @@
+export const runtime = "nodejs";
+
+
 import { handlers } from "@/config/auth/auth";
 
 

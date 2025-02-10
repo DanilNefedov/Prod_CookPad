@@ -1,3 +1,6 @@
+export const runtime = "nodejs";
+
+
 import connectDB from "@/app/lib/mongoose";
 import User from "@/app/models/user";
 import NextAuth from "next-auth";
