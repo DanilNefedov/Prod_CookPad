@@ -82,9 +82,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       options: {
         httpOnly: true,
         sameSite: "lax",
-        secure: process.env.NODE_ENV === "production", // Только в проде
+        secure: process.env.NODE_ENV === "production",
       },
     },
   },
-  
+  session: {
+    strategy: "jwt", 
+  },
 })
