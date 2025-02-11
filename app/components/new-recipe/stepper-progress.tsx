@@ -6,8 +6,6 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 import { useAppSelector } from '@/state/hook';
-import { Tooltip } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
 import { theme } from '@/config/ThemeMUI/theme';
 
 const namesErrors = [

@@ -1,6 +1,5 @@
 // import { Ingredients } from '@/types/types';
-import mongoose from "mongoose";
-import { ChangeEvent, Dispatch, ReactNode, SetStateAction } from "react";
+import { ReactNode } from "react";
 
 export interface RequestData <T>{
     url: string;
@@ -508,7 +507,7 @@ export type commListData = {
     answer_count:number,
     likes_count:number,
     reply_list?:replyCommData[],
-    createdAt?:String,
+    createdAt?:string,
     liked?:boolean
 }
 
@@ -522,7 +521,7 @@ export type replyCommData = {
     name_parent:string,
     text: string,
     likes_count:number,
-    createdAt?:String,
+    createdAt?:string,
     liked?:boolean
 }
 // -------------------------------------  POPULAR ----------------------------//

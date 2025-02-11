@@ -1,6 +1,5 @@
-import { mainCardImg } from "@/app/(main)/home/style";
 import { MediaObj } from "@/app/types/types";
-import { Box, CardMedia } from "@mui/material";
+import { CardMedia } from "@mui/material";
 
 
 

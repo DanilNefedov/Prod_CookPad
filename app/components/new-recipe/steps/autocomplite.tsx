@@ -161,7 +161,7 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                 freeSolo
                 value={value}
                 noOptionsText="No ingredients"
-                onChange={(event: any, newValue: IngredientForState | string | null) => {
+                onChange={(event, newValue: IngredientForState | string | null) => {
                     if (typeof newValue === 'string') {
                         const newIngredient = {
                             ingredient_id: ingredient.ingredient_id,

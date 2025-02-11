@@ -228,7 +228,7 @@ export async function saveForm(state: StateStepper, id: string, dispatch: AppDis
                                 const result = await response.json();
 
                                 if (result.body && result.body.length > 0) {
-                                    const response = await fetch('/api/ingredients', {
+                                    await fetch('/api/ingredients', {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',

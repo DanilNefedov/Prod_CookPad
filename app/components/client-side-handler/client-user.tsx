@@ -14,7 +14,7 @@ export function ClientUser() {
     if (connection_id) {
       dispatch(fetchUser(connection_id));
     }
-  }, [connection_id]);
+  }, [dispatch, connection_id]);
 
   return null;
 }

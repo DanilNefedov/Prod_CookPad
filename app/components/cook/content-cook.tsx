@@ -9,7 +9,6 @@ import { useEffect } from "react";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { favoriteBtnActive, favoriteBtnDesactive } from "@/app/(main)/home/style";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import React, { useRef } from "react";
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';

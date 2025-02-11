@@ -3,7 +3,6 @@
 import { theme } from '@/config/ThemeMUI/theme';
 import { useAppSelector } from '@/state/hook';
 import { Avatar, Box, Tooltip, Typography } from '@mui/material';
-import Image from 'next/image';
 
 
 

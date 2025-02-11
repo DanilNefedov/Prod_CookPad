@@ -6,10 +6,10 @@ import NextLink from 'next/link';
 import { useState } from 'react';
 import { useNavigationState } from '../context-navigation';
 
-interface RenderedNavigationItem {
-  _id: string | null;
-  typeNav: string | null;
-}
+// interface RenderedNavigationItem {
+//   _id: string | null;
+//   typeNav: string | null;
+// }
 
 interface TabsRendererProps {
   styleLink: object;
@@ -49,7 +49,7 @@ export default function TabsRenderer({ styleLink }: TabsRendererProps) {
             sx={styleLink}
             component={NextLink}
             href="#"
-            onClick={(e) => handlerNavigation(sortingItem)}
+            onClick={() => handlerNavigation(sortingItem)}
           />
         );
       })
@@ -77,7 +77,7 @@ export default function TabsRenderer({ styleLink }: TabsRendererProps) {
         sx={styleLink}
         component={NextLink}
         href="#"
-        onClick={(e) => handlerNavigation('all')}
+        onClick={() => handlerNavigation('all')}
       />
       
       {tabs}

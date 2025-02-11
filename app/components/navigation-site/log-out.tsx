@@ -1,4 +1,3 @@
-import NextLink from 'next/link'
 import { Button } from '@mui/material'
 import { signOut } from '@/config/auth/auth'
 import LogoutIcon from '@mui/icons-material/Logout';

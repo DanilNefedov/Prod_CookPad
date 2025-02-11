@@ -1,7 +1,7 @@
 import { theme } from "@/config/ThemeMUI/theme";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { changeType, openRecommendation } from "@/state/slices/step-by-step";
-import { Button, Checkbox, FormControlLabel, TextField, Typography } from "@mui/material";
+import { Checkbox, FormControlLabel, TextField, Typography } from "@mui/material";
 import MenuItem from '@mui/material/MenuItem';
 import { ChangeEvent } from "react";
 

@@ -1,12 +1,6 @@
-export const runtime = "nodejs";
-
-
-
 import connectDB from "@/app/lib/mongoose";
 import Recipe from "@/app/models/recipe";
 import RecipePopularConfig from "@/app/models/recipe-popular-config";
-import { ObjectId } from "mongodb";
-import mongoose from "mongoose";
 import { NextResponse } from "next/server"
 
 

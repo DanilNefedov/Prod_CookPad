@@ -1,9 +1,9 @@
 
-import { Container, Paper, styled } from '@mui/material'
+import { Container, Paper } from '@mui/material'
 import Box from '@mui/material/Box';
 
 import { LogOut } from './log-out'
-import { dataPage, paperNavigation } from '@/app/main-styles'
+import { dataPage } from '@/app/main-styles'
 import { BtnLinks } from './btn-links'
 import { AboutUser } from './user-info';
 import HomeIcon from '@mui/icons-material/Home';

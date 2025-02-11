@@ -1,7 +1,6 @@
 
 import { MediaObj } from "@/app/types/types";
-import { theme } from "@/config/ThemeMUI/theme";
-import { Box, CardMedia, IconButton, Tooltip } from "@mui/material";
+import { CardMedia } from "@mui/material";
 
 
 

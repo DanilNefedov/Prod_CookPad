@@ -2,7 +2,6 @@ import Paper from '@mui/material/Paper';
 import { Box, Container } from "@mui/material";
 import { MainBuildPage } from '@/app/components/new-recipe/main-build-page';
 import { StepperProgress } from '@/app/components/new-recipe/stepper-progress';
-import { theme } from '@/config/ThemeMUI/theme';
 
 
 
@@ -15,19 +14,19 @@ export default function FormBuild() {
     // const activeSaveBtn = stepperState.steps_info.find(el => el?.open && !el?.error_status)
 
 
-    const styleLink = {
-        // fontWeight:'400', 
-        lineHeight: 'inherit',
-        textTransform: 'initial',
-        color: 'text.secondary',
+    // const styleLink = {
+    //     // fontWeight:'400', 
+    //     lineHeight: 'inherit',
+    //     textTransform: 'initial',
+    //     color: 'text.secondary',
 
-        ':hover': {
-            bgcolor: 'primary.main',
-            color: 'text.primary'
-        },
-        // width:'100%',
-        backgroudColor: 'background.main'
-    }
+    //     ':hover': {
+    //         bgcolor: 'primary.main',
+    //         color: 'text.primary'
+    //     },
+    //     // width:'100%',
+    //     backgroudColor: 'background.main'
+    // }
 
     // function handleSave () {
     //     saveForm(stepperState)

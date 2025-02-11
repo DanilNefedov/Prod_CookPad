@@ -5,7 +5,6 @@ import { useNavigationState } from "../context-navigation";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { fetchRecipes } from "@/state/slices/recipe-slice";
 import { CardContentBlock } from "./card-content-block";
-import { useFetchOnDependency } from "@/app/hooks/useReduxGet";
 import { Box, Button } from "@mui/material";
 import { styleLink } from "../header/header";
 import { theme } from "@/config/ThemeMUI/theme";

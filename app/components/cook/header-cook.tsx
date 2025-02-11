@@ -8,7 +8,6 @@ import { Box, Button } from "@mui/material";
 import Link from "next/link";
 import { useEffect } from "react";
 import { DeleteButton } from "./delete";
-import { fetchCook } from "@/state/slices/cook";
 
 
 

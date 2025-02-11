@@ -16,7 +16,6 @@ interface propsData {
 
 export function ItemsIngrSwiper({ props }: { props: propsData }) {
     const { el, id } = props
-    const dispatch = useAppDispatch()
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [units, setUnits] = useState<returnData[]>([])
     const open = Boolean(anchorEl);

@@ -16,7 +16,7 @@ export interface IProps{
 
 
 const StepsContext = createContext<INavigationContext>({
-  handlerNavigation: (navigation: string | null) => { },
+  handlerNavigation: () => { },
   nav: 'all'
 });
 

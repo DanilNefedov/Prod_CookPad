@@ -1,7 +1,7 @@
 'use client'
 
 import { btnLink, dataPage } from "@/app/main-styles";
-import { Button, useTheme } from "@mui/material";
+import { Button } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
