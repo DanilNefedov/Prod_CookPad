@@ -72,7 +72,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return token;
     },
-  
+    authorized(params) {
+      return !!params.auth?.user;
+    },
   },
   cookies: {
     sessionToken: {
