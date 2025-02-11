@@ -35,19 +35,28 @@ export function ContentCook({ recipe_id }: { recipe_id: string }) {
     const id = userStore.user.connection_id
     const findCook = cookStore.recipes.find(el => el.recipe_id === recipe_id)
 
-    useEffect(() => {
-        console.log(findCook, userStore.user.connection_id, cookStore)
-        // async function fetchData() {
-        if (!findCook && userStore.user.connection_id !== '') {
-            console.log(findCook)
-            dispatch(fetchCook({ id, recipe_id}))
-            // dispatch(fetchNameLinks(id))
-        }
-        // }
+    // useEffect(() => {
+    //     console.log(findCook, userStore.user.connection_id, cookStore)
+    //     // async function fetchData() {
+    //     if (!findCook && userStore.user.connection_id !== '') {
+    //         console.log(findCook)
+    //         dispatch(fetchCook({ id, recipe_id}))
+    //         // dispatch(fetchNameLinks(id))
+    //     }
+    //     // }
 
-        // fetchData();
-    }, [id, recipe_id]);
+    //     // fetchData();
+    // }, [id, recipe_id]);
     // console.log(findCook, recipe_id, cookStore)
+
+    useEffect(() => {
+        console.log(findCook, userStore.user.connection_id, cookStore);
+        if (!findCook && userStore.user.connection_id !== '') {
+            console.log(findCook);
+            dispatch(fetchCook({ id, recipe_id }));
+        }
+    }, [id, recipe_id, findCook, userStore.user.connection_id, cookStore, dispatch]);
+    
 
 
     const handlerFavorite = ({ recipe_id }: { recipe_id: string | null | undefined }): void => {

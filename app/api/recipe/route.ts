@@ -189,6 +189,7 @@ export async function DELETE(req: Request) {
 
       return NextResponse.json({ status: 201, message: 'Recipe successfully deleted' });
   } catch (error) {
+    console.error(error);
       return NextResponse.json({
           status: 500,
           body: { message: 'Internal Server Error', error: error },

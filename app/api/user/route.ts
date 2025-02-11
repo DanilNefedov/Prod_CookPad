@@ -23,6 +23,7 @@ export async function POST(req: Request) {
       { status: 201 }
     );
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { message: 'An internal error occurred' },
       { status: 500 }
@@ -57,6 +58,7 @@ export async function GET(request: Request) {
     return NextResponse.json(user);
 
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { message: 'An internal error occurred' }, 
       { status: 500 }

@@ -23,17 +23,30 @@ export function BlockContent() {
   const { nav } = useNavigationState()
   const id = userStore?.user?.connection_id
 
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const url = `api/recipe?connection_id=${id}&page=${recipeStore.page + 1}`
+
+  //     if (id !== '' && recipeStore.recipes.length === 0) {
+  //       dispatch(fetchRecipes(url))
+  //     }
+  //   }
+
+  //   fetchData();
+  // }, [id]);
+
   useEffect(() => {
     async function fetchData() {
-      const url = `api/recipe?connection_id=${id}&page=${recipeStore.page + 1}`
-
+      const url = `api/recipe?connection_id=${id}&page=${recipeStore.page + 1}`;
+  
       if (id !== '' && recipeStore.recipes.length === 0) {
-        dispatch(fetchRecipes(url))
+        dispatch(fetchRecipes(url));
       }
     }
-
+  
     fetchData();
-  }, [id]);
+  }, [id, dispatch, recipeStore.page, recipeStore.recipes.length]); 
+  
 
   const filteredRecipes = recipeStore.recipes.filter(recipe => recipe.sorting.includes(nav));
   console.log(recipeStore)

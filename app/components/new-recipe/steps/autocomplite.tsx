@@ -43,15 +43,45 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
         []
     );
 
+    // useEffect(() => {
+    //     let active = true;
+
+    //     if (inputValue === '') {
+    //         setOptions(value ? [value] : []);
+    //         dispatch(errorAutocomplite(ingredient.ingredient_id));
+    //         return undefined;
+    //     }
+
+    //     fetch({ input: inputValue }, async (results) => {
+    //         if (active) {
+    //             const newOptions = results.map((el) => {
+    //                 return {
+    //                     ingredient_id: el._id,
+    //                     name: el.name,
+    //                     new_ingredient: false,
+    //                     units: el.units,
+    //                     media: el.media,
+    //                 };
+    //             });
+    //             setOptions(value ? [value, ...newOptions] : newOptions);
+    //             dispatch(errorAutocomplite(ingredient.ingredient_id));
+    //         }
+    //     });
+
+    //     return () => {
+    //         active = false;
+    //     };
+    // }, [value, inputValue, fetch]);
+
     useEffect(() => {
         let active = true;
-
+    
         if (inputValue === '') {
             setOptions(value ? [value] : []);
             dispatch(errorAutocomplite(ingredient.ingredient_id));
             return undefined;
         }
-
+    
         fetch({ input: inputValue }, async (results) => {
             if (active) {
                 const newOptions = results.map((el) => {
@@ -67,11 +97,12 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                 dispatch(errorAutocomplite(ingredient.ingredient_id));
             }
         });
-
+    
         return () => {
             active = false;
         };
-    }, [value, inputValue, fetch]);
+    }, [value, inputValue, fetch, dispatch, ingredient.ingredient_id]); 
+    
 
 
 

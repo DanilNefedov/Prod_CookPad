@@ -20,14 +20,21 @@ export function HeaderCook({ recipe_id }: { recipe_id: string }) {
 
 
 
-    useEffect(() => {
-        if (userStore.user.connection_id !== '' && cookHistoryStore.history_links.length <= 0){
-            dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id }));
-        };
+    // useEffect(() => {
+    //     if (userStore.user.connection_id !== '' && cookHistoryStore.history_links.length <= 0){
+    //         dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id }));
+    //     };
         
 
-    }, [userStore.user.connection_id])//cookHistoryStore.history_links, recipe_id
+    // }, [userStore.user.connection_id])//cookHistoryStore.history_links, recipe_id
 
+
+    useEffect(() => {
+        if (userStore.user.connection_id !== '' && cookHistoryStore.history_links.length <= 0) {
+            dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id }));
+        };
+    }, [userStore.user.connection_id, cookHistoryStore.history_links.length, dispatch]);
+    
 
     return (
         <Box sx={scrollBox}>

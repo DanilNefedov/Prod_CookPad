@@ -127,6 +127,7 @@ export async function POST(req: Request) {
 
       return NextResponse.json({ message: 'Success' });
     } catch (error) {
+      console.error(error);      
       return NextResponse.json(
         { message: 'An internal error occurred' },
         { status: 500 }
@@ -169,6 +170,7 @@ export async function PATCH(req: Request) {
     }
     return NextResponse.json({ message: 'Success', body: toUpdate });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       { message: 'An internal error occurred' },
       { status: 500 }
