@@ -158,7 +158,7 @@ export async function DELETE(req: Request) {
           return NextResponse.json({ status: 404, message: "Recipe or recipe config not found" });
       }
 
-      const recipePopularConfigId = recipe.recipe_popular_config[0];
+      // const recipePopularConfigId = recipe.recipe_popular_config[0];
 
       // await Promise.all([
       //     LikesPopular.deleteMany({ config_id: recipePopularConfigId.toString() }),

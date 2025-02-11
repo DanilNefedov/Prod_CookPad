@@ -30,9 +30,10 @@ export async function PATCH(request: Request) {
             );
         }
 
-        const updateData: any = {
+        const updateData: { $set: { favorite: boolean }; $push?: { sorting: string }; $pull?: { sorting: string } } = {
             $set: { favorite: !favorite },
         };
+        
 
         if (!recipe.sorting.includes('favorite')) {
             updateData.$push = { sorting: 'favorite' };
