@@ -32,8 +32,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (account) {
         // await connectDB();
         // const existingUser = await User.findOne({ connection_id: account.providerAccountId });
-        const url = `https://web-archive-nine.vercel.app/api/user?connection_id=${account.providerAccountId}`
-        // const url = `http://localhost:3000/api/user?connection_id=${account.providerAccountId}`
+        // const url = `https://web-archive-nine.vercel.app/api/user?connection_id=${account.providerAccountId}`
+        const url = `http://localhost:3000/api/user?connection_id=${account.providerAccountId}`
         const existingUser = await getCall(url)
         // `http://localhost:3000/api/user?connection_id=${account.providerAccountId}`
         if (!existingUser) {
@@ -49,8 +49,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           
           try {
             const response = await postCall({
-              url: 'https://web-archive-nine.vercel.app/api/user',
-              // url: 'http://localhost:3000/api/user',
+              // url: 'https://web-archive-nine.vercel.app/api/user',
+              url: 'http://localhost:3000/api/user',
               data: dataUser,
             });
             const responseData = await response.json();

@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { fetchCook } from "@/state/slices/cook";
 import { setFavoriteRecipe } from "@/state/slices/recipe-slice";
 import { Box, Container, IconButton, List, Typography } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { favoriteBtnActive, favoriteBtnDesactive } from "@/app/(main)/home/style";
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -25,10 +25,11 @@ import { SwiperMediaCook } from "./swiper-media";
 
 
 export function ContentCook({ recipe_id }: { recipe_id: string }) {
-    
+
     const dispatch = useAppDispatch()
     const cookStore = useAppSelector(state => state.cook)
     const userStore = useAppSelector(state => state.user)
+
     // const recipeStore = useAppSelector(state => state.recipe)
 
     // const thisRecipe = recipeStore.recipes.find(el => el.recipe_id === recipe_id)
@@ -49,14 +50,23 @@ export function ContentCook({ recipe_id }: { recipe_id: string }) {
     // }, [id, recipe_id]);
     // console.log(findCook, recipe_id, cookStore)
 
+    // useEffect(() => {
+    //     if (!findCook && userStore.user.connection_id !== '' && !isFetching) {
+    //       dispatch(fetchCook({ id, recipe_id }))
+    //     }
+    //   }, [id, recipe_id, findCook, userStore.user.connection_id, dispatch, isFetching]);
+
+    const effectRan = useRef(false);
+
     useEffect(() => {
-        console.log(findCook, userStore.user.connection_id, cookStore);
         if (!findCook && userStore.user.connection_id !== '') {
-            console.log(findCook);
-            dispatch(fetchCook({ id, recipe_id }));
+            if (effectRan.current === false || typeof window === "undefined") {
+                effectRan.current = true;
+                console.log("Fetching recipe:", recipe_id);
+                dispatch(fetchCook({ id, recipe_id }));
+            }
         }
-    }, [id, recipe_id, findCook, userStore.user.connection_id, cookStore, dispatch]);
-    
+    }, [id, recipe_id, dispatch, findCook]);
 
 
     const handlerFavorite = ({ recipe_id }: { recipe_id: string | null | undefined }): void => {
