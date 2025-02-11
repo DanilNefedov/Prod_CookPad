@@ -1,12 +1,10 @@
 export const runtime = "nodejs";
 
 
-import connectDB from "@/app/lib/mongoose";
-import User from "@/app/models/user";
 import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
 import Google from "next-auth/providers/google";
-import { postCall } from "./calls";
+import { getCall, postCall } from "./calls";
 
 
 export interface RequestData <T>{
@@ -32,9 +30,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async signIn({ account, profile }) {
       if (account) {
-        await connectDB();
-        const existingUser = await User.findOne({ connection_id: account.providerAccountId });
-        
+        // await connectDB();
+        // const existingUser = await User.findOne({ connection_id: account.providerAccountId });
+        const url = `http://localhost:3000/api/user?connection_id=${account.providerAccountId}`
+        const existingUser = await getCall(url)
+        // `http://localhost:3000/api/user?connection_id=${account.providerAccountId}`
         if (!existingUser) {
           const isGoogle = account.provider === 'google';
           const dataUser = {
