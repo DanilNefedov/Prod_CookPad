@@ -59,15 +59,11 @@ interface fetchDataT {
 export const fetchCook = createAsyncThunk<fetchDataT, { id: string, recipe_id: string}, { rejectValue: string }>(
     'cook/fetchCook',
     async function ({ id, recipe_id }, { rejectWithValue, dispatch, getState }) {
-        console.log('fetchCook thunk called with:', { id, recipe_id }); // debug log
         try {
-            // const state = getState() as RootState
-            // const recipeExists = state.recipe.recipes.find(el => el.recipe_id === recipe_id)
-            console.log('createAsyncThunkcreateAsyncThunkcreateAsyncThunk')
+            const state = getState() as RootState
+            const recipeExists = state.recipe.recipes.find(el => el.recipe_id === recipe_id)
             
-            // const url = `/api/cook?connection_id=${id}&recipe=${recipe_id}&recipeExists=${recipeExists ? true : false}`
-            const url = `/api/cook?connection_id=${id}&recipe=${recipe_id}`
-            console.log('Fetching URL:', url); // debug log
+            const url = `/api/cook?connection_id=${id}&recipe=${recipe_id}&recipeExists=${recipeExists ? true : false}`
             const responseCook = await fetch(url);
 
             if (!responseCook.ok) return rejectWithValue('Server Error!');
@@ -76,19 +72,18 @@ export const fetchCook = createAsyncThunk<fetchDataT, { id: string, recipe_id: s
 
             const {dataCook, isInHistory} = data
 
-            // if(!isInHistory){
-            //     dispatch(newCookHistory({ connection_id: id, history_links: { recipe_id, recipe_name: recipeExists ? recipeExists.name : dataCook.name } }))
-            // }
+            if(!isInHistory){
+                console.log('2')
+                dispatch(newCookHistory({ connection_id: id, history_links: { recipe_id, recipe_name: recipeExists ? recipeExists.name : dataCook.name } }))
+            }
 
-            // if(recipeExists){
-            //     const mergedRecipe = merge({}, recipeExists, dataCook);
+            if(recipeExists){
+                const mergedRecipe = merge({}, recipeExists, dataCook);
             
-            //     return { recipe: mergedRecipe, connection_id: id }
-            // }else{
+                return { recipe: mergedRecipe, connection_id: id }
+            }else{
                 return { recipe: dataCook, connection_id: id }
-            // }
-            
-        
+            }
 
         } catch (error) {
             console.error(error)

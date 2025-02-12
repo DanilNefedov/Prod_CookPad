@@ -22,16 +22,6 @@ export function HeaderCook() {
     const segments = pathName.split("/"); 
     const recipe_id = segments[2]; 
 
-    console.log(recipe_id)
-
-    // useEffect(() => {
-    //     if (userStore.user.connection_id !== '' && cookHistoryStore.history_links.length <= 0){
-    //         dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id }));
-    //     };
-        
-
-    // }, [userStore.user.connection_id])//cookHistoryStore.history_links, recipe_id
-
 
     useEffect(() => {
         if (userStore.user.connection_id !== '' && cookHistoryStore.history_links.length <= 0) {
