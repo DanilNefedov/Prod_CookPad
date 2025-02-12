@@ -59,8 +59,11 @@ import { NextResponse } from "next/server"
 // }
 
 
-
 export async function GET(request: Request) {
+    // console.trace("API /api/cook called");
+    const requestId = Math.random().toString(36).substring(7);
+    console.log(`[${requestId}] API request started`, new Date().toISOString());
+
     console.log("API /api/cook called"); // Логгирование вызова API
     try {
       const { searchParams } = new URL(request.url);
@@ -81,12 +84,12 @@ export async function GET(request: Request) {
         ? "instruction ingredients -_id"
         : "recipe_id name time media recipe_type description favorite sorting instruction ingredients -_id";
   
-      const cookHistory = await CookHistory.findOne({
-        connection_id,
-        "history_links.recipe_id": recipe_id
-      }).select("_id").lean();
+    //   const cookHistory = await CookHistory.findOne({
+    //     connection_id,
+    //     "history_links.recipe_id": recipe_id
+    //   }).select("_id").lean();
   
-      const isInHistory = !!cookHistory;
+    //   const isInHistory = !!cookHistory;
   
       const dataCook = await Recipe.findOne({ recipe_id, connection_id })
         .select(selectedFields)
@@ -98,11 +101,13 @@ export async function GET(request: Request) {
           { status: 404 }
         );
       }
-  
+      console.log(`[${requestId}] API request completed`, new Date().toISOString());
       console.log("API /api/cook response sent"); // Логгирование успешного ответа
-      return NextResponse.json({ dataCook, isInHistory }, { status: 200 });
+      return NextResponse.json({ dataCook }, { status: 200 });
   
     } catch (error) {
+      console.log(`[${requestId}] API request failed`, new Date().toISOString());
+
       console.error("GET /api/cook/recipe error:", error);
       return NextResponse.json(
         { message: "Internal Server Error", error },
@@ -112,3 +117,20 @@ export async function GET(request: Request) {
   }
 
 
+
+
+
+
+
+
+//   GET /api/cook?connection_id=101625596288293490906&recipe=762dca58-496e-432a-9df3-cc0f73043c03 200 in 115ms
+//   GET /cook/7137a7fd-14ab-454e-a3a1-e3f302b11323 200 in 31ms
+//  API /api/cook called
+//  Connected
+//  API /api/cook response sent
+//   GET /api/cook?connection_id=101625596288293490906&recipe=7137a7fd-14ab-454e-a3a1-e3f302b11323 200 in 77ms
+//  API /api/cook called
+//  Connected
+//  API /api/cook response sent
+//   GET /api/cook?connection_id=101625596288293490906&recipe=7137a7fd-14ab-454e-a3a1-e3f302b11323 200 in 86ms
+ 

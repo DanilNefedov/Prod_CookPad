@@ -37,10 +37,11 @@ export function ContentCook({ recipe_id }: { recipe_id: string }) {
     const findCook = cookStore.recipes.find(el => el.recipe_id === recipe_id)
 
     // useEffect(() => {
-    //     console.log(findCook, userStore.user.connection_id, cookStore)
+    //     // console.trace("useEffect запущен");
+    //     console.log('effect')
     //     // async function fetchData() {
     //     if (!findCook && userStore.user.connection_id !== '') {
-    //         console.log(findCook)
+    //         // console.log(findCook)
     //         dispatch(fetchCook({ id, recipe_id}))
     //         // dispatch(fetchNameLinks(id))
     //     }
@@ -48,6 +49,7 @@ export function ContentCook({ recipe_id }: { recipe_id: string }) {
 
     //     // fetchData();
     // }, [id, recipe_id]);
+
     // console.log(findCook, recipe_id, cookStore)
 
     // useEffect(() => {
@@ -56,17 +58,17 @@ export function ContentCook({ recipe_id }: { recipe_id: string }) {
     //     }
     //   }, [id, recipe_id, findCook, userStore.user.connection_id, dispatch, isFetching]);
 
-    const effectRan = useRef(false);
+    // const effectRan = useRef(false);
 
-    useEffect(() => {
-        if (!findCook && userStore.user.connection_id !== '') {
-            if (effectRan.current === false || typeof window === "undefined") {
-                effectRan.current = true;
-                console.log("Fetching recipe:", recipe_id);
-                dispatch(fetchCook({ id, recipe_id }));
-            }
-        }
-    }, [id, recipe_id, dispatch, findCook]);
+    // useEffect(() => {
+    //     if (!findCook && userStore.user.connection_id !== '') {
+    //         if (effectRan.current === false || typeof window === "undefined") {
+    //             effectRan.current = true;
+    //             console.log("Fetching recipe:", recipe_id);
+    //             dispatch(fetchCook({ id, recipe_id }));
+    //         }
+    //     }
+    // }, [id, recipe_id, dispatch, findCook]);
 
 
     const handlerFavorite = ({ recipe_id }: { recipe_id: string | null | undefined }): void => {

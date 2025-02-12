@@ -17,6 +17,7 @@ export function HeaderCook({ recipe_id }: { recipe_id: string }) {
     const cookHistoryStore = useAppSelector(state => state.cookHistory)
     const userStore = useAppSelector(state => state.user)
     const dispatch = useAppDispatch()
+    
 
 
 
@@ -29,11 +30,11 @@ export function HeaderCook({ recipe_id }: { recipe_id: string }) {
     // }, [userStore.user.connection_id])//cookHistoryStore.history_links, recipe_id
 
 
-    useEffect(() => {
-        if (userStore.user.connection_id !== '' && cookHistoryStore.history_links.length <= 0) {
-            dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id }));
-        };
-    }, [userStore.user.connection_id, cookHistoryStore.history_links.length, dispatch]);
+    // useEffect(() => {
+    //     if (userStore.user.connection_id !== '' && cookHistoryStore.history_links.length <= 0) {
+    //         dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id }));
+    //     };
+    // }, [userStore.user.connection_id, cookHistoryStore.history_links.length, dispatch]);
     
 
     return (
