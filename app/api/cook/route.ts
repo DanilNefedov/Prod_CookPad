@@ -2,7 +2,6 @@
 
 
 import connectDB from "@/app/lib/mongoose"
-import CookHistory from "@/app/models/cook-history";
 import Recipe from "@/app/models/recipe"
 import { NextResponse } from "next/server"
 

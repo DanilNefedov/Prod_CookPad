@@ -2,10 +2,8 @@
 
 import { containerContentRecipe, contentBlock, contentContainer } from "@/app/(main)/cook/[recipe_id]/styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { fetchCook } from "@/state/slices/cook";
 import { setFavoriteRecipe } from "@/state/slices/recipe-slice";
 import { Box, Container, IconButton, List, Typography } from "@mui/material";
-import { useEffect, useRef } from "react";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { favoriteBtnActive, favoriteBtnDesactive } from "@/app/(main)/home/style";
 import { Swiper, SwiperSlide } from 'swiper/react';

@@ -3,10 +3,8 @@
 import { btnsCookHeader, scrollBox } from "@/app/(main)/cook/[recipe_id]/styles";
 import { btnMain } from "@/app/main-styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { fetchHistoryCook } from "@/state/slices/cook-history";
 import { Box, Button } from "@mui/material";
 import Link from "next/link";
-import { useEffect } from "react";
 import { DeleteButton } from "./delete";
 
 
@@ -15,8 +13,6 @@ import { DeleteButton } from "./delete";
 
 export function HeaderCook({ recipe_id }: { recipe_id: string }) {
     const cookHistoryStore = useAppSelector(state => state.cookHistory)
-    const userStore = useAppSelector(state => state.user)
-    const dispatch = useAppDispatch()
     
 
 
