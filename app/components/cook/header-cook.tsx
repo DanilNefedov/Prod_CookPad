@@ -2,7 +2,7 @@
 
 import { btnsCookHeader, scrollBox } from "@/app/(main)/cook/[recipe_id]/styles";
 import { btnMain } from "@/app/main-styles";
-import { useAppDispatch, useAppSelector } from "@/state/hook";
+import { useAppSelector } from "@/state/hook";
 import { Box, Button } from "@mui/material";
 import Link from "next/link";
 import { DeleteButton } from "./delete";

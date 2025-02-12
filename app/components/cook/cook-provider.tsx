@@ -36,8 +36,7 @@ export function CookProvider({
         dispatch(fetchCook({ id, recipe_id }));
       }
     }
-  }, [recipe_id, userStore.user.connection_id]);
-
+  }, [recipe_id, userStore.user.connection_id, cookHistoryStore.history_links.length, cookStore.recipes, dispatch]);
   return (
     <CookContext.Provider value={{ recipe_id }}>
       {children}
