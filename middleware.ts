@@ -26,6 +26,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
+
+    if (req.nextUrl.pathname === "/") { //for vercel
+        return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
+    }
+
     if (!req.cookies.get("authjs.session-token") && req.nextUrl.pathname !== "/login") {
         return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
     }

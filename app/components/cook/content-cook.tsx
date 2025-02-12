@@ -18,35 +18,41 @@ import { ItemsIngrSwiper } from "./items-ingr-swiper";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { SwiperMediaCook } from "./swiper-media";
+import { useEffect } from "react";
+import { fetchCook } from "@/state/slices/cook";
+import { usePathname } from "next/navigation";
 
 
 
 
-export function ContentCook({ recipe_id }: { recipe_id: string }) {
+export function ContentCook() {//{ recipe_id }: { recipe_id: string }
 
     const dispatch = useAppDispatch()
     const cookStore = useAppSelector(state => state.cook)
     const userStore = useAppSelector(state => state.user)
-
+    const pathName = usePathname()
+    const segments = pathName.split("/"); 
+    const recipe_id = segments[2]; 
+    console.log(pathName)
     // const recipeStore = useAppSelector(state => state.recipe)
 
     // const thisRecipe = recipeStore.recipes.find(el => el.recipe_id === recipe_id)
     const id = userStore.user.connection_id
     const findCook = cookStore.recipes.find(el => el.recipe_id === recipe_id)
 
-    // useEffect(() => {
-    //     // console.trace("useEffect запущен");
-    //     console.log('effect')
-    //     // async function fetchData() {
-    //     if (!findCook && userStore.user.connection_id !== '') {
-    //         // console.log(findCook)
-    //         dispatch(fetchCook({ id, recipe_id}))
-    //         // dispatch(fetchNameLinks(id))
-    //     }
-    //     // }
+    useEffect(() => {
+        // console.trace("useEffect запущен");
+        console.log('effect')
+        // async function fetchData() {
+        if (!findCook && userStore.user.connection_id !== '') {
+            // console.log(findCook)
+            dispatch(fetchCook({ id, recipe_id}))
+            // dispatch(fetchNameLinks(id))
+        }
+        // }
 
-    //     // fetchData();
-    // }, [id, recipe_id]);
+        // fetchData();
+    }, [id, recipe_id, dispatch, findCook, userStore.user.connection_id]);
 
     // console.log(findCook, recipe_id, cookStore)
 

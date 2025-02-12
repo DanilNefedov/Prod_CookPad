@@ -2,20 +2,27 @@
 
 import { btnsCookHeader, scrollBox } from "@/app/(main)/cook/[recipe_id]/styles";
 import { btnMain } from "@/app/main-styles";
-import { useAppSelector } from "@/state/hook";
+import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { Box, Button } from "@mui/material";
 import Link from "next/link";
 import { DeleteButton } from "./delete";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
+import { fetchHistoryCook } from "@/state/slices/cook-history";
 
 
 
 
 
-export function HeaderCook({ recipe_id }: { recipe_id: string }) {
+export function HeaderCook() {
     const cookHistoryStore = useAppSelector(state => state.cookHistory)
-    
+    const userStore = useAppSelector(state => state.user)
+    const dispatch = useAppDispatch()
+    const pathName = usePathname()
+    const segments = pathName.split("/"); 
+    const recipe_id = segments[2]; 
 
-
+    console.log(recipe_id)
 
     // useEffect(() => {
     //     if (userStore.user.connection_id !== '' && cookHistoryStore.history_links.length <= 0){
@@ -26,11 +33,11 @@ export function HeaderCook({ recipe_id }: { recipe_id: string }) {
     // }, [userStore.user.connection_id])//cookHistoryStore.history_links, recipe_id
 
 
-    // useEffect(() => {
-    //     if (userStore.user.connection_id !== '' && cookHistoryStore.history_links.length <= 0) {
-    //         dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id }));
-    //     };
-    // }, [userStore.user.connection_id, cookHistoryStore.history_links.length, dispatch]);
+    useEffect(() => {
+        if (userStore.user.connection_id !== '' && cookHistoryStore.history_links.length <= 0) {
+            dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id }));
+        };
+    }, [userStore.user.connection_id, cookHistoryStore.history_links.length, dispatch]);
     
 
     return (
