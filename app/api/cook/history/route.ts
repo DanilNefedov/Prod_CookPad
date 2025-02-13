@@ -3,6 +3,7 @@
 
 import connectDB from "@/app/lib/mongoose";
 import CookHistory from "@/app/models/cook-history";
+import Recipe from "@/app/models/recipe";
 import { NextResponse } from "next/server";
 
 
@@ -43,9 +44,11 @@ export async function GET(request: Request) {
         await connectDB();
 
         const { searchParams } = new URL(request.url)
-        const connection_id = searchParams.get('connection_id') as string
+        const connection_id = searchParams.get('connection_id')
+        const recipe_id = searchParams.get('recipe_id')
         console.log(connection_id, 'connection_idconnection_idconnection_idconnection_id')
-        const cook = await CookHistory.findOne({connection_id }).select('-_id connection_id history_links')
+        const cook = await CookHistory.findOne({connection_id }).select('-_id connection_id history_links.recipe_id history_links.recipe_name')
+
 
 
         if (!cook) {
@@ -54,8 +57,20 @@ export async function GET(request: Request) {
                 body: { message: 'History Cook not found' },
             });
         }
-        console.log(cook, '3333333333333333333333333333333')
-        return NextResponse.json(cook)
+
+        const exists = cook.history_links.some((link: any) => link.recipe_id === recipe_id);
+        if(!exists){
+            const dataCook = await Recipe.findOne({ recipe_id, connection_id })
+            .select('-_id name recipe_id')
+            .lean();
+
+            return NextResponse.json({cook, newCook:dataCook})
+
+        }
+        
+
+        console.log(cook, '3333333333333333333333333333333', exists)
+        return NextResponse.json({cook, newCook:null})
 
     } catch (error) {
         return NextResponse.json({

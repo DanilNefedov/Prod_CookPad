@@ -79,12 +79,12 @@ export async function GET(request: Request) {
         ? "instruction ingredients -_id"
         : "recipe_id name time media recipe_type description favorite sorting instruction ingredients -_id";
   
-      const cookHistory = await CookHistory.findOne({
-        connection_id,
-        "history_links.recipe_id": recipe_id
-      }).select("_id").lean();
+      // const cookHistory = await CookHistory.findOne({
+      //   connection_id,
+      //   "history_links.recipe_id": recipe_id
+      // }).select("_id").lean();
   
-      const isInHistory = !!cookHistory;
+      // const isInHistory = !!cookHistory;
   
       const dataCook = await Recipe.findOne({ recipe_id, connection_id })
         .select(selectedFields)
@@ -96,7 +96,7 @@ export async function GET(request: Request) {
           { status: 404 }
         );
       }
-      return NextResponse.json({ dataCook, isInHistory }, { status: 200 });
+      return NextResponse.json({ dataCook }, { status: 200 });//, isInHistory
   
     } catch (error) {
       console.error("GET /api/cook/recipe error:", error);

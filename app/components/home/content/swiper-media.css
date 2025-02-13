@@ -41,3 +41,48 @@ main{
     box-shadow: var(--shadow-bg);
 
 }
+
+/* 
+cookBtn = {
+    padding: '2px 10px', 
+    backgroundColor: '#4F5362', 
+    color: 'text.primary', 
+    textTransform: 'initial', 
+    fontSize: '15px', 
+    "&:hover": { 
+        backgroundColor: 'primary.main', 
+        color: "text.primary" 
+    },
+
+    [theme.breakpoints.down("md")]: {
+        fontSize: '12px', 
+        padding: '2px 5px',
+        minWidth:'50px'
+    },
+} */
+
+
+.cookLinkMainContent{
+    padding: 2px 10px;
+    background-color: #4F5362;
+    color: #FFFFFF;
+    text-transform: inherit;
+    font-size: 15px;
+    border-radius: 20px;
+    line-height: 1.75;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 250ms cubic-bezier(0.4, 0, 0.2, 1);}
+
+.cookLinkMainContent:hover{
+    background-color: #FF7269;
+    /* color: ; */
+}
+
+@media screen and (max-width:899px){
+    .cookLinkMainContent{
+        font-size: 12px;
+        padding: 2px 5px;
+        max-width: 50px;
+    }
+}

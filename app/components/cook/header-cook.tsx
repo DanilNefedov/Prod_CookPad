@@ -6,9 +6,9 @@ import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { Box, Button } from "@mui/material";
 import Link from "next/link";
 import { DeleteButton } from "./delete";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { fetchHistoryCook } from "@/state/slices/cook-history";
+import { fetchHistoryCook, newCookHistory } from "@/state/slices/cook-history";
 
 
 
@@ -21,14 +21,19 @@ export function HeaderCook() {
     const pathName = usePathname()
     const segments = pathName.split("/"); 
     const recipe_id = segments[2]; 
-
+    const searchParams = useSearchParams();
+    const recipeName = searchParams.get("name") ?? '';
+    
 
     useEffect(() => {
-        if (userStore.user.connection_id !== '' && cookHistoryStore.history_links.length <= 0) {
-            dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id }));
+        
+        if (userStore.user.connection_id !== '' ) {
+            console.log('=====')
+            dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id, recipe_id, recipe_name:recipeName }));
         };
-    }, [userStore.user.connection_id, cookHistoryStore.history_links.length, dispatch]);
-    
+
+      
+    }, [userStore.user.connection_id, dispatch]);
 
     return (
         <Box sx={scrollBox}>

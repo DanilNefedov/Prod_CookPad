@@ -1,5 +1,6 @@
 import { CookHistoryT, NameLinksT } from "@/app/types/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 
 
@@ -22,19 +23,25 @@ interface fetchCookHistoryT {
 }
 
 
-export const fetchHistoryCook = createAsyncThunk<fetchCookHistoryT, {connection_id:string}, {rejectValue: string}>(
+export const fetchHistoryCook = createAsyncThunk<fetchCookHistoryT, {connection_id:string, recipe_id:string, recipe_name:string}, {rejectValue: string}>(
     'cook-history/fetchHistoryCook',
-    async function ({connection_id}, {rejectWithValue}){
+    async function ({connection_id, recipe_id, recipe_name}, {rejectWithValue, dispatch }){
         try{
-            const url = `/api/cook/history?connection_id=${connection_id}`
+
+            const url = `/api/cook/history?connection_id=${connection_id}&recipe_id=${recipe_id}`
             const response = await fetch(url);
 
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-            const cookData = await response.json();
+            const {cook, newCook} = await response.json();
+
+            if(newCook !== null){
+                // console.log(newCook)
+                dispatch(newCookHistory({ connection_id, history_links:{recipe_id:newCook.recipe_id, recipe_name:newCook.name} }))
+            }
             
-            return cookData
+            return cook
 
         }catch(error){
             console.error(error)
@@ -69,7 +76,7 @@ export const newCookHistory = createAsyncThunk<newCookHistoryT, newCookHistoryT,
             }
 
             const newHeader = await response.json();
-            console.log(data, newHeader)
+            // console.log(data, newHeader)
             return data;
 
         }catch(error){
@@ -145,6 +152,7 @@ const CookHistorySlice = createSlice({
             state.error = false;
 
             const thisLink = state.history_links.find(el => el.recipe_id === action.payload.history_links.recipe_id)
+            // console.log(thisLink, action.payload.history_links)
             if(!thisLink) state.history_links.push(action.payload.history_links)
             
         })

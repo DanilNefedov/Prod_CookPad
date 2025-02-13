@@ -286,7 +286,15 @@ export function CardContentBlock({ props }: { props: propsData }) {
                     :
 
                     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Button href={`/cook/${recipe_id}`} component={Link} size="small" sx={cookBtn}>Cook</Button>
+                        {/* <Button size="small" sx={cookBtn}> */}
+                            <Link 
+                            href={{
+                                pathname: `/cook/${recipe_id}`,
+                                query: { name },
+                            }}
+                            className='cookLinkMainContent'
+                            >Cook</Link>
+                        {/* </Button> */}
                         <Button onClick={() => addToList()} size="small" sx={cookBtn}>To List</Button>
                         <Button onClick={handleOpen} size="small" sx={{
                             minWidth: '0', p: '0',
