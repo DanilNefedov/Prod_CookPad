@@ -11,7 +11,8 @@ export const headerCook = {
     height: '100%',
     borderRadius: '20px',
     boxShadow: 'none',
-    width: '14%',
+    maxWidth:'200px',
+    width: '100%',
 }
 
 
@@ -34,7 +35,7 @@ export const btnsCookHeader = {
     borderRadius: '10px',
     minWidth: '110px',
     width: '100%',
-    m: '10px auto',
+    m: '8px auto',
     '& .hover': {
         backgroundColor: 'primary.light'
     },
@@ -53,9 +54,8 @@ export const deleteHeaderCook = {
     minWidth: 'inherit',
     p: '5px',
     borderRadius: '50%',
-    width: '34px',
-    height: '34px',
-    ml: '10px',
+    width: '30px',
+    height: '30px',
     '&:hover': {
         backgroundColor: 'primary.main'
     },

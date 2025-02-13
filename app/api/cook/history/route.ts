@@ -46,10 +46,8 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url)
         const connection_id = searchParams.get('connection_id')
         const recipe_id = searchParams.get('recipe_id')
-        console.log(connection_id, 'connection_idconnection_idconnection_idconnection_id')
+        
         const cook = await CookHistory.findOne({connection_id }).select('-_id connection_id history_links.recipe_id history_links.recipe_name')
-
-
 
         if (!cook) {
             return NextResponse.json({
@@ -69,7 +67,6 @@ export async function GET(request: Request) {
         }
         
 
-        console.log(cook, '3333333333333333333333333333333', exists)
         return NextResponse.json({cook, newCook:null})
 
     } catch (error) {
@@ -90,7 +87,6 @@ export async function PATCH(request: Request) {
         const data = await request.json();
         const { connection_id, history_links } = data;
 
-        console.log(history_links, 'history_linkshistory_linkshistory_linkshistory_linkshistory_links')
         const filter = {
             connection_id,
             'history_links.recipe_id': { $ne: history_links.recipe_id }
