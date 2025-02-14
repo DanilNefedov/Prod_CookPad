@@ -34,20 +34,26 @@
 
 
 
-.cook-media-main-slide-video{
+.cook-media-main-slide-video, .cook-media-main-slide{
     display: flex;
     align-items: center;
     justify-content: center;
     height: 80vh;
+    /* margin: 0 40px; */
 }
-.cook-media-main-slide{
+/* .cook-media-main-slide{
     max-height: 700px;
     
-}
+} */
 .swiper-cook-media-main{
-    /* background-color: brown; */
+    background-color:#1F2128 ;
     position: relative;
-    /* height: 100%; */
+    height: 100%;
+    border-radius: 20px;
+}
+.swiper-cook-media-main .swiper-wrapper{
+    align-items: center;
+    /* margin: 0 20px; */
 }
 
 

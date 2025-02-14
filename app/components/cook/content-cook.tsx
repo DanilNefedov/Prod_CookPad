@@ -55,12 +55,48 @@ export function ContentCook() {
     }
 
     return (
-        <Container sx={containerContentRecipe}>
-            <Typography variant='h1' sx={{ fontSize: '1.3rem', mb: '10px' }}>{findCook?.recipe_type}</Typography>
+        <Box sx={containerContentRecipe}>
+            {/* <Typography variant='h1' sx={{ fontSize: '1.3rem', mb: '10px' }}>{findCook?.recipe_type}</Typography> */}
 
 
-            <Box sx={{ display: 'flex', alignItems: 'center',flexGrow:1 }}>
-                <Box sx={{ ...contentBlock, }}>
+            <Box sx={{width:"100%", height:'100%', overflow:'auto' }}>
+
+
+                 <Swiper
+                    modules={[Navigation]}
+                    className="swiper-cook-media-main"
+                    navigation={{
+                        prevEl: '.btn-prev-cook-media',
+                        nextEl: '.btn-next-cook-media',
+
+                    }}
+                >
+                    {findCook?.media.map(el => (
+                        <SwiperSlide key={el.media_id} className={el.media_type === 'image' ? 'cook-media-main-slide' : 'cook-media-main-slide-video'} >
+                            <SwiperMediaCook props={{ el }}></SwiperMediaCook>
+                        </SwiperSlide>
+
+                    ))}
+
+                    <Box className='btn-next-cook-media' sx={{
+                        borderRadius: '50%', backgroundColor: 'background.paper', width: '35px', height: '35px', right:"5px" }}>
+                        <ArrowRightIcon viewBox="3 3 17 17" sx={{ fontSize: 35, opacity: '0.5', position:"relative",right:'1px', top:'-1px'  }}></ArrowRightIcon>
+                    </Box>
+                    <Box className='btn-prev-cook-media' sx={{
+                        borderRadius: '50%', backgroundColor: 'background.paper', width: '35px', height: '35px', left:'5px'}}>
+                        <ArrowLeftIcon viewBox="3 3 17 17" sx={{ fontSize: 35, opacity: '0.5', position:"relative",left:'-2px', top:'-1px' }}></ArrowLeftIcon>
+                    </Box>
+                </Swiper> 
+
+
+
+
+
+
+
+
+
+                {/* <Box sx={{ ...contentBlock, }}>
                     <Box sx={contentContainer}>
                         <Typography variant="h2" fontSize={'2rem'}>{findCook?.name}</Typography>
                         <Typography variant="body1" sx={{ m: '8px 0' }}>{findCook?.description}</Typography>
@@ -76,8 +112,7 @@ export function ContentCook() {
                         <Box >
 
                             <Typography variant="h3" fontSize={'1.4rem'} align="center">Ingredients</Typography>
-                            {/* change tag ul in DOM */}
-                            <List sx={{ '& .swiper': { position: 'static', m: '0 15px'}, p:'0'  }}>
+                            <Box sx={{ '& .swiper': { position: 'static', m: '0 15px'}, p:'0', position:'relative' }}>
                                 <Swiper
                                     className='swiper-cook'
                                     navigation={{
@@ -109,7 +144,7 @@ export function ContentCook() {
                                     </Box>
 
                                 </Swiper>
-                            </List>
+                            </Box>
                         </Box>
 
                         <Box>
@@ -119,9 +154,9 @@ export function ContentCook() {
                     </Box>
 
                 </Box>
+ */}
 
-
-                <Swiper
+                {/* <Swiper
                     modules={[Navigation]}
                     className="swiper-cook-media-main"
                     navigation={{
@@ -129,7 +164,6 @@ export function ContentCook() {
                         nextEl: '.btn-next-cook-media',
 
                     }}
-                // lazy={true}
                 >
                     {findCook?.media.map(el => (
                         <SwiperSlide key={el.media_id} className={el.media_type === 'image' ? 'cook-media-main-slide' : 'cook-media-main-slide-video'} >
@@ -138,17 +172,19 @@ export function ContentCook() {
 
                     ))}
 
-                    <Box className='btn-next-cook-media'>
-                        <ArrowRightIcon viewBox="3 3 17 17" sx={{ fontSize: 35, opacity: '0.5' }}></ArrowRightIcon>
+                    <Box className='btn-next-cook-media' sx={{
+                        borderRadius: '50%', backgroundColor: 'background.paper', width: '35px', height: '35px', right:"5px" }}>
+                        <ArrowRightIcon viewBox="3 3 17 17" sx={{ fontSize: 35, opacity: '0.5', position:"relative",right:'1px', top:'-1px'  }}></ArrowRightIcon>
                     </Box>
-                    <Box className='btn-prev-cook-media'>
-                        <ArrowLeftIcon viewBox="3 3 17 17" sx={{ fontSize: 35, opacity: '0.5' }}></ArrowLeftIcon>
+                    <Box className='btn-prev-cook-media' sx={{
+                        borderRadius: '50%', backgroundColor: 'background.paper', width: '35px', height: '35px', left:'5px'}}>
+                        <ArrowLeftIcon viewBox="3 3 17 17" sx={{ fontSize: 35, opacity: '0.5', position:"relative",left:'-2px', top:'-1px' }}></ArrowLeftIcon>
                     </Box>
-                </Swiper>
+                </Swiper> */}
 
             </Box>
 
 
-        </Container >
+        </Box >
     )
 }

@@ -113,13 +113,22 @@ export const descriptionRecipt = {
 
 
 export const containerContentRecipe = {
-    maxWidth: 'none!important',
-    height:'auto',
-    minHeight:'auto',
-    width:'88%',
-    pr:'0!important',
-    display:'flex',
-    flexDirection:'column'
+    // maxWidth: 'none!important',
+    // height:'auto',
+    // minHeight:'auto',
+    width:'100%',
+    m:'0',
+    borderRadius:'20px',
+    display: "flex",
+    backgroundColor:'background.default',
+    overflow: "hidden",
+    ml:"20px"
+    // overflow:'auto',
+    // pr:'0!important',
+    // display:'flex',
+    // flexDirection:'column',
+    // alignItems:'center',
+    // justifyContent:'center',
 }
 
 
