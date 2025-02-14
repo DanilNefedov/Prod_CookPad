@@ -89,16 +89,17 @@ export const contentBlock = {
     borderRadius:'20px',
     width:'50%',
     overflow: "auto", 
-    p:'0 7px',
-    height:'fit-content',
+    p:'7px 7px',
+    // height:'fit-content',
     flexShrink:'0',
     mr:'20px',
+    height:'100%'
 }
 
 export const contentContainer ={
     overflowX:'hidden',
     scrollbarColor: "#353842 #1F2128",
-    maxHeight:'calc(100vh - 60px)',
+    maxHeight:'calc(100vh - 74px)',
     p:'15px 15px',
     position:'relative'
    
@@ -115,9 +116,10 @@ export const containerContentRecipe = {
     maxWidth: 'none!important',
     height:'auto',
     minHeight:'auto',
-    width:'86%',
+    width:'88%',
     pr:'0!important',
-
+    display:'flex',
+    flexDirection:'column'
 }
 
 
@@ -150,11 +152,13 @@ export const addListIngr = {
     color:'text.secondary',
     textTransform:'none',
     p:'2px 7px',
+    lineHeight:'1.7',
     '&:hover':{
         color:'text.primary',
-        backgroundColor:'primary.dark',
+        backgroundColor:'primary.main',
     },
-    display:'block'
+    display:'block',
+    mt:'10px'
 }
 
 

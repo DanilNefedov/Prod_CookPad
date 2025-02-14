@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { deleteCookHistory } from "@/state/slices/cook-history";
 import { deleteHeaderCook } from "@/app/(main)/cook/[recipe_id]/styles";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, memo, SetStateAction, useCallback } from "react";
 
 
 interface PropsData { 
@@ -18,6 +18,7 @@ export function DeleteButton({ props }: { props: PropsData }) {
     const { recipe_id, isDeleting, setIsDeleting } = props;
     const cookHistoryStore = useAppSelector(state => state.cookHistory);
     const dispatch = useAppDispatch();
+    
 
     function handleDeleteRecipe(recipe_id: string) {
         if (!recipe_id) return;
@@ -36,3 +37,5 @@ export function DeleteButton({ props }: { props: PropsData }) {
         </Button>
     );
 }
+
+

@@ -45,8 +45,8 @@ export function ContentCook() {
     }, [id, recipe_id, dispatch, findCook, userStore.user.connection_id]);
 
 
-    const handlerFavorite = ({ recipe_id }: { recipe_id: string | null | undefined }): void => {
-        if (recipe_id !== null && recipe_id) {
+    const handlerFavorite = ({ recipe_id }: { recipe_id: string | undefined }): void => {
+        if (recipe_id !== '' && recipe_id) {
             if (findCook && id !== '') {
                 const data = { connection_id: id, recipe_id, favorite: findCook?.favorite }
                 dispatch(setFavoriteRecipe(data))
@@ -56,14 +56,14 @@ export function ContentCook() {
 
     return (
         <Container sx={containerContentRecipe}>
-            <Typography variant='h1' sx={{ fontSize: '1.6rem', mb: '10px' }}>{findCook?.recipe_type}</Typography>
+            <Typography variant='h1' sx={{ fontSize: '1.3rem', mb: '10px' }}>{findCook?.recipe_type}</Typography>
 
 
-            <Box sx={{ display: 'flex', alignItems: 'center', maxHeight: '80vh' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center',flexGrow:1 }}>
                 <Box sx={{ ...contentBlock, }}>
                     <Box sx={contentContainer}>
-                        <Typography variant="h2" fontSize={'2.75rem'}>{findCook?.name}</Typography>
-                        <Typography variant="body1" sx={{ m: '15px 0' }}>{findCook?.description}</Typography>
+                        <Typography variant="h2" fontSize={'2rem'}>{findCook?.name}</Typography>
+                        <Typography variant="body1" sx={{ m: '8px 0' }}>{findCook?.description}</Typography>
 
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                             <Typography color={'text.secondary'}>Time: {findCook?.time.hours}h : {findCook?.time.minutes}m</Typography>
@@ -73,11 +73,11 @@ export function ContentCook() {
 
                         </Box>
 
-                        <Box>
+                        <Box >
 
-                            <Typography variant="h3" fontSize={'1.8rem'} align="center">Ingredients</Typography>
+                            <Typography variant="h3" fontSize={'1.4rem'} align="center">Ingredients</Typography>
                             {/* change tag ul in DOM */}
-                            <List sx={{ '& .swiper': { position: 'static', m: '0 15px' } }}>
+                            <List sx={{ '& .swiper': { position: 'static', m: '0 15px'}, p:'0'  }}>
                                 <Swiper
                                     className='swiper-cook'
                                     navigation={{
@@ -113,8 +113,8 @@ export function ContentCook() {
                         </Box>
 
                         <Box>
-                            <Typography variant="h3" fontSize={'1.8rem'} align="center">Instruction</Typography>
-                            <Typography variant="body1" >{findCook?.instruction}</Typography>
+                            <Typography variant="h3" fontSize={'1.4rem'} align="center">Instruction</Typography>
+                            <Typography variant="body1" sx={{wordWrap:'break-word', mt:'5px'}}>{findCook?.instruction}</Typography>
                         </Box>
                     </Box>
 

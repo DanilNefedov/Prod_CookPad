@@ -79,18 +79,24 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
     // console.log(units)
     return (
         <Box sx={containerContentSlide}>
-            <ListItemAvatar >
-                <Avatar
+            <ListItemAvatar sx={{width: '40px', height: '40px', borderRadius: '50%', minWidth:'0', m:'0 auto'}}>
+
+                <Box sx={{
+                    width: '100%', height: '100%',
+                }} component="img"
+                src={el.media !== '' ? el.media : '/images/load-ingr.svg'} alt={el.name}
+                loading="lazy"></Box>
+                {/* <Avatar
                     alt={el.name}
                     src={el.media !== '' ? el.media : '/images/load-ingr.svg'}
                     sx={avatartIngredient}
-                />
+                /> */}
             </ListItemAvatar>
             <ListItemText
                 primary={el.name}
-                sx={{ textAlign: 'center' }}
+                sx={{ textAlign: 'center', mb:'0', fontSize:'1.1rem' }}
             />
-            <Box sx={{ textAlign: 'center' }}>
+            <Box sx={{ textAlign: 'center', opacity:'0.6' }}>
                 <span
                 >
                     {'list' in el.units && el.units.amount !== 0
