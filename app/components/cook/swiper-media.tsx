@@ -26,30 +26,38 @@ export function SwiperMediaCook ({ props }: { props: propsData }){
         <Box sx={{ ...imgRecipeContainer, }}>
             {el.media_type === 'image' ? 
                 <CardMedia
-                sx={{maxHeight:'80vh', height:'100%', display: "flex",
-                justifyContent: "center",
-                alignItems: "center"}}
-                    component='img'
-                    // alt={name as string}
-                    // sx={mainCardImg}
-                    src={el.media_url as string}
-                    loading="lazy"
+                sx={{
+                    height:'100%', 
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    objectFit:"cover",
+
+                }}
+                component='img'
+                // alt={name as string}
+                // sx={mainCardImg}
+                src={el.media_url as string}
+                loading="lazy"
                     // className="swiper-lazy"
                 />
                 :
                 <CardMedia
-                sx={{maxHeight:'80vh', height:'100%', }}
-                    component='video'
-                    // alt={name as string}
-                    // sx={mainCardImg}
-                    // src={el.media_url as string}
-                    
-                    // sx={{objectFit: "cover"}}
-                    autoPlay
-                    loop
-                    muted
-                    poster={el.media_url as string}
-                    // className="swiper-lazy"
+                sx={{
+                    height:'100%', 
+                    objectFit:"cover",
+                }}
+                component='video'
+                // alt={name as string}
+                // sx={mainCardImg}
+                // src={el.media_url as string}
+                
+                // sx={{objectFit: "cover"}}
+                autoPlay
+                loop
+                muted
+                poster={el.media_url as string}
+                // className="swiper-lazy"
                 >
                     <source
                     

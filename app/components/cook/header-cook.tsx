@@ -58,33 +58,31 @@ export function HeaderCook() {
 
 
     return (
-        <Box sx={scrollBox}>
-            {cookHistoryStore.history_links.map(el => (
-                <Box key={el.recipe_id} sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Button
-                        component={Link}
-                        variant="contained"
-                        href={`/cook/${el.recipe_id}`}
-                        sx={{
-                            ...btnMain, ...btnsCookHeader,
-                            color: recipe_id === el.recipe_id ? 'text.primary' : 'text.secondary',
-                            backgroundColor: recipe_id === el.recipe_id ? 'primary' : 'secondary.main'
-                        }}
-                        disabled={isDeleting}
-                    >
-                        {el.recipe_name}
-                    </Button>
+        (cookHistoryStore.history_links.map(el => (
+            <Box key={el.recipe_id} sx={{ display: 'flex', alignItems: 'center' }}>
+                <Button
+                    component={Link}
+                    variant="contained"
+                    href={`/cook/${el.recipe_id}`}
+                    sx={{
+                        ...btnMain, ...btnsCookHeader,
+                        color: recipe_id === el.recipe_id ? 'text.primary' : 'text.secondary',
+                        backgroundColor: recipe_id === el.recipe_id ? 'primary' : 'secondary.main'
+                    }}
+                    disabled={isDeleting}
+                >
+                    {el.recipe_name}
+                </Button>
 
-                    <DeleteButton
-                        props={{
-                            recipe_id: el.recipe_id,
-                            isDeleting,
-                            setIsDeleting
-                        }}
-                    />
-                </Box>
-            ))}
-        </Box>
+                <DeleteButton
+                    props={{
+                        recipe_id: el.recipe_id,
+                        isDeleting,
+                        setIsDeleting
+                    }}
+                />
+            </Box>
+        )))
     );
 }
 

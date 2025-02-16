@@ -2,6 +2,7 @@
 .swiper-cook > .swiper-wrapper{
     margin: 10px 0;
     flex-direction: inherit;
+    
 }
 .cook-slide{
     background-color: #353842;
@@ -38,7 +39,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 80vh;
+    /* height: 80vh; */
     /* margin: 0 40px; */
 }
 /* .cook-media-main-slide{
@@ -49,7 +50,11 @@
     background-color:#1F2128 ;
     position: relative;
     height: 100%;
-    border-radius: 20px;
+    border-radius: 10px;
+    max-width: 464px;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
 }
 .swiper-cook-media-main .swiper-wrapper{
     align-items: center;
@@ -69,3 +74,13 @@
 .btn-next-cook-media{
     right: 0px;
 }
+
+.swiper-cook-media-main .swiper-button-disabled svg{
+    /* color:#1F2128; */
+    opacity: .5;
+    cursor: auto;
+}
+
+
+
+

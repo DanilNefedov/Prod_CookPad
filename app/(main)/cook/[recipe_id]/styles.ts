@@ -1,3 +1,5 @@
+import { theme } from "@/config/ThemeMUI/theme"
+
 export const mainBoxCook = {
     display: 'flex',
     height: 'calc(100vh - 20px)',
@@ -76,7 +78,9 @@ export const imgRecipeContainer = {
     // maxWidth:"750px"
     alignItems:'center',
     justifyContent:'center',
-    display:'flex'
+    display:'flex',
+    aspectRatio:'4/5',
+    maxWidth:'465px'
 }
 
 export const imgRecipe = {
@@ -113,22 +117,17 @@ export const descriptionRecipt = {
 
 
 export const containerContentRecipe = {
-    // maxWidth: 'none!important',
-    // height:'auto',
-    // minHeight:'auto',
-    width:'100%',
+    width:'calc(100% - 200px)',
     m:'0',
     borderRadius:'20px',
-    display: "flex",
     backgroundColor:'background.default',
-    overflow: "hidden",
-    ml:"20px"
-    // overflow:'auto',
-    // pr:'0!important',
-    // display:'flex',
-    // flexDirection:'column',
-    // alignItems:'center',
-    // justifyContent:'center',
+    ml:"20px",
+    scrollbarColor: "#353842 #1F2128",
+    p:'10px',
+    
+    [theme.breakpoints.down("md")]: {
+        width:'calc(100% - 50px)',
+    }
 }
 
 
