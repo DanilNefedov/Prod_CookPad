@@ -162,18 +162,35 @@ export function CardContentBlock({ props }: { props: propsData }) {
                     height:'35px', 
                     backgroundColor:'rgba(31,33,40, 0.7)',
                     borderRadius:'50%',
-                    
-                }}>
-                    <ArrowRightIcon viewBox="3 3 17 17" sx={{ fontSize: 35, opacity: '0.5', borderRadius:'50%', mt:'-1px' }}></ArrowRightIcon>
+                    cursor:'pointer',
+                    [theme.breakpoints.down("md")]: { width:'30px', 
+                        height:'30px',},
+
+                    [theme.breakpoints.down(600)]: { width:'20px', 
+                        height:'20px',}
+                    }}>
+                    <ArrowRightIcon viewBox="3 3 17 17" sx={{ fontSize: 35, borderRadius:'50%', mt:'-1px',
+                
+                        [theme.breakpoints.down("md")]: { fontSize: 30 },
+                        [theme.breakpoints.down(600)]: { fontSize: 20 }
+                    }}></ArrowRightIcon>
                 </Box>
                 <Box className='btn-prev-media' sx={{
                     width:'35px', 
                     height:'35px', 
                     backgroundColor:'rgba(31,33,40, 0.7)', 
                     borderRadius:'50%',
-                    
+                    cursor:'pointer',
+                    [theme.breakpoints.down("md")]: { width:'30px', 
+                        height:'30px',},
+                    [theme.breakpoints.down(600)]: { width:'20px', 
+                        height:'20px',}
                     }}>
-                    <ArrowLeftIcon viewBox="3 3 17 17" sx={{ fontSize: 35, opacity: '0.5', borderRadius:'50%', margin: "-1px 0 0 -2px" }}></ArrowLeftIcon>
+                    <ArrowLeftIcon viewBox="3 3 17 17" sx={{ fontSize: 35, borderRadius:'50%', margin: "-1px 0 0 -2px",
+                
+                        [theme.breakpoints.down("md")]: { fontSize: 30 },
+                        [theme.breakpoints.down(600)]: { fontSize: 20 }
+                    }}></ArrowLeftIcon>
                 </Box>
             </Swiper>
             {/* <CardMedia
@@ -277,7 +294,10 @@ export function CardContentBlock({ props }: { props: propsData }) {
                             }}>
                                 <DeleteIcon sx={{
                                     width: '100%',
-                                    height: '100%'
+                                    height: '100%',
+                                    '&:hover': { 
+                                        color: 'primary.main' 
+                                    },
                                 }}></DeleteIcon>
                             </Button>
                         </MenuItem>
@@ -306,6 +326,9 @@ export function CardContentBlock({ props }: { props: propsData }) {
                             },
                         }}>
                             <DeleteIcon sx={{
+                                '&:hover': { 
+                                    color: 'primary.main' 
+                                },
                                 [theme.breakpoints.down("md")]: {
                                     width: '100%',
                                     height: '100%'

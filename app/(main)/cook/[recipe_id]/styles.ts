@@ -15,6 +15,7 @@ export const headerCook = {
     boxShadow: 'none',
     maxWidth:'200px',
     width: '100%',
+    padding:'10px 3px 10px 15px'
 }
 
 
@@ -22,12 +23,13 @@ export const scrollBox = {
     overflowY: 'auto',
     display: 'flex',
     flexDirection: 'column',
-    m: '10px 10px 10px 10px',
+    // m: '10px 10px 10px 10px',
     borderRight: 1,
     borderColor: 'transparent',
     scrollbarColor: "#353842 #1F2128",
     pr: '10px',
     width: '100%',
+    height:'100%'
 }
 
 
@@ -144,7 +146,8 @@ export const ingredientBox = {
 }
 
 export const containerContentSlide ={
-    p:'5px'
+    p:'5px',
+
 }
 
 export const avatartIngredient = {
@@ -166,7 +169,13 @@ export const addListIngr = {
         backgroundColor:'primary.main',
     },
     display:'block',
-    mt:'10px'
+    mt:'10px',
+    [theme.breakpoints.down("md")]: {    
+        fontSize:'14px',
+        minWidth:'0',
+        lineHeight:'14px',
+        p:"5px 7px"
+    }
 }
 
 

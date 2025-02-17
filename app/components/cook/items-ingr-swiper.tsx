@@ -5,6 +5,7 @@ import { MouseEvent, useState } from "react";
 import { getUnits, returnData } from "./func/modal-fetch-units";
 import { Avatar, Box, Button, ListItemAvatar, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
 import { addListIngr, avatartIngredient, containerContentSlide, menuListItems } from "@/app/(main)/cook/[recipe_id]/styles";
+import { theme } from "@/config/ThemeMUI/theme";
 
 
 interface propsData {
@@ -79,7 +80,12 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
     // console.log(units)
     return (
         <Box sx={containerContentSlide}>
-            <ListItemAvatar sx={{width: '40px', height: '40px', borderRadius: '50%', minWidth:'0', m:'0 auto'}}>
+            <ListItemAvatar sx={{width: '40px', height: '40px', borderRadius: '50%', minWidth:'0', m:'0 auto',
+                [theme.breakpoints.down("md")]: {   
+                    width:'30px',
+                    height:'30px' 
+                }
+            }}>
 
                 <Box sx={{
                     width: '100%', height: '100%',
@@ -94,9 +100,16 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
             </ListItemAvatar>
             <ListItemText
                 primary={el.name}
-                sx={{ textAlign: 'center', mb:'0', fontSize:'1.1rem' }}
+                sx={{ textAlign: 'center', mb:'0', fontSize:'1.1rem',
+                    '& span':{[theme.breakpoints.down("md")]: {
+                       
+                        fontSize:'14px'
+                    },}
+                }}
             />
-            <Box sx={{ textAlign: 'center', opacity:'0.6' }}>
+            <Box sx={{ textAlign: 'center', opacity:'0.6', [theme.breakpoints.down("md")]: {
+                    fontSize:'14px'
+                }, }}>
                 <span
                 >
                     {'list' in el.units && el.units.amount !== 0
