@@ -5,7 +5,6 @@ import { AdaptiveHeader } from "@/app/components/cook/adaptive-header";
 
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
-
     return (
         <Box sx={mainBoxCook}>
             <Box sx={{...headerCook, display: { xs: "none", md: "block" } }}>
