@@ -66,9 +66,9 @@ export function CardContentBlock({ props }: { props: propsData }) {
     }
 
     function addToList() {
-        if (id !== '' && recipe_id) {
-            // dispatch(newListRecipe({ connection_id: id, recipe_id: recipe_id }))
-        }
+        // if (id !== '' && recipe_id) {
+        //     dispatch(newListRecipe({ connection_id: id, recipe_id: recipe_id }))
+        // }
     }
 
     function handleDelete(recipe_id: string) {

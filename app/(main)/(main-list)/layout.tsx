@@ -1,7 +1,5 @@
 import { HeaderList } from "@/app/components/main-list/header-list";
-import { Box } from "@mui/material";
-import { headers } from "next/headers";
-// import { HeaderList } from "./heade-list";
+import { AppBar, Box } from "@mui/material";
 
 
 
@@ -11,14 +9,36 @@ export default async function ListLayout({
 }: {
     children: React.ReactNode
 }) {
-    const headersList = await headers();
-    const referer = headersList.get('referer') || '';
-    const url = new URL(referer);
-    const pathname = url.pathname.startsWith("/") ? url.pathname.slice(1) : url.pathname;
+   
+    const links = [
+        {
+            url:'/list',
+            name:'List'
+        },
+        {
+            url:'/list-recipe',
+            name:'Recipes'
+        }
+    ]
 
     return (
         <Box sx={{ height: 'inherit' }}>
-            <HeaderList pathname={pathname}></HeaderList>
+            <AppBar position="static" sx={{ 
+                backgroundColor: 'background.default', 
+                alignItems: 'center', 
+                m: '10px 0', 
+                justifyContent:'center',
+                flexDirection:'inherit',
+                borderRadius:'10px',
+                p:'10px 0',
+                gap:'20px',
+                boxShadow:'none'
+            }}>
+                {links.map(el => (
+                    <HeaderList props={el} key={el.url}></HeaderList>
+                ))}
+                
+            </AppBar>
             {children}
         </Box>
     )

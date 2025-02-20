@@ -7,6 +7,7 @@ export const blockList = {
     '&:lastChild': {
         mb: '0'
     },
+    borderRadius:'10px'
     // m: '10px 0 0 0',
 
 }
@@ -164,11 +165,10 @@ export const btnsModal = {
 
 
 export const cellHeader = {
-    backgroundColor: '#15161B',
     '& .MuiTableCell-root': {
         color: '#8E94A4',
-        backgroundColor: '#15161B',
-        borderRight: '2px solid #1F2128',
+        borderRight: '2px solid #37393c',
+        borderBottom:'2px solid #37393c',
         '&:last-child': {
             borderRight: '0'
         }

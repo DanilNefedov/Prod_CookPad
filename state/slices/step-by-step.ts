@@ -1,4 +1,4 @@
-import { IngredientForState, unitsState } from '@/app/types/types';
+import { IngredientForAutocomplite, IngredientFullData, unitsState } from '@/app/types/types';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -21,7 +21,7 @@ type StepInfo = {
     minutes?: string;
     hours?: string;
     media?: MediaObj[];
-    ingredients?: IngredientForState[];
+    ingredients?: IngredientForAutocomplite[];
     description?: string;
     instruction?: string;
     second_option?: {

@@ -9,10 +9,10 @@ import { Box } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { theme } from '@/config/ThemeMUI/theme';
-import { IngredientForState } from '@/app/types/types';
+import { IngredientFullData } from '@/app/types/types';
 
 interface PropsData {
-    findCook: IngredientForState[] | undefined,
+    findCook: IngredientFullData[] | undefined,
     id: string
 }
 
@@ -20,6 +20,8 @@ interface PropsData {
 export function IngredientSwiper({ props }: { props: PropsData }) {
     const { findCook, id } = props;
     const itemCount = findCook?.length || 0;
+
+    console.log(findCook)
 
     return (
         <Swiper

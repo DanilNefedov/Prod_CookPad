@@ -64,6 +64,7 @@ cookBtn = {
 .swiper-media-main .swiper-button-disabled svg{
     opacity: .5;
     cursor: auto;
+    color: inherit;
 }
 .cookLinkMainContent{
     padding: 2px 10px;

@@ -4,7 +4,7 @@ import { AppDispatch } from "@/state/store";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 import _ from "lodash";
-import { IFetchDataRecipe, IngredientForState } from "@/app/types/types";
+import { IFetchDataRecipe, IngredientForAutocomplite } from "@/app/types/types";
 import { resetStateRecipes } from "@/state/slices/recipe-slice";
 
 
@@ -139,7 +139,7 @@ export async function saveForm(state: StateStepper, id: string, dispatch: AppDis
 
                     // console.log(state.steps_info[0])
                     if (state.steps_info[0].recommendation) {
-                        const ingredientNames = ingredientsCopy.map((el: IngredientForState) => el.name);
+                        const ingredientNames = ingredientsCopy.map((el: IngredientForAutocomplite) => el.name);
 
                         //media - 10
                         //name - 1 

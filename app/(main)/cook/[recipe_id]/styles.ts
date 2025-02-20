@@ -211,10 +211,11 @@ export const btnAddNew = {
     display:'flex', 
     m:'0 auto 10px ', 
     transition:'0',
+    color:'text.primary',
+    textTransform:'capitalize',
     backgroundColor:'background.paper',
     p:'5px 10px',
     '&:hover':{
         backgroundColor:'primary.dark',
-        color:'text.primary'
     }
 }

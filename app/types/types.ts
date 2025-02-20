@@ -135,21 +135,21 @@ export interface IProps{
 //     name:string | null | undefined  ||||||||||||||||||||||||||||||||||||||
 // }
 
-export interface IRecipe{
-    recipe_id:string | null , 
-    name:string | null , 
-    time: {
-        hours:null | string ,
-        minutes:null | string 
-    }, 
-    media:MediaObj[], 
-    recipe_type:string | null , 
-    instruction:string | null ,
-    sorting:string[],
-    description: string | null 
-    ingredients:IngredientForState[],
-    favorite:boolean
-}
+// export interface IRecipe{
+//     recipe_id:string | null , 
+//     name:string | null , 
+//     time: {
+//         hours:null | string ,
+//         minutes:null | string 
+//     }, 
+//     media:MediaObj[], 
+//     recipe_type:string | null , 
+//     instruction:string | null ,
+//     sorting:string[],
+//     description: string | null 
+//     ingredients:IngredientForAutocomplite[],
+//     favorite:boolean
+// }
 
 // export interface ISaveFormThunk  {
 //     url: string,
@@ -178,13 +178,13 @@ export interface ErrorStatus {
     error: boolean,
 }
 
-export interface ISaveFormThunk  {
-    url: string,
-    recipeData:IRecipe
-}
+// export interface ISaveFormThunk  {
+//     url: string,
+//     recipeData:IRecipe
+// }
 
 export interface unitsState {
-    choice: null | string
+    choice: string
     amount:number
     list: string[]
 }
@@ -202,15 +202,25 @@ export interface IngredientTemplateT{
     media: string;
 }
 
-
-export interface IngredientForState{
+export interface IngredientStateTemplate{
     ingredient_id: string;
     name: string;
     media: string;
+}
+
+
+
+export interface IngredientForAutocomplite extends IngredientStateTemplate{
+    // check_open_link?:string, 
     new_ingredient?:boolean,
-    // check_open_link?:string,
     units: (string[] | unitsState);
 }
+
+export interface IngredientFullData extends IngredientStateTemplate{
+    units: unitsState;
+}
+
+
 
 export type TempalateRecipe = {
     recipe_id:string  , 
@@ -241,7 +251,7 @@ export type TempalateRecipe = {
 export type CookPageT = TempalateRecipe & {
     instruction:string,
     sorting:string[],
-    ingredients:IngredientForState[],
+    ingredients:IngredientFullData[],
 }
 
 export type FetchCookPage = {
@@ -382,7 +392,7 @@ ingredients:[
 //     description: string,
 //     instruction:string
 // }
-export interface unitsList {
+export interface UnitsList {
     choice: string,
     amount: number,
     shop_unit:boolean,
@@ -396,7 +406,7 @@ export interface IListObj{
     media:string,
     shop_ingr: boolean,
     list: string[],
-    units: unitsList[]
+    units: UnitsList[]
 }
 
 export interface IListState{
@@ -416,12 +426,12 @@ export interface IRequestList {
 // -------------------------------------  LIST RECIPE TYPE ----------------------------//
 
 export type MainListRecipe = ErrorStatus & {
-    connection_id:string | null,
+    connection_id:string,
     recipes:recipeForList[]
 }
 
 export type returnDataRecipeList = {
-    connection_id:string | null,
+    connection_id:string,
     recipes:recipeForList[]
 }
 
@@ -434,7 +444,24 @@ export type recipeForList = {
 }
 
 
- 
+export interface IngredientNewList extends IngredientStateTemplate{
+    units: unitsState;
+}
+
+
+export interface NewUnitObj{
+    choice:string
+    amount:number
+    shop_unit:boolean
+}
+export interface NewUnitIngredient {
+    name:string,
+    media:string,
+    shop_ingr:boolean
+    units:NewUnitObj[]
+    list:string[]
+}
+
 
 
 

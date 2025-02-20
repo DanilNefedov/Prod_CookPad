@@ -1,4 +1,4 @@
-import { IngredientForState, ingredintFetch } from "@/app/types/types";
+import { IngredientForAutocomplite, ingredintFetch } from "@/app/types/types";
 import { useAppDispatch } from "@/state/hook";
 import { Autocomplete, Box, debounce, ListItem, TextField, Typography } from "@mui/material";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
@@ -10,7 +10,7 @@ import { theme } from "@/config/ThemeMUI/theme";
 
 
 interface AutocompleteProps {
-    ingredient: IngredientForState,
+    ingredient: IngredientForAutocomplite,
     open: boolean,
     error: boolean
 }
@@ -19,10 +19,11 @@ interface AutocompleteProps {
 export function Autocomplite(props: { props: AutocompleteProps }) {
     const { ingredient, open, error } = props.props;
     const dispatch = useAppDispatch();
-    const [value, setValue] = useState<IngredientForState | null>(ingredient);
+    const [value, setValue] = useState<IngredientForAutocomplite | null>(ingredient);
     const [inputValue, setInputValue] = useState<string>('');
-    const [options, setOptions] = useState<IngredientForState[]>([]);
+    const [options, setOptions] = useState<IngredientForAutocomplite[]>([]);
 
+    console.log(ingredient)
 
     const fetch = useMemo(
         () =>
@@ -192,7 +193,7 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                 freeSolo
                 value={value}
                 noOptionsText="No ingredients"
-                onChange={(event, newValue: IngredientForState | string | null) => {
+                onChange={(event, newValue: IngredientForAutocomplite | string | null) => {
                     if (typeof newValue === 'string') {
                         const newIngredient = {
                             ingredient_id: ingredient.ingredient_id,

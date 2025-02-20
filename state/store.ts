@@ -5,6 +5,7 @@ import recipeSlice from './slices/recipe-slice'
 import stepByStep from './slices/step-by-step'
 import cookHistorySlice from './slices/cook-history'
 import cookSlice from './slices/cook'
+import listSlice from './slices/list-slice'
 
 export const store = configureStore({
     reducer:{
@@ -12,7 +13,8 @@ export const store = configureStore({
         recipe:recipeSlice,
         setpForm:stepByStep,
         cookHistory:cookHistorySlice,
-        cook:cookSlice
+        cook:cookSlice,
+        list:listSlice,
     }
 })
 

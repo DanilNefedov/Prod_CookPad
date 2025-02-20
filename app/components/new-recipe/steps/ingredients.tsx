@@ -1,5 +1,5 @@
 import { btnMain } from "@/app/main-styles"
-import { IngredientForState } from "@/app/types/types"
+import { IngredientForAutocomplite } from "@/app/types/types"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { addIngredient, deleteIngredient } from "@/state/slices/step-by-step"
 import { Box, Button, Container, Divider, Tooltip, Typography } from "@mui/material"
@@ -14,7 +14,7 @@ export function Ingredients() {
     const dispatch = useAppDispatch()
 
 
-
+    console.log(infoPageState?.ingredients)
 
     return (
         <Container sx={{
@@ -44,7 +44,7 @@ export function Ingredients() {
                 }
              }}>
 
-                {infoPageState?.ingredients?.map((ingredient: IngredientForState) => (
+                {infoPageState?.ingredients?.map((ingredient: IngredientForAutocomplite) => (
                     <Box key={ingredient.ingredient_id} sx={{ display: 'flex', alignItems: 'center', borderColor: 'background.default', width: '100%', mb: '10px',
                         [theme.breakpoints.down('md')]: {
                             mb:'5px'
@@ -63,7 +63,8 @@ export function Ingredients() {
                             p:'5px'
                         } }} onClick={() => dispatch(deleteIngredient({ ingredient_id: ingredient.ingredient_id as string }))}>X</Button>
                         <Divider sx={{height:'1px', bgcolor:"text.disabled", width:'100%', display:'none', [theme.breakpoints.down(500)]: {display:'block'}}}/>
-                    </Box>))}
+                    </Box>))
+                }
 
                 <Button sx={{ ...btnMain, m: '20px auto 0 ', display: 'block', width: '140px', backgroundColor: 'background.default',[theme.breakpoints.down('md')]: {
                             fontSize:'12px',
