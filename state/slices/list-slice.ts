@@ -52,6 +52,15 @@ interface reqDataUpdateUnit{
 }
 
 
+
+
+interface updateCookUnitI {
+    name:string,
+    connection_id: string,
+    _id: string,
+    amount: number,
+}
+
 export const fetchList = createAsyncThunk<IRequestList, string, { rejectValue: string }>(
     'list/fetchList',
     async function (id, { rejectWithValue }) {
@@ -76,17 +85,17 @@ export const fetchList = createAsyncThunk<IRequestList, string, { rejectValue: s
 
 
 // export const newUnitCookPage = createAsyncThunk<returnNewUnit | returnNewIngredient, newUnitCookPageI, { rejectValue: string }>(
-export const newUnitCookPage = createAsyncThunk<void, reqDataNewUnit | reqDataUpdateUnit, { rejectValue: string }>(
+export const newUnitCookPage = createAsyncThunk<reqDataNewUnit | reqDataUpdateUnit, reqDataNewUnit | reqDataUpdateUnit, { rejectValue: string }>(
     'list/newUnitCookPage',
-    async function ({dataUnit, method}, { rejectWithValue }) {
+    async function (reqData, { rejectWithValue }) {
         try {
-            console.log(dataUnit, method)
-            const response = await fetch('/api/list/ingredient', {
-                method: method,
+            console.log(reqData.dataUnit, reqData.method)
+            const response = await fetch('/api/list/cook-ingredient', {
+                method: reqData.method,
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(dataUnit)
+                body: JSON.stringify(reqData.dataUnit)
             });
 
             if (!response.ok) {
@@ -95,7 +104,36 @@ export const newUnitCookPage = createAsyncThunk<void, reqDataNewUnit | reqDataUp
 
             const { data } = await response.json()
             console.log(data)
-            // return data;
+            return reqData;
+
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+);
+
+
+export const updateCookUnit = createAsyncThunk<updateCookUnitI, updateCookUnitI, { rejectValue: string }>(
+    'list/updateCookUnit',
+    async function (data, { rejectWithValue }) {
+        try {
+            
+            const response = await fetch('/api/list/cook-amount', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error('Server Error!');
+            }
+
+            // const dataList = await response.json()
+            // console.log(dataList)
+            return data;
 
         } catch (error) {
             console.log(error);
@@ -142,6 +180,58 @@ const listSlice = createSlice({
                 })
 
             })
+
+
+// export interface IListObj{
+//     _id:string,
+//     name: string,
+//     media:string,
+//     shop_ingr: boolean,
+//     list: string[],
+//     units: UnitsList[]
+// }
+
+            .addCase(newUnitCookPage.pending, (state) => {
+                state.status = true,
+                state.error = false
+            })
+            .addCase(newUnitCookPage.fulfilled, (state, action:PayloadAction<reqDataNewUnit | reqDataUpdateUnit, string>) => {
+                const {dataUnit, method} = action.payload;
+                // console.log(action.payload)
+                // const ingredient = state.list_ingr.find(ingr => ingr.name === data.name);
+                // if(messages === 'new_unit' && ingredient && !('list' in data)){
+                //     ingredient.units.push({
+                //         shop_unit: data.shop_unit,
+                //         choice: data.choice,
+                //         amount: data.amount,
+                //         _id:data._id
+                //     })
+                // }
+
+                if(method === 'POST'){
+                    state.list_ingr.push(dataUnit)
+                }
+
+            })
+
+
+
+            .addCase(updateCookUnit.pending, (state) => {
+                state.status = true,
+                state.error = false
+            })
+            .addCase(updateCookUnit.fulfilled, (state, action: PayloadAction<updateCookUnitI, string>) => {
+                const { name, amount, _id } = action.payload;
+                const ingredient = state.list_ingr.find(ingr => ingr.name === name);
+                if (ingredient) {
+                    const unit = ingredient.units.find(unit => unit._id === _id);
+                    if (unit) {
+                        unit.amount = amount;
+                    }
+
+                }
+            })
+
 
         }
 })

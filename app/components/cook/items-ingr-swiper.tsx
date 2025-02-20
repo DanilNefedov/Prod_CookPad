@@ -7,18 +7,19 @@ import { addListIngr, avatartIngredient, btnAddNew, btnListItem, containerConten
 import { theme } from "@/config/ThemeMUI/theme";
 import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch } from "@/state/hook";
-import { newUnitCookPage } from "@/state/slices/list-slice";
+import { newUnitCookPage, updateCookUnit } from "@/state/slices/list-slice";
+import { add, bignumber, format } from "mathjs";
 
 
 interface propsData {
     el: IngredientFullData,
-    id: string 
+    id: string
 }
 
 interface returnData {
-    choice:string,
-    amount:number,
-    _id:string
+    choice: string,
+    amount: number,
+    _id: string
 }
 
 
@@ -32,11 +33,11 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
     // const listStore = useAppSelector(state => state.list)
 
 
-    
+
 
     const handleClick = async (event: MouseEvent<HTMLElement>) => {
         const choice = el.units.choice
-           
+
         const url = `/api/cook/units?connection_id=${id}&name=${el.name}&choice=${choice}`
 
         setAnchorEl(event.currentTarget);
@@ -49,10 +50,10 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
         });
 
         if (!responseData.ok) {
-            
+
             throw new Error('Server Error!');
         }
-        
+
 
         const dataList = await responseData.json()
 
@@ -62,13 +63,13 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
             setUnits(dataList.units)
             console.log('Данные получены:', dataList);
 
-        } else if(dataList.unit_found === false) {
-
+        } else if (dataList.unit_found === false) {
+            setMethod('PATCH')
             setUnits(dataList.units)
             console.log(dataList)
-            setMethod('PATCH')
 
-        }else if(dataList.unit_found === null){
+
+        } else if (dataList.unit_found === null) {
 
             setMethod('POST')
             console.log(dataList)
@@ -76,33 +77,34 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
 
 
     };
-   
+
 
 
     const handleClose = () => {
         setAnchorEl(null);
+        setMethod('')
     };
 
 
 
     function addNewUnit(el: IngredientFullData) {
-        console.log(el)
-        if (id !== '' ) {
-            if(method === 'POST')
-                {const dataUnit = {
+        if (id !== '') {
+            if (method === 'POST') {
+                const dataUnit = {
                     connection_id: id,
                     name: el.name,
                     media: el.media,
                     shop_ingr: false,
                     units: [{
-                    choice: el.units.choice,
-                    amount: el.units.amount,
-                    shop_unit: false,
+                        choice: el.units.choice,
+                        amount: el.units.amount,
+                        shop_unit: false,
                     }],
                     list: [...el.units.list]
                 }
-                dispatch(newUnitCookPage({dataUnit, method}))
-            }else if(method === 'PATCH'){
+                dispatch(newUnitCookPage({ dataUnit, method }));
+
+            } else if (method === 'PATCH') {
                 const dataUnit = {
                     connection_id: id,
                     name: el.name,
@@ -112,55 +114,49 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
                         shop_unit: false,
                     },
                 }
-                dispatch(newUnitCookPage({dataUnit, method}))
+                dispatch(newUnitCookPage({ dataUnit, method }));
             }
-            // dispatch(newUnitCookPage(data))
-            setAnchorEl(null);
         }
-
+        handleClose()
     }
 
 
 
 
 
-    //Number((0.2 + 0.1).toFixed(5))
     function addOldUnit(elem: returnData) {
-        console.log('addOldUnit')
-        
-        // const amount = 'list' in el.units ? el.units.amount : ''
+        const sum = add(bignumber(el.units.amount), bignumber(elem.amount));
+        const new_amount = Number(sum.toFixed(5)); 
 
-        // if (id && id !== null && typeof amount === 'number') {
-        //     const data = {
-        //         name:el.name,
-        //         connection_id: id,
-        //         old_id: elem._id,
-        //         // ingredient_id:el.ingredient_id,
-        //         new_amount: Number((amount + elem.amount).toFixed(5))
-        //     }
+        if (id !== '') {
+            const data = {
+                name:el.name,
+                connection_id: id,
+                _id: elem._id,
+                amount: new_amount
+            }
 
-        //     dispatch(updateCookUnit(data))
-        //     setAnchorEl(null);
-        // }
-
-
+            dispatch(updateCookUnit(data))
+            handleClose()
+        }
     }
 
     // console.log(units)
     return (
         <Box sx={containerContentSlide}>
-            <ListItemAvatar sx={{width: '40px', height: '40px', borderRadius: '50%', minWidth:'0', m:'0 auto',
-                [theme.breakpoints.down("md")]: {   
-                    width:'30px',
-                    height:'30px' 
+            <ListItemAvatar sx={{
+                width: '40px', height: '40px', borderRadius: '50%', minWidth: '0', m: '0 auto',
+                [theme.breakpoints.down("md")]: {
+                    width: '30px',
+                    height: '30px'
                 }
             }}>
 
                 <Box sx={{
                     width: '100%', height: '100%',
                 }} component="img"
-                src={el.media !== '' ? el.media : '/images/load-ingr.svg'} alt={el.name}
-                loading="lazy"></Box>
+                    src={el.media !== '' ? el.media : '/images/load-ingr.svg'} alt={el.name}
+                    loading="lazy"></Box>
                 {/* <Avatar
                     alt={el.name}
                     src={el.media !== '' ? el.media : '/images/load-ingr.svg'}
@@ -169,16 +165,21 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
             </ListItemAvatar>
             <ListItemText
                 primary={el.name}
-                sx={{ textAlign: 'center', mb:'0', fontSize:'1.1rem',
-                    '& span':{[theme.breakpoints.down("md")]: {
-                       
-                        fontSize:'14px'
-                    },}
+                sx={{
+                    textAlign: 'center', mb: '0', fontSize: '1.1rem',
+                    '& span': {
+                        [theme.breakpoints.down("md")]: {
+
+                            fontSize: '14px'
+                        },
+                    }
                 }}
             />
-            <Box sx={{ textAlign: 'center', opacity:'0.6', [theme.breakpoints.down("md")]: {
-                    fontSize:'14px'
-                }, }}>
+            <Box sx={{
+                textAlign: 'center', opacity: '0.6', [theme.breakpoints.down("md")]: {
+                    fontSize: '14px'
+                },
+            }}>
                 <span
                 >
                     {'list' in el.units && el.units.amount !== 0
@@ -245,7 +246,7 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
                         <Typography sx={{ textAlign: 'center' }}>Or</Typography>
                     </MenuItem>
 
-                    <Button onClick={() => addNewUnit(el)} sx={{ ...btnListItem, ...btnAddNew }}>Like a new</Button>
+                    <Button disabled={method !== '' ? false : true} onClick={() => addNewUnit(el)} sx={{ ...btnListItem, ...btnAddNew }}>Like a new</Button>
                 </Menu>
             </Box>
         </Box>

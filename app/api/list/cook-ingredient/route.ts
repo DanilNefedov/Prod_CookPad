@@ -10,7 +10,7 @@ export async function PATCH(request: Request) {
     try {
         const dataUnit = await request.json();
         const { connection_id, name, units } = dataUnit;
-        console.log('2222222222222222222222222222222222222222222222',connection_id , name ,units ,'2222222222222222222222222222222222222222222222')
+
         if (!connection_id || !name || !units ) {
             return NextResponse.json({ error: 'Missing or invalid required parameters' }, { status: 400 });
         }
@@ -30,13 +30,11 @@ export async function PATCH(request: Request) {
             },
             { new: true } 
         );        
-        console.log('2222222222222222222222222222222222222222222222',updatedDoc,document, '2222222222222222222222222222222222222222222222')
 
-        return NextResponse.json({
-            data: updatedDoc
-        });
+        return NextResponse.json({}, { status: 204 });
 
     } catch (error) {
+        console.log(error)
         return NextResponse.json({
             status: 500,
             message: 'Failed to update document'
@@ -45,28 +43,11 @@ export async function PATCH(request: Request) {
 }
 
 
-// {
-//     "connection_id": "101625596288293490906",
-//     "name": "first",
-//     "media": "",
-//     "shop_ingr": false,
-//     "units": {
-//         "choice": "rt",
-//         "amount": 1,
-//         "shop_unit": false
-//     },
-//     "list": [
-//         "kg",
-//         "g",
-//         "ml",
-//         "l"
-//     ]
-// }
+
 
 export async function POST(request: Request) {
     try{
         const dataUnit = await request.json();
-        console.log(dataUnit)
         
         if (!dataUnit.connection_id || !dataUnit.name) {
             return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
@@ -80,7 +61,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: 'Document created', data: newIngredient }, { status: 201 });
 
     }catch(error){
-        console.error('❌ Ошибка в POST:', error);
+        console.error(error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
 
     }
