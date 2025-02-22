@@ -8,24 +8,11 @@ const initialState: IListState = {
     error: false,
     connection_id: '',
     list_ingr: [
-
-        // ingredient_id: string,
-        // name: string,
-        // media:string,
-        // shop_ingr: boolean,
-        // list:[string],
-        // count,------
-        // units: [{
-        //    shop_unit:boolean,
-        //    choice: string,
-        //    amount: number,
-        //    _id:string
-        // }]
     ]
 }
 
 
-interface newUnitCookPage {
+interface NewIngredientListT {
     connection_id:string,
     name:string,
     media:string,
@@ -33,24 +20,29 @@ interface newUnitCookPage {
     units:NewUnitObj[]
     list:string[]
 }
-interface reqDataNewUnit{
-    dataUnit:newUnitCookPage
-    method:string
+interface ResUnitObj extends NewUnitObj{
+    _id:string
+}
+interface ResNewIngredientListT {
+    _id:string,
+    name:string,
+    media:string,
+    shop_ingr:boolean
+    units:ResUnitObj[]
+    list:string[]
 }
 
 
 
-
-interface updateUnitCookpage {
+interface ReqDataUpdateUnit {
     connection_id: string,
     name: string,
     units: NewUnitObj,
 }
-interface reqDataUpdateUnit{
-    dataUnit:updateUnitCookpage
-    method:string
+interface ResDataUnitUpdate{
+    unit:ResUnitObj
+    _id:string
 }
-
 
 
 
@@ -71,7 +63,6 @@ export const fetchList = createAsyncThunk<IRequestList, string, { rejectValue: s
             if (!responseList.ok) return rejectWithValue('Server Error!');
             const dataList = await responseList.json()
 
-            // console.log(dataList.data)
 
             return dataList.data
             
@@ -82,29 +73,56 @@ export const fetchList = createAsyncThunk<IRequestList, string, { rejectValue: s
         }
     }
 )
-
-
-// export const newUnitCookPage = createAsyncThunk<returnNewUnit | returnNewIngredient, newUnitCookPageI, { rejectValue: string }>(
-export const newUnitCookPage = createAsyncThunk<reqDataNewUnit | reqDataUpdateUnit, reqDataNewUnit | reqDataUpdateUnit, { rejectValue: string }>(
-    'list/newUnitCookPage',
+export const newIngredientList = createAsyncThunk<ResNewIngredientListT, NewIngredientListT, { rejectValue: string }>(
+    'list/newIngredientList',
     async function (reqData, { rejectWithValue }) {
         try {
-            console.log(reqData.dataUnit, reqData.method)
+            // console.log(reqData)
             const response = await fetch('/api/list/cook-ingredient', {
-                method: reqData.method,
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(reqData.dataUnit)
+                body: JSON.stringify(reqData)
             });
 
             if (!response.ok) {
                 throw new Error('Server Error!');
             }
 
-            const { data } = await response.json()
-            console.log(data)
-            return reqData;
+            const data = await response.json()
+
+            return data;
+
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+);
+
+
+
+
+// export const newUnitCookPage = createAsyncThunk<returnNewUnit | returnNewIngredient, newUnitCookPageI, { rejectValue: string }>(
+export const newUnitIngredientList = createAsyncThunk<ResDataUnitUpdate, ReqDataUpdateUnit, { rejectValue: string }>(
+    'list/newUnitIngredientList',
+    async function (reqData, { rejectWithValue }) {
+        try {
+            const response = await fetch('/api/list/cook-ingredient', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reqData)
+            });
+
+            if (!response.ok) {
+                throw new Error('Server Error!');
+            }
+
+            const data = await response.json()
+            return data;
 
         } catch (error) {
             console.log(error);
@@ -131,8 +149,6 @@ export const updateCookUnit = createAsyncThunk<updateCookUnitI, updateCookUnitI,
                 throw new Error('Server Error!');
             }
 
-            // const dataList = await response.json()
-            // console.log(dataList)
             return data;
 
         } catch (error) {
@@ -164,57 +180,40 @@ const listSlice = createSlice({
                     const findThisIngr = state.list_ingr.find(elem => (elem._id === el._id))
 
                     if (!findThisIngr) {
-
                         state.list_ingr.push(el)
-
-                        // const { ingredient_id, media, name, units, shop_ingr, list } = el
-                        // const processedUnits = units.map(unit => ({
-                        //     amount: unit.amount,
-                        //     choice: unit.choice,
-                        //     shop_unit: unit.shop_unit,
-                        //     _id: unit._id
-                        // }));
-                        // // console.log(el)
-                        // state.list_ingr.unshift({ ingredient_id, media, name, list, units: processedUnits, shop_ingr })
                     }
                 })
 
             })
 
 
-// export interface IListObj{
-//     _id:string,
-//     name: string,
-//     media:string,
-//     shop_ingr: boolean,
-//     list: string[],
-//     units: UnitsList[]
-// }
-
-            .addCase(newUnitCookPage.pending, (state) => {
+           .addCase(newIngredientList.pending, (state) => {
                 state.status = true,
                 state.error = false
             })
-            .addCase(newUnitCookPage.fulfilled, (state, action:PayloadAction<reqDataNewUnit | reqDataUpdateUnit, string>) => {
-                const {dataUnit, method} = action.payload;
-                // console.log(action.payload)
-                // const ingredient = state.list_ingr.find(ingr => ingr.name === data.name);
-                // if(messages === 'new_unit' && ingredient && !('list' in data)){
-                //     ingredient.units.push({
-                //         shop_unit: data.shop_unit,
-                //         choice: data.choice,
-                //         amount: data.amount,
-                //         _id:data._id
-                //     })
-                // }
+            .addCase(newIngredientList.fulfilled, (state, action:PayloadAction<ResNewIngredientListT, string>) => {
+                const data = action.payload;
 
-                if(method === 'POST'){
-                    state.list_ingr.push(dataUnit)
+                const thisIngr = state.list_ingr.find(el => el._id === data._id)
+                if(state.list_ingr.length > 0 && !thisIngr){
+                    state.list_ingr.push(data)
+                    
+
                 }
-
             })
 
+            .addCase(newUnitIngredientList.pending, (state) => {
+                state.status = true,
+                state.error = false
+            })
+            .addCase(newUnitIngredientList.fulfilled, (state, action:PayloadAction<ResDataUnitUpdate, string>) => {
+                const {unit, _id} = action.payload;
+                const thisIngr = state.list_ingr.find(el => el._id === _id)
 
+                if(thisIngr){
+                    thisIngr.units.push(unit)
+                }
+            })
 
             .addCase(updateCookUnit.pending, (state) => {
                 state.status = true,

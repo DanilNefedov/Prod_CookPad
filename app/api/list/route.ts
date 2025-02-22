@@ -17,7 +17,7 @@ export async function GET(request: Request) {
         await connectDB();
 
         const result = await ListIngredients.find({ connection_id })
-            .select("-createdAt -updatedAt -__v")  
+            .select("-createdAt -updatedAt -__v -connection_id")  
             .sort({ createdAt: -1 })  
             .limit(15)
             .lean(); 

@@ -7,7 +7,7 @@ import { addListIngr, avatartIngredient, btnAddNew, btnListItem, containerConten
 import { theme } from "@/config/ThemeMUI/theme";
 import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch } from "@/state/hook";
-import { newUnitCookPage, updateCookUnit } from "@/state/slices/list-slice";
+import { newIngredientList, newUnitIngredientList, updateCookUnit } from "@/state/slices/list-slice";
 import { add, bignumber, format } from "mathjs";
 
 
@@ -102,7 +102,7 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
                     }],
                     list: [...el.units.list]
                 }
-                dispatch(newUnitCookPage({ dataUnit, method }));
+                dispatch(newIngredientList(dataUnit));
 
             } else if (method === 'PATCH') {
                 const dataUnit = {
@@ -114,7 +114,7 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
                         shop_unit: false,
                     },
                 }
-                dispatch(newUnitCookPage({ dataUnit, method }));
+                dispatch(newUnitIngredientList(dataUnit));
             }
         }
         handleClose()

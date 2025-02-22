@@ -1,6 +1,7 @@
 import connectDB from "@/app/lib/mongoose";
 import ListIngredients from "@/app/models/list";
 import { NextResponse } from "next/server";
+import _ from "lodash";
 
 
 
@@ -31,7 +32,11 @@ export async function PATCH(request: Request) {
             { new: true } 
         );        
 
-        return NextResponse.json({}, { status: 204 });
+        if (!updatedDoc) {
+            return NextResponse.json({ error: "Failed to update document" }, { status: 500 });
+        }
+
+        return NextResponse.json({unit:updatedDoc.units[updatedDoc.units.length - 1], _id:updatedDoc._id}, { status: 200 });
 
     } catch (error) {
         console.log(error)
@@ -58,7 +63,9 @@ export async function POST(request: Request) {
         const newIngredient = new ListIngredients(dataUnit);
         await newIngredient.save();
 
-        return NextResponse.json({ message: 'Document created', data: newIngredient }, { status: 201 });
+        const filteredData = _.omit(_.cloneDeep(newIngredient.toObject()), ["connection_id", "updatedAt", "createdAt", "__v"]);
+
+        return NextResponse.json(filteredData, { status: 201 });
 
     }catch(error){
         console.error(error);
