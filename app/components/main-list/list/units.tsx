@@ -9,6 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import { CalcUnit } from "./calc-unit"
+import { shopUnitUpdate } from "@/state/slices/list-slice"
 
 
 
@@ -76,15 +77,16 @@ export function Units({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsLi
 
     function toggleShopUnit(_id: string, shop_unit: boolean) {
         console.log('toggleShopUnit')
-        // if (id !== null && id) {
-        //     if(pathName === '/list'){
-        //         dispatch(toggleUnitFetch({ connection_id: id, ingredient_id: el.ingredient_id, unit_id: _id, shop_unit }))
-        //     }else if(pathName === '/list-recipe' && recipe_id){
-        //         dispatch(shopUnitListRecipe({ connection_id: id, ingredient_id: el.ingredient_id, unit_id: _id, shop_unit, recipe_id}))
+        if (id !== '') {
+            if(pathName === '/list'){
+                dispatch(shopUnitUpdate({ ingredient_id: el._id, unit_id: _id, shop_unit }))
+            }
+            // else if(pathName === '/list-recipe' && recipe_id){
+            //     dispatch(shopUnitListRecipe({ connection_id: id, ingredient_id: el.ingredient_id, unit_id: _id, shop_unit, recipe_id}))
 
-        //     }
+            // }
             
-        // }
+        }
     }
 
 

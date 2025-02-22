@@ -158,6 +158,67 @@ export const updateCookUnit = createAsyncThunk<updateCookUnitI, updateCookUnitI,
     }
 );
 
+interface ShopIngredientT {
+    _id:string, 
+    shop_ingr:boolean
+}
+
+export const toggleShopIngrFetch = createAsyncThunk<ShopIngredientT, ShopIngredientT, { rejectValue: string }>(
+    'list/toggleShopIngrFetch',
+    async function (data, { rejectWithValue }) {
+        try {
+            const response = await fetch('/api/list/shop-ingredient', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+    
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+    
+            return data;
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+);
+
+interface ShopUnitUpdateT {
+    ingredient_id: string
+    unit_id:string
+    shop_unit:boolean
+}
+
+export const shopUnitUpdate = createAsyncThunk<ShopUnitUpdateT, ShopUnitUpdateT, { rejectValue: string }>(
+    'list/toggleUnitFetch',
+    async function (data, { rejectWithValue }) {
+        try {
+            console.log(data)
+            const response = await fetch('/api/list/shop-unit', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+    
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+    
+            return data;
+    
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+);
+
 
 
 const listSlice = createSlice({
@@ -202,6 +263,7 @@ const listSlice = createSlice({
                 }
             })
 
+
             .addCase(newUnitIngredientList.pending, (state) => {
                 state.status = true,
                 state.error = false
@@ -214,6 +276,7 @@ const listSlice = createSlice({
                     thisIngr.units.push(unit)
                 }
             })
+
 
             .addCase(updateCookUnit.pending, (state) => {
                 state.status = true,
@@ -232,6 +295,34 @@ const listSlice = createSlice({
             })
 
 
+
+            .addCase(toggleShopIngrFetch.pending, (state) => {
+                state.status = true,
+                    state.error = false
+            })
+            .addCase(toggleShopIngrFetch.fulfilled, (state, action: PayloadAction<ShopIngredientT, string>) => {
+                const ingredient = state.list_ingr.find(ingr => ingr._id === action.payload._id);
+                if (ingredient) {
+                    ingredient.shop_ingr = !action.payload.shop_ingr;
+                }
+
+            })
+
+
+            .addCase(shopUnitUpdate.pending, (state) => {
+                state.status = true,
+                    state.error = false
+            })
+            .addCase(shopUnitUpdate.fulfilled, (state, action: PayloadAction<ShopUnitUpdateT, string>) => {
+                const { ingredient_id, unit_id, shop_unit } = action.payload;
+                const ingredient = state.list_ingr.find(ingr => ingr._id === ingredient_id);
+                if (ingredient) {
+                    const unit = ingredient.units.find(unit => unit._id === unit_id);
+                    if (unit) {
+                        unit.shop_unit = !shop_unit;
+                    }
+                }
+            })
         }
 })
     
