@@ -9,14 +9,15 @@ import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import { CalcUnit } from "./calc-unit"
-import { shopUnitUpdate } from "@/state/slices/list-slice"
+import { changeAmountFetch, deleteUnitIngrFetch, shopUnitUpdate } from "@/state/slices/list-slice"
+import { parse } from "mathjs"
 
 
 
 export function Units({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsList, id: string, recipe_id?: string}) {
     const [editAmount, setEditAmount] = useState<string | null>(null)
     // const [amount, setAmount] = useState<number | string>(elem.amount)
-    const [amount, setAmount] = useState<string | number>(elem.amount);
+    const [amount, setAmount] = useState<number>(elem.amount);
 
     const pathName = usePathname()
     const dispatch = useAppDispatch()
@@ -26,54 +27,56 @@ export function Units({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsLi
 
 
     function deleteUnitIngr(ingredient_id: string, unit_id: string) {
-        console.log('deleteUnitIngr')
-        // if (id && id !== null) {
-        //     console.log(ingredient_id, id)
-        //     if(pathName === '/list'){
-        //         dispatch(deleteUnitIngrFetch({ ingredient_id, connection_id: id, unit_id }))
-        //     }else if(pathName === '/list-recipe' && recipe_id){
-        //         dispatch(deleteUnitListRecipe({ ingredient_id, connection_id: id, unit_id, recipe_id }))
-        //     }
+        if (id !== '') {
+            if(pathName === '/list'){
+                dispatch(deleteUnitIngrFetch({ ingredient_id, unit_id }))
+            }
+            // else if(pathName === '/list-recipe' && recipe_id){
+            //     dispatch(deleteUnitListRecipe({ ingredient_id, connection_id: id, unit_id, recipe_id }))
+            // }
             
-        // }
+        }
     }
 
 
     function confirmAmount(_id: string) {
-        console.log('confirmAmount')
-        // setEditAmount(null);
-
-        // if (id !== null && id && amount !== elem.amount) {
-        //     if (amount === '' || isNaN(parseFloat(amount.toString()))) {
-        //         if(pathName === '/list'){
-        //             dispatch(changeAmountFetch({ connection_id: id, ingredient_id: el.ingredient_id, unit_id: _id, amount: 0 }))
-        //         }else if(pathName === '/list-recipe' && recipe_id){
-        //             dispatch(newAmountListRecipe({connection_id: id, ingredient_id: el.ingredient_id, unit_id: _id, amount: 0, recipe_id }))
-        //         }
+        if (id !== '' && amount !== elem.amount) {
+            
+            if(pathName === '/list'){
+                dispatch(changeAmountFetch({ ingredient_id: el._id, unit_id: _id, amount: amount}))
+            }
+            // else if(pathName === '/list-recipe' && recipe_id){
+            //     dispatch(newAmountListRecipe({connection_id: id, ingredient_id: el.ingredient_id, unit_id: _id, amount: 0, recipe_id }))
+            // }
+            
+        
+            // if(pathName === '/list'){
+            //     dispatch(changeAmountFetch({ connection_id: id, ingredient_id: el.ingredient_id, unit_id: _id, amount: parseFloat(amount.toString()) || 0 }))
+            // }
+            // else if(pathName === '/list-recipe' && recipe_id){
+            //     dispatch(newAmountListRecipe({connection_id: id, ingredient_id: el.ingredient_id, unit_id: _id, amount: parseFloat(amount.toString()) || 0, recipe_id }))
+            // }
                 
-        //     } else {
-        //         if(pathName === '/list'){
-        //             dispatch(changeAmountFetch({ connection_id: id, ingredient_id: el.ingredient_id, unit_id: _id, amount: parseFloat(amount.toString()) || 0 }))
-        //         }else if(pathName === '/list-recipe' && recipe_id){
-        //             dispatch(newAmountListRecipe({connection_id: id, ingredient_id: el.ingredient_id, unit_id: _id, amount: parseFloat(amount.toString()) || 0, recipe_id }))
-        //         }
-                
-        //     }
-        // }
+            
+        } 
+        setEditAmount(null);
 
     }
 
+    //-------------------  Error with floating-point numbers allowing characters such as period and comma in floating-point numbers   --------------------//
 
     function handleAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        console.log('handleAmount')
-        // const value = e.target.value;
-        // if (value === '' || (!isNaN(parseFloat(value)) && parseFloat(value) >= 0 && parseFloat(value) <= 999)) {
-        //     // if(pathName === '/list'){
-        //         setAmount(value);
-        //     // }
-            
-        // }
+        const value = e.target.value === '' ? '0' : e.target.value;
+        const regex = /^\d{1,4}(\.\d{0,4})?$/;
+
+        if (regex.test(value)) {
+            const numericValue = parse(value);
+            setAmount(numericValue.evaluate());
+        }
     };
+
+    //-------------------  Error with floating-point numbers allowing characters such as period and comma in floating-point numbers   --------------------//
+
 
     function toggleShopUnit(_id: string, shop_unit: boolean) {
         console.log('toggleShopUnit')
@@ -95,7 +98,19 @@ export function Units({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsLi
     return (
         <Box key={elem._id} sx={{...blockUnits, opacity:`${elem.shop_unit ? 0.4 : 1}`, backgroundColor:pathName ==='/list' ? 'background.paper' : 'background.default'}}>
             {editAmount === elem._id ?
-                <TextField type="number"
+                <TextField 
+                    onKeyDown={(e) => {
+                        if (['-', '+', 'e'].includes(e.key)) {
+                            e.preventDefault();
+                        }
+
+                        if (e.key === 'Enter') {
+                            e.preventDefault(); 
+                            confirmAmount(elem._id); 
+                        }
+                    }}
+                    
+                    type="number"
                     value={amount.toString()}
                     sx={inputUnitList}
                     onChange={(e) => handleAmount(e)}

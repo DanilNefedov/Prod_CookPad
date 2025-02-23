@@ -6,25 +6,24 @@ import { NextResponse } from "next/server";
 
 
 
-
-
 export async function PATCH(request: Request) {
     try {
-        const { ingredient_id, unit_id, shop_unit } = await request.json();
+        const { ingredient_id, unit_id } = await request.json();
 
-        if (!unit_id || !ingredient_id || typeof shop_unit !== "boolean") {
-            return NextResponse.json({ error: "Missing or invalid parameters" }, { status: 400 });
+        if (!ingredient_id || !unit_id) {
+            return NextResponse.json({ error: "Missing ingredient_id or unit_id" }, { status: 400 });
         }
 
         await connectDB();
 
         const updatedDoc = await ListIngredients.findOneAndUpdate(
-            { _id:ingredient_id, "units._id": unit_id },
-            { $set: { "units.$.shop_unit": !shop_unit } }
+            { _id: ingredient_id },
+            { $pull: { units: { _id: unit_id } } },
+            // { new: true } 
         );
 
         if (!updatedDoc) {
-            return NextResponse.json({ error: "Document or unit not found" }, { status: 404 });
+            return NextResponse.json({ error: "Document not found" }, { status: 404 });
         }
 
         return NextResponse.json({}, { status: 200 });

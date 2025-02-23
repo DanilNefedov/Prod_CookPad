@@ -18,7 +18,7 @@ interface DataProps {
     elem: UnitsList;
     id: string;
     ingredient_id: string;
-    setAmount: (value: string | number | ((prev: string | number) => string | number)) => void;
+    setAmount: (value: number | ((prev: number) =>number)) => void;
     recipe_id?: string;
 }
 

@@ -1,7 +1,7 @@
 'use client'
 import { useAppDispatch, useAppSelector } from '@/state/hook';
 import { useEffect, useState } from 'react';
-import { fetchList, toggleShopIngrFetch } from '@/state/slices/list-slice';
+import { deleteIngredientFetch, fetchList, toggleShopIngrFetch } from '@/state/slices/list-slice';
 import { Box, Button, ListItemText, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { blockList, btnsListUnitHover, cellHeader, imgIngrList, mainIngrList, nameIngredient, sortBtnHeader } from '@/app/(main)/(main-list)/style';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -63,11 +63,10 @@ export function MainListPage() {
     }) : listStore.list_ingr;
 
     function deleteIngredient(_id: string) {
-        console.log('2')
-        // if (id && id !== null) {
-        //     console.log(_id, id)
-        //     dispatch(deleteIngredientFetch({ _id, connection_id: id }))
-        // }
+        if (id !== '') {
+            console.log(_id)
+            dispatch(deleteIngredientFetch({ _id}))
+        }
     }
 
     function toggleShopIngr(_id: string, shop_ingr: boolean) {

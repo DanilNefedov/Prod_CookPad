@@ -10,17 +10,18 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request) {
     try {
-        const { ingredient_id, unit_id, shop_unit } = await request.json();
+        const { ingredient_id, unit_id, amount } = await request.json();
 
-        if (!unit_id || !ingredient_id || typeof shop_unit !== "boolean") {
-            return NextResponse.json({ error: "Missing or invalid parameters" }, { status: 400 });
+        if (!ingredient_id || !unit_id || amount === undefined) {
+            return NextResponse.json({ error: "Missing ingredient_id, unit_id, or amount" }, { status: 400 });
         }
 
         await connectDB();
 
         const updatedDoc = await ListIngredients.findOneAndUpdate(
-            { _id:ingredient_id, "units._id": unit_id },
-            { $set: { "units.$.shop_unit": !shop_unit } }
+            { _id: ingredient_id, "units._id": unit_id }, 
+            { $set: { "units.$.amount": amount } }, 
+            // { new: true } 
         );
 
         if (!updatedDoc) {
@@ -34,3 +35,4 @@ export async function PATCH(request: Request) {
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }
+

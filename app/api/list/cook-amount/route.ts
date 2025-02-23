@@ -30,7 +30,7 @@ export async function PATCH(request: Request) {
             return NextResponse.json({ error: 'Document not found' }, { status: 404 });
         }
 
-        return NextResponse.json({}, { status: 204 });
+        return NextResponse.json({}, { status: 200 });
 
     }catch(error){
         console.log(error)

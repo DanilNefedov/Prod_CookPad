@@ -2,6 +2,10 @@ import connectDB from "@/app/lib/mongoose";
 import ListIngredients from "@/app/models/list";
 import { NextResponse } from "next/server";
 
+
+
+
+
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
@@ -38,5 +42,33 @@ export async function GET(request: Request) {
             message: "Internal Server Error",
             error: error instanceof Error ? error.message : error,
         });
+    }
+}
+
+
+
+
+
+export async function DELETE(request: Request) {
+    try {
+        const { _id } = await request.json();
+
+        if (!_id) {
+            return NextResponse.json({ error: 'Missing _id parameter' }, { status: 400 });
+        }
+
+        await connectDB();
+
+        const deletedDoc = await ListIngredients.findByIdAndDelete(_id);
+
+        if (!deletedDoc) {
+            return NextResponse.json({ error: 'Document not found' }, { status: 404 });
+        }
+
+        return NextResponse.json({}, { status: 204 });
+
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json({ error: 'Failed to delete document' }, { status: 500 });
     }
 }

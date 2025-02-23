@@ -219,6 +219,102 @@ export const shopUnitUpdate = createAsyncThunk<ShopUnitUpdateT, ShopUnitUpdateT,
     }
 );
 
+interface DeleteIngredientT{
+    _id:string
+}
+
+export const deleteIngredientFetch = createAsyncThunk<DeleteIngredientT, DeleteIngredientT, { rejectValue: string }>(
+    'list/deleteIngredientFetch',
+    async function (data, { rejectWithValue }) {
+        try {
+            const response = await fetch('/api/list', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+    
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+    
+            return data;
+    
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+)
+
+
+interface DeleteUnitIngredientT{
+    ingredient_id:string, 
+    unit_id:string 
+}
+
+export const deleteUnitIngrFetch = createAsyncThunk<DeleteUnitIngredientT, DeleteUnitIngredientT, { rejectValue: string }>(
+    'list/deleteUnitIngrFetch',
+    async function (data, { rejectWithValue }) {
+
+        try {
+            const response = await fetch('/api/list/unit-removal', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+    
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+    
+            return data;
+    
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+);
+
+
+interface ChangeAmountT {
+    ingredient_id:string,
+    unit_id:string,
+    amount:number
+}
+
+
+export const changeAmountFetch = createAsyncThunk<ChangeAmountT, ChangeAmountT, { rejectValue: string }>(
+    'list/changeAmountFetch',
+    async function (data, { rejectWithValue }) {
+        try {
+            const response = await fetch('/api/list/amount', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+    
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+    
+            return data;
+    
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+);
+
+
+
 
 
 const listSlice = createSlice({
@@ -320,6 +416,49 @@ const listSlice = createSlice({
                     const unit = ingredient.units.find(unit => unit._id === unit_id);
                     if (unit) {
                         unit.shop_unit = !shop_unit;
+                    }
+                }
+            })
+
+
+
+            .addCase(deleteIngredientFetch.pending, (state) => {
+                state.status = true,
+                state.error = false
+            })
+            .addCase(deleteIngredientFetch.fulfilled, (state, action: PayloadAction<DeleteIngredientT, string>) => {
+                const { _id } = action.payload;
+                state.list_ingr = state.list_ingr.filter(
+                    (item) => item._id !== _id
+                );
+            })
+
+
+
+            .addCase(deleteUnitIngrFetch.pending, (state) => {
+                state.status = true,
+                    state.error = false
+            })
+            .addCase(deleteUnitIngrFetch.fulfilled, (state, action: PayloadAction<DeleteUnitIngredientT, string>) => {
+                const { ingredient_id, unit_id } = action.payload;
+                const ingredient = state.list_ingr.find(ingr => ingr._id === ingredient_id);
+                if (ingredient) {
+                    ingredient.units = ingredient.units.filter(unit => unit._id !== unit_id);
+                }
+            })
+
+
+            .addCase(changeAmountFetch.pending, (state) => {
+                state.status = true,
+                state.error = false
+            })
+            .addCase(changeAmountFetch.fulfilled, (state, action: PayloadAction<ChangeAmountT, string>) => {
+                const { ingredient_id, unit_id, amount } = action.payload;
+                const ingredient = state.list_ingr.find(ingr => ingr._id === ingredient_id);
+                if (ingredient) {
+                    const unit = ingredient.units.find(unit => unit._id === unit_id);
+                    if (unit) {
+                        unit.amount = amount;
                     }
                 }
             })
