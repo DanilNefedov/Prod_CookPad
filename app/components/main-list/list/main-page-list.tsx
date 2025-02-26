@@ -76,7 +76,7 @@ export function MainListPage() {
     }
 
 
-    // console.log(sortedList[0]?.units)
+    // console.log('MainListPageMainListPageMainListPageMainListPage')
     return (
 
         <TableContainer component={Paper} sx={{ ...blockList, backgroundColor: "background.paper", boxShadow: 'none' }}>

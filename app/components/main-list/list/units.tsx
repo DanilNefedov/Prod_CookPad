@@ -3,7 +3,7 @@ import { IListObj, UnitsList } from "@/app/types/types"
 import { useAppDispatch } from "@/state/hook"
 import { Box, Button, ListItemText, TextField } from "@mui/material"
 import { usePathname } from "next/navigation"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, memo, useCallback, useState } from "react"
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
@@ -14,14 +14,18 @@ import { parse } from "mathjs"
 
 
 
-export function Units({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsList, id: string, recipe_id?: string}) {
-    const [editAmount, setEditAmount] = useState<string | null>(null)
+export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsList, id: string, recipe_id?: string }) => {
+
+      const [editAmount, setEditAmount] = useState<string | null>(null)
     // const [amount, setAmount] = useState<number | string>(elem.amount)
     const [amount, setAmount] = useState<number >(elem.amount);
 
     const pathName = usePathname()
     const dispatch = useAppDispatch()
 
+    // const handleAmountChange = useCallback((value: number) => {
+    //     setAmount(value);
+    // }, [setAmount]);
     
 
     function deleteUnitIngr(ingredient_id: string, unit_id: string) {
@@ -37,42 +41,38 @@ export function Units({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsLi
     }
 
 
-    function confirmAmount(_id: string) {
+    const confirmAmount = useCallback((_id: string) => {
         if (id !== '' && amount !== elem.amount) {
-            
-            if(pathName === '/list'){
-                dispatch(changeAmountFetch({ ingredient_id: el._id, unit_id: _id, amount: amount}))
+            if (pathName === '/list') {
+                dispatch(changeAmountFetch({ ingredient_id: el._id, unit_id: _id, amount: amount }));
             }
-            // else if(pathName === '/list-recipe' && recipe_id){
-            //     dispatch(newAmountListRecipe({connection_id: id, ingredient_id: el.ingredient_id, unit_id: _id, amount: 0, recipe_id }))
-            // }
-            
-        
-            // if(pathName === '/list'){
-            //     dispatch(changeAmountFetch({ connection_id: id, ingredient_id: el.ingredient_id, unit_id: _id, amount: parseFloat(amount.toString()) || 0 }))
-            // }
-            // else if(pathName === '/list-recipe' && recipe_id){
-            //     dispatch(newAmountListRecipe({connection_id: id, ingredient_id: el.ingredient_id, unit_id: _id, amount: parseFloat(amount.toString()) || 0, recipe_id }))
-            // }
-                
-            
         } 
         setEditAmount(null);
-
-    }
+    }, [id, amount, pathName, dispatch]);
+    
 
     //-------------------  Error with floating-point numbers allowing characters such as period and comma in floating-point numbers   --------------------//
 
-    function handleAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        
-        const regex = /^\d{0,4}([.,]\d{0,4})?$/;
-        const value = e.target.value === '' ? '0' : e.target.value;//=== '' ? '0' : e.target.value;
+    // const handleAmount = useCallback((e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    //     const regex = /^\d{0,4}([.,]\d{0,4})?$/;
+    //     const value = e.target.value === '' ? '0' : e.target.value;//=== '' ? '0' : e.target.value;
 
+    //     if (regex.test(value)) {
+    //         const numericValue = parse(value);
+    //         setAmount(numericValue.evaluate());
+    //     }
+    // }, [setAmount]);
+    
+    const handleAmount = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const regex = /^\d{0,4}([.,]\d{0,4})?$/;
+        const value = e.target.value === '' ? '0' : e.target.value;
+    
         if (regex.test(value)) {
             const numericValue = parse(value);
             setAmount(numericValue.evaluate());
         }
-    };
+    }, []);
+    
 
     
     //-------------------  Error with floating-point numbers allowing characters such as period and comma in floating-point numbers   --------------------//
@@ -94,7 +94,7 @@ export function Units({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsLi
 
 
 
-    // console.log(amount)
+    // console.log('unitunitunitunitunitunitunitunitunit')
     return (
         <Box key={elem._id} sx={{...blockUnits, opacity:`${elem.shop_unit ? 0.4 : 1}`, backgroundColor:pathName ==='/list' ? 'background.paper' : 'background.default'}}>
             {editAmount === elem._id ?
@@ -146,4 +146,4 @@ export function Units({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsLi
             </Button>
         </Box>
     )
-}
+})
