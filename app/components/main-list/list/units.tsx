@@ -17,14 +17,12 @@ import { parse } from "mathjs"
 export function Units({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsList, id: string, recipe_id?: string}) {
     const [editAmount, setEditAmount] = useState<string | null>(null)
     // const [amount, setAmount] = useState<number | string>(elem.amount)
-    const [amount, setAmount] = useState<number>(elem.amount);
+    const [amount, setAmount] = useState<number >(elem.amount);
 
     const pathName = usePathname()
     const dispatch = useAppDispatch()
 
-
     
-
 
     function deleteUnitIngr(ingredient_id: string, unit_id: string) {
         if (id !== '') {
@@ -66,8 +64,9 @@ export function Units({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsLi
     //-------------------  Error with floating-point numbers allowing characters such as period and comma in floating-point numbers   --------------------//
 
     function handleAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        const value = e.target.value === '' ? '0' : e.target.value;
-        const regex = /^\d{1,4}(\.\d{0,4})?$/;
+        
+        const regex = /^\d{0,4}([.,]\d{0,4})?$/;
+        const value = e.target.value === '' ? '0' : e.target.value;//=== '' ? '0' : e.target.value;
 
         if (regex.test(value)) {
             const numericValue = parse(value);
@@ -75,6 +74,7 @@ export function Units({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsLi
         }
     };
 
+    
     //-------------------  Error with floating-point numbers allowing characters such as period and comma in floating-point numbers   --------------------//
 
 
@@ -138,7 +138,7 @@ export function Units({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsLi
                     <CheckIcon sx={{ width: '18px' }}></CheckIcon>
                 </Button>
             }
-            <CalcUnit props={{elem, id, ingredient_id: el._id, setAmount, recipe_id}}></CalcUnit>
+            <CalcUnit props={{elem, id, ingredient_id: el._id, amount, setAmount, recipe_id}}></CalcUnit>
             {/* <Convert props={{ elem, id, ingredient_id: el._id, editAmount, recipe_id }}></Convert> */}
            
             <Button onClick={() => deleteUnitIngr(el._id, elem._id)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>

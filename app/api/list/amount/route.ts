@@ -6,8 +6,6 @@ import { NextResponse } from "next/server";
 
 
 
-
-
 export async function PATCH(request: Request) {
     try {
         const { ingredient_id, unit_id, amount } = await request.json();
