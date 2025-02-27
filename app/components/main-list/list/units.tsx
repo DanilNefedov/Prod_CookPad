@@ -3,7 +3,7 @@ import { IListObj, UnitsList } from "@/app/types/types"
 import { useAppDispatch } from "@/state/hook"
 import { Box, Button, ListItemText, TextField } from "@mui/material"
 import { usePathname } from "next/navigation"
-import { ChangeEvent, memo, useCallback, useState } from "react"
+import { ChangeEvent, memo, useCallback, useMemo, useState } from "react"
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
@@ -15,18 +15,11 @@ import { parse } from "mathjs"
 
 
 export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsList, id: string, recipe_id?: string }) => {
-
-      const [editAmount, setEditAmount] = useState<string | null>(null)
-    // const [amount, setAmount] = useState<number | string>(elem.amount)
+    const [editAmount, setEditAmount] = useState<string | null>(null)
     const [amount, setAmount] = useState<number >(elem.amount);
-
     const pathName = usePathname()
     const dispatch = useAppDispatch()
 
-    // const handleAmountChange = useCallback((value: number) => {
-    //     setAmount(value);
-    // }, [setAmount]);
-    
 
     function deleteUnitIngr(ingredient_id: string, unit_id: string) {
         if (id !== '') {
@@ -52,16 +45,6 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
     
 
     //-------------------  Error with floating-point numbers allowing characters such as period and comma in floating-point numbers   --------------------//
-
-    // const handleAmount = useCallback((e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    //     const regex = /^\d{0,4}([.,]\d{0,4})?$/;
-    //     const value = e.target.value === '' ? '0' : e.target.value;//=== '' ? '0' : e.target.value;
-
-    //     if (regex.test(value)) {
-    //         const numericValue = parse(value);
-    //         setAmount(numericValue.evaluate());
-    //     }
-    // }, [setAmount]);
     
     const handleAmount = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const regex = /^\d{0,4}([.,]\d{0,4})?$/;
@@ -94,6 +77,7 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
 
 
 
+    
     // console.log('unitunitunitunitunitunitunitunitunit')
     return (
         <Box key={elem._id} sx={{...blockUnits, opacity:`${elem.shop_unit ? 0.4 : 1}`, backgroundColor:pathName ==='/list' ? 'background.paper' : 'background.default'}}>
@@ -138,7 +122,7 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
                     <CheckIcon sx={{ width: '18px' }}></CheckIcon>
                 </Button>
             }
-            <CalcUnit props={{elem, id, ingredient_id: el._id, amount, setAmount, recipe_id}}></CalcUnit>
+            <CalcUnit props={{ elem, id, ingredient_id:el._id, amount, setAmount, recipe_id }}></CalcUnit>
             {/* <Convert props={{ elem, id, ingredient_id: el._id, editAmount, recipe_id }}></Convert> */}
            
             <Button onClick={() => deleteUnitIngr(el._id, elem._id)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>

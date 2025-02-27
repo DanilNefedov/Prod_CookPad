@@ -4,7 +4,7 @@ import { UnitsList } from "@/app/types/types";
 import { useAppDispatch } from "@/state/hook";
 import { Dispatch } from "@reduxjs/toolkit";
 import { usePathname } from "next/navigation";
-import { ChangeEvent, memo, SetStateAction, useEffect, useState } from "react";
+import { ChangeEvent, memo, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
 import { create, all, parse } from 'mathjs'
 import { Alert, Box, Button, Menu, MenuItem, TextField } from "@mui/material";
 import { btnsListUnitHover, calcInput, containerCalcBtns, containerCalcGrid, menuCalc, unitBtnsImg } from "@/app/(main)/(main-list)/style";
@@ -24,7 +24,7 @@ interface DataProps {
 }
 
 
-export function CalcUnit({ props }: { props: DataProps }) {
+export const CalcUnit = memo(({ props }: { props: DataProps }) => {    
     const { elem, id, ingredient_id, amount, setAmount, recipe_id } = props
     const [currentValue, setCurrentValue] = useState<string>(amount.toString());
     const [isParenthesisOpen, setIsParenthesisOpen] = useState<number>(0);
@@ -36,34 +36,46 @@ export function CalcUnit({ props }: { props: DataProps }) {
     const open = Boolean(anchorEl);
 
     useEffect(() => {
-        setCurrentValue(amount.toString()); 
+        if (currentValue !== amount.toString()) {
+            setCurrentValue(amount.toString());
+        }
+    }, [amount]);
+    
+
+    // const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    //     setAnchorEl(event.currentTarget);
+    // };
+    const handleClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    }, []);
+
+    // console.log('12121212')
+    // const handleClose = () => {
+    //     setAnchorEl(null);
+    //     setCurrentValue(amount.toString())
+    // };
+    const handleClose = useCallback(() => {
+        setAnchorEl(null);
+        setCurrentValue(amount.toString());
     }, [amount]);
 
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
+    // const btnValues = [
+    const btnValues = useMemo(() => [
 
-    console.log('12121212')
-    const handleClose = () => {
-        setAnchorEl(null);
-        setCurrentValue(amount.toString())
-    };
-
-
-    const btnValues = [
         ["C", "( )", "/",],
         ["7", "8", "9", "*"],
         ["4", "5", "6", "-"],
         ["1", "2", "3", "+"],
         ["%", "0", ".", "="],
-    ];
+    ], []);
 
     const math = create(all, {
         number: 'BigNumber',
         precision: 10
     })
 
-    function cleanArea() {
+    // function cleanArea() {
+    const cleanArea = useCallback(() => {
         const lastChar = currentValue[currentValue.length - 1];
 
         if (currentValue !== '') {
@@ -77,9 +89,13 @@ export function CalcUnit({ props }: { props: DataProps }) {
             }
         }
 
-    }
+    }, [currentValue, isParenthesisOpen]);
 
-    function handleEqual(currentValue: string): string | null {
+
+
+    // function handleEqual(currentValue: string): string | null {
+    const handleEqual = useCallback((currentValue: string): string | null => {
+
         try {
             const endsWithOperator = /[+\-*/^%]$/.test(currentValue);
             if (endsWithOperator) {
@@ -110,11 +126,13 @@ export function CalcUnit({ props }: { props: DataProps }) {
             setMathError("Check the input data");
             return null;
         }
-    }
+    }, []);
 
 
 
-    function handlCalc(btn: string) {
+
+    // function handlCalc(btn: string) {
+    const handlCalc = useCallback((btn: string) => {
 
         if (btn === "=") {
             const resEqual = handleEqual(currentValue);
@@ -162,10 +180,11 @@ export function CalcUnit({ props }: { props: DataProps }) {
             }
         }
 
-    }
+    }, [currentValue, isParenthesisOpen, amount]);
 
 
-    function updateAmountCalc() {
+    // function updateAmountCalc() {
+    const updateAmountCalc = useCallback(() => {
 
         const resEqual = handleEqual(currentValue);
         if (resEqual === null) return;
@@ -208,7 +227,8 @@ export function CalcUnit({ props }: { props: DataProps }) {
 
         //     }
         // }
-    }
+    }, [currentValue, id, pathName, ingredient_id, elem._id, dispatch]);
+
 
     return (
         <>
@@ -292,5 +312,5 @@ export function CalcUnit({ props }: { props: DataProps }) {
         </>
 
     )
-}
+})
 
