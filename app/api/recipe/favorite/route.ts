@@ -3,10 +3,6 @@ import Recipe from "@/app/models/recipe";
 import { NextResponse } from "next/server"
 
 
-
-
-
-
 export async function PATCH(request: Request) {
     try {
         await connectDB();
@@ -21,40 +17,31 @@ export async function PATCH(request: Request) {
             );
         }
 
-        const recipe = await Recipe.findOne({ connection_id, recipe_id });
+        const updateData: { $set: { favorite: boolean }; $push?: { sorting: string }; $pull?: { sorting: string } } = {
+            $set: { favorite: !favorite },
+        };
 
-        if (!recipe) {
+        if (!favorite) {
+            updateData.$push = { sorting: 'favorite' };
+        } else {
+            updateData.$pull = { sorting: 'favorite' };
+        }
+
+        const updatedRecipe = await Recipe.findOneAndUpdate(
+            { connection_id, recipe_id },
+            updateData,
+            { new: true, select: '-_id recipe_id favorite' } 
+        );
+
+        if (!updatedRecipe) {
             return NextResponse.json(
                 { message: 'Recipe not found' },
                 { status: 404 }
             );
         }
 
-        const updateData: { $set: { favorite: boolean }; $push?: { sorting: string }; $pull?: { sorting: string } } = {
-            $set: { favorite: !favorite },
-        };
-        
-
-        if (!recipe.sorting.includes('favorite')) {
-            updateData.$push = { sorting: 'favorite' };
-        } else {
-            updateData.$pull = { sorting: 'favorite' };
-        }
-
-        const result = await Recipe.updateOne(
-            { connection_id, recipe_id },
-            updateData
-        );
-
-        if (result.modifiedCount === 0) {
-            return NextResponse.json(
-                { message: 'Recipe not found or no changes made' },
-                { status: 404 }
-            );
-        }
-
         return NextResponse.json(
-            { message: 'Recipe updated successfully' },
+            updatedRecipe, 
             { status: 200 }
         );
 
@@ -66,3 +53,4 @@ export async function PATCH(request: Request) {
         );
     }
 }
+

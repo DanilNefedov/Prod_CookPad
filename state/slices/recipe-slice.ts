@@ -58,7 +58,9 @@ export const setFavoriteRecipe = createAsyncThunk<favoriteDataRecipeT, favoriteD
                 return rejectWithValue('Server Error!');
             }
             dispatch(setFavoriteCook(data))
-            return data;
+            const dataResponse = await response.json()
+            console.log(dataResponse)
+            return dataResponse;
 
         }catch(error){
             console.error(error)
@@ -140,22 +142,45 @@ const recipeSlice = createSlice({
             })
 
 
-            .addCase(setFavoriteRecipe.fulfilled, (state, action: PayloadAction<favoriteDataRecipeT, string>)=>{
+            // .addCase(setFavoriteRecipe.fulfilled, (state, action: PayloadAction<favoriteDataRecipeT, string>)=>{
+            //     state.status = false;
+            //     state.error = false;
+            //     const payload = action.payload;
+
+            //     const findRecipe = state.recipes.find(el => el.recipe_id === payload.recipe_id)
+
+            //     if(findRecipe){
+            //         findRecipe.favorite = !payload.favorite
+
+            //         const favoriteIndex = findRecipe.sorting.indexOf("favorite");
+
+            //         if (favoriteIndex === -1) {
+            //             findRecipe.sorting.push('favorite')
+            //         } else {
+            //             findRecipe.sorting.splice(favoriteIndex, 1);
+            //         }
+            //     }
+            // })
+            .addCase(setFavoriteRecipe.fulfilled, (state, action: PayloadAction<favoriteDataRecipeT, string>) => {
                 state.status = false;
                 state.error = false;
-                const payload = action.payload;
-
-                const findRecipe = state.recipes.find(el => el.recipe_id === payload.recipe_id)
-
-                if(findRecipe){
-                    findRecipe.favorite = !payload.favorite
-
-                    const favoriteIndex = findRecipe.sorting.indexOf("favorite");
-
-                    if (favoriteIndex === -1) {
-                        findRecipe.sorting.push('favorite')
+                const { recipe_id } = action.payload;
+            
+                const recipeIndex = state.recipes.findIndex(el => el.recipe_id === recipe_id);
+            
+                if (recipeIndex !== -1) {
+                    // const newFavoriteStatus = !state.recipes[recipeIndex].favorite;
+                    state.recipes[recipeIndex].favorite = action.payload.favorite;
+            
+                    if (action.payload.favorite) {
+                        if (!state.recipes[recipeIndex].sorting.includes('favorite')) {
+                            state.recipes[recipeIndex].sorting.push('favorite');
+                        }
                     } else {
-                        findRecipe.sorting.splice(favoriteIndex, 1);
+                        const favoriteIndex = state.recipes[recipeIndex].sorting.indexOf('favorite');
+                        if (favoriteIndex !== -1) {
+                            state.recipes[recipeIndex].sorting.splice(favoriteIndex, 1);
+                        }
                     }
                 }
             })

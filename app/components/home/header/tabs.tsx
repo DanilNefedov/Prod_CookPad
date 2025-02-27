@@ -22,14 +22,14 @@ export default function TabsRenderer({ styleLink }: TabsRendererProps) {
     setValue(newValue);
   };
 
-  function capitalizeFirstLetter(str:string) {
+  function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
 
   const recipeStore = useAppSelector(state => state.recipe);
   const renderedNavigation = recipeStore.recipes.map((el) => ({
-    sorting: el.sorting, 
+    sorting: el.sorting,
     _id: el.recipe_id,
   }));
 
@@ -37,23 +37,28 @@ export default function TabsRenderer({ styleLink }: TabsRendererProps) {
 
   const uniqueTabs: string[] = [];
   const tabs = renderedNavigation
-  .flatMap((el) => 
-    el.sorting
-      .filter((sortingItem) => sortingItem && !uniqueTabs.includes(sortingItem.toLowerCase())) 
-      .map((sortingItem) => {
-        uniqueTabs.push(sortingItem.toLowerCase()); 
-        return (
-          <Tab
-            key={sortingItem}
-            label={capitalizeFirstLetter(sortingItem)}
-            sx={styleLink}
-            component={NextLink}
-            href="#"
-            onClick={() => handlerNavigation(sortingItem)}
-          />
-        );
-      })
-  );
+    .flatMap((el) =>
+      el.sorting
+        .filter((sortingItem) => sortingItem && !uniqueTabs.includes(sortingItem.toLowerCase()))
+        .map((sortingItem) => {
+          uniqueTabs.push(sortingItem.toLowerCase());
+          return {
+            key: sortingItem,
+            label: capitalizeFirstLetter(sortingItem),
+          };
+        })
+    )
+    .sort((a, b) => a.label.localeCompare(b.label))
+    .map(({ key, label }) => (
+      <Tab
+        key={key}
+        label={label}
+        sx={styleLink}
+        component={NextLink}
+        href="#"
+        onClick={() => handlerNavigation(key)}
+      />
+    ));
 
 
   return (
@@ -65,12 +70,12 @@ export default function TabsRenderer({ styleLink }: TabsRendererProps) {
       allowScrollButtonsMobile
       aria-label="scrollable force tabs"
       sx={{
-        minHeight: '0', 
+        minHeight: '0',
         '.MuiTabScrollButton-root': {
           width: '25px'
         }
       }}
-    >   
+    >
       <Tab
         key="all"
         label="All"
@@ -79,7 +84,7 @@ export default function TabsRenderer({ styleLink }: TabsRendererProps) {
         href="#"
         onClick={() => handlerNavigation('all')}
       />
-      
+
       {tabs}
     </Tabs>
   );

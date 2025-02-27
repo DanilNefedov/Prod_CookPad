@@ -23,9 +23,9 @@ import './swiper-media.css';
 
 // import required modules
 import { Navigation } from 'swiper/modules';
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { TempalateRecipe } from "@/app/types/types";
-import { useAppDispatch } from '@/state/hook';
+import { useAppDispatch, useAppSelector } from '@/state/hook';
 import { SwiperMediaCard } from './swiper-media-card';
 import { deleteRecipe, setFavoriteRecipe } from '@/state/slices/recipe-slice';
 import { theme } from '@/config/ThemeMUI/theme';
@@ -33,12 +33,20 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 
 
-interface propsData extends TempalateRecipe {
-    id: string
+// interface propsData extends TempalateRecipe {
+//     id: string
+// }
+interface propsData {
+    recipe_id:string,
+    id:string
 }
 
-export function CardContentBlock({ props }: { props: propsData }) {
-    const { recipe_id, media, name, time, recipe_type, description, favorite, id } = props
+export const CardContentBlock = memo(({ props }: { props: propsData }) => {
+// export function CardContentBlock({ props }: { props: propsData }) {
+    // const { recipe_id, media, name, time, recipe_type, description, favorite, id } = props
+    const { recipe_id, id} = props
+    const recipes = useAppSelector(state => state.recipe.recipes.find(el => el.recipe_id === recipe_id));
+    
     const dispatch = useAppDispatch()
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -57,14 +65,28 @@ export function CardContentBlock({ props }: { props: propsData }) {
         setAnchorEl(null);
     };
 
-
-    const handlerFavorite = (recipe_id: string, favorite: boolean): void => {
-        if (recipe_id && id !== '') {
+    console.log('321312312')
+    const handlerFavorite = (recipe_id: string, favorite: boolean | undefined): void => {
+        if (recipe_id && id !== '' && favorite !== undefined) {
             const data = { connection_id: id, recipe_id, favorite }
             dispatch(setFavoriteRecipe(data))
         }
     }
-
+    // const handlerFavorite = useCallback((recipe_id: string, favorite: boolean): void => {
+    //     if (recipe_id && id !== '') {
+    //         const data = { connection_id: id, recipe_id, favorite }
+    //         dispatch(setFavoriteRecipe(data))
+    //     }
+    // }, [id, dispatch]);
+    // const handlerFavorite = useCallback(
+    //     (recipe_id: string, favorite: boolean): void => {
+    //       if (recipe_id && id !== '') {
+    //         const data = { connection_id: id, recipe_id, favorite };
+    //         dispatch(setFavoriteRecipe(data));
+    //       }
+    //     },
+    //     [id, dispatch] 
+    //   );
     function addToList() {
         // if (id !== '' && recipe_id) {
         //     dispatch(newListRecipe({ connection_id: id, recipe_id: recipe_id }))
@@ -88,7 +110,7 @@ export function CardContentBlock({ props }: { props: propsData }) {
                     alignItems="center"
                 >
                     <CardHeader
-                        title={name}
+                        title={recipes?.name}
                         sx={{ padding: 0, maxWidth: "70%", '& .MuiCardHeader-content':{width:'100%'}, [theme.breakpoints.down(500)]: {maxWidth: "57%"}}}
                         slotProps={{
                             title: {
@@ -128,7 +150,7 @@ export function CardContentBlock({ props }: { props: propsData }) {
                             }}
 
                         >
-                            {`${time.hours === '' ? '00' : time.hours}:${time.minutes === '' ? '00' : time.minutes}h`}
+                            {`${recipes?.time.hours === '' ? '00' : recipes?.time.hours}:${recipes?.time.minutes === '' ? '00' : recipes?.time.minutes}h`}
                         </Typography>
                     </Box>
                 </Box>
@@ -146,12 +168,12 @@ export function CardContentBlock({ props }: { props: propsData }) {
                 spaceBetween={1}
             // lazy={true}
             >
-                {media
+                {recipes?.media
                     .slice()
                     .sort((a, b) => Number(b.main) - Number(a.main))
                     .map(el => (
                         <SwiperSlide key={el.media_id} className="media-main-slide">
-                            <SwiperMediaCard props={{ el, name }} />
+                            <SwiperMediaCard props={{ el, name:recipes?.name }} />
                         </SwiperSlide>
                     )
                     )}
@@ -214,12 +236,12 @@ export function CardContentBlock({ props }: { props: propsData }) {
                             textOverflow: "ellipsis"
                         },
                     }}>
-                        {"type: " + recipe_type}
+                        {"type: " + recipes?.recipe_type}
                     </Typography>
                     <IconButton sx={{
                         padding: '0',
-                    }} aria-label="add to favorites" onClick={() => handlerFavorite(recipe_id, favorite)}>
-                        {favorite ? <FavoriteIcon sx={favoriteBtnActive} /> : <FavoriteIcon sx={favoriteBtnDesactive} />}
+                    }} aria-label="add to favorites" onClick={() => handlerFavorite(recipe_id, recipes?.favorite)}>
+                        {recipes?.favorite ? <FavoriteIcon sx={favoriteBtnActive} /> : <FavoriteIcon sx={favoriteBtnDesactive} />}
                     </IconButton>
                 </Box>
                 <Box>
@@ -241,7 +263,7 @@ export function CardContentBlock({ props }: { props: propsData }) {
                             },
                         }}
                     >
-                        {description}
+                        {recipes?.description}
                     </Typography>
                 </Box>
 
@@ -310,7 +332,7 @@ export function CardContentBlock({ props }: { props: propsData }) {
                             <Link 
                             href={{
                                 pathname: `/cook/${recipe_id}`,
-                                query: { name },
+                                query: { name:recipes?.name },
                             }}
                             className='cookLinkMainContent'
                             >Cook</Link>
@@ -419,3 +441,16 @@ export function CardContentBlock({ props }: { props: propsData }) {
         </Card>
     )
 }
+,(prevProps, nextProps) => {
+    // Custom comparison function for memo
+    // Return true if props are "equal" (component doesn't need to re-render)
+    // Return false if props have changed (component needs to re-render)
+    
+    return prevProps.props.recipe_id === nextProps.props.recipe_id &&
+    prevProps.props.id === nextProps.props.id
+    // && 
+        //    prevProps.props.favorite === nextProps.props.favorite &&
+        //    prevProps.props.name === nextProps.props.name &&
+        //    prevProps.props.description === nextProps.props.description;
+    // You can add more specific comparisons if needed
+});
