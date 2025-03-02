@@ -315,6 +315,43 @@ export const changeAmountFetch = createAsyncThunk<ChangeAmountT, ChangeAmountT, 
 
 
 
+interface AddNewUnitT {
+    ingredient_id:string,
+    new_unit:NewUnitObj
+}
+
+interface ResAddNewUnitT {
+    ingredient_id:string,
+    new_unit:ResUnitObj
+}
+
+export const addNewUnit = createAsyncThunk<ResAddNewUnitT, AddNewUnitT, { rejectValue: string }>(
+    'list/addNewUnit',
+    async function (data, { rejectWithValue }) {
+
+        try {
+            const response = await fetch('/api/list/new-unit', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+    
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+            const respData = await response.json()
+            // console.log(respData)
+            return respData;
+    
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+);
+
 
 
 
@@ -462,6 +499,20 @@ const listSlice = createSlice({
                     if (unit) {
                         unit.amount = amount;
                     }
+                }
+            })
+
+
+
+            .addCase(addNewUnit.pending, (state) => {
+                state.status = true,
+                state.error = false
+            })
+            .addCase(addNewUnit.fulfilled, (state, action: PayloadAction<ResAddNewUnitT, string>) => {
+                const { ingredient_id, new_unit } = action.payload;
+                const ingredient = state.list_ingr.find(ingr => ingr._id === ingredient_id);
+                if (ingredient) {
+                    ingredient.units.push(new_unit)
                 }
             })
         }

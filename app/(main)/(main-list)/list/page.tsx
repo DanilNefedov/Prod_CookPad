@@ -1,5 +1,6 @@
 import { MainListPage } from "@/app/components/main-list/list/main-page-list";
-import { Box } from "@mui/material";
+import { Box, Paper, Table, TableContainer } from "@mui/material";
+import { blockList } from "../style";
 
 
 
@@ -9,8 +10,9 @@ export default function List() {
 
     return (
         <Box sx={{ height: '100%', position: 'relative' }}>
-            
-            <MainListPage></MainListPage>
+            <TableContainer component={Paper} sx={{ ...blockList, backgroundColor: "background.paper", boxShadow: 'none' }}>
+                <MainListPage></MainListPage>
+            </TableContainer>
             {/* <AddListFab></AddListFab> */}
         </Box>
 

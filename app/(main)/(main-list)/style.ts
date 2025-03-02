@@ -27,7 +27,7 @@ export const mainIngrList = {
     // borderCollapse: "separate",
     // borderSpacing: "0 10px", 
     '& .MuiTableCell-root': {
-        borderBottom: '10px solid #353842',
+        borderBottom: '5px solid #353842',
     },
     '&:last-child .MuiTableCell-root': {
         borderBottom: '0'
@@ -40,8 +40,9 @@ export const nameIngredient = {
 }
 
 export const imgIngrList = {
-    maxHeight: '55px',
-
+    maxHeight: '45px',
+    width:'100%',
+    height:'100%'
 }
 
 
