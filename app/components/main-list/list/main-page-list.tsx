@@ -8,8 +8,8 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ClearIcon from '@mui/icons-material/Clear';
-import { Box, Button, ListItemText, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
-import { useEffect, useMemo, useState } from 'react';
+import { Box, Button, IconButton, ListItemText, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, useMediaQuery } from '@mui/material';
+import { MouseEvent, useEffect, useMemo, useState } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { Navigation } from 'swiper/modules';
@@ -17,6 +17,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { AddNewUnit } from './add-unit';
 import './styles.css';
 import { Units } from './units';
+import { theme } from '@/config/ThemeMUI/theme';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { MainButtons } from './main-buttons';
 // import { DataGrid } from "@mui/x-data-grid";
 // import { Search, SearchIconWrapper, StyledInputBase } from "./search-style";
 
@@ -28,6 +31,7 @@ export function MainListPage() {
     const id = userStore?.user?.connection_id
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
     const [sortBy, setSortBy] = useState<string | null>(null);
+
 
 
     useEffect(() => {
@@ -70,24 +74,12 @@ export function MainListPage() {
         });
     }, [sortBy, sortOrder, listStore.list_ingr]);
 
-    function deleteIngredient(_id: string) {
-        if (id !== '') {
-            console.log(_id)
-            dispatch(deleteIngredientFetch({ _id }))
-        }
-    }
-
-    function toggleShopIngr(_id: string, shop_ingr: boolean) {
-        if (id !== '') {
-            dispatch(toggleShopIngrFetch({ _id, shop_ingr }))
-        }
-    }
 
 
     // console.log('MainListPageMainListPageMainListPageMainListPage')
     return (
 
-        <Table sx={{ minWidth: 700, '& .MuiTableCell-root': { p: '7px 14px' }, }} stickyHeader aria-label="sticky table">
+        <Table sx={{ minWidth: '0', '& .MuiTableCell-root': { p: '7px 14px', [theme.breakpoints.down(1050)]: { p: '5px 7px' } } }} stickyHeader aria-label="sticky table">
             <TableHead sx={{
                 '& .MuiTableCell-root': {
                     borderBottom: '0',
@@ -109,7 +101,7 @@ export function MainListPage() {
                             <Typography fontSize={'0.875rem'} sx={{ borderBottom: '0', pr: '10px' }}>
                                 Unit
                             </Typography>
-                            <ArrowUpwardIcon sx={{ width: '16px', transition: "transform 0.3s ease", transform: `rotate(${sortOrder === 'asc' && sortBy === 'unit' ? '180deg' : '0deg'})` }}></ArrowUpwardIcon>
+                            <ArrowUpwardIcon sx={{ width: '16px', transition: "transform 0.3s ease", transform: `rotate(${sortOrder === 'desc' && sortBy === 'unit' ? '180deg' : '0deg'})` }}></ArrowUpwardIcon>
                         </Box>
 
                     </TableCell>
@@ -122,60 +114,66 @@ export function MainListPage() {
             <TableBody sx={{ overflow: 'auto', borderTop: '2px solid rgba(255, 0, 0, 0.12)' }}>
                 {sortedList.map((el) => (
                     <TableRow key={el._id} sx={{ ...mainIngrList, opacity: `${el.shop_ingr ? 0.4 : 1}` }}>
-                        <TableCell>
+                        <TableCell sx={{ width: '73px', [theme.breakpoints.down(1050)]: { width: '30px' } }}>
                             <Box component={'img'} src={el.media !== '' ? el.media : 'images/load-ingr.svg'} alt={el.name} sx={imgIngrList}></Box>
                         </TableCell>
                         <TableCell sx={{
-                            maxWidth: '200px',
-                            width: '200px',
-                            overflow: 'hidden',
-                            whiteSpace: 'nowrap',
-                            textOverflow: 'ellipsis'
+                            maxWidth: '150px',
+                            width: '150px',
+                            [theme.breakpoints.down(1050)]: {
+                                maxWidth: '100px',
+                                width: '100px',
+                            }
                         }}>
-                            <ListItemText
-                                sx={nameIngredient}
-                                primary={el.name}
-                            />
+                            <Tooltip title={el.name} arrow>
+                                <ListItemText
+                                    sx={nameIngredient}
+                                    primary={el.name}
+                                />
+                            </Tooltip>
+
+
                         </TableCell>
-                        <TableCell sx={{ position: 'relative', '& .slide-list': { width: 'auto' } }}>
+                        <TableCell sx={{
+                            position: 'relative', '& .slide-list-unit': { width: 'auto' }, '& .swiper-list-unit': {
+                                position: 'static',
+                                m: '0',
+                                ml: '7px',
+                                mr: '7px'
+                            }
+                        }}>
                             <Swiper
                                 navigation={{
-                                    prevEl: '.custom-prev-list',
-                                    nextEl: '.custom-next-list',
+                                    prevEl: '.custom-prev-list-unit',
+                                    nextEl: '.custom-next-list-unit',
 
                                 }}
-                                className="swiper-list"
+                                className="swiper-list-unit"
                                 slidesPerView={'auto'}
                                 modules={[Navigation]}
                                 spaceBetween={10}
+                                style={{minWidth: 0}}
                             >
                                 {el.units.map((elem: UnitsList) => (
-                                    <SwiperSlide key={elem._id} className="slide-list">
+                                    <SwiperSlide key={elem._id} className="slide-list-unit">
                                         <Units el={el} elem={elem} id={id} />
                                     </SwiperSlide>
 
 
                                 ))}
 
-                                <div className="custom-prev-list ">
+                                <div className="custom-prev-list-unit ">
                                     <ArrowLeftIcon></ArrowLeftIcon>
                                 </div>
-                                <div className="custom-next-list ">
+                                <div className="custom-next-list-unit ">
                                     <ArrowRightIcon></ArrowRightIcon>
                                 </div>
                             </Swiper>
                         </TableCell>
-                        <TableCell sx={{ ml: 'auto' }}>
-                            <Button onClick={() => toggleShopIngr(el._id, el.shop_ingr)} sx={btnsListUnitHover}>
-                                <AddShoppingCartIcon ></AddShoppingCartIcon>
-                            </Button>
 
-                            <AddNewUnit props={{ ingr: el, id }}></AddNewUnit>
 
-                            <Button onClick={() => deleteIngredient(el._id)} sx={btnsListUnitHover}>
-                                <ClearIcon></ClearIcon>
-                            </Button>
-                        </TableCell>
+                        <MainButtons props={{ el }}></MainButtons>
+
                     </TableRow>
                 ))
                 }

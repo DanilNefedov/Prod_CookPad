@@ -11,6 +11,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { CalcUnit } from "./calc-unit"
 import { changeAmountFetch, deleteUnitIngrFetch, shopUnitUpdate } from "@/state/slices/list-slice"
 import { parse } from "mathjs"
+import { theme } from "@/config/ThemeMUI/theme"
 
 
 
@@ -80,7 +81,8 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
     
     // console.log('unitunitunitunitunitunitunitunitunit')
     return (
-        <Box key={elem._id} sx={{...blockUnits, opacity:`${elem.shop_unit ? 0.4 : 1}`, backgroundColor:pathName ==='/list' ? 'background.paper' : 'background.default'}}>
+        <Box key={elem._id} sx={{...blockUnits, opacity:`${elem.shop_unit ? 0.4 : 1}`, 
+        backgroundColor:pathName ==='/list' ? 'background.paper' : 'background.default'}}>
             {editAmount === elem._id ?
                 <TextField 
                     onKeyDown={(e) => {
@@ -100,11 +102,11 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
                     onChange={(e) => handleAmount(e)}
                 />
                 :
-                <ListItemText sx={{ paddingRight: '4px' }} primary={elem.amount} />
+                <ListItemText sx={{ paddingRight: '4px', [theme.breakpoints.down(1050)]: { '& span':{fontSize:'14px'}} }} primary={elem.amount} />
             }
 
             <ListItemText
-                sx={{ mr: '10px', flex:'none'}}
+                sx={{ mr: '10px', flex:'none', [theme.breakpoints.down(1050)]: { '& span':{fontSize:'14px'}}}}
                 primary={elem.choice}
             />
 

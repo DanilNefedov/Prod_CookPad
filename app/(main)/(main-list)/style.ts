@@ -1,5 +1,7 @@
+import { theme } from "@/config/ThemeMUI/theme"
+
 export const blockList = {
-    height: '95vh',
+    height: '100%',
     // overflow: 'auto',
     '&:firstChild': {
         m: '0 0 15px 0'
@@ -36,13 +38,28 @@ export const mainIngrList = {
 
 export const nameIngredient = {
     // m: '0 0 0 15px',
-    maxWidth: '200px'
+    maxWidth: '150px',
+
+    '& span':{
+        overflow: 'hidden',
+        whiteSpace: 'nowrap',
+        textOverflow: 'ellipsis'
+    },
+
+    [theme.breakpoints.down(1050)]: {
+        maxWidth:'100px',
+
+        '& span':{
+            fontSize:'14px'
+        }
+    }
 }
 
 export const imgIngrList = {
     maxHeight: '45px',
     width:'100%',
-    height:'100%'
+    height:'100%',
+    [theme.breakpoints.down(1050)]: {width:'30px'} 
 }
 
 
@@ -57,6 +74,12 @@ export const blockUnits = {
     flexShrink: '0',
     maxWidth: '420px',
     position: 'relative',
+    '&:first-child':{
+        ml:'0'
+    },
+    '&:last-child':{
+        mr:'0'
+    }
     // opacity:'0.3',
 }
 
@@ -69,6 +92,12 @@ export const unitBtnsImg = {
     '& .MuiSvgIcon-root': {
         width: "100%",
         height: '100%',
+    },
+    [theme.breakpoints.down(1050)]: {
+        p: '3px',
+        width: '25px',
+        height: '25px',
+        m:'0 3px'
     }
 }
 
@@ -76,18 +105,60 @@ export const unitBtnsImg = {
 
 export const btnsListUnitHover = {
     transition: '0.4s',
-    minWidth:'50px',
-
+    maxWidth:'35px',
+    minWidth:'0',
+    p:'5px',
+    
     '&:hover': {
         backgroundColor: 'primary.main',
 
         '& .MuiSvgIcon-root': {
             color: 'background.paper'
         }
+    },
+    [theme.breakpoints.down(800)]: {
+        
+        maxWidth:'none',
+        textAligh:'center',
+
+        '& span':{
+            lineHeight:'initial',
+        },
+
+        '&:hover': {
+            backgroundColor: 'background.default',
+
+            '& .MuiSvgIcon-root': {
+                color: 'primary.main'
+            }
+        },
+        // '&:hover': {
+        //     backgroundColor: 'background.paper',
+
+        //     '& .MuiSvgIcon-root': {
+        //         color: 'inherit'
+        //     }
+        // },
+        
     }
+
 }
 
+export const styleBtnsAdaptiveMenu = {
+    backgroundColor:'background.default', 
+    p:'5px 10px',
+    width:'100%',
+    justifyContent:'start',
+    
+    '& svg':{
+        width:'18px'
+    }, 
 
+    "& span":{
+        textTransform:'none',
+        ml:'7px'
+    }
+}
 
 
 export const inputUnitList = {
@@ -98,6 +169,11 @@ export const inputUnitList = {
     mr: '5px',
     '& .MuiInputBase-input': {
         p: '5px 5px 5px 7px',
+    },
+    [theme.breakpoints.down(1050)]: {
+        '& span':{
+            fontSize:'14px'
+        }
     }
 }
 

@@ -1,18 +1,17 @@
 
-.swiper-list{
-    max-width: 1226px;
+.swiper-list-unit{
+    max-width: 1263px;
     margin-left: 0;
     margin-right: 0;
-    position: static;
     margin: 0 10px;
 }
 
 
-.swiper-button-disabled svg{
+.swiper-list-unit .swiper-button-disabled svg{
     color:#353842;
     cursor: auto;
 }
-.custom-prev-list, .custom-next-list{
+.custom-prev-list-unit, .custom-next-list-unit{
     position: absolute;
     height: 24px;
     width: 24px;
@@ -21,11 +20,22 @@
 }
 
 
-.custom-prev-list {
-    left: 0px; 
+.custom-prev-list-unit {
+    left: -3px; 
 }
 
-.custom-next-list {
-    right: -5px; 
+.custom-next-list-unit {
+    right: -3px; 
 }
 
+
+@media screen and (max-width:1050px) {
+    .custom-prev-list-unit {
+        left: -7px; 
+    }
+    
+    .custom-next-list-unit {
+        right: -7px; 
+    }
+    
+}

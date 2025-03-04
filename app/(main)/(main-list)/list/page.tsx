@@ -9,7 +9,7 @@ export default function List() {
 
 
     return (
-        <Box sx={{ height: '100%', position: 'relative' }}>
+        <Box sx={{ height: 'calc(100vh - 85px)', position: 'relative' }}>
             <TableContainer component={Paper} sx={{ ...blockList, backgroundColor: "background.paper", boxShadow: 'none' }}>
                 <MainListPage></MainListPage>
             </TableContainer>

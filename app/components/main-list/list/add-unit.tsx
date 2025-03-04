@@ -1,7 +1,7 @@
-import { amountNewUnit, btnsListUnitHover, btnsModal, modalContainer } from "@/app/(main)/(main-list)/style";
+import { amountNewUnit, btnsListUnitHover, btnsModal, modalContainer, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/style";
 import { IListObj, NewUnitObj } from "@/app/types/types";
 import { useAppDispatch } from "@/state/hook";
-import { Autocomplete, Box, Button, Modal, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, Modal, TextField, Typography, useMediaQuery } from "@mui/material";
 import { usePathname } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
@@ -10,22 +10,24 @@ import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import { evaluate } from "mathjs";
 import { addNewUnit } from "@/state/slices/list-slice";
-
-
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 interface PropsData {
     ingr: IListObj;
     id: string;
-    recipe_id?: string
+    recipe_id?: string,
+    handleClose?: () => void
 }
 
 export function AddNewUnit({ props }: { props: PropsData }) {
-    const { ingr, id, recipe_id } = props;
+    const { ingr, id, recipe_id, handleClose } = props;
     const [open, setOpen] = useState<boolean>(false)
     const dispatch = useAppDispatch()
     const [amount, setAmount] = useState<string>('0')
     const [unit, setUnit] = useState<string>('');
     const pathName = usePathname()
+    const isSmallScreen = useMediaQuery("(max-width:800px)");
+
     console.log('2')
     // const uuid = uuidv4();
     // const { el, _id} = ingr
@@ -132,10 +134,18 @@ export function AddNewUnit({ props }: { props: PropsData }) {
     }
 
     // console.log(amount)
+   
+
     return (
         <>
-            <Button onClick={() => setOpen(true)} sx={btnsListUnitHover}>
-                <AddIcon></AddIcon>
+            <Button onClick={(e) => {
+                handleClose
+                setOpen(true)
+            }} sx={isSmallScreen ? [btnsListUnitHover, styleBtnsAdaptiveMenu] : btnsListUnitHover}>
+                <AddCircleOutlineIcon></AddCircleOutlineIcon>
+                {/* <AddIcon fontSize="large" sx={{width:'30px', height:'100%', display:'block',}} ></AddIcon>  */}
+                {isSmallScreen ? <span>New</span> : <></>}
+               
             </Button>
             <Modal
                 open={open}
@@ -189,7 +199,9 @@ export function AddNewUnit({ props }: { props: PropsData }) {
                         >
                             <CheckIcon sx={{ color: 'text.secondary' }}></CheckIcon>
                         </Button>
-                        <Button onClick={() => setOpen(false)}
+                        <Button onClick={() => {
+                            setOpen(false)
+                        }}
                             sx={btnsModal}
                         >
                             <ClearIcon sx={{ color: 'text.secondary' }}></ClearIcon>
