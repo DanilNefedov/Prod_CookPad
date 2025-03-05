@@ -54,7 +54,7 @@ export function MainButtons({props}: {props:DataProps}) {
     return (
 
 
-        <TableCell sx={{ width: '155px', [theme.breakpoints.down(1050)]: { width: "30px" } }}>
+        <TableCell className="ignore-toggle" sx={{ width: '155px', [theme.breakpoints.down(1050)]: { width: "30px" } }}>
 
 
 

@@ -52,7 +52,9 @@ export const nameIngredient = {
         '& span':{
             fontSize:'14px'
         }
-    }
+    },
+
+    
 }
 
 export const imgIngrList = {

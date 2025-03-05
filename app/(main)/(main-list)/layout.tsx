@@ -32,7 +32,8 @@ export default async function ListLayout({
                 borderRadius:'10px',
                 p:'10px 0',
                 gap:'20px',
-                boxShadow:'none'
+                boxShadow:'none',
+                
             }}>
                 {links.map(el => (
                     <HeaderList props={el} key={el.url}></HeaderList>

@@ -29,6 +29,25 @@
 }
 
 
+.adaptive-list-unit-swiper{
+    width: 90%;
+}
+
+.adaptive-list-unit-swiper .swiper-wrapper{
+    max-width: 0;
+}
+
+.adaptive-list-unit-swiper .custom-prev-list-unit {
+    left:0;
+    top:7px;
+}
+
+.adaptive-list-unit-swiper  .custom-next-list-unit {
+    right:0;
+    top:7px;
+}
+
+
 @media screen and (max-width:1050px) {
     .custom-prev-list-unit {
         left: -7px; 
@@ -38,4 +57,11 @@
         right: -7px; 
     }
     
+}
+
+
+@media screen and (max-width:450px) {
+    .adaptive-list-unit-swiper{
+        width: 80%;
+    }
 }

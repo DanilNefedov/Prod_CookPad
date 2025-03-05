@@ -12,6 +12,8 @@ import { CalcUnit } from "./calc-unit"
 import { changeAmountFetch, deleteUnitIngrFetch, shopUnitUpdate } from "@/state/slices/list-slice"
 import { parse } from "mathjs"
 import { theme } from "@/config/ThemeMUI/theme"
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 
 
 
@@ -111,7 +113,7 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
             />
 
             <Button onClick={() => toggleShopUnit(elem._id, elem.shop_unit)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
-                <AddShoppingCartIcon sx={{ width: '18px' }}></AddShoppingCartIcon>
+                <ShoppingBagOutlinedIcon sx={{ width: '18px' }}></ShoppingBagOutlinedIcon>
             </Button>
 
 
@@ -128,7 +130,7 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
             {/* <Convert props={{ elem, id, ingredient_id: el._id, editAmount, recipe_id }}></Convert> */}
            
             <Button onClick={() => deleteUnitIngr(el._id, elem._id)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
-                <ClearIcon></ClearIcon>
+                <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
             </Button>
         </Box>
     )
