@@ -348,3 +348,28 @@ export const menuCalc = {
     },
 
 }
+
+
+
+
+
+
+
+export const contentAccordionList = {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    backgroundColor: 'background.paper',
+    borderRadius: '10px',
+    m: '15px 0',
+    alignItems: 'center',
+    p: '10px'
+}
+
+export const blockSwiperAccordion = { 
+    position: 'relative', 
+    flexGrow:'1', 
+    '& .slide-recipe-list': { 
+        width: 'auto' 
+    } 
+}

@@ -1,7 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 
 //---------------------------------change constants to one of ingr or list---------------------------------
-const UnitsState = new Schema({
+ export const UnitsStateSchema = new Schema({
     choice:{
         type: String,
         required: true
@@ -39,7 +39,7 @@ const ListSchema = new Schema(
             required: true
         },
         units: {
-            type: [UnitsState],
+            type: [UnitsStateSchema],
             required: true
         },
         list: {

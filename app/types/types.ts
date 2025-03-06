@@ -438,7 +438,8 @@ export type returnDataRecipeList = {
 export type recipeForList = {
     recipe_id: string,
     recipe_name: string,
-    recipe_media:MediaObj[],
+    // recipe_media:MediaObj[],
+    recipe_media:string,
     recipe_shop:boolean,
     ingredients_list: IListObj[],
 }
