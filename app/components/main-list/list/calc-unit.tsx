@@ -13,6 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import CheckIcon from '@mui/icons-material/Check';
 import { changeAmountFetch } from "@/state/slices/list-slice";
+import { theme } from "@/config/ThemeMUI/theme";
 
 interface DataProps {
     elem: UnitsList;
@@ -120,6 +121,7 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
                 return null;
             }
 
+
             return math.round(result, 4).toString();
 
         } catch (error) {
@@ -127,7 +129,6 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
             return null;
         }
     }, []);
-
 
 
 
@@ -185,6 +186,7 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
 
     // function updateAmountCalc() {
     const updateAmountCalc = useCallback(() => {
+        if (currentValue === amount.toString()) return 
 
         const resEqual = handleEqual(currentValue);
         if (resEqual === null) return;
@@ -193,6 +195,10 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
 
         if (numericValue > 9999.9999) {
             setMathError("Max number 9999.9999");
+            return;
+        }
+        if (numericValue < 0) {
+            setMathError("Result must be 0 or greater");
             return;
         }
 
@@ -254,9 +260,20 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
                 sx={menuCalc}
 
             >
-                <Box component={MenuItem} sx={{ p: "0" }}>
+                <Box component={MenuItem} sx={{ p: "0",  [theme.breakpoints.down(600)]: {
+                    minHeight:'auto'
+                } }}>
                     {mathError !== '' ?
-                        <Alert severity="error" sx={{ pb: '0', alignItems: "center", '& .MuiAlert-icon, & .MuiAlert-message': { p: '0', color: 'primary.main' } }}>
+                        <Alert severity="error" sx={{ 
+                            pb: '0', 
+                            alignItems: "center", 
+                            '& .MuiAlert-icon, & .MuiAlert-message': { p: '0', color: 'primary.main' },
+                            [theme.breakpoints.down('md')]: {
+                                fontSize:"14px",
+                                
+                            },
+                           
+                        }}>
                             {mathError}
                         </Alert>
                         :
@@ -285,19 +302,43 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
                         />
                         <CheckIcon
                             onClick={() => updateAmountCalc()}
-                            sx={{ position: 'absolute', right: '20px', bottom: 'calc(50% - 12px)', color: 'primary.dark', cursor: 'pointer' }}
+                            sx={{ 
+                                p:"4px",
+                                backgroundColor:'primary.dark',
+                                borderRadius:"50%",
+                                position: 'absolute', 
+                                right: '20px', 
+                                width:'30px',
+                                height:'30px',
+                                bottom: 'calc(50% - 15px)', 
+                                color: 'text.primary', 
+                                cursor: 'pointer',
+                                [theme.breakpoints.down('md')]: {
+                                    width:'25px',
+                                    height:'25px',
+                                    bottom: 'calc(50% - 12px)',
+                                    p:'4px'
+                                }
+                             }}
                         />
                     </Box>
 
                     <Box sx={{ ...containerCalcBtns, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 1 }}>
-                        <Button variant="contained" onClick={cleanArea} sx={{ backgroundColor: 'primary.dark' }}>
-                            <BackspaceIcon sx={{ width: "16px" }} />
+                        <Button variant="contained" onClick={cleanArea} sx={{ backgroundColor: 'primary.dark', [theme.breakpoints.down('md')]: {
+                            minWidth:'50px'
+                        } }}>
+                            <BackspaceIcon sx={{ width: "16px",  [theme.breakpoints.down('md')]: {mr:'2px'}}} />
                         </Button>
 
                         {btnValues.flat().map((btn, i) => (
                             <Button
                                 key={i}
-                                sx={{ backgroundColor: 'primary.dark' }}
+                                sx={{ backgroundColor: 'primary.dark',
+                                    [theme.breakpoints.down('md')]: {
+                                        minWidth:'50px',
+                                        fontSize:'14px'
+                                    }
+                                }}
                                 variant="contained"
                                 onClick={() => handlCalc(btn)}
                             >

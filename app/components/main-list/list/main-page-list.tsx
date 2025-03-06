@@ -90,9 +90,11 @@ export function MainListPage() {
     // console.log('MainListPageMainListPageMainListPageMainListPage')
     return (
         <Table sx={{
-            minWidth: '0', '& .MuiTableCell-root': { p: '7px 14px', [theme.breakpoints.down(1050)]: { p: '5px 7px' }, 
-            [theme.breakpoints.down(400)]: { p: '8px 3px' }},
-            
+            minWidth: '0', '& .MuiTableCell-root': {
+                p: '7px 14px', [theme.breakpoints.down(1050)]: { p: '9px 7px' },
+                [theme.breakpoints.down(400)]: { p: '8px 3px' }
+            },
+
         }} stickyHeader aria-label="sticky table">
             <TableHead sx={{
                 '& .MuiTableCell-root': {
@@ -115,15 +117,15 @@ export function MainListPage() {
 
                         </TableCell>
                         : */}
-                        <TableCell align="center" onClick={() => handleSort("unit")} sx={{ cursor: 'pointer' }}>
-                            <Box sx={sortBtnHeader}>
-                                <Typography fontSize={'0.875rem'} sx={{ borderBottom: '0', pr: '10px' }}>
-                                    Unit
-                                </Typography>
-                                <ArrowUpwardIcon sx={{ width: '16px', transition: "transform 0.3s ease", transform: `rotate(${sortOrder === 'desc' && sortBy === 'unit' ? '180deg' : '0deg'})` }}></ArrowUpwardIcon>
-                            </Box>
+                    <TableCell align="center" onClick={() => handleSort("unit")} sx={{ cursor: 'pointer' }}>
+                        <Box sx={sortBtnHeader}>
+                            <Typography fontSize={'0.875rem'} sx={{ borderBottom: '0', pr: '10px' }}>
+                                Unit
+                            </Typography>
+                            <ArrowUpwardIcon sx={{ width: '16px', transition: "transform 0.3s ease", transform: `rotate(${sortOrder === 'desc' && sortBy === 'unit' ? '180deg' : '0deg'})` }}></ArrowUpwardIcon>
+                        </Box>
 
-                        </TableCell>
+                    </TableCell>
                     {/* } */}
                     <TableCell>
                     </TableCell>
@@ -143,7 +145,7 @@ export function MainListPage() {
 
                         }}>
                             <TableCell onClick={() => { if (isMobile) handleToggle(el._id) }} sx={{ width: '73px', [theme.breakpoints.down(1050)]: { width: '30px' }, }}>
-                                <Box sx={{display:'flex', alignItems:'center', justifyContent:'center'}}>
+                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                     <Box component={'img'} src={el.media !== '' ? el.media : 'images/load-ingr.svg'} alt={el.name} sx={imgIngrList}></Box>
                                 </Box>
                             </TableCell>
@@ -154,14 +156,22 @@ export function MainListPage() {
                                     maxWidth: '100px',
                                     width: '100px',
                                 },
-                            
+
                             }}>
-                                <Tooltip title={el.name} arrow>
+
+                                {isMobile ?
                                     <ListItemText
                                         sx={nameIngredient}
                                         primary={el.name}
-                                    />
-                                </Tooltip>
+                                    /> 
+                                    :
+                                    <Tooltip title={el.name} sx={{ display: isMobile ? 'block' : 'none' }} arrow>
+                                        <ListItemText
+                                            sx={nameIngredient}
+                                            primary={el.name}
+                                        />
+                                    </Tooltip>
+                                }
 
 
                             </TableCell>
@@ -176,17 +186,17 @@ export function MainListPage() {
                                             ml: '7px',
                                             mr: '7px'
                                         }
-                                    }}> 
-                                        
+                                    }}>
+
                                         <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'end' }}>
                                             <Typography sx={{
-                                                fontSize:'14px', 
-                                                color:'text.disabled', 
-                                                pr:'5px',
+                                                fontSize: '14px',
+                                                color: 'text.disabled',
+                                                pr: '5px',
                                                 overflow: 'hidden',
                                                 whiteSpace: 'nowrap',
                                                 textOverflow: 'ellipsis',
-                                                maxWidth:'65px'
+                                                maxWidth: '65px'
                                             }}>×{el.units.length}</Typography>
                                             <ExpandMoreIcon sx={{
                                                 transition: "transform 0.3s ease",
@@ -256,7 +266,7 @@ export function MainListPage() {
                                             <Box sx={{
                                                 position: 'relative', '& .slide-list-unit': { width: 'auto' }, '& .swiper-list-unit': {
                                                     position: 'static',
-                                                    
+
                                                     margin: '0 auto 15px'
                                                 },
                                                 overflow: 'hidden',

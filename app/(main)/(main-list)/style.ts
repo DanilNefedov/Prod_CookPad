@@ -176,6 +176,9 @@ export const inputUnitList = {
         '& span':{
             fontSize:'14px'
         }
+    },
+    [theme.breakpoints.down(460)]: {
+        maxWidth:'100px'
     }
 }
 
@@ -209,19 +212,23 @@ export const boughtBlock = {
 
 export const modalContainer = {
     backgroundColor: 'background.paper',
-    maxWidth: '40%',
+    maxWidth: '50%',
     top: '50%',
     left: '50%',
     position: 'relative',
     transform: "translate(-50%, -50%)",
     padding: '10px',
-    borderRadius: '20px'
+    borderRadius: '20px',
+    [theme.breakpoints.down('md')]: {
+        maxWidth:'300px',
+        
+    }
 }
 
 
 export const amountNewUnit = {
-    '& .MuiInputBase-input': {
-        p: '10px',
+    '& .MuiInputBase-root .MuiOutlinedInput-input': {
+        p: '10px 10px 10px 14px',
     },
 }
 
@@ -231,6 +238,7 @@ export const btnsModal = {
     borderRadius: '50%',
     minWidth: 'initial',
     margin: '0 5px',
+    backgroundColor:'background.default',
 
     '&:hover': {
         backgroundColor: 'primary.main'
@@ -238,6 +246,15 @@ export const btnsModal = {
 
     '&:hover svg': {
         color: '#fff'
+    },
+    [theme.breakpoints.down('md')]: {
+        width:"30px",
+        height:'30px',
+
+        '& svg': {
+            width:'18px',
+            height:'18px',
+        }
     }
 }
 
@@ -270,10 +287,22 @@ export const calcInput = {
     '& .MuiInputBase-input': {
         WebkitTextFillColor: '#fff !important',
         maxWidth: "210px",
+
+        [theme.breakpoints.down('md')]: {
+            fontSize:'14px',
+            
+        }
     },
     '& .MuiOutlinedInput-notchedOutline': {
         borderColor: '#353842 !important'
+    },
+    [theme.breakpoints.down('md')]: {
+        '& .MuiInputBase-root':{
+            p:'9.5px 15px'
+        }
+        
     }
+    
 }
 
 export const containerCalcGrid = {
@@ -303,6 +332,10 @@ export const menuCalc = {
     '& .MuiPaper-root': {
         maxWidth: '300px',
         backgroundColor: '#15161B',
+
+        [theme.breakpoints.down('md')]: {
+            maxWidth: '250px',
+        }
     },
     '& .MuiButtonBase-root': {
         m: '0',
