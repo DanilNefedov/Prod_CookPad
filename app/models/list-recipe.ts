@@ -28,6 +28,19 @@ const IngredientsDataSchema = new Schema(
     }
 )
 
+const MediaRecipeSchema = new Schema (
+    {
+        url:{ 
+            type: String, 
+            default: '' 
+        },
+        type:{
+            type: String, 
+            default: 'image'
+        }
+    }
+)
+
 const RecipeDataSchema = new Schema(
     {
         recipe_id: {
@@ -39,8 +52,8 @@ const RecipeDataSchema = new Schema(
             required: true
         },
         recipe_media:{ 
-            type: String, 
-            default: '' 
+            type: [MediaRecipeSchema], 
+            required: true
         },//only main | if we dont have it - first
         recipe_shop:{
             type: Boolean,

@@ -30,6 +30,7 @@ import { SwiperMediaCard } from './swiper-media-card';
 import { deleteRecipe, setFavoriteRecipe } from '@/state/slices/recipe-slice';
 import { theme } from '@/config/ThemeMUI/theme';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { newListRecipe } from '@/state/slices/list-recipe-slice';
 
 
 
@@ -88,9 +89,9 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
     //     [id, dispatch] 
     //   );
     function addToList() {
-        // if (id !== '' && recipe_id) {
-        //     dispatch(newListRecipe({ connection_id: id, recipe_id: recipe_id }))
-        // }
+        if (id !== '' && recipe_id) {
+            dispatch(newListRecipe({ connection_id: id, recipe_id: recipe_id }))
+        }
     }
 
     function handleDelete(recipe_id: string) {

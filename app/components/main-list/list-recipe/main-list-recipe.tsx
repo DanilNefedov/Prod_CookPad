@@ -2,6 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { Box } from "@mui/material";
+import { useEffect } from "react";
 
 
 
@@ -11,6 +12,15 @@ import { Box } from "@mui/material";
 export function MainListRecipe() {
     const dispatch = useAppDispatch()
     const listRecipeStore = useAppSelector(state => state.listRecipe)
+    const userStore = useAppSelector(state => state.user)
+
+
+    useEffect(() => {
+        if(userStore.user.connection_id !== ''){
+            
+        }
+    }, [])
+
 
     console.log(listRecipeStore)
     return (
