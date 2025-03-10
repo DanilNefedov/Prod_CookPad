@@ -104,6 +104,42 @@ export const ingredientsListRecipe = createAsyncThunk<ReturnIngredientsListrecip
     }
 )
 
+interface ShopIngrListRecipeT {
+    ingredient_id:string, 
+    connection_id:string, 
+    shop_ingr: boolean, 
+    recipe_id:string
+}
+
+export const shopIngrListRecipe = createAsyncThunk<ShopIngrListRecipeT, ShopIngrListRecipeT, { rejectValue: string }>(
+    'listRecipe/shopIngrListRecipe',
+    async function (data, { rejectWithValue }) {
+        try {
+            const response = await fetch('/api/list-recipe/shop-ingredient', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+    
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+            
+            const dataList = await response.json()
+            console.log(dataList)
+
+            return dataList;
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+)
+
+
+
 
 
 
@@ -163,6 +199,30 @@ const listRecipeSlice = createSlice({
                         }
                     });
                 }
+            })
+
+
+
+
+            .addCase(shopIngrListRecipe.pending, (state) => {
+                state.status = true,
+                state.error = false
+            })
+            .addCase(shopIngrListRecipe.fulfilled, (state, action: PayloadAction<ShopIngrListRecipeT, string>) => {
+                const { ingredient_id, shop_ingr, recipe_id } = action.payload;
+                state.error = false,
+                state.status = false
+
+                const thisRecipe = state.recipes.find(el => el.recipe_id === recipe_id)
+
+                if (thisRecipe) {
+                    thisRecipe.ingredients_list.map(el => {
+                        if (el._id === ingredient_id) {
+                            el.shop_ingr = shop_ingr
+                        }
+                    })
+                }
+
             })
             
     }
