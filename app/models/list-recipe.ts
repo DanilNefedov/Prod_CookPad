@@ -32,11 +32,11 @@ const MediaRecipeSchema = new Schema (
     {
         url:{ 
             type: String, 
-            default: '' 
+            required: true
         },
         type:{
             type: String, 
-            default: 'image'
+            required: true
         }
     }
 )
@@ -52,7 +52,7 @@ const RecipeDataSchema = new Schema(
             required: true
         },
         recipe_media:{ 
-            type: [MediaRecipeSchema], 
+            type: MediaRecipeSchema, 
             required: true
         },//only main | if we dont have it - first
         recipe_shop:{

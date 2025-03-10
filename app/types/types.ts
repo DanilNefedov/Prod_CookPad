@@ -427,22 +427,32 @@ export interface IRequestList {
 
 export type MainListRecipe = ErrorStatus & {
     connection_id:string,
-    recipes:recipeForList[]
+    page:number
+    recipes:TempalteRecipeForList[]
 }
 
 export type returnDataRecipeList = {
     connection_id:string,
-    recipes:recipeForList[]
+    recipes:TempalteRecipeForList[]
 }
 
-export type recipeForList = {
+
+
+export type TempalteRecipeForList = {
     recipe_id: string,
     recipe_name: string,
     // recipe_media:MediaObj[],
-    recipe_media:string,
+    recipe_media:{
+        url:string,
+        type:string
+    },
     recipe_shop:boolean,
     ingredients_list: IListObj[],
 }
+
+// export type RecipeListWithIngr = TempalteRecipeForList & {
+//     ingredients_list: IListObj[],
+// }
 
 
 export interface IngredientNewList extends IngredientStateTemplate{
