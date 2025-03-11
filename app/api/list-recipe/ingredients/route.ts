@@ -27,17 +27,20 @@ export async function GET(request: Request) {
         await connectDB();
         
 
-        const recipe = await ListRecipe.findOne({
-            connection_id: connection_id,
-            'recipe.recipe_id': recipe_id
-        });
+        const recipe = await ListRecipe.findOne(
+            {
+                connection_id: connection_id,
+                'recipe.recipe_id': recipe_id
+            },
+            { "recipe.ingredients_list": 1, _id: 0 }
+        );
 
 
-        if (!recipe) {
+        if (!recipe || !recipe.recipe) {
             return NextResponse.json(
                 { message: "Recipe not found" },
                 { status: 404 }
-            )       
+            );
         }
 
         return NextResponse.json(

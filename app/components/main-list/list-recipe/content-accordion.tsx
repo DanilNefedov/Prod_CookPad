@@ -13,7 +13,7 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { AddNewUnit } from "../list/add-unit"
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { shopIngrListRecipe } from "@/state/slices/list-recipe-slice"
+import { deleteIngrRecipeList, shopIngrListRecipe } from "@/state/slices/list-recipe-slice"
 
 
 
@@ -32,10 +32,10 @@ export function ContentAccordion({ props }: { props: dataProps }) {
 
     function deleteIngredient(ingredient_id: string) {
         console.log('deleteIngredient')
-        // if (id && id !== null) {
+        if (connection_id !== '') {
         //     console.log(ingredient_id, id)
-        //     dispatch(deleteIngrRecipeList({ ingredient_id, connection_id: id, recipe_id }))
-        // }
+            dispatch(deleteIngrRecipeList({ ingredient_id, connection_id, recipe_id }))
+        }
     }
 
     function toggleShopIngr(ingredient_id: string, shop_ingr: boolean) {

@@ -18,6 +18,11 @@ interface NewListRecipeT {
     recipe_id: string
 }
 
+interface TempalteRecipeIngredient {
+    ingredient_id:string, 
+    connection_id:string, 
+    recipe_id:string
+}
 
 interface ReturnPreLoaderMain {
     connection_id:string,
@@ -104,11 +109,8 @@ export const ingredientsListRecipe = createAsyncThunk<ReturnIngredientsListrecip
     }
 )
 
-interface ShopIngrListRecipeT {
-    ingredient_id:string, 
-    connection_id:string, 
+interface ShopIngrListRecipeT extends TempalteRecipeIngredient{ 
     shop_ingr: boolean, 
-    recipe_id:string
 }
 
 export const shopIngrListRecipe = createAsyncThunk<ShopIngrListRecipeT, ShopIngrListRecipeT, { rejectValue: string }>(
@@ -140,7 +142,132 @@ export const shopIngrListRecipe = createAsyncThunk<ShopIngrListRecipeT, ShopIngr
 
 
 
+export const deleteIngrRecipeList = createAsyncThunk<TempalteRecipeIngredient, TempalteRecipeIngredient, { rejectValue: string }>(
+    'listRecipe/deleteIngrRecipeList',
+    async function (data, { rejectWithValue }) {
+        try {
+            const response = await fetch('/api/list-recipe/ingredient-removal', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+    
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+            
+            const dataList = await response.json()
+            console.log(dataList)
 
+            return dataList;
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+)
+
+
+interface ShopUnitIngredientT extends TempalteRecipeIngredient{
+    unit_id:string,
+    shop_unit:boolean
+}
+
+export const shopUnitListRecipe = createAsyncThunk<ShopUnitIngredientT, ShopUnitIngredientT, { rejectValue: string }>(
+    'listRecipe/shopUnitListRecipe',
+    async function (data, { rejectWithValue }) {
+        try {
+            const response = await fetch('/api/list-recipe/shop-unit', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+    
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+            
+            const dataList = await response.json()
+            console.log(dataList)
+
+            return dataList;
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+)
+
+
+interface DeleteUnitIngredientT extends TempalteRecipeIngredient{
+    unit_id:string
+}
+
+
+export const deleteUnitListRecipe = createAsyncThunk<DeleteUnitIngredientT, DeleteUnitIngredientT, { rejectValue: string }>(
+    'listRecipe/deleteUnitListRecipe',
+    async function (data, { rejectWithValue }) {
+        try {
+            const response = await fetch('/api/list-recipe/unit-removal', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+    
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+            
+            const dataList = await response.json()
+            console.log(dataList)
+
+            return dataList;
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+)
+
+
+
+interface ChangeAmountT extends TempalteRecipeIngredient{
+    unit_id: string, 
+    amount: number
+}
+
+export const newAmountListRecipe = createAsyncThunk<ChangeAmountT, ChangeAmountT, { rejectValue: string }>(
+    'listRecipe/newAmountListRecipe',
+    async function (data, { rejectWithValue }) {
+        try {
+            const response = await fetch('/api/list-recipe/new-amount', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+    
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+            
+            const dataList = await response.json()
+            console.log(dataList)
+
+            return dataList;
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+)
 
 
 const listRecipeSlice = createSlice({
@@ -221,6 +348,74 @@ const listRecipeSlice = createSlice({
                             el.shop_ingr = shop_ingr
                         }
                     })
+                }
+
+            })
+
+
+
+            .addCase(deleteIngrRecipeList.pending, (state) => {
+                state.status = true,
+                state.error = false
+            })
+            .addCase(deleteIngrRecipeList.fulfilled, (state, action: PayloadAction<TempalteRecipeIngredient, string>) => {
+                const { recipe_id, ingredient_id } = action.payload;
+                state.error = false,
+                state.status = false
+
+                const recipeIndex = state.recipes.findIndex(recipe => recipe.recipe_id === recipe_id);
+
+                if (recipeIndex !== -1) {
+                    const ingredientsList = state.recipes[recipeIndex].ingredients_list.filter((ingredient: IListObj) => ingredient._id !== ingredient_id);
+                    state.recipes[recipeIndex].ingredients_list = ingredientsList;
+                }
+
+            })
+
+
+
+            .addCase(shopUnitListRecipe.pending, (state) => {
+                state.status = true,
+                state.error = false
+            })
+            .addCase(shopUnitListRecipe.fulfilled, (state, action: PayloadAction<ShopUnitIngredientT, string>) => {
+                const { ingredient_id, unit_id, shop_unit, recipe_id  } = action.payload;
+                state.error = false,
+                state.status = false
+
+                const recipe = state.recipes.find(recipe => recipe.recipe_id === recipe_id);
+                if (recipe) {
+                    const ingredient = recipe.ingredients_list.find(ingredient => ingredient._id === ingredient_id);
+                    if (ingredient) {
+                        const unit = ingredient.units.find(unit => unit._id === unit_id);
+                        if (unit) {
+                            unit.shop_unit = shop_unit;
+                        }
+                    }
+                }
+
+            })
+
+
+
+            .addCase(newAmountListRecipe.pending, (state) => {
+                state.status = true,
+                    state.error = false
+            })
+            .addCase(newAmountListRecipe.fulfilled, (state, action: PayloadAction<ChangeAmountT, string>) => {
+                const { ingredient_id, unit_id, amount, recipe_id } = action.payload;
+                state.error = false,
+                state.status = false
+
+                const recipe = state.recipes.find(recipe => recipe.recipe_id === recipe_id);
+                if (recipe) {
+                    const ingredient = recipe.ingredients_list.find(ingredient => ingredient._id === ingredient_id);
+                    if (ingredient) {
+                        const unit = ingredient.units.find(unit => unit._id === unit_id);
+                        if (unit) {
+                            unit.amount = amount;
+                        }
+                    }
                 }
 
             })

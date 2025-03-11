@@ -14,6 +14,7 @@ import { parse } from "mathjs"
 import { theme } from "@/config/ThemeMUI/theme"
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
+import { deleteUnitListRecipe, newAmountListRecipe, shopUnitListRecipe } from "@/state/slices/list-recipe-slice"
 
 
 
@@ -29,9 +30,9 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
             if(pathName === '/list'){
                 dispatch(deleteUnitIngrFetch({ ingredient_id, unit_id }))
             }
-            // else if(pathName === '/list-recipe' && recipe_id){
-            //     dispatch(deleteUnitListRecipe({ ingredient_id, connection_id: id, unit_id, recipe_id }))
-            // }
+            else if(pathName === '/list-recipe' && recipe_id){
+                dispatch(deleteUnitListRecipe({ ingredient_id, connection_id: id, unit_id, recipe_id }))
+            }
             
         }
     }
@@ -41,7 +42,9 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
         if (id !== '' && amount !== elem.amount) {
             if (pathName === '/list') {
                 dispatch(changeAmountFetch({ ingredient_id: el._id, unit_id: _id, amount: amount }));
-            }
+            }else if(pathName === '/list-recipe' && recipe_id){
+                dispatch(newAmountListRecipe({connection_id: id, ingredient_id: el._id, unit_id: _id, amount: amount, recipe_id }))
+            }   
         } 
         setEditAmount(null);
     }, [id, amount, pathName, dispatch]);
@@ -49,17 +52,75 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
 
     //-------------------  Error with floating-point numbers allowing characters such as period and comma in floating-point numbers   --------------------//
     
-    const handleAmount = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const regex = /^\d{0,4}([.,]\d{0,4})?$/;
-        const value = e.target.value === '' ? '0' : e.target.value;
+    // const handleAmount = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    //     // const regex = /^\d{0,4}([.,]\d{0,4})?$/;
+    //     // const value = e.target.value === '' ? '0' : e.target.value;
     
-        if (regex.test(value)) {
-            const numericValue = parse(value);
-            setAmount(numericValue.evaluate());
-        }
-    }, []);
-    
+    //     // if (regex.test(value)) {
+    //     //     const numericValue = parse(value);
+    //     //     setAmount(numericValue.evaluate());
+    //     // }
 
+    //     let inputValue = e.target.value;
+
+    //     inputValue = inputValue.replace(/[^0-9.,]/g, "");
+
+    //     inputValue = inputValue.replace(",", ".");
+
+    //     if (inputValue === "") {
+    //         inputValue = "0";
+    //     }
+
+    //     if (inputValue === ".") {
+    //         inputValue = "0.";
+    //     }
+
+    //     if (inputValue.length > 1 && inputValue.startsWith("0") && !inputValue.startsWith("0.")) {
+    //         inputValue = inputValue.slice(1);
+    //     }
+
+    //     const dotCount = (inputValue.match(/\./g) || []).length;
+    //     if (dotCount > 1) {
+    //         inputValue = inputValue.slice(0, inputValue.lastIndexOf("."));
+    //     }
+
+    //     const match = inputValue.match(/^(\d{0,4})(\.\d{0,4})?/);
+    //     inputValue = match ? match[0] : "0";
+
+    //     const numericValue = parse(inputValue);
+    //     setAmount(numericValue.evaluate());
+    // }, []);
+    
+    const handleAmount = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        let inputValue = e.target.value;
+
+        inputValue = inputValue.replace(/[^0-9.,]/g, "");
+
+        inputValue = inputValue.replace(",", ".");
+
+        if (inputValue === "") {
+            inputValue = "0";
+        }
+
+        if (inputValue === ".") {
+            inputValue = "0.";
+        }
+
+        if (inputValue.length > 1 && inputValue.startsWith("0") && !inputValue.startsWith("0.")) {
+            inputValue = inputValue.slice(1);
+        }
+
+        const dotCount = (inputValue.match(/\./g) || []).length;
+        if (dotCount > 1) {
+            inputValue = inputValue.slice(0, inputValue.lastIndexOf("."));
+        }
+
+        const match = inputValue.match(/^(\d{0,4})(\.\d{0,4})?/);
+        inputValue = match ? match[0] : "0";
+
+        const numericValue = parse(inputValue);
+        setAmount(numericValue.evaluate());
+    }
     
     //-------------------  Error with floating-point numbers allowing characters such as period and comma in floating-point numbers   --------------------//
 
@@ -70,10 +131,9 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
             if(pathName === '/list'){
                 dispatch(shopUnitUpdate({ ingredient_id: el._id, unit_id: _id, shop_unit }))
             }
-            // else if(pathName === '/list-recipe' && recipe_id){
-            //     dispatch(shopUnitListRecipe({ connection_id: id, ingredient_id: el.ingredient_id, unit_id: _id, shop_unit, recipe_id}))
-
-            // }
+            else if(pathName === '/list-recipe' && recipe_id){
+                dispatch(shopUnitListRecipe({ connection_id: id, ingredient_id: el._id, unit_id: _id, shop_unit, recipe_id}))
+            }
             
         }
     }
@@ -98,7 +158,7 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
                         }
                     }}
                     
-                    type="number"
+                    // type="string"
                     value={amount.toString()}
                     sx={inputUnitList}
                     onChange={(e) => handleAmount(e)}
