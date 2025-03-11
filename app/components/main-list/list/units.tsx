@@ -10,7 +10,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import { CalcUnit } from "./calc-unit"
 import { changeAmountFetch, deleteUnitIngrFetch, shopUnitUpdate } from "@/state/slices/list-slice"
-import { parse } from "mathjs"
+import { bignumber, evaluate, parse } from "mathjs"
 import { theme } from "@/config/ThemeMUI/theme"
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
@@ -118,8 +118,9 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
         const match = inputValue.match(/^(\d{0,4})(\.\d{0,4})?/);
         inputValue = match ? match[0] : "0";
 
-        const numericValue = parse(inputValue);
-        setAmount(numericValue.evaluate());
+        const numericValue = evaluate(inputValue);
+        // console.log(numericValue, inputValue,)
+        setAmount(numericValue);
     }
     
     //-------------------  Error with floating-point numbers allowing characters such as period and comma in floating-point numbers   --------------------//
