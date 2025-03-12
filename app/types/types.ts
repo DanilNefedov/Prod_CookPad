@@ -472,7 +472,9 @@ export interface NewUnitIngredient {
     units:NewUnitObj[]
     list:string[]
 }
-
+export interface ResUnitObj extends NewUnitObj{
+    _id:string
+}
 
 
 

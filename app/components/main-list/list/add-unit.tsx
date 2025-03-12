@@ -12,6 +12,8 @@ import { evaluate } from "mathjs";
 import { addNewUnit } from "@/state/slices/list-slice";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { theme } from "@/config/ThemeMUI/theme";
+import { handleAmountChange } from "../function";
+import { newUnitListRecipe } from "@/state/slices/list-recipe-slice";
 
 interface PropsData {
     ingr: IListObj;
@@ -49,33 +51,9 @@ export function AddNewUnit({ props }: { props: PropsData }) {
     // };
 
     function handleAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        let inputValue = e.target.value;
+        const resIntupChange = handleAmountChange(e.target.value)
 
-        inputValue = inputValue.replace(/[^0-9.,]/g, "");
-
-        inputValue = inputValue.replace(",", ".");
-
-        if (inputValue === "") {
-            inputValue = "0";
-        }
-
-        if (inputValue === ".") {
-            inputValue = "0.";
-        }
-
-        if (inputValue.length > 1 && inputValue.startsWith("0") && !inputValue.startsWith("0.")) {
-            inputValue = inputValue.slice(1);
-        }
-
-        const dotCount = (inputValue.match(/\./g) || []).length;
-        if (dotCount > 1) {
-            inputValue = inputValue.slice(0, inputValue.lastIndexOf("."));
-        }
-
-        const match = inputValue.match(/^(\d{0,4})(\.\d{0,4})?/);
-        inputValue = match ? match[0] : "0";
-
-        setAmount(inputValue);
+        setAmount(resIntupChange);
     }
 
 
@@ -93,6 +71,9 @@ export function AddNewUnit({ props }: { props: PropsData }) {
             if (pathName === '/list') {
                 setOpen(false)
                 dispatch(addNewUnit({ ingredient_id, new_unit: newUnit }))
+            }else if(pathName === '/list-recipe' && recipe_id){
+                setOpen(false)
+                dispatch(newUnitListRecipe({connection_id: id,  ingredient_id, updated_unit:newUnit, recipe_id}))
             }
 
 

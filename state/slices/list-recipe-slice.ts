@@ -1,4 +1,4 @@
-import { IListObj, MainListRecipe, returnDataRecipeList, TempalteRecipeForList } from "@/app/types/types";
+import { IListObj, MainListRecipe, NewUnitObj, ResUnitObj, returnDataRecipeList, TempalteRecipeForList } from "@/app/types/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
@@ -259,7 +259,39 @@ export const newAmountListRecipe = createAsyncThunk<ChangeAmountT, ChangeAmountT
             }
             
             const dataList = await response.json()
-            console.log(dataList)
+
+            return dataList;
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+)
+interface NewUnitIngredient extends TempalteRecipeIngredient{
+    updated_unit:NewUnitObj
+}
+
+interface RespNewUnitIngreedient extends TempalteRecipeIngredient {
+    new_unit:ResUnitObj
+}
+
+export const newUnitListRecipe = createAsyncThunk<RespNewUnitIngreedient, NewUnitIngredient, { rejectValue: string }>(
+    'listRecipe/newUnitListRecipe',
+    async function (data, { rejectWithValue }) {
+        try {
+            const response = await fetch('/api/list-recipe/new-unit', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+    
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+            
+            const dataList = await response.json()
 
             return dataList;
         } catch (error) {
@@ -416,6 +448,27 @@ const listRecipeSlice = createSlice({
                             unit.amount = amount;
                         }
                     }
+                }
+
+            })
+
+
+            .addCase(newUnitListRecipe.pending, (state) => {
+                state.status = true,
+                    state.error = false
+            })
+            .addCase(newUnitListRecipe.fulfilled, (state, action: PayloadAction<RespNewUnitIngreedient, string>) => {
+                const { ingredient_id, new_unit, recipe_id } = action.payload;
+                state.error = false,
+                state.status = false
+
+                const thisRecipe = state.recipes.find(el => el.recipe_id === recipe_id)
+                if (thisRecipe) {
+                    thisRecipe.ingredients_list.map(el => {
+                        if (el._id === ingredient_id) {
+                            el.units.push(new_unit)
+                        }
+                    })
                 }
 
             })

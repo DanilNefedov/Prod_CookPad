@@ -1,4 +1,4 @@
-import { IListState, IngredientFullData, IRequestList, NewUnitIngredient, NewUnitObj } from "@/app/types/types";
+import { IListState, IngredientFullData, IRequestList, NewUnitIngredient, NewUnitObj, ResUnitObj } from "@/app/types/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
@@ -20,9 +20,7 @@ interface NewIngredientListT {
     units:NewUnitObj[]
     list:string[]
 }
-interface ResUnitObj extends NewUnitObj{
-    _id:string
-}
+
 interface ResNewIngredientListT {
     _id:string,
     name:string,

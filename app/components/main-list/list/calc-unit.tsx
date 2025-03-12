@@ -14,20 +14,21 @@ import BackspaceIcon from '@mui/icons-material/Backspace';
 import CheckIcon from '@mui/icons-material/Check';
 import { changeAmountFetch } from "@/state/slices/list-slice";
 import { theme } from "@/config/ThemeMUI/theme";
+import { newAmountListRecipe } from "@/state/slices/list-recipe-slice";
 
 interface DataProps {
     elem: UnitsList;
     id: string;
     ingredient_id: string;
-    amount:number
-    setAmount: (newValue: number) => void
+    amount:string
+    setAmount: (newValue: string) => void
     recipe_id?: string;
 }
 
 
 export const CalcUnit = memo(({ props }: { props: DataProps }) => {    
     const { elem, id, ingredient_id, amount, setAmount, recipe_id } = props
-    const [currentValue, setCurrentValue] = useState<string>(amount.toString());
+    const [currentValue, setCurrentValue] = useState<string>(amount);
     const [isParenthesisOpen, setIsParenthesisOpen] = useState<number>(0);
     const [mathError, setMathError] = useState<string>('')
     const pathName = usePathname()
@@ -37,8 +38,8 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
     const open = Boolean(anchorEl);
 
     useEffect(() => {
-        if (currentValue !== amount.toString()) {
-            setCurrentValue(amount.toString());
+        if (currentValue !== amount) {
+            setCurrentValue(amount);
         }
     }, [amount]);
     
@@ -204,10 +205,12 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
 
         setMathError("");
         setCurrentValue(resEqual);
-        setAmount(numericValue)
+        setAmount(numericValue.toString())
 
         if (id !== "" && pathName === "/list") {
             dispatch(changeAmountFetch({ ingredient_id, unit_id: elem._id, amount: numericValue }));
+        }else if (id !== "" && pathName === "/list-recipe" && recipe_id){
+            dispatch(newAmountListRecipe({connection_id: id, ingredient_id: ingredient_id, unit_id: elem._id, amount: numericValue, recipe_id }))
         }
 
 

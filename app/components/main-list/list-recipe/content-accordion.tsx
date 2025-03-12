@@ -46,7 +46,7 @@ export function ContentAccordion({ props }: { props: dataProps }) {
         }
     }
 
-
+   
     return (
         <AccordionDetails sx={{overflow:'auto', height:'100%', bgcolor:'background.default', borderRadius:'0 0 20px 20px'}}>
 

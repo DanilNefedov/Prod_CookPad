@@ -15,15 +15,15 @@ import { theme } from "@/config/ThemeMUI/theme"
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import { deleteUnitListRecipe, newAmountListRecipe, shopUnitListRecipe } from "@/state/slices/list-recipe-slice"
+import { handleAmountChange } from "../function"
 
 
 
 export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: UnitsList, id: string, recipe_id?: string }) => {
     const [editAmount, setEditAmount] = useState<string | null>(null)
-    const [amount, setAmount] = useState<number >(elem.amount);
+    const [amount, setAmount] = useState<string>(elem.amount.toString());
     const pathName = usePathname()
     const dispatch = useAppDispatch()
-
 
     function deleteUnitIngr(ingredient_id: string, unit_id: string) {
         if (id !== '') {
@@ -39,91 +39,29 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
 
 
     const confirmAmount = useCallback((_id: string) => {
-        if (id !== '' && amount !== elem.amount) {
+        const numberAmount = evaluate(amount)
+
+        if (id !== '' && numberAmount !== elem.amount) {
             if (pathName === '/list') {
-                dispatch(changeAmountFetch({ ingredient_id: el._id, unit_id: _id, amount: amount }));
+                dispatch(changeAmountFetch({ ingredient_id: el._id, unit_id: _id, amount: numberAmount }));
             }else if(pathName === '/list-recipe' && recipe_id){
-                dispatch(newAmountListRecipe({connection_id: id, ingredient_id: el._id, unit_id: _id, amount: amount, recipe_id }))
+                // console.log(numberAmount)
+                dispatch(newAmountListRecipe({connection_id: id, ingredient_id: el._id, unit_id: _id, amount: numberAmount, recipe_id }))
             }   
         } 
         setEditAmount(null);
     }, [id, amount, pathName, dispatch]);
     
 
-    //-------------------  Error with floating-point numbers allowing characters such as period and comma in floating-point numbers   --------------------//
-    
-    // const handleAmount = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    //     // const regex = /^\d{0,4}([.,]\d{0,4})?$/;
-    //     // const value = e.target.value === '' ? '0' : e.target.value;
-    
-    //     // if (regex.test(value)) {
-    //     //     const numericValue = parse(value);
-    //     //     setAmount(numericValue.evaluate());
-    //     // }
-
-    //     let inputValue = e.target.value;
-
-    //     inputValue = inputValue.replace(/[^0-9.,]/g, "");
-
-    //     inputValue = inputValue.replace(",", ".");
-
-    //     if (inputValue === "") {
-    //         inputValue = "0";
-    //     }
-
-    //     if (inputValue === ".") {
-    //         inputValue = "0.";
-    //     }
-
-    //     if (inputValue.length > 1 && inputValue.startsWith("0") && !inputValue.startsWith("0.")) {
-    //         inputValue = inputValue.slice(1);
-    //     }
-
-    //     const dotCount = (inputValue.match(/\./g) || []).length;
-    //     if (dotCount > 1) {
-    //         inputValue = inputValue.slice(0, inputValue.lastIndexOf("."));
-    //     }
-
-    //     const match = inputValue.match(/^(\d{0,4})(\.\d{0,4})?/);
-    //     inputValue = match ? match[0] : "0";
-
-    //     const numericValue = parse(inputValue);
-    //     setAmount(numericValue.evaluate());
-    // }, []);
+   
     
     const handleAmount = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        let inputValue = e.target.value;
+        const resIntupChange = handleAmountChange(e.target.value)
 
-        inputValue = inputValue.replace(/[^0-9.,]/g, "");
-
-        inputValue = inputValue.replace(",", ".");
-
-        if (inputValue === "") {
-            inputValue = "0";
-        }
-
-        if (inputValue === ".") {
-            inputValue = "0.";
-        }
-
-        if (inputValue.length > 1 && inputValue.startsWith("0") && !inputValue.startsWith("0.")) {
-            inputValue = inputValue.slice(1);
-        }
-
-        const dotCount = (inputValue.match(/\./g) || []).length;
-        if (dotCount > 1) {
-            inputValue = inputValue.slice(0, inputValue.lastIndexOf("."));
-        }
-
-        const match = inputValue.match(/^(\d{0,4})(\.\d{0,4})?/);
-        inputValue = match ? match[0] : "0";
-
-        const numericValue = evaluate(inputValue);
-        // console.log(numericValue, inputValue,)
-        setAmount(numericValue);
+        setAmount(resIntupChange);
+        
     }
     
-    //-------------------  Error with floating-point numbers allowing characters such as period and comma in floating-point numbers   --------------------//
 
 
     function toggleShopUnit(_id: string, shop_unit: boolean) {
@@ -159,7 +97,7 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
                         }
                     }}
                     
-                    // type="string"
+                    type="number"
                     value={amount.toString()}
                     sx={inputUnitList}
                     onChange={(e) => handleAmount(e)}
