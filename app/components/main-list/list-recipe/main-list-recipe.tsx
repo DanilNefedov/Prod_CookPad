@@ -34,31 +34,42 @@ export function MainListRecipe() {
     }
 
 
-    console.log(listRecipeStore)
     return (
-        <Box sx={{height:'100%', overflow:'auto'}}>
+        <Box sx={{height:'100%',}}>
             {listRecipeStore?.recipes.map(el => (
-                <Accordion key={el.recipe_id} sx={{ backgroundColor: 'background.default', height:'auto', maxHeight:'100%', mb: '20px'}}>
+                <Accordion 
+                    // square={false}  
+                    key={el.recipe_id} 
+                    sx={{ 
+                    backgroundColor: 'background.default', 
+                    height:'auto', 
+                    maxHeight:'100%', 
+                    overflow:'none',
+                    mb: '5px',
+                    '&:first-of-type': { borderTopLeftRadius: '10px', borderTopRightRadius: '10px' },
+                    '&:last-of-type': { borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' },
+                    '&.Mui-expanded': {m: '5px 0 ',}
+                }}>
                     <AccordionSummary
                         onClick={() => getDataRecipe(el.recipe_id)}
                         expandIcon={<ExpandMoreIcon sx={{ color: 'text.primary' }} />}
                         aria-controls={`panel1-content${el.recipe_id}`}
                         id={`panel1-header${el.recipe_id}`}
-                        sx={{ '& .MuiAccordionSummary-content': { alignItems: 'center' } }}
+                        sx={{ '& .MuiAccordionSummary-content': { alignItems: 'center', m:'10px 0' } }}
                     >
 
                         {el.recipe_media.type === 'image' ?
                             <Box
                                 component='img'
                                 alt={el.recipe_name}
-                                sx={{ height: '80px', objectFit: 'cover', borderRadius: '50%' }}
+                                sx={{ height: '60px', width:'60px', objectFit: 'cover', borderRadius: '50%' }}
                                 src={el.recipe_media.url as string}
                                 loading="lazy"
                             />
                             :
                             <Box
                                 component='video'
-                                sx={{ height: '80px', objectFit: "cover", width: '80px', borderRadius: '50%' }}
+                                sx={{ height: '60px', objectFit: "cover", width: '60px', borderRadius: '50%' }}
                                 autoPlay
                                 loop
                                 muted
@@ -71,7 +82,7 @@ export function MainListRecipe() {
                             </Box>
                         }
 
-                        <Typography sx={{ m: '0 auto', fontSize: '20px', }}>{el.recipe_name}</Typography>
+                        <Typography sx={{ m: '0 auto', fontSize: '18px', }}>{el.recipe_name}</Typography>
 
 
                     </AccordionSummary>
