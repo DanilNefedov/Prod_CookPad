@@ -260,7 +260,9 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
                 MenuListProps={{
                     'aria-labelledby': 'basic-button',
                 }}
-                sx={menuCalc}
+                sx={{...menuCalc,
+                    '&[aria-hidden="true"]': { inert: 'true' } // prevents a closing error. double-check everything and get rid of this class
+                }}
 
             >
                 <Box component={MenuItem} sx={{ p: "0",  [theme.breakpoints.down(600)]: {

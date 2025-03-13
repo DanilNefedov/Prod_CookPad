@@ -21,6 +21,8 @@ import { theme } from '@/config/ThemeMUI/theme';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { MainButtons } from './main-buttons';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { MainTableHeader } from '../main-table-header';
+import { MainTableBody } from '../main-table-body';
 
 // import { DataGrid } from "@mui/x-data-grid";
 // import { Search, SearchIconWrapper, StyledInputBase } from "./search-style";
@@ -50,15 +52,15 @@ export function MainListPage() {
 
     console.log(listStore)
 
-    const handleSort = (name: string) => {
-        if (sortBy === name) {
-            setSortBy(null);
-            setSortOrder(null);
-        } else {
-            setSortBy(name);
-            setSortOrder(name === 'unit' ? 'desc' : 'asc');
-        }
-    };
+    // const handleSort = (name: string) => {
+    //     if (sortBy === name) {
+    //         setSortBy(null);
+    //         setSortOrder(null);
+    //     } else {
+    //         setSortBy(name);
+    //         setSortOrder(name === 'unit' ? 'desc' : 'asc');
+    //     }
+    // };
 
 
 
@@ -96,7 +98,7 @@ export function MainListPage() {
             },
 
         }} stickyHeader aria-label="sticky table">
-            <TableHead sx={{
+            {/* <TableHead sx={{
                 '& .MuiTableCell-root': {
                     borderBottom: '0',
                 },
@@ -112,11 +114,7 @@ export function MainListPage() {
                         </Box>
 
                     </TableCell>
-                    {/* {isMobile ?
-                        <TableCell onClick={() => handleSort("unit")} sx={{ cursor: 'pointer' }}>
-
-                        </TableCell>
-                        : */}
+                   
                     <TableCell align="center" onClick={() => handleSort("unit")} sx={{ cursor: 'pointer' }}>
                         <Box sx={sortBtnHeader}>
                             <Typography fontSize={'0.875rem'} sx={{ borderBottom: '0', pr: '10px' }}>
@@ -126,191 +124,197 @@ export function MainListPage() {
                         </Box>
 
                     </TableCell>
-                    {/* } */}
                     <TableCell>
                     </TableCell>
                 </TableRow>
-            </TableHead>
-
+            </TableHead> */}
+            <MainTableHeader props={{
+                sortOrder,
+                setSortOrder,
+                sortBy,
+                setSortBy
+            }}></MainTableHeader>
 
             <TableBody sx={{ overflow: 'auto', borderTop: '2px solid rgba(255, 0, 0, 0.12)' }}>
                 {sortedList.map((el) => (
+                    <MainTableBody key={el._id} props={{el}}>
+                    </MainTableBody>
 
-                    <Fragment key={el._id}>
-                        <TableRow sx={{
-                            ...mainIngrList, opacity: `${el.shop_ingr ? 0.4 : 1}`,
-                            '& .MuiTableCell-root': {
-                                borderBottom: `${isMobile ? 'none' : '5px solid #353842'}`,
-                            },
+                    // <Fragment key={el._id}>
+                    //     <TableRow sx={{
+                    //         ...mainIngrList, opacity: `${el.shop_ingr ? 0.4 : 1}`,
+                    //         '& .MuiTableCell-root': {
+                    //             borderBottom: `${isMobile ? 'none' : '5px solid #353842'}`,
+                    //         },
 
-                        }}>
-                            <TableCell onClick={() => { if (isMobile) handleToggle(el._id) }} sx={{ width: '73px', [theme.breakpoints.down(1050)]: { width: '30px' }, }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <Box component={'img'} src={el.media !== '' ? el.media : 'images/load-ingr.svg'} alt={el.name} sx={imgIngrList}></Box>
-                                </Box>
-                            </TableCell>
-                            <TableCell onClick={() => { if (isMobile) handleToggle(el._id) }} sx={{
-                                maxWidth: '150px',
-                                width: '150px',
-                                [theme.breakpoints.down(1050)]: {
-                                    maxWidth: '100px',
-                                    width: '100px',
-                                },
+                    //     }}>
+                    //         <TableCell onClick={() => { if (isMobile) handleToggle(el._id) }} sx={{ width: '73px', [theme.breakpoints.down(1050)]: { width: '30px' }, }}>
+                    //             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    //                 <Box component={'img'} src={el.media !== '' ? el.media : 'images/load-ingr.svg'} alt={el.name} sx={imgIngrList}></Box>
+                    //             </Box>
+                    //         </TableCell>
+                    //         <TableCell onClick={() => { if (isMobile) handleToggle(el._id) }} sx={{
+                    //             maxWidth: '150px',
+                    //             width: '150px',
+                    //             [theme.breakpoints.down(1050)]: {
+                    //                 maxWidth: '100px',
+                    //                 width: '100px',
+                    //             },
 
-                            }}>
+                    //         }}>
 
-                                {isMobile ?
-                                    <ListItemText
-                                        sx={nameIngredient}
-                                        primary={el.name}
-                                    /> 
-                                    :
-                                    <Tooltip title={el.name} sx={{ display: isMobile ? 'block' : 'none' }} arrow>
-                                        <ListItemText
-                                            sx={nameIngredient}
-                                            primary={el.name}
-                                        />
-                                    </Tooltip>
-                                }
-
-
-                            </TableCell>
-
-
-                            {
-                                isMobile ?
-                                    <TableCell onClick={() => { if (isMobile) handleToggle(el._id) }} sx={{
-                                        position: 'relative', '& .slide-list-unit': { width: 'auto' }, '& .swiper-list-unit': {
-                                            position: 'static',
-                                            m: '0',
-                                            ml: '7px',
-                                            mr: '7px'
-                                        }
-                                    }}>
-
-                                        <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'end' }}>
-                                            <Typography sx={{
-                                                fontSize: '14px',
-                                                color: 'text.disabled',
-                                                pr: '5px',
-                                                overflow: 'hidden',
-                                                whiteSpace: 'nowrap',
-                                                textOverflow: 'ellipsis',
-                                                maxWidth: '65px'
-                                            }}>×{el.units.length}</Typography>
-                                            <ExpandMoreIcon sx={{
-                                                transition: "transform 0.3s ease",
-                                                transform: expandedId === el._id ? "rotate(180deg)" : "rotate(0deg)",
-                                                color: 'text.disabled'
-                                            }}></ExpandMoreIcon>
-                                        </Box>
-                                    </TableCell>
-
-                                    :
-                                    <TableCell sx={{
-                                        position: 'relative', '& .slide-list-unit': { width: 'auto' }, '& .swiper-list-unit': {
-                                            position: 'static',
-                                            m: '0',
-                                            ml: '7px',
-                                            mr: '7px'
-                                        },
-                                        minWidth: '0',
-                                        maxWidth: '100%'
-                                    }}>
-                                        <Swiper
-                                            navigation={{
-                                                prevEl: '.custom-prev-list-unit',
-                                                nextEl: '.custom-next-list-unit',
-
-                                            }}
-                                            className="swiper-list-unit"
-                                            slidesPerView={'auto'}
-                                            modules={[Navigation]}
-                                            spaceBetween={10}
-                                            style={{ minWidth: 0 }}
-                                        >
-                                            {el.units.map((elem: UnitsList) => (
-                                                <SwiperSlide key={elem._id} className="slide-list-unit">
-                                                    <Units el={el} elem={elem} id={id} />
-                                                </SwiperSlide>
+                    //             {isMobile ?
+                    //                 <ListItemText
+                    //                     sx={nameIngredient}
+                    //                     primary={el.name}
+                    //                 /> 
+                    //                 :
+                    //                 <Tooltip title={el.name} sx={{ display: isMobile ? 'block' : 'none' }} arrow>
+                    //                     <ListItemText
+                    //                         sx={nameIngredient}
+                    //                         primary={el.name}
+                    //                     />
+                    //                 </Tooltip>
+                    //             }
 
 
-                                            ))}
-
-                                            <div className="custom-prev-list-unit ">
-                                                <ArrowLeftIcon></ArrowLeftIcon>
-                                            </div>
-                                            <div className="custom-next-list-unit ">
-                                                <ArrowRightIcon></ArrowRightIcon>
-                                            </div>
-                                        </Swiper>
-                                    </TableCell>
-                            }
-
-                            <MainButtons props={{ el }}></MainButtons>
+                    //         </TableCell>
 
 
+                    //         {
+                    //             isMobile ?
+                    //                 <TableCell onClick={() => { if (isMobile) handleToggle(el._id) }} sx={{
+                    //                     position: 'relative', '& .slide-list-unit': { width: 'auto' }, '& .swiper-list-unit': {
+                    //                         position: 'static',
+                    //                         m: '0',
+                    //                         ml: '7px',
+                    //                         mr: '7px'
+                    //                     }
+                    //                 }}>
 
-                        </TableRow>
+                    //                     <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'end' }}>
+                    //                         <Typography sx={{
+                    //                             fontSize: '14px',
+                    //                             color: 'text.disabled',
+                    //                             pr: '5px',
+                    //                             overflow: 'hidden',
+                    //                             whiteSpace: 'nowrap',
+                    //                             textOverflow: 'ellipsis',
+                    //                             maxWidth: '65px'
+                    //                         }}>×{el.units.length}</Typography>
+                    //                         <ExpandMoreIcon sx={{
+                    //                             transition: "transform 0.3s ease",
+                    //                             transform: expandedId === el._id ? "rotate(180deg)" : "rotate(0deg)",
+                    //                             color: 'text.disabled'
+                    //                         }}></ExpandMoreIcon>
+                    //                     </Box>
+                    //                 </TableCell>
 
-                        {
-                            isMobile ?
-                                <TableRow sx={{
-                                    ...mainIngrList, opacity: `${el.shop_ingr ? 0.4 : 1}`, p: "0",
-                                    transition: 'height 300ms ease,',
-                                }}>
-                                    <TableCell colSpan={4} sx={{
-                                        p: "0 !important", border: 'none',
-                                    }}>
-                                        <Collapse in={expandedId === el._id} timeout={300}>
-                                            <Box sx={{
-                                                position: 'relative', '& .slide-list-unit': { width: 'auto' }, '& .swiper-list-unit': {
-                                                    position: 'static',
+                    //                 :
+                    //                 <TableCell sx={{
+                    //                     position: 'relative', '& .slide-list-unit': { width: 'auto' }, '& .swiper-list-unit': {
+                    //                         position: 'static',
+                    //                         m: '0',
+                    //                         ml: '7px',
+                    //                         mr: '7px'
+                    //                     },
+                    //                     minWidth: '0',
+                    //                     maxWidth: '100%'
+                    //                 }}>
+                    //                     <Swiper
+                    //                         navigation={{
+                    //                             prevEl: '.custom-prev-list-unit',
+                    //                             nextEl: '.custom-next-list-unit',
 
-                                                    margin: '0 auto 15px'
-                                                },
-                                                overflow: 'hidden',
-                                                transition: 'max-height 300ms ease',
-                                                maxHeight: expandedId === el._id ? '75px' : '0',
-                                            }}>
-                                                <Swiper
-                                                    navigation={{
-                                                        prevEl: '.custom-prev-list-unit',
-                                                        nextEl: '.custom-next-list-unit',
-
-                                                    }}
-                                                    className="swiper-list-unit adaptive-list-unit-swiper"
-                                                    slidesPerView={'auto'}
-                                                    modules={[Navigation]}
-                                                    spaceBetween={10}
-                                                    style={{ minWidth: 0 }}
-                                                >
-                                                    {el.units.map((elem: UnitsList) => (
-                                                        <SwiperSlide key={elem._id} className="slide-list-unit">
-                                                            <Units el={el} elem={elem} id={id} />
-                                                        </SwiperSlide>
+                    //                         }}
+                    //                         className="swiper-list-unit"
+                    //                         slidesPerView={'auto'}
+                    //                         modules={[Navigation]}
+                    //                         spaceBetween={10}
+                    //                         style={{ minWidth: 0 }}
+                    //                     >
+                    //                         {el.units.map((elem: UnitsList) => (
+                    //                             <SwiperSlide key={elem._id} className="slide-list-unit">
+                    //                                 <Units el={el} elem={elem} id={id} />
+                    //                             </SwiperSlide>
 
 
-                                                    ))}
+                    //                         ))}
 
-                                                    <div className="custom-prev-list-unit ">
-                                                        <ArrowLeftIcon></ArrowLeftIcon>
-                                                    </div>
-                                                    <div className="custom-next-list-unit ">
-                                                        <ArrowRightIcon></ArrowRightIcon>
-                                                    </div>
-                                                </Swiper>
-                                            </Box>
+                    //                         <div className="custom-prev-list-unit ">
+                    //                             <ArrowLeftIcon></ArrowLeftIcon>
+                    //                         </div>
+                    //                         <div className="custom-next-list-unit ">
+                    //                             <ArrowRightIcon></ArrowRightIcon>
+                    //                         </div>
+                    //                     </Swiper>
+                    //                 </TableCell>
+                    //         }
 
-                                        </Collapse>
-                                    </TableCell>
-                                </TableRow>
-                                :
-                                <></>
+                    //         <MainButtons props={{ el }}></MainButtons>
 
-                        }
 
-                    </Fragment>
+
+                    //     </TableRow>
+
+                    //     {
+                    //         isMobile ?
+                    //             <TableRow sx={{
+                    //                 ...mainIngrList, opacity: `${el.shop_ingr ? 0.4 : 1}`, p: "0",
+                    //                 transition: 'height 300ms ease,',
+                    //             }}>
+                    //                 <TableCell colSpan={4} sx={{
+                    //                     p: "0 !important", border: 'none',
+                    //                 }}>
+                    //                     <Collapse in={expandedId === el._id} timeout={300}>
+                    //                         <Box sx={{
+                    //                             position: 'relative', '& .slide-list-unit': { width: 'auto' }, '& .swiper-list-unit': {
+                    //                                 position: 'static',
+
+                    //                                 margin: '0 auto 15px'
+                    //                             },
+                    //                             overflow: 'hidden',
+                    //                             transition: 'max-height 300ms ease',
+                    //                             maxHeight: expandedId === el._id ? '75px' : '0',
+                    //                         }}>
+                    //                             <Swiper
+                    //                                 navigation={{
+                    //                                     prevEl: '.custom-prev-list-unit',
+                    //                                     nextEl: '.custom-next-list-unit',
+
+                    //                                 }}
+                    //                                 className="swiper-list-unit adaptive-list-unit-swiper"
+                    //                                 slidesPerView={'auto'}
+                    //                                 modules={[Navigation]}
+                    //                                 spaceBetween={10}
+                    //                                 style={{ minWidth: 0 }}
+                    //                             >
+                    //                                 {el.units.map((elem: UnitsList) => (
+                    //                                     <SwiperSlide key={elem._id} className="slide-list-unit">
+                    //                                         <Units el={el} elem={elem} id={id} />
+                    //                                     </SwiperSlide>
+
+
+                    //                                 ))}
+
+                    //                                 <div className="custom-prev-list-unit ">
+                    //                                     <ArrowLeftIcon></ArrowLeftIcon>
+                    //                                 </div>
+                    //                                 <div className="custom-next-list-unit ">
+                    //                                     <ArrowRightIcon></ArrowRightIcon>
+                    //                                 </div>
+                    //                             </Swiper>
+                    //                         </Box>
+
+                    //                     </Collapse>
+                    //                 </TableCell>
+                    //             </TableRow>
+                    //             :
+                    //             <></>
+
+                    //     }
+
+                    // </Fragment>
 
 
                 ))

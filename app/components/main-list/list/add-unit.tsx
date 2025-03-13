@@ -31,7 +31,7 @@ export function AddNewUnit({ props }: { props: PropsData }) {
     const pathName = usePathname()
     const isSmallScreen = useMediaQuery("(max-width:800px)");
 
-    console.log('2')
+    // console.log('2')
     // const uuid = uuidv4();
     // const { el, _id} = ingr
 

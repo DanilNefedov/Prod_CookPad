@@ -58,7 +58,7 @@ export const newListRecipe = createAsyncThunk<void, NewListRecipeT, { rejectValu
     'listRecipe/newListRecipe',
     async function (data, { rejectWithValue }) {
         try {
-            console.log(data)
+            // console.log(data)
             const urlList = `/api/list-recipe`
             const response = await fetch(urlList, {
                 method: 'POST',
@@ -72,7 +72,7 @@ export const newListRecipe = createAsyncThunk<void, NewListRecipeT, { rejectValu
             if (!response.ok) return rejectWithValue('Server Error!');
             const dataList = await response.json()
 
-            console.log(dataList)
+            // console.log(dataList)
 
         } catch (error) {
             console.log(error)
@@ -99,7 +99,7 @@ export const ingredientsListRecipe = createAsyncThunk<ReturnIngredientsListrecip
             if (!responseList.ok) return rejectWithValue('Server Error!');
             const dataList = await responseList.json()
 
-            console.log(dataList)
+            // console.log(dataList)
             return dataList
 
         } catch (error) {
@@ -130,7 +130,7 @@ export const shopIngrListRecipe = createAsyncThunk<ShopIngrListRecipeT, ShopIngr
             }
             
             const dataList = await response.json()
-            console.log(dataList)
+            // console.log(dataList)
 
             return dataList;
         } catch (error) {
@@ -159,7 +159,7 @@ export const deleteIngrRecipeList = createAsyncThunk<TempalteRecipeIngredient, T
             }
             
             const dataList = await response.json()
-            console.log(dataList)
+            // console.log(dataList)
 
             return dataList;
         } catch (error) {
@@ -192,7 +192,7 @@ export const shopUnitListRecipe = createAsyncThunk<ShopUnitIngredientT, ShopUnit
             }
             
             const dataList = await response.json()
-            console.log(dataList)
+            // console.log(dataList)
 
             return dataList;
         } catch (error) {
@@ -225,7 +225,7 @@ export const deleteUnitListRecipe = createAsyncThunk<DeleteUnitIngredientT, Dele
             }
             
             const dataList = await response.json()
-            console.log(dataList)
+            // console.log(dataList)
 
             return dataList;
         } catch (error) {

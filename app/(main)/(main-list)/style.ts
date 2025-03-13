@@ -361,9 +361,9 @@ export const contentAccordionList = {
     justifyContent: 'space-between',
     backgroundColor: 'background.paper',
     borderRadius: '10px',
-    m: '15px 0',
+    m: '5px 0',
     alignItems: 'center',
-    p: '10px'
+    p: '7px 14px'
 }
 
 export const blockSwiperAccordion = { 
