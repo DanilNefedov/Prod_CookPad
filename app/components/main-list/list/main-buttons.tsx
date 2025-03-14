@@ -11,19 +11,23 @@ import { deleteIngredientFetch, toggleShopIngrFetch } from "@/state/slices/list-
 import { IListObj } from "@/app/types/types";
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import { usePathname } from "next/navigation";
+import { deleteIngrRecipeList, shopIngrListRecipe } from "@/state/slices/list-recipe-slice";
 
 
 interface DataProps{
-    el: IListObj
+    el: IListObj,
+    recipe_id?:string
 }
 
 
 export function MainButtons({props}: {props:DataProps}) {
-    const {el} = props
+    const {el, recipe_id} = props
 
     const dispatch = useAppDispatch()
     const userStore = useAppSelector(state => state.user)
     const id = userStore?.user?.connection_id
+    const pathName = usePathname()
 
 
     const isSmallScreen = useMediaQuery("(max-width:800px)");
@@ -37,24 +41,32 @@ export function MainButtons({props}: {props:DataProps}) {
     };
 
 
-
     function toggleShopIngr(_id: string, shop_ingr: boolean) {
         if (id !== '') {
-            dispatch(toggleShopIngrFetch({ _id, shop_ingr }))
+            if(pathName === '/list'){
+                dispatch(toggleShopIngrFetch({ _id, shop_ingr }))            
+            }else if(pathName === '/list-recipe' && recipe_id){
+                dispatch(shopIngrListRecipe({ ingredient_id:el._id, connection_id:id, shop_ingr, recipe_id }))
+            }
         }
     }
 
     function deleteIngredient(_id: string) {
         if (id !== '') {
             console.log(_id)
-            dispatch(deleteIngredientFetch({ _id }))
+            if(pathName === '/list'){
+                dispatch(deleteIngredientFetch({ _id }))
+            }else if(pathName === '/list-recipe' && recipe_id){
+                dispatch(deleteIngrRecipeList({ ingredient_id:el._id, connection_id:id, recipe_id }))
+            }
+            
         }
     }
     
     return (
 
 
-        <TableCell className="ignore-toggle" sx={{ width: '155px', [theme.breakpoints.down(1050)]: { width: "30px" } }}>
+        <TableCell className="ignore-toggle" sx={{  [theme.breakpoints.down(1050)]: { width: "30px" } }}>
 
 
 
@@ -84,7 +96,7 @@ export function MainButtons({props}: {props:DataProps}) {
                             e.preventDefault()
                             handleClose
                         }} >
-                            <AddNewUnit props={{ ingr: el, id, handleClose }} />
+                            <AddNewUnit props={{ ingr: el, id, handleClose, recipe_id }} />
                         </MenuItem>
 
                         <MenuItem onClick={handleClose} >
@@ -103,7 +115,7 @@ export function MainButtons({props}: {props:DataProps}) {
                         <ShoppingBagOutlinedIcon />
                     </Button>
 
-                    <AddNewUnit props={{ ingr: el, id }} />
+                    <AddNewUnit props={{ ingr: el, id, recipe_id }} />
 
                     <Button onClick={() => deleteIngredient(el._id)} sx={btnsListUnitHover}>
                         <DeleteOutlineOutlinedIcon />

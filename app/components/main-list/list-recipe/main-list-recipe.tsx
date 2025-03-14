@@ -35,7 +35,7 @@ export function MainListRecipe() {
 
 
     return (
-        <Box sx={{height:'100%',}}>
+        <Box sx={{height:'100%', }}>
             {listRecipeStore?.recipes.map(el => (
                 <Accordion 
                     // square={false}  
@@ -43,19 +43,31 @@ export function MainListRecipe() {
                     sx={{ 
                     backgroundColor: 'background.default', 
                     height:'auto', 
-                    maxHeight:'100%', 
                     overflow:'none',
                     mb: '5px',
                     '&:first-of-type': { borderTopLeftRadius: '10px', borderTopRightRadius: '10px' },
                     '&:last-of-type': { borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' },
-                    '&.Mui-expanded': {m: '5px 0 ',}
+                    '&.Mui-expanded': {m: '5px 0 ',},
+                    '& .MuiButtonBase-root.MuiAccordionSummary-root':{p:'0'},
+                    p:'15px',
+                    '& .MuiAccordionSummary-content.Mui-expanded':{
+                        m:'0 0 20px 0'
+                    }
+                    
                 }}>
                     <AccordionSummary
                         onClick={() => getDataRecipe(el.recipe_id)}
                         expandIcon={<ExpandMoreIcon sx={{ color: 'text.primary' }} />}
                         aria-controls={`panel1-content${el.recipe_id}`}
                         id={`panel1-header${el.recipe_id}`}
-                        sx={{ '& .MuiAccordionSummary-content': { alignItems: 'center', m:'10px 0' } }}
+                        sx={{ 
+                            '& .MuiAccordionSummary-content': { 
+                                alignItems: 'center',
+                                m:'0',
+                                maxWidth:'97%'
+                            },
+                        
+                        }}
                     >
 
                         {el.recipe_media.type === 'image' ?
@@ -82,7 +94,14 @@ export function MainListRecipe() {
                             </Box>
                         }
 
-                        <Typography sx={{ m: '0 auto', fontSize: '18px', }}>{el.recipe_name}</Typography>
+                        <Typography sx={{ 
+                            m: '0 auto', 
+                            fontSize: '18px', 
+                            maxWidth:"65%",
+                            overflow: 'hidden',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis'
+                        }}>{el.recipe_name}</Typography>
 
 
                     </AccordionSummary>

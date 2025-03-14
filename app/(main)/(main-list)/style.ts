@@ -28,9 +28,9 @@ export const mainIngrList = {
     // },
     // borderCollapse: "separate",
     // borderSpacing: "0 10px", 
-    '& .MuiTableCell-root': {
-        borderBottom: '5px solid #353842',
-    },
+    // '& .MuiTableCell-root': {
+    //     borderBottom: '5px solid #353842',
+    // },
     '&:last-child .MuiTableCell-root': {
         borderBottom: '0'
     }
@@ -263,11 +263,6 @@ export const btnsModal = {
 export const cellHeader = {
     '& .MuiTableCell-root': {
         color: '#8E94A4',
-        borderRight: '2px solid #37393c',
-        borderBottom:'2px solid #37393c',
-        '&:last-child': {
-            borderRight: '0'
-        }
     }
 }
 

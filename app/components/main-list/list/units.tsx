@@ -31,6 +31,7 @@ export const Units = memo(({ el, elem, id, recipe_id }: { el: IListObj, elem: Un
                 dispatch(deleteUnitIngrFetch({ ingredient_id, unit_id }))
             }
             else if(pathName === '/list-recipe' && recipe_id){
+                console.log({ingredient_id, connection_id: id, unit_id, recipe_id})
                 dispatch(deleteUnitListRecipe({ ingredient_id, connection_id: id, unit_id, recipe_id }))
             }
             

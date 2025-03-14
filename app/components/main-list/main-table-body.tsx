@@ -19,11 +19,12 @@ import { usePathname } from "next/navigation"
 
 
 interface DataProps {
-    el: IListObj
+    el: IListObj,
+    recipe_id?: string
 }
 
 export function MainTableBody({props}: {props:DataProps}) {
-    const {el} = props
+    const {el, recipe_id} = props
     const userStore = useAppSelector(state => state.user)
     const id = userStore?.user?.connection_id
 
@@ -46,7 +47,8 @@ export function MainTableBody({props}: {props:DataProps}) {
             <TableRow sx={{
                 ...mainIngrList, opacity: `${el.shop_ingr ? 0.4 : 1}`,
                 '& .MuiTableCell-root': {
-                    borderBottom: `${isMobile ? 'none' : '5px solid #353842'}`,
+                    borderBottom: `${isMobile ? 'none' : '5px solid '}`,
+                    borderColor: `${pathName === '/list-recipe' ? '#1F2128' : '#353842'}`
                 },
 
             }}>
@@ -133,11 +135,13 @@ export function MainTableBody({props}: {props:DataProps}) {
                                 slidesPerView={'auto'}
                                 modules={[Navigation]}
                                 spaceBetween={10}
-                                style={{ minWidth: 0 }}
+                                style={{ minWidth: 0,
+                                   
+                                }}
                             >
                                 {el.units.map((elem: UnitsList) => (
                                     <SwiperSlide key={elem._id} className="slide-list-unit">
-                                        <Units el={el} elem={elem} id={id} />
+                                        <Units el={el} elem={elem} id={id} recipe_id={recipe_id}/>
                                     </SwiperSlide>
 
 
@@ -153,7 +157,7 @@ export function MainTableBody({props}: {props:DataProps}) {
                         </TableCell>
                 }
 
-                <MainButtons props={{ el }}></MainButtons>
+                <MainButtons props={{ el, recipe_id }}></MainButtons>
 
 
 

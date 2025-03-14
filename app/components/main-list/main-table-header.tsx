@@ -2,6 +2,7 @@ import { cellHeader, sortBtnHeader } from "@/app/(main)/(main-list)/style";
 import { Box, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { Dispatch, SetStateAction, useState } from "react";
+import { usePathname } from "next/navigation";
 
 
 
@@ -17,6 +18,19 @@ interface DataProps{
 
 export function MainTableHeader ({props}: {props:DataProps}) {
     const {setSortBy, setSortOrder, sortBy, sortOrder} = props
+    const pathName = usePathname()
+
+
+    const border = pathName === '/list-recipe' ? {
+        borderRight: '2px solid #1F2128',
+        borderBottom:'2px solid #1F2128',
+    } 
+        : 
+    {
+        borderRight: '2px solid #37393c',
+        borderBottom:'2px solid #37393c',
+    }
+
 
     const handleSort = (name: string) => { //check for frequent re-rendering. if any, rewrite to useCallback
         if (sortBy === name) {
@@ -29,15 +43,22 @@ export function MainTableHeader ({props}: {props:DataProps}) {
     };
 
 
+
+
     return(
         <TableHead sx={{
-            '& .MuiTableCell-root': {
+            '& .MuiTableCell-root .head': {
                 borderBottom: '0',
             },
         }}>
-            <TableRow sx={cellHeader}>
-                <TableCell align="center">Image</TableCell>
-                <TableCell align="center" onClick={() => handleSort("name")} sx={{ cursor: 'pointer' }}>
+            <TableRow sx={{...cellHeader, '& .MuiTableCell-root': {
+                ...border,
+                '&:last-child': {
+                    borderRight: '0'
+                }
+            }}}>
+                <TableCell  align="center">Image</TableCell>
+                <TableCell align="center" onClick={() => handleSort("name")} sx={{ cursor: 'pointer', }}>
                     <Box sx={sortBtnHeader}>
                         <Typography fontSize={'0.875rem'} sx={{ borderBottom: '0', pr: '10px' }}>
                             Name
@@ -51,7 +72,7 @@ export function MainTableHeader ({props}: {props:DataProps}) {
 
                     </TableCell>
                     : */}
-                <TableCell align="center" onClick={() => handleSort("unit")} sx={{ cursor: 'pointer' }}>
+                <TableCell align="center" onClick={() => handleSort("unit")} sx={{ cursor: 'pointer', }}>
                     <Box sx={sortBtnHeader}>
                         <Typography fontSize={'0.875rem'} sx={{ borderBottom: '0', pr: '10px' }}>
                             Unit

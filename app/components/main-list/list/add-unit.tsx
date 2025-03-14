@@ -56,10 +56,10 @@ export function AddNewUnit({ props }: { props: PropsData }) {
         setAmount(resIntupChange);
     }
 
-
+    
 
     function confirmAmount(ingredient_id: string) {
-
+        console.log(recipe_id)
         if (id !== '') {
             const numericAmount = evaluate(amount);
 
@@ -70,47 +70,16 @@ export function AddNewUnit({ props }: { props: PropsData }) {
             }
             if (pathName === '/list') {
                 setOpen(false)
+                setAmount('0')
+                setUnit('')
                 dispatch(addNewUnit({ ingredient_id, new_unit: newUnit }))
             }else if(pathName === '/list-recipe' && recipe_id){
                 setOpen(false)
+                setAmount('0')
+                setUnit('')
                 dispatch(newUnitListRecipe({connection_id: id,  ingredient_id, updated_unit:newUnit, recipe_id}))
             }
 
-
-            //     if (typeof amount === 'number' && unit !== null) {
-            //         if (isNaN(amount)) {
-            //             const newUnit = {
-            //                 shop_unit:false,
-            //                 choice:unit,
-            //                 amount:0,
-            //                 _id:uuidv4()
-            //             }
-            //             if(pathName === '/list'){
-            //                 dispatch(addNewUnit({ connection_id: id,  ingredient_id, updated_unit:newUnit }))
-            //             }else if(pathName === '/list-recipe' && recipe_id){
-            //                 dispatch(newUnitListRecipe({connection_id: id,  ingredient_id, updated_unit:newUnit, recipe_id}))
-            //             }
-
-            //             setOpen(false)
-            //             // console.log(0, unit)
-            //         } else {
-            //             const newUnit = {
-            //                 shop_unit:false,
-            //                 choice:unit,
-            //                 amount:amount,
-            //                 _id:uuidv4()
-            //             }
-            //             if(pathName === '/list'){
-            //                 dispatch(addNewUnit({ connection_id: id,  ingredient_id, updated_unit:newUnit }))
-            //             }else if(pathName === '/list-recipe' && recipe_id){
-            //                 dispatch(newUnitListRecipe({connection_id: id,  ingredient_id, updated_unit:newUnit, recipe_id}))
-            //             }
-            //             setOpen(false)
-            //             // console.log(amount, unit)
-            //         }
-            //     } else {
-            //         console.log('add error handler for inputs')
-            //     }
         }
 
     }

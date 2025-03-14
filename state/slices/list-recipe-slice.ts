@@ -225,7 +225,7 @@ export const deleteUnitListRecipe = createAsyncThunk<DeleteUnitIngredientT, Dele
             }
             
             const dataList = await response.json()
-            // console.log(dataList)
+            console.log(dataList)
 
             return dataList;
         } catch (error) {
@@ -472,6 +472,28 @@ const listRecipeSlice = createSlice({
                 }
 
             })
+
+
+
+            .addCase(deleteUnitListRecipe.pending, (state) => {
+                state.status = true,
+                    state.error = false
+            })
+            .addCase(deleteUnitListRecipe.fulfilled, (state, action: PayloadAction<DeleteUnitIngredientT, string>) => {
+                const { ingredient_id, connection_id: id, unit_id, recipe_id } = action.payload;
+                state.error = false,
+                state.status = false
+
+                const recipe = state.recipes.find(r => r.recipe_id === recipe_id);
+                if (recipe) {
+                    const ingredient = recipe.ingredients_list.find(el => el._id === ingredient_id);
+                    if (ingredient) {
+                        ingredient.units = ingredient.units.filter(unit => unit._id !== unit_id);
+                    }
+                }
+
+            })
+
             
     }
 })
