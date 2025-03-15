@@ -110,7 +110,7 @@ export function MainButtons({props}: {props:DataProps}) {
                     </Menu>
                 </>
             ) : (
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", maxWidth:'130px', width:'100%', minWidth:'0' }}>
                     <Button onClick={() => toggleShopIngr(el._id, el.shop_ingr)} sx={btnsListUnitHover}>
                         <ShoppingBagOutlinedIcon />
                     </Button>

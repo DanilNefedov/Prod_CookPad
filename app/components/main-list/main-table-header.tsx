@@ -82,7 +82,7 @@ export function MainTableHeader ({props}: {props:DataProps}) {
 
                 </TableCell>
                 {/* } */}
-                <TableCell>
+                <TableCell sx={{}}>
                 </TableCell>
             </TableRow>
         </TableHead>

@@ -122,8 +122,8 @@ export function MainTableBody({props}: {props:DataProps}) {
                                 ml: '7px',
                                 mr: '7px'
                             },
-                            minWidth: '0',
-                            maxWidth: '100%'
+                            maxWidth:"0px", /*     DO NOT CHANGE!     */
+                            width: '100%'
                         }}>
                             <Swiper
                                 navigation={{
@@ -135,8 +135,8 @@ export function MainTableBody({props}: {props:DataProps}) {
                                 slidesPerView={'auto'}
                                 modules={[Navigation]}
                                 spaceBetween={10}
-                                style={{ minWidth: 0,
-                                   
+                                style={{ 
+                                //    width:'100%'
                                 }}
                             >
                                 {el.units.map((elem: UnitsList) => (
@@ -154,6 +154,8 @@ export function MainTableBody({props}: {props:DataProps}) {
                                     <ArrowRightIcon></ArrowRightIcon>
                                 </div>
                             </Swiper>
+
+                            
                         </TableCell>
                 }
 
@@ -168,9 +170,11 @@ export function MainTableBody({props}: {props:DataProps}) {
                     <TableRow sx={{
                         ...mainIngrList, opacity: `${el.shop_ingr ? 0.4 : 1}`, p: "0",
                         transition: 'height 300ms ease,',
+                        
                     }}>
                         <TableCell colSpan={4} sx={{
                             p: "0 !important", border: 'none',
+                            minWidth: 0, width: '100%'
                         }}>
                             <Collapse in={expandedId === el._id} timeout={300}>
                                 <Box sx={{
@@ -193,7 +197,9 @@ export function MainTableBody({props}: {props:DataProps}) {
                                         slidesPerView={'auto'}
                                         modules={[Navigation]}
                                         spaceBetween={10}
-                                        style={{ minWidth: 0 }}
+                                        style={{ 
+                                            // width:'100%'
+                                        }}
                                     >
                                         {el.units.map((elem: UnitsList) => (
                                             <SwiperSlide key={elem._id} className="slide-list-unit">
