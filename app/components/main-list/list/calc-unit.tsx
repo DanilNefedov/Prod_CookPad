@@ -255,13 +255,13 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
             <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
-                open={open}
+                open={Boolean(open)}
                 onClose={handleClose}
                 MenuListProps={{
-                    'aria-labelledby': 'basic-button',
+                'aria-labelledby': 'demo-positioned-button',
                 }}
+            
                 sx={{...menuCalc,
-                    '&[aria-hidden="true"]': { inert: 'true' } // prevents a closing error. double-check everything and get rid of this class
                 }}
 
             >

@@ -10,8 +10,14 @@
 }
 
 
-.swiper-list-unit .swiper-button-disabled svg{
+.swiper-list-unit .list-disabled-btn.swiper-button-disabled svg{
     color:#353842;
+    cursor: auto;
+}
+
+.swiper-list-unit .list-recipe-disabled-btn.swiper-button-disabled svg{
+    color:#1F2128;
+    opacity:.8;
     cursor: auto;
 }
 .custom-prev-list-unit, .custom-next-list-unit{

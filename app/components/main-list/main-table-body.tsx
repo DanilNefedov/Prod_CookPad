@@ -147,10 +147,10 @@ export function MainTableBody({props}: {props:DataProps}) {
 
                                 ))}
 
-                                <div className="custom-prev-list-unit ">
+                                <div className={`custom-prev-list-unit ${pathName === '/list-recipe' ? 'list-recipe-disabled-btn' : 'list-disabled-btn'}`}>
                                     <ArrowLeftIcon></ArrowLeftIcon>
                                 </div>
-                                <div className="custom-next-list-unit ">
+                                <div className={`custom-next-list-unit ${pathName === '/list-recipe' ? 'list-recipe-disabled-btn' : 'list-disabled-btn'}`}>
                                     <ArrowRightIcon></ArrowRightIcon>
                                 </div>
                             </Swiper>
@@ -170,11 +170,11 @@ export function MainTableBody({props}: {props:DataProps}) {
                     <TableRow sx={{
                         ...mainIngrList, opacity: `${el.shop_ingr ? 0.4 : 1}`, p: "0",
                         transition: 'height 300ms ease,',
-                        
                     }}>
                         <TableCell colSpan={4} sx={{
                             p: "0 !important", border: 'none',
-                            minWidth: 0, width: '100%'
+                            minWidth: 0, width: '100%',
+                            borderBottom:`2px solid ${pathName === '/list-recipe' ? '#1F2128' : '#353842'}`
                         }}>
                             <Collapse in={expandedId === el._id} timeout={300}>
                                 <Box sx={{
@@ -209,10 +209,10 @@ export function MainTableBody({props}: {props:DataProps}) {
 
                                         ))}
 
-                                        <div className="custom-prev-list-unit ">
+                                        <div className={`custom-prev-list-unit ${pathName === '/list-recipe' ? 'list-recipe-disabled-btn' : 'list-disabled-btn'}`}>
                                             <ArrowLeftIcon></ArrowLeftIcon>
                                         </div>
-                                        <div className="custom-next-list-unit ">
+                                        <div className={`custom-next-list-unit ${pathName === '/list-recipe' ? 'list-recipe-disabled-btn' : 'list-disabled-btn'}`}>
                                             <ArrowRightIcon></ArrowRightIcon>
                                         </div>
                                     </Swiper>
