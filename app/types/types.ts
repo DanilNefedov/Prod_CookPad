@@ -488,7 +488,7 @@ export interface ResUnitObj extends NewUnitObj{
 
 
 export type popularInitData = ErrorStatus & {
-    pop_list:popListReturn[]
+    pop_list:PopularListDataT[]
 }
 
 export type recipeDataP = {
@@ -513,13 +513,16 @@ export type popularList = {
     // creator: mongoose.Schema.Types.ObjectId;
 }
 
-
-export type popListReturn = {
-    config_id:string,
+export type PopularAuthorInfoT = {
     id_author:string,
-    id_recipe:string,
     author_name:string,
     author_img:string,
+}
+
+export type PopularListDataT = {
+    config_id:string,
+    id_recipe:string,
+    author_info:PopularAuthorInfoT
     description:string,
     recipe_name:string,
     recipe_media:MediaObj[],
