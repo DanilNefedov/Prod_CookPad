@@ -16,26 +16,23 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import { deleteIngrRecipeList, shopIngrListRecipe } from "@/state/slices/list-recipe-slice"
 import { theme } from "@/config/ThemeMUI/theme"
 import { MainTableHeader } from "../main-table-header"
-import { useMemo, useState } from "react"
+import { memo, useMemo, useState } from "react"
 import { MainTableBody } from "../main-table-body"
 
 
 
 interface dataProps {
-    ingredients_list: IListObj[],
-    connection_id: string,
     recipe_id: string
 }
 
 
 
-export function ContentAccordion({ props }: { props: dataProps }) {
-    const { ingredients_list, connection_id, recipe_id } = props
-    const dispatch = useAppDispatch()
-    // const listStore = useAppSelector(state => state.list)
+export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
+    const {recipe_id } = props
+    const ingredients_list = useAppSelector(state => state.listRecipe.recipes.find(el => el.recipe_id === recipe_id)?.ingredients_list)
+    if(!ingredients_list) return null 
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
     const [sortBy, setSortBy] = useState<string | null>(null);
-
 
 
 
@@ -57,8 +54,6 @@ export function ContentAccordion({ props }: { props: dataProps }) {
     }, [sortBy, sortOrder, ingredients_list]);
 
 
-
-    // console.log(sortedList)
     return (
         <AccordionDetails sx={{ p: '0', overflow: 'auto', height: '100%', bgcolor: 'background.default', borderRadius: '10px' }}>
 
@@ -84,7 +79,7 @@ export function ContentAccordion({ props }: { props: dataProps }) {
                     <TableBody sx={{ overflow: 'auto', borderTop: '2px solid rgba(255, 0, 0, 0.12)' }}>
                         {sortedList.map(el => (
                             <MainTableBody key={el._id} props={{
-                                el,
+                                ingredient_id:el._id,
                                 recipe_id
                             }}></MainTableBody>
                         ))}
@@ -97,4 +92,6 @@ export function ContentAccordion({ props }: { props: dataProps }) {
         </AccordionDetails>
 
     )
-}
+}, (prevProps, nextProps) => {
+    return prevProps.props.recipe_id === nextProps.props.recipe_id;
+});

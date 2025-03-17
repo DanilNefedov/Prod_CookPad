@@ -26,7 +26,7 @@ export async function PATCH(request: Request) {
             return NextResponse.json({ error: "Document or unit not found" }, { status: 404 });
         }
 
-        return NextResponse.json({}, { status: 200 });
+        return NextResponse.json({ingredient_id, unit_id, amount});
 
     } catch (error) {
         console.error(error);

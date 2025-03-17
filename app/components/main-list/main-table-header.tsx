@@ -44,7 +44,6 @@ export function MainTableHeader ({props}: {props:DataProps}) {
 
 
 
-
     return(
         <TableHead sx={{
             '& .MuiTableCell-root .head': {

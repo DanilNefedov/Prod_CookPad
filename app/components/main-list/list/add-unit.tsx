@@ -59,7 +59,6 @@ export function AddNewUnit({ props }: { props: PropsData }) {
     
 
     function confirmAmount(ingredient_id: string) {
-        console.log(recipe_id)
         if (id !== '') {
             const numericAmount = evaluate(amount);
 

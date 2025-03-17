@@ -3,7 +3,7 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { ingredientsListRecipe, preLoaderMain } from "@/state/slices/list-recipe-slice";
 import { Accordion, AccordionSummary, Box, Typography } from "@mui/material";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ContentAccordion } from "./content-accordion";
 
@@ -32,6 +32,7 @@ export function MainListRecipe() {
             }
         }
     }
+
 
 
     return (
@@ -106,7 +107,7 @@ export function MainListRecipe() {
 
                     </AccordionSummary>
 
-                    <ContentAccordion props={{ ingredients_list: el.ingredients_list, connection_id, recipe_id: el.recipe_id }}></ContentAccordion>
+                    <ContentAccordion props={{ recipe_id: el.recipe_id }}></ContentAccordion>
                 </Accordion>
             ))}
 

@@ -225,7 +225,6 @@ export const deleteUnitListRecipe = createAsyncThunk<DeleteUnitIngredientT, Dele
             }
             
             const dataList = await response.json()
-            console.log(dataList)
 
             return dataList;
         } catch (error) {

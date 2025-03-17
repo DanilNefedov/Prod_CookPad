@@ -1,5 +1,5 @@
 import { Box, Collapse, ListItemText, TableCell, TableRow, Tooltip, Typography, useMediaQuery } from "@mui/material"
-import { Fragment, useState } from "react"
+import { Fragment, memo, useState } from "react"
 import { MainButtons } from "./list/main-buttons"
 import { imgIngrList, mainIngrList, nameIngredient } from "@/app/(main)/(main-list)/style"
 import { Swiper, SwiperSlide } from "swiper/react"
@@ -19,14 +19,28 @@ import { usePathname } from "next/navigation"
 
 
 interface DataProps {
-    el: IListObj,
+    ingredient_id: string,
     recipe_id?: string
 }
 
-export function MainTableBody({props}: {props:DataProps}) {
-    const {el, recipe_id} = props
-    const userStore = useAppSelector(state => state.user)
-    const id = userStore?.user?.connection_id
+export const MainTableBody = memo(({ props }: { props: DataProps }) => {
+    const { ingredient_id, recipe_id } = props;
+
+    const thisIngredient = useAppSelector(state => {
+        if (recipe_id) {
+            return state.listRecipe.recipes
+                .find(el => el.recipe_id === recipe_id)
+                ?.ingredients_list.find(ing => ing._id === ingredient_id);
+        }
+    
+        return state.list.list_ingr.find(el => el._id === ingredient_id);
+    });
+    
+
+
+    if (!thisIngredient) return null;
+
+
 
     const isMobile = useMediaQuery("(max-width:800px)");
     const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -40,24 +54,22 @@ export function MainTableBody({props}: {props:DataProps}) {
         setExpandedId((prevId) => (prevId === id ? null : id));
     }
 
-
-
     return (
         <Fragment >
             <TableRow sx={{
-                ...mainIngrList, opacity: `${el.shop_ingr ? 0.4 : 1}`,
+                ...mainIngrList, opacity: `${thisIngredient.shop_ingr ? 0.4 : 1}`,
                 '& .MuiTableCell-root': {
                     borderBottom: `${isMobile ? 'none' : '5px solid '}`,
                     borderColor: `${pathName === '/list-recipe' ? '#1F2128' : '#353842'}`
                 },
 
             }}>
-                <TableCell onClick={() => { if (isMobile) handleToggle(el._id) }} sx={{ width: '73px', [theme.breakpoints.down(1050)]: { width: '30px' }, }}>
+                <TableCell onClick={() => { if (isMobile) handleToggle(thisIngredient._id) }} sx={{ width: '73px', [theme.breakpoints.down(1050)]: { width: '30px' }, }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Box component={'img'} src={el.media !== '' ? el.media : 'images/load-ingr.svg'} alt={el.name} sx={imgIngrList}></Box>
+                        <Box component={'img'} src={thisIngredient.media !== '' ? thisIngredient.media : 'images/load-ingr.svg'} alt={thisIngredient.name} sx={imgIngrList}></Box>
                     </Box>
                 </TableCell>
-                <TableCell onClick={() => { if (isMobile) handleToggle(el._id) }} sx={{
+                <TableCell onClick={() => { if (isMobile) handleToggle(thisIngredient._id) }} sx={{
                     maxWidth: '150px',
                     width: '150px',
                     [theme.breakpoints.down(1050)]: {
@@ -70,13 +82,13 @@ export function MainTableBody({props}: {props:DataProps}) {
                     {isMobile ?
                         <ListItemText
                             sx={nameIngredient}
-                            primary={el.name}
+                            primary={thisIngredient.name}
                         />
                         :
-                        <Tooltip title={el.name} sx={{ display: isMobile ? 'block' : 'none' }} arrow>
+                        <Tooltip title={thisIngredient.name} sx={{ display: isMobile ? 'block' : 'none' }} arrow>
                             <ListItemText
                                 sx={nameIngredient}
-                                primary={el.name}
+                                primary={thisIngredient.name}
                             />
                         </Tooltip>
                     }
@@ -87,7 +99,7 @@ export function MainTableBody({props}: {props:DataProps}) {
 
                 {
                     isMobile ?
-                        <TableCell onClick={() => { if (isMobile) handleToggle(el._id) }} sx={{
+                        <TableCell onClick={() => { if (isMobile) handleToggle(thisIngredient._id) }} sx={{
                             position: 'relative', '& .slide-list-unit': { width: 'auto' }, '& .swiper-list-unit': {
                                 position: 'static',
                                 m: '0',
@@ -105,10 +117,10 @@ export function MainTableBody({props}: {props:DataProps}) {
                                     whiteSpace: 'nowrap',
                                     textOverflow: 'ellipsis',
                                     maxWidth: '65px'
-                                }}>×{el.units.length}</Typography>
+                                }}>×{thisIngredient.units.length}</Typography>
                                 <ExpandMoreIcon sx={{
                                     transition: "transform 0.3s ease",
-                                    transform: expandedId === el._id ? "rotate(180deg)" : "rotate(0deg)",
+                                    transform: expandedId === thisIngredient._id ? "rotate(180deg)" : "rotate(0deg)",
                                     color: 'text.disabled'
                                 }}></ExpandMoreIcon>
                             </Box>
@@ -139,9 +151,9 @@ export function MainTableBody({props}: {props:DataProps}) {
                                 //    width:'100%'
                                 }}
                             >
-                                {el.units.map((elem: UnitsList) => (
+                                {thisIngredient.units.map((elem: UnitsList) => (
                                     <SwiperSlide key={elem._id} className="slide-list-unit">
-                                        <Units el={el} elem={elem} id={id} recipe_id={recipe_id}/>
+                                        <Units ingredient_id={thisIngredient._id} unit_id={elem._id} recipe_id={recipe_id}/>
                                     </SwiperSlide>
 
 
@@ -159,7 +171,7 @@ export function MainTableBody({props}: {props:DataProps}) {
                         </TableCell>
                 }
 
-                <MainButtons props={{ el, recipe_id }}></MainButtons>
+                <MainButtons props={{ el:thisIngredient, recipe_id }}></MainButtons>
 
 
 
@@ -168,7 +180,7 @@ export function MainTableBody({props}: {props:DataProps}) {
             {
                 isMobile ?
                     <TableRow sx={{
-                        ...mainIngrList, opacity: `${el.shop_ingr ? 0.4 : 1}`, p: "0",
+                        ...mainIngrList, opacity: `${thisIngredient.shop_ingr ? 0.4 : 1}`, p: "0",
                         transition: 'height 300ms ease,',
                     }}>
                         <TableCell colSpan={4} sx={{
@@ -176,7 +188,7 @@ export function MainTableBody({props}: {props:DataProps}) {
                             minWidth: 0, width: '100%',
                             borderBottom:`2px solid ${pathName === '/list-recipe' ? '#1F2128' : '#353842'}`
                         }}>
-                            <Collapse in={expandedId === el._id} timeout={300}>
+                            <Collapse in={expandedId === thisIngredient._id} timeout={300}>
                                 <Box sx={{
                                     position: 'relative', '& .slide-list-unit': { width: 'auto' }, '& .swiper-list-unit': {
                                         position: 'static',
@@ -185,7 +197,7 @@ export function MainTableBody({props}: {props:DataProps}) {
                                     },
                                     overflow: 'hidden',
                                     transition: 'max-height 300ms ease',
-                                    maxHeight: expandedId === el._id ? '75px' : '0',
+                                    maxHeight: expandedId === thisIngredient._id ? '75px' : '0',
                                 }}>
                                     <Swiper
                                         navigation={{
@@ -201,9 +213,9 @@ export function MainTableBody({props}: {props:DataProps}) {
                                             // width:'100%'
                                         }}
                                     >
-                                        {el.units.map((elem: UnitsList) => (
+                                        {thisIngredient.units.map((elem: UnitsList) => (
                                             <SwiperSlide key={elem._id} className="slide-list-unit">
-                                                <Units el={el} elem={elem} id={id} />
+                                                <Units ingredient_id={thisIngredient._id} unit_id={elem._id} />
                                             </SwiperSlide>
 
 
@@ -228,4 +240,7 @@ export function MainTableBody({props}: {props:DataProps}) {
 
         </Fragment>
     )
-}
+}, (prevProps, nextProps) => {
+    return prevProps.props.ingredient_id === nextProps.props.ingredient_id && 
+           prevProps.props.recipe_id === nextProps.props.recipe_id;
+});

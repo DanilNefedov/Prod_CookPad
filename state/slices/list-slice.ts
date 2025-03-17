@@ -195,7 +195,6 @@ export const shopUnitUpdate = createAsyncThunk<ShopUnitUpdateT, ShopUnitUpdateT,
     'list/toggleUnitFetch',
     async function (data, { rejectWithValue }) {
         try {
-            console.log(data)
             const response = await fetch('/api/list/shop-unit', {
                 method: 'PATCH',
                 headers: {
@@ -302,7 +301,9 @@ export const changeAmountFetch = createAsyncThunk<ChangeAmountT, ChangeAmountT, 
                 return rejectWithValue('Server Error!');
             }
     
-            return data;
+            const listData = await response.json()
+            console.log(listData)
+            return listData;
     
         } catch (error) {
             console.log(error);
@@ -490,13 +491,31 @@ const listSlice = createSlice({
                 state.error = false
             })
             .addCase(changeAmountFetch.fulfilled, (state, action: PayloadAction<ChangeAmountT, string>) => {
+                // const { ingredient_id, unit_id, amount } = action.payload;
+                // const ingredient = state.list_ingr.find(ingr => ingr._id === ingredient_id);
+                // if (ingredient) {
+                //     const unit = ingredient.units.find(unit => unit._id === unit_id);
+                //     if (unit) {
+                //         unit.amount = amount;
+                //     }
+                // }
                 const { ingredient_id, unit_id, amount } = action.payload;
-                const ingredient = state.list_ingr.find(ingr => ingr._id === ingredient_id);
-                if (ingredient) {
-                    const unit = ingredient.units.find(unit => unit._id === unit_id);
-                    if (unit) {
-                        unit.amount = amount;
-                    }
+        
+                // Находим ингредиент
+                const ingredientIndex = state.list_ingr.findIndex(
+                (ingredient) => ingredient._id === ingredient_id
+                );
+                
+                if (ingredientIndex !== -1) {
+                // Находим юнит в ингредиенте
+                const unitIndex = state.list_ingr[ingredientIndex].units.findIndex(
+                    (unit) => unit._id === unit_id
+                );
+                
+                if (unitIndex !== -1) {
+                    // Обновляем только нужный юнит
+                    state.list_ingr[ingredientIndex].units[unitIndex].amount = amount;
+                }
                 }
             })
 

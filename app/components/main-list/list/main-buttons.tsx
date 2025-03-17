@@ -53,7 +53,6 @@ export function MainButtons({props}: {props:DataProps}) {
 
     function deleteIngredient(_id: string) {
         if (id !== '') {
-            console.log(_id)
             if(pathName === '/list'){
                 dispatch(deleteIngredientFetch({ _id }))
             }else if(pathName === '/list-recipe' && recipe_id){
