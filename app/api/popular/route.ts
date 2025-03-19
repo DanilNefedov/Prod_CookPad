@@ -7,6 +7,8 @@ import { add, divide, mean, multiply, round, sum } from "mathjs";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import _ from 'lodash';
+import LikesPopular from "@/app/models/likes-popular";
+import SavesPopular from "@/app/models/saves-popular";
 
 
 
@@ -43,7 +45,6 @@ function categoryCoefVideo(data: RecipeT, matchCoefficient: number): number {
     const coefComm = round(add(divide(comments, views + 1), 1), 15);
     const coefSaves = round(add(divide(saves, views + 1), 1), 15);
     
-    console.log(matchCoefficient, round(multiply(mean([coefLikes, coefComm, coefSaves, newFully]), matchCoefficient), 15))
 
     return round(multiply(mean([coefLikes, coefComm, coefSaves, newFully]), matchCoefficient), 15);
 }
@@ -62,14 +63,11 @@ function getSortingByCategory(selectedElements: RecipeT[], userList: UserT[]) {
 
     const elementsWithMatchCoefficient = selectedElements.map(item => {
         const matchCount = calculateMatchCount(item.categories, userList);
-        // console.log(matchCount, item.categories.length)
-        //переписать не умножение в конце на колличесвто, а +1. тогда разбег будет от 1 до 2
+
         const matchCoefficient = round(multiply(matchCount, divide(matchCount, item.categories.length)), 15);
-        // console.log(matchCoefficient)
         return { item, matchCount, matchCoefficient };
     });
 
-    // console.log(elementsWithMatchCoefficient)
     return _.orderBy(elementsWithMatchCoefficient, ['matchCoefficient'], ['desc']).slice(0, 100).map(entry => ({
         item: entry.item,
         matchCoefficient: calculateAverageCoef(entry.item, userList, entry.matchCoefficient)
@@ -109,7 +107,6 @@ function orderByUsersImpact(top20Elements: Top20ElementsT[], count: number): Rec
 }
 
 
-// console.log(recipeData)
 
 
 export async function GET(request: Request) {
@@ -131,12 +128,11 @@ export async function GET(request: Request) {
         const list = await RecipePopularConfig.aggregate([{ $sample: { size: 200 } }]);
 
 
-        // const top20Elements = getTop20Elements(list, userData.popular_config);
         
         const sortedByCateries = getSortingByCategory(list, userData.popular_config);
         const fullSorted = orderByUsersImpact(sortedByCateries, +count);
 
-
+        console.log(fullSorted)
         const finalData = await Promise.all(fullSorted.map(async (el) => {
             const recipeData = await Recipe.findOne({ _id: el.creator });
             const authorData = await User.findOne({ connection_id: recipeData?.connection_id });
@@ -147,30 +143,37 @@ export async function GET(request: Request) {
                 { text: { query: connection_id, path: 'user_id' } },
             ] } } }];
 
-            const saveAgg = [{ $search: { index: 'save-popular', compound: { must: [
+            const saveAgg = [{ $search: { index: 'saved-popular', compound: { must: [
                 { text: { query: el._id.toString(), path: 'config_id' } },
                 { text: { query: connection_id, path: 'user_id' } },
             ] } } }];
 
             // const [like, save] = await Promise.all([
             //     LikesPopular.aggregate(likeAgg),
-            //     SavePopular.aggregate(saveAgg)
+            //     SavesPopular.aggregate(saveAgg)
             // ]);
+
+            const like = await LikesPopular.aggregate(likeAgg)
+            const save = await SavesPopular.aggregate(saveAgg)
             
+            console.log(like, save)
+
             return {
                 config_id: el._id.toString(),
-                id_author: authorData.connection_id,
-                author_name: authorData.name,
-                author_img: authorData.img,
+                author_info: {
+                    id_author:authorData.connection_id,
+                    author_name:authorData.name,
+                    author_img:authorData.img,
+                },
                 id_recipe: recipeData.recipe_id,
                 description: recipeData.description,
                 recipe_name: recipeData.name,
                 recipe_media: _.cloneDeep(recipeData.media),
-                // liked: like.length > 0,
+                liked: like.length > 0,
                 likes: el.likes,
                 views: el.views,
                 saves: el.saves,
-                // saved: save.length > 0,
+                saved: save.length > 0,
                 comments: el.comments,
             };
         }));

@@ -74,7 +74,20 @@ const popularSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(popularFetch.pending, (state) => {
+                state.status = true,
+                    state.error = false
+            })
+            .addCase(popularFetch.fulfilled, (state, action: PayloadAction<PopularListDataT[], string>) => {
+                state.error = false,
+                    state.status = false,
+                    // console.log(action.payload)
+                    action.payload.map(el => {
 
+                        state.pop_list.push(el)
+                    })
+
+            })
         
     }
 })
