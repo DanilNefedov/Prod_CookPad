@@ -3,6 +3,7 @@ import LikesPopular from "@/app/models/likes-popular";
 import RecipePopularConfig from "@/app/models/popular-config";
 import User from "@/app/models/user";
 import { NextResponse } from "next/server";
+import { categoryUser } from "../functions";
 
 
 
@@ -62,7 +63,18 @@ export async function PATCH(request: Request) {
             return NextResponse.json({ status: 404, body: { message: 'User not found' } });
         }
 
+        // Update user popular_config
+        const updatedConfig = categoryUser(user.popular_config, liked, 2, popularData.categories);
+        if (updatedConfig.length > 0) {
+            const updateUserResult = await User.updateOne(
+                { connection_id: user_id },
+                { $set: { popular_config: updatedConfig } }
+            );
 
+            if (updateUserResult.modifiedCount === 0) {
+                return NextResponse.json({ status: 500, body: { message: 'Failed to update user' } });
+            }
+        }
 
     } catch (error) {
         console.error(error)
