@@ -59,6 +59,36 @@ export const popularFetch = createAsyncThunk<PopularListDataT[], { id: string, c
 
 
 
+export const likePopContent = createAsyncThunk<{ config_id: string, liked: boolean }, { config_id: string, liked: boolean, user_id: string}, { rejectValue: string } >(
+    'popular/likePopContent',
+    async function (data, { rejectWithValue }) {
+        try {
+            
+            const response = await fetch('/api/popular/like', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) return rejectWithValue('Server Error!');
+
+            const returnData = await response.json()
+
+            console.log(returnData)
+
+            return returnData
+
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+)
+
+
+
 
 
 const popularSlice = createSlice({

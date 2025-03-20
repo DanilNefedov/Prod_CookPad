@@ -2,9 +2,9 @@
 
 
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { popularFetch } from "@/state/slices/popular-slice";
+import { likePopContent, popularFetch } from "@/state/slices/popular-slice";
 import { Avatar, Box, Button, Card, CardActions, CardContent, IconButton, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from 'swiper/modules';
 import { MediaObj } from "@/app/types/types";
@@ -26,6 +26,7 @@ export function MainPopular() {
     const [activeVideo, setActiveVideo] = useState<number>(0)
     const [openComment, setOpenComment] = useState<boolean>(false)
 
+    const firstViewTracked = useRef<string>(''); 
 
 
     useEffect(() => {
@@ -35,7 +36,52 @@ export function MainPopular() {
     }, [connection_id])
 
 
-    console.log(popularData, popularData.pop_list[activeVideo])
+    useEffect(() => {
+        if (popularData.pop_list.length > 0) {
+            const firstRecipe = popularData.pop_list[0]; 
+
+            if (firstRecipe && firstViewTracked.current !== firstRecipe.id_recipe) {
+                updateViews(firstRecipe.config_id);
+                firstViewTracked.current = firstRecipe.id_recipe;
+            }
+        }
+    }, [popularData.pop_list]);
+
+
+    async function updateViews(config_id: string) {
+        try {
+            const response = await fetch(`/api/popular`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ config_id }),
+            });
+
+            if (!response.ok) {
+                console.error('Failed to update views');
+            }
+        } catch (error) {
+            console.error('Error in updating views:', error);
+        }
+    }
+
+
+    function handleLike() {
+        if (connection_id !== '' && !popularData.status) {
+            dispatch(likePopContent({
+                config_id: popularData.pop_list[activeVideo]?.config_id,
+                liked: popularData.pop_list[activeVideo]?.liked,
+                user_id: connection_id
+            }))
+
+            
+        }
+
+    }
+    
+
+
     return (
         <Card sx={{ width: '100%', backgroundColor: "background.default", display: 'flex', m: '20px 0', height: '100%' }}>
             <Box sx={{ maxWidth: '70%', position: 'relative', width: "100%" }}>
@@ -103,7 +149,7 @@ export function MainPopular() {
                         }
                     }}>
                         <IconButton
-                            // onClick={() => handleLike()}
+                            onClick={() => handleLike()}
                             sx={{ m: '5px 0', color: 'text.primary', p: '0', flexDirection: 'column', justifyContent: "center" }}
                         >
                             <FavoriteIcon sx={{ color: `${popularData.pop_list[activeVideo]?.liked ? 'primary.main' : 'text.primary'}` }}></FavoriteIcon>

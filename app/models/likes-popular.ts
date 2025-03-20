@@ -26,7 +26,9 @@ const LikesPopularSchema = new Schema(
     }
 );
 
-LikesPopularSchema.index({ deletedAt: 1 }, { expireAfterSeconds: 3 }); 
+LikesPopularSchema.index({ deletedAt: 1 }, { expireAfterSeconds: 10 }); 
+
+//Delayed deletion if the user changes their mind or clicks the like button frequently
 
 const LikesPopular = mongoose.models.LikesPopular || mongoose.model('LikesPopular', LikesPopularSchema);
 export default LikesPopular;

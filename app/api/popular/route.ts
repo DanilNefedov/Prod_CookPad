@@ -1,5 +1,4 @@
 import connectDB from "@/app/lib/mongoose";
-import RecipePopularConfig from "@/app/models/popular-config";
 import Recipe from "@/app/models/recipe";
 import User from "@/app/models/user";
 import { popularList } from "@/app/types/types";
@@ -9,6 +8,7 @@ import { NextResponse } from "next/server";
 import _ from 'lodash';
 import LikesPopular from "@/app/models/likes-popular";
 import SavesPopular from "@/app/models/saves-popular";
+import RecipePopularConfig from "@/app/models/popular-config";
 
 
 
@@ -189,6 +189,37 @@ export async function GET(request: Request) {
 
 
 
+export async function PATCH(request: Request) {
+    try {
+        const { config_id } = await request.json();
+
+        if(!config_id){
+            return NextResponse.json({ error: "Missing config_id" }, { status: 400 });
+        }
+
+        await connectDB();
+
+        const updatedPopular = await RecipePopularConfig.findOneAndUpdate(
+            { _id: config_id },
+            { $inc: { views: 1 } },
+            { new: true }
+        );
+
+        if (!updatedPopular) {
+            return NextResponse.json(
+                { message: 'Recipe not found' },
+                { status: 404 }
+            );
+        }
+
+        return NextResponse.json({ message: 'Views updated' }, { status: 200 });
+    } catch (error) {
+        return NextResponse.json(
+            { message: 'Internal Server Error', error: error },
+            { status: 500 }
+        );
+    }
+}
 
 
 // ---- params ---- //          user
