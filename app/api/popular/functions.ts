@@ -12,54 +12,41 @@ interface AvarageDataT{
     history_length_average: number
 }
 
-function averageCalc ({multiplier, history_length_average }:AvarageDataT): number{
-    const math = create(all, ({
-        number: 'BigNumber',                                
-        precision: 64,         
-    }))
+function averageCalc({ multiplier, history_length_average }: AvarageDataT): number {
+    const math = create(all, {
+        number: 'BigNumber',
+        precision: 64,
+    });
 
-
+    const newValuesCount = multiplier.length - 1; 
     const firstSum = multiplier.reduce(
         (sum: BigNumber, num: number) => math.add(sum, math.bignumber(num)),
         math.bignumber(0)
     );
-    
-    const _preciseAverage = math.bignumber(multiplier[0]);
-    
-    const sum = math.multiply(_preciseAverage, math.subtract(history_length_average, 49));
-    
-    const newSum = history_length_average <= 50
-        ? firstSum 
-        : math.add(sum, math.subtract(firstSum, _preciseAverage));
-    
-    const newAverage = math.divide(
-        newSum,
-        history_length_average <= 50
-        ? multiplier.length 
-        : history_length_average
-    );
 
-    const resString = newAverage.toString()
-    const resNumb = evaluate(resString)
-    
-    return resNumb;
+    if (history_length_average > newValuesCount) {
+        const _previousAverage = math.bignumber(multiplier[0]);
+
+        const oldSum = math.multiply(_previousAverage, math.bignumber(history_length_average));
+
+        const newSum = math.add(oldSum, math.subtract(firstSum, _previousAverage));
+
+        const totalCount = math.add(history_length_average, math.bignumber(newValuesCount));
+
+        const newAverage = math.divide(newSum, totalCount);
+
+        return Number(newAverage.toString());
+    } else {
+        return Number(math.divide(firstSum, math.bignumber(multiplier.length)).toString());
+    }
 }
-//
-//   1.2, 1.3, 2, 1, 1.5, 1.2 / 6 = 1,35
-//      
-//   1.35 * 6 = 8.1
-//
-//   8.1, 1.2, 1.4, 2, 1, 1,7 / 11 = 1,4
-//   
-//   1.2, 1.3, 2, 1, 1.5, 1.2, 1.2, 1.4, 2, 1, 1,7 / 11 = 1,409090909090909
-//
-//
-//
+
 
 
 export function categoryUser(popular_config: userT[], action: boolean, coef:number, categories: string[]): userT[] {
 
     //It may be necessary in the future to check the length of popular_config
+    //For a completely empty list. create a new one.
     if (popular_config.length === 0 && !action) {
         return categories.map(category => ({
             // id: uuidv4(),
@@ -77,7 +64,7 @@ export function categoryUser(popular_config: userT[], action: boolean, coef:numb
             let updatedConfig = popular_config.map(config => {
                 if (categories.includes(config.category)) {
 
-                    if (config.multiplier.length >= 10) {
+                    if (config.multiplier.length >= 10) { //10
                         
                         const preciseNewAverage = averageCalc({
                             multiplier:config.multiplier, 
@@ -201,3 +188,7 @@ export function categoryUser(popular_config: userT[], action: boolean, coef:numb
 
 
 }
+
+
+
+

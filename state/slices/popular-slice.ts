@@ -63,8 +63,35 @@ export const likePopContent = createAsyncThunk<{ config_id: string, liked: boole
     'popular/likePopContent',
     async function (data, { rejectWithValue }) {
         try {
-            
             const response = await fetch('/api/popular/like', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) return rejectWithValue('Server Error!');
+
+            const returnData = await response.json()
+
+            return returnData
+
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+)
+
+
+
+export const savePopContent = createAsyncThunk<{ config_id: string, saved: boolean }, { config_id: string, saved: boolean, user_id: string }, { rejectValue: string }>(
+    'popular/savePopContent',
+    async function (data, { rejectWithValue }) {
+        try {
+
+            const response = await fetch('/api/popular/save', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -86,7 +113,6 @@ export const likePopContent = createAsyncThunk<{ config_id: string, liked: boole
         }
     }
 )
-
 
 
 
@@ -116,6 +142,44 @@ const popularSlice = createSlice({
 
                         state.pop_list.push(el)
                     })
+
+            })
+
+
+            
+            .addCase(likePopContent.pending, (state) => {
+                state.status = true,
+                state.error = false
+            })
+            .addCase(likePopContent.fulfilled, (state, action: PayloadAction<{ config_id: string, liked: boolean }, string>) => {
+                state.error = false
+                state.status = false
+                // console.log(action.payload)
+                const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
+                if (thisPop) {
+                    thisPop.liked = !action.payload.liked
+                    thisPop.likes = action.payload.liked ? thisPop.likes - 1 : thisPop.likes + 1
+                }
+
+
+            })
+
+
+
+            .addCase(savePopContent.pending, (state) => {
+                state.status = true,
+                    state.error = false
+            })
+            .addCase(savePopContent.fulfilled, (state, action: PayloadAction<{ config_id: string, saved: boolean }, string>) => {
+                state.error = false
+                state.status = false
+                // console.log(action.payload)
+                const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
+                if (thisPop) {
+                    thisPop.saved = !action.payload.saved
+                    thisPop.saves = action.payload.saved ? thisPop.saves - 1 : thisPop.saves + 1
+                }
+
 
             })
         

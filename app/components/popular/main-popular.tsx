@@ -2,7 +2,7 @@
 
 
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { likePopContent, popularFetch } from "@/state/slices/popular-slice";
+import { likePopContent, popularFetch, savePopContent } from "@/state/slices/popular-slice";
 import { Avatar, Box, Button, Card, CardActions, CardContent, IconButton, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -27,7 +27,7 @@ export function MainPopular() {
     const [activeVideo, setActiveVideo] = useState<number>(0)
     const [openComment, setOpenComment] = useState<boolean>(false)
 
-    const firstViewTracked = useRef<string>(''); 
+    const firstViewTracked = useRef<string>('');
 
 
     useEffect(() => {
@@ -39,7 +39,7 @@ export function MainPopular() {
 
     useEffect(() => {
         if (popularData.pop_list.length > 0) {
-            const firstRecipe = popularData.pop_list[0]; 
+            const firstRecipe = popularData.pop_list[0];
 
             if (firstRecipe && firstViewTracked.current !== firstRecipe.id_recipe) {
                 updateViews(firstRecipe.config_id);
@@ -75,12 +75,21 @@ export function MainPopular() {
                 liked: popularData.pop_list[activeVideo]?.liked,
                 user_id: connection_id
             }))
-
-            
         }
 
     }
-    
+
+
+    function handleSave() {
+        if (connection_id !== '' && !popularData.status) {
+            dispatch(savePopContent({
+                config_id: popularData.pop_list[activeVideo]?.config_id,
+                saved: popularData.pop_list[activeVideo]?.saved,
+                user_id: connection_id
+            }))
+        }
+    }
+
 
 
 
@@ -161,14 +170,14 @@ export function MainPopular() {
 
 
                         <IconButton
-                            // onClick={() => setOpenComment(!openComment)}
+                            onClick={() => setOpenComment(!openComment)}
                             sx={{ m: '10px 0', color: 'text.primary', p: '0', flexDirection: 'column', justifyContent: "center" }}>
                             <CommentIcon sx={{ color: `${openComment ? 'primary.main' : 'text.primary'}` }} >{popularData.pop_list[activeVideo]?.comments}</CommentIcon>
                             <Typography>{popularData.pop_list[activeVideo]?.comments}</Typography>
                         </IconButton>
 
                         <IconButton
-                            // onClick={() => handleSave()}
+                            onClick={() => handleSave()}
                             sx={{ m: '5px 0', color: 'text.primary', p: '0', flexDirection: 'column', justifyContent: "center" }}>
                             <BookmarkIcon sx={{ color: `${popularData.pop_list[activeVideo]?.saved ? 'primary.main' : 'text.primary'}` }}>{popularData.pop_list[activeVideo]?.saves}</BookmarkIcon>
                             <Typography>{popularData.pop_list[activeVideo]?.saves}</Typography>
