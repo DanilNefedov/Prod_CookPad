@@ -13,6 +13,7 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CommentIcon from '@mui/icons-material/Comment';
 import { MediaSwiper } from "./media-swiper";
 import { all, BigNumber, create, evaluate, number } from "mathjs";
+import { Comments } from "./comments";
 
 
 
@@ -198,13 +199,13 @@ export function MainPopular() {
                 </Typography>
 
                 {openComment ?
-                    // <Comments props={{
-                    //     user_info: userData?.user,
-                    //     config_id: popularData.pop_list[activeVideo]?.config_id,
-                    //     // dataAlgoPop,
-                    //     // setDataAlgoPop
-                    // }}></Comments>
-                    <></>
+                    <Comments props={{
+                        user_info: userData?.user,
+                        config_id: popularData.pop_list[activeVideo]?.config_id,
+                        // dataAlgoPop,
+                        // setDataAlgoPop
+                    }}></Comments>
+                    
                     :
                     <CardActions>
                         <Button size="small">Share</Button>

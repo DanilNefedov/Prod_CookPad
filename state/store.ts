@@ -8,6 +8,7 @@ import cookSlice from './slices/cook'
 import listSlice from './slices/list-slice'
 import listRecipeSlice from './slices/list-recipe-slice'
 import popularSlice from './slices/popular-slice'
+import commentsPopular from './slices/comments-popular-slice'
 
 
 export const store = configureStore({
@@ -19,7 +20,8 @@ export const store = configureStore({
         cook:cookSlice,
         list:listSlice,
         listRecipe:listRecipeSlice,
-        popular:popularSlice
+        popular:popularSlice,
+        comments:commentsPopular
     }
 })
 

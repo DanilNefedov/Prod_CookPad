@@ -25,11 +25,11 @@ export type popConfig = {
 }
 
 export type collectionUser =  {
-    name: string | null,
-    email: string | null,
-    provider: string | null,
+    name: string ,
+    email: string ,
+    provider: string ,
     img: string ,
-    connection_id: string | null,
+    connection_id: string ,
     popular_config: popConfig[] 
 }
 
@@ -557,10 +557,10 @@ export type commListData = {
 export type replyCommData = {
     id_comment: string,
     id_author:string,
-    id_branch:string,
+    id_branch:string, //id_comment from commListData
     author_avatar:string,
     author_name:string,
-    id_parent: string,
+    id_parent: string,// for first reply - commListData next id_comment form replyCommData
     name_parent:string,
     text: string,
     likes_count:number,
