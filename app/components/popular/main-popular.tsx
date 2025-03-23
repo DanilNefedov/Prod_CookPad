@@ -71,6 +71,7 @@ export function MainPopular() {
 
     function handleLike() {
         if (connection_id !== '' && !popularData.status) {
+            console.log('3')
             dispatch(likePopContent({
                 config_id: popularData.pop_list[activeVideo]?.config_id,
                 liked: popularData.pop_list[activeVideo]?.liked,

@@ -1,5 +1,6 @@
 import { commListData, commListState } from "@/app/types/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { newCommCalc } from "./popular-slice";
 
 
 
@@ -44,6 +45,74 @@ export const commVideoFetch = createAsyncThunk<commListData[], {config_id: strin
 
 
 
+export const newCommPopular = createAsyncThunk<commListData, {data:commListData, comment_branch:boolean}, { rejectValue: string }>(
+    'commentsPopular/newCommPopular',
+    async function (data, { rejectWithValue, dispatch }) {
+        try {
+            // const { id, count } = data
+            const urlList = `/api/popular/comments/popular`
+
+            const response = await fetch(urlList, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) return rejectWithValue('Server Error!');
+
+            const dataReturn = await response.json()
+
+            dispatch(newCommCalc({config_id:data.data.config_id}))
+            return dataReturn
+
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+)
+
+interface LikedCommnetDataT {
+    id_author:string, 
+    // id_branch:openReply === '' ? infoReply.id_comment : openReply, 
+    id_comment:string, 
+    config_id:string, 
+    // id_parent, 
+    liked:boolean, 
+    reply:boolean
+}
+
+export const likedComment = createAsyncThunk<LikedCommnetDataT, LikedCommnetDataT, { rejectValue: string }>(
+    'commentsPopular/likedComment',
+    async function (data, { rejectWithValue }) {
+        try {
+            const urlList = `/api/popular/like/comment`
+
+            const response = await fetch(urlList, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) return rejectWithValue('Server Error!');
+            
+            const dataReturn = await response.json()
+            console.log(data, dataReturn)
+            return dataReturn.data
+
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+)
+
+
+
 
 const commentsPopularSlice = createSlice({
     name: 'commentsPopular',
@@ -72,6 +141,19 @@ const commentsPopularSlice = createSlice({
                 // })
 
                 state.comm_list = action.payload
+            })
+
+
+            .addCase(newCommPopular.pending, (state) => {
+                state.status = true,
+                state.error = false
+            })
+            .addCase(newCommPopular.fulfilled, (state, action: PayloadAction<commListData, string>) => {
+                state.error = false,
+                state.status = false,
+                // console.log(action.payload)
+                state.comm_list.push(action.payload)
+
             })
 
     }

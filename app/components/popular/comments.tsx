@@ -3,8 +3,9 @@ import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import SendIcon from '@mui/icons-material/Send';
-import { commVideoFetch } from "@/state/slices/comments-popular-slice";
+import { commVideoFetch, likedComment, newCommPopular } from "@/state/slices/comments-popular-slice";
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -18,6 +19,7 @@ interface dataProps {
 
 export function Comments({ props }: { props: dataProps }) {
     const { user_info, config_id} = props
+    const connection_id = user_info.connection_id
 
     const [comm, setComm] = useState<string>('')
     const [openReply, setOpenReply] = useState<string>('')
@@ -32,8 +34,8 @@ export function Comments({ props }: { props: dataProps }) {
 
 
     useEffect(() => {
-        if (config_id && user_info?.connection_id !== '') {
-            dispatch(commVideoFetch({ config_id, user_id:user_info?.connection_id }))
+        if (config_id && connection_id !== '') {
+            dispatch(commVideoFetch({ config_id, user_id:connection_id }))
         }
         
 
@@ -41,7 +43,7 @@ export function Comments({ props }: { props: dataProps }) {
     
     function sendComm() {
         console.log('sendComm')
-        // if (user_info?.connection_id && user_info?.connection_id !== null && user_info?.name !== null) {
+        if (connection_id !== '') {
         //     if (infoReply.id_comment !== '') {
 
         //         const data = {
@@ -62,25 +64,25 @@ export function Comments({ props }: { props: dataProps }) {
         //         //     comment: prevState.comment + 1
         //         // }));
         //     } else {
-        //         const data = {
-        //             id_comment: uuidv4(),
-        //             id_author: user_info?.connection_id,
-        //             author_avatar: user_info?.img,
-        //             author_name: user_info?.name,
-        //             config_id: config_id,
-        //             text: comm.trim(),
-        //             likes_count:0,
-        //             // reply_list:[],
-        //             answer_count: 0,
-        //         }
-        //         dispatch(newCommPopular({data, comment:true}))
-        //         setComm('')
-        //         // setDataAlgoPop(prevState => ({
-        //         //     ...prevState,
-        //         //     comment: prevState.comment + 1
-        //         // }));
+                const data = {
+                    id_comment: uuidv4(),
+                    id_author: connection_id,
+                    author_avatar: user_info?.img,
+                    author_name: user_info?.name,
+                    config_id: config_id,
+                    text: comm.trim(),
+                    likes_count:0,
+                    reply_list:[],
+                    answer_count: 0,
+                }
+                dispatch(newCommPopular({data, comment_branch:true}))
+                setComm('')
+                // setDataAlgoPop(prevState => ({
+                //     ...prevState,
+                //     comment: prevState.comment + 1
+                // }));
 
-        //     }
+            }
         // }
     }
 
@@ -100,13 +102,21 @@ export function Comments({ props }: { props: dataProps }) {
         
     // }
     
-    // function handleLike(id_comment:string, config_id:string, liked:boolean | undefined, id_parent:string, reply:boolean ){
-    //     if (user_info?.connection_id && user_info?.connection_id !== null && liked !== undefined) {
-    //         console.log(liked,id_comment)
-    //         dispatch(likedComment({id_author:user_info?.connection_id, id_branch:openReply === '' ? infoReply.id_comment : openReply, id_comment, config_id, id_parent, liked, reply}))
-    //     }
+    function handleLike(id_comment:string, config_id:string, liked:boolean | undefined, id_parent:string, reply:boolean ){
+        if (connection_id !== '' && liked !== undefined) {
+            console.log(liked,id_comment)
+            dispatch(likedComment({
+                id_author:connection_id, 
+                // id_branch:openReply === '' ? infoReply.id_comment : openReply, 
+                id_comment, 
+                config_id, 
+                // id_parent, 
+                liked, 
+                reply
+            }))
+        }
         
-    // }
+    }
     console.log(commentsData)
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', pt: '20px', overflow: 'auto', }}>
@@ -182,7 +192,7 @@ export function Comments({ props }: { props: dataProps }) {
                                     alignItems:'center',
                                     // maxHeight:'20px'
                                 }}
-                                // onClick={() => handleLike(el.id_comment, config_id, el.liked, el.id_comment, false )}
+                                onClick={() => handleLike(el.id_comment, config_id, el.liked, el.id_comment, false )}
                                 >
                                     {el.likes_count}
                                     <FavoriteIcon sx={{ fontSize: "16px", m:'0 0 3px 3px', color:el.liked ? 'primary.main' : 'inherit' }}></FavoriteIcon>

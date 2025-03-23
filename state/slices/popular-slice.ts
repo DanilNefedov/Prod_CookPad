@@ -64,7 +64,7 @@ export const likePopContent = createAsyncThunk<{ config_id: string, liked: boole
     async function (data, { rejectWithValue }) {
         try {
             const response = await fetch('/api/popular/like', {
-                method: 'PATCH',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -136,12 +136,12 @@ const popularSlice = createSlice({
             })
             .addCase(popularFetch.fulfilled, (state, action: PayloadAction<PopularListDataT[], string>) => {
                 state.error = false,
-                    state.status = false,
+                state.status = false,
                     // console.log(action.payload)
-                    action.payload.map(el => {
+                action.payload.map(el => {
 
-                        state.pop_list.push(el)
-                    })
+                    state.pop_list.push(el)
+                })
 
             })
 

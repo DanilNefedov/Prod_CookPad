@@ -1,9 +1,12 @@
 import connectDB from "@/app/lib/mongoose";
 import CommentPopular from "@/app/models/comments-popular";
 import LikesComments from "@/app/models/likes-comments";
+import RecipePopularConfig from "@/app/models/popular-config";
+import User from "@/app/models/user";
 import moment from 'moment';
 import { NextResponse } from "next/server";
-
+import { categoryUser } from "../../functions";
+import _ from 'lodash'; 
 
 
 
@@ -59,5 +62,65 @@ export async function GET(request: Request) {
             status: 500,
             body: { message: 'Internal Server Error', error: error },
         });
+    }
+}
+
+
+
+export async function POST(request: Request) {
+    try {
+        const { data } = await request.json();
+
+        if (!data || !data.config_id || !data.id_author) {
+            return NextResponse.json({ status: 400, message: 'Missing required fields' });
+        }
+
+        await connectDB();
+
+        const comment = await new CommentPopular(data).save();
+
+        const updatedPopular = await RecipePopularConfig.findOneAndUpdate(
+            { _id: data.config_id },
+            { $inc: { comments: 1 } },
+            { new: true, lean: true }
+        ).select('-_id -__v') as { categories?: string[] } | null;
+
+        if (!updatedPopular || updatedPopular.categories === undefined) {
+            return NextResponse.json({ status: 404, message: 'Popular config not found' });
+        }
+
+        const user = await User.findOne({ connection_id: data.id_author })
+
+        if (!user) {
+            return NextResponse.json({ status: 404, message: 'User not found' });
+        }
+
+        const updatedConfig = categoryUser(user.popular_config, !data.comment, 1.2, updatedPopular.categories);
+        if (updatedConfig.length > 0) {
+            await User.updateOne(
+                { connection_id: data.id_author },
+                { $set: { popular_config: updatedConfig } }
+            );
+        }
+
+        const responseData = {
+            id_comment: comment.id_comment,
+            id_author: comment.id_author,
+            author_avatar: comment.author_avatar,
+            author_name: comment.author_name,
+            config_id: comment.config_id,
+            text: comment.text,
+            answer_count: comment.answer_count,
+            likes_count: comment.likes_count,
+            reply_list: [], 
+            createdAt: moment(comment.createdAt).fromNow(),
+            liked: false, 
+        };
+
+        return NextResponse.json(responseData);
+
+    } catch (error) {
+        console.error('Error in POST /comments:', error);
+        return NextResponse.json({ status: 500, message: 'Internal Server Error' });
     }
 }
