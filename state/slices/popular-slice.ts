@@ -92,7 +92,7 @@ export const savePopContent = createAsyncThunk<{ config_id: string, saved: boole
         try {
 
             const response = await fetch('/api/popular/save', {
-                method: 'PATCH',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },

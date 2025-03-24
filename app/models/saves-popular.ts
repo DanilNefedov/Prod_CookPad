@@ -25,7 +25,7 @@ const SavesSchema = new Schema(
     },
     {
         timestamps: true,
-        collection: 'save-popular'
+        collection: 'saves-popular'
     }
 );
 

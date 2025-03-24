@@ -106,12 +106,26 @@ function orderByUsersImpact(top20Elements: Top20ElementsT[], count: number): Rec
     ).map(entry => entry.item).slice(0, count);
 }
 
+// if startSession() is placed in try session may be undefined 
+// in finally if the error occurred before startTransaction(), 
+// and then calling session.endSession() will throw an error.
 
+
+// OUTside the try block startSession() will throw an error 
+// (which is rare), it will not be handled inside catch
+
+// The best option is to keep startSession() BEFORE try, 
+// and startTransaction() already IN. 
 
 
 export async function GET(request: Request) {
+    const session = await mongoose.startSession();
+    
+
     try {
         await connectDB();
+        session.startTransaction();
+
         const { searchParams } = new URL(request.url);
         const connection_id = searchParams.get('connection_id');
         const count = searchParams.get('count');
@@ -120,50 +134,59 @@ export async function GET(request: Request) {
             return NextResponse.json({ message: 'Missing required parameters' }, { status: 400 });
         }
 
-        const userData = await User.findOne({ connection_id }).select('-_id -__v -createdAt -updatedAt');
+        const userData = await User.findOne({ connection_id })
+            .select('-_id -__v -createdAt -updatedAt')
+            .session(session);
+
         if (!userData?.popular_config) {
             return NextResponse.json({ message: 'User data not found' }, { status: 404 });
         }
 
-        const list = await RecipePopularConfig.aggregate([{ $sample: { size: 200 } }]);
+        const list = await RecipePopularConfig.aggregate([{ $sample: { size: 200 } }]).session(session);
 
-
-        
         const sortedByCateries = getSortingByCategory(list, userData.popular_config);
         const fullSorted = orderByUsersImpact(sortedByCateries, +count);
 
-        console.log(fullSorted)
         const finalData = await Promise.all(fullSorted.map(async (el) => {
-            const recipeData = await Recipe.findOne({ _id: el.creator });
-            const authorData = await User.findOne({ connection_id: recipeData?.connection_id });
-            if (!recipeData || !authorData) throw new Error('Recipe or author data not found');
-
-            const likeAgg = [{ $search: { index: 'liked-popular', compound: { must: [
-                { text: { query: el._id.toString(), path: 'config_id' } },
-                { text: { query: connection_id, path: 'user_id' } },
-            ] } } }];
-
-            const saveAgg = [{ $search: { index: 'saved-popular', compound: { must: [
-                { text: { query: el._id.toString(), path: 'config_id' } },
-                { text: { query: connection_id, path: 'user_id' } },
-            ] } } }];
-
-            // const [like, save] = await Promise.all([
-            //     LikesPopular.aggregate(likeAgg),
-            //     SavesPopular.aggregate(saveAgg)
-            // ]);
-
-            const like = await LikesPopular.aggregate(likeAgg)
-            const save = await SavesPopular.aggregate(saveAgg)
+            const recipeData = await Recipe.findOne({ _id: el.creator }).session(session);
+            const authorData = await User.findOne({ connection_id: recipeData?.connection_id }).session(session);
             
-            console.log(like, save)
+            if (!recipeData || !authorData) {
+                throw new Error('Recipe or author data not found');
+            }
 
+            const likeAgg = [{ 
+                $search: { 
+                    index: 'liked-popular', 
+                    compound: { must: [
+                        { text: { query: el._id.toString(), path: 'config_id' } },
+                        { text: { query: connection_id, path: 'user_id' } },
+                    ] } 
+                } 
+            }];
+
+            const saveAgg = [{ 
+                $search: { 
+                    index: 'saved-popular', 
+                    compound: { must: [
+                        { text: { query: el._id.toString(), path: 'config_id' } },
+                        { text: { query: connection_id, path: 'user_id' } },
+                    ] } 
+                } 
+            }];
+
+            const [like, save] = await Promise.all([
+                LikesPopular.aggregate(likeAgg),
+                SavesPopular.aggregate(saveAgg)
+            ]);
+            
+        
             return {
                 config_id: el._id.toString(),
                 author_info: {
-                    id_author:authorData.connection_id,
-                    author_name:authorData.name,
-                    author_img:authorData.img,
+                    id_author: authorData.connection_id,
+                    author_name: authorData.name,
+                    author_img: authorData.img,
                 },
                 id_recipe: recipeData.recipe_id,
                 description: recipeData.description,
@@ -178,10 +201,15 @@ export async function GET(request: Request) {
             };
         }));
 
+        await session.commitTransaction(); 
+
         return NextResponse.json(finalData, { status: 200 });
     } catch (error) {
-        console.error(error)
+        console.error(error);
+        await session.abortTransaction(); 
         return NextResponse.json({ message: 'Internal Server Error', error }, { status: 500 });
+    }finally {
+        session.endSession(); 
     }
 }
 

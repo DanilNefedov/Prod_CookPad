@@ -91,23 +91,24 @@ export function Comments({ props }: { props: dataProps }) {
     // }
 
 
-    // function handleReplies(id_comment: string) {
-    //     if (user_info?.connection_id && user_info?.connection_id !== null) {
+    function handleReplies(id_comment: string) {
+        console.log("handleReplies")
+        // if (user_info?.connection_id && user_info?.connection_id !== null) {
             
-    //         const comment = stateCommVideo.comm_list.find(el => el.id_comment === id_comment);
-    //         const skip = comment ? (comment.reply_list ? comment.reply_list.length : 0) : 0;
-    //         dispatch(getReplies({ id_comment, skip, id_author:user_info?.connection_id}))
+        //     const comment = stateCommVideo.comm_list.find(el => el.id_comment === id_comment);
+        //     const skip = comment ? (comment.reply_list ? comment.reply_list.length : 0) : 0;
+        //     dispatch(getReplies({ id_comment, skip, id_author:user_info?.connection_id}))
 
-    //     }
+        // }
         
-    // }
+    }
     
-    function handleLike(id_comment:string, config_id:string, liked:boolean | undefined, id_parent:string, reply:boolean ){
+    function handleLike(id_comment:string, config_id:string, liked:boolean | undefined, reply:boolean, id_branch:string | undefined){
         if (connection_id !== '' && liked !== undefined) {
             console.log(liked,id_comment)
             dispatch(likedComment({
                 id_author:connection_id, 
-                // id_branch:openReply === '' ? infoReply.id_comment : openReply, 
+                id_branch: id_branch !== undefined  ? id_branch : '', 
                 id_comment, 
                 config_id, 
                 // id_parent, 
@@ -231,7 +232,7 @@ export function Comments({ props }: { props: dataProps }) {
                                     color: 'text.secondary',
                                     mr:'25px'
                                 }}
-                                // onClick={() => handleReplies(el.id_comment)}
+                                onClick={() => handleReplies(el.id_comment)}
                                 >more</Button>
                                 <Button sx={{
                                     p: '0',

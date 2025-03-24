@@ -5,8 +5,9 @@ import RecipePopularConfig from "@/app/models/popular-config";
 import User from "@/app/models/user";
 import moment from 'moment';
 import { NextResponse } from "next/server";
-import { categoryUser } from "../../functions";
+import { categoryUser } from "../functions";
 import _ from 'lodash'; 
+import mongoose from "mongoose";
 
 
 
@@ -68,28 +69,32 @@ export async function GET(request: Request) {
 
 
 export async function POST(request: Request) {
+    const session = await mongoose.startSession();
+    
+
     try {
+        await connectDB();
+        session.startTransaction();
+
         const { data } = await request.json();
 
         if (!data || !data.config_id || !data.id_author) {
             return NextResponse.json({ status: 400, message: 'Missing required fields' });
         }
 
-        await connectDB();
-
-        const comment = await new CommentPopular(data).save();
+        const comment = await new CommentPopular(data).save({ session });
 
         const updatedPopular = await RecipePopularConfig.findOneAndUpdate(
             { _id: data.config_id },
             { $inc: { comments: 1 } },
-            { new: true, lean: true }
+            { new: true, lean: true, session }
         ).select('-_id -__v') as { categories?: string[] } | null;
 
         if (!updatedPopular || updatedPopular.categories === undefined) {
             return NextResponse.json({ status: 404, message: 'Popular config not found' });
         }
 
-        const user = await User.findOne({ connection_id: data.id_author })
+        const user = await User.findOne({ connection_id: data.id_author }).session(session);
 
         if (!user) {
             return NextResponse.json({ status: 404, message: 'User not found' });
@@ -99,9 +104,12 @@ export async function POST(request: Request) {
         if (updatedConfig.length > 0) {
             await User.updateOne(
                 { connection_id: data.id_author },
-                { $set: { popular_config: updatedConfig } }
+                { $set: { popular_config: updatedConfig } },
+                { session }
             );
         }
+
+        await session.commitTransaction(); 
 
         const responseData = {
             id_comment: comment.id_comment,
@@ -118,9 +126,14 @@ export async function POST(request: Request) {
         };
 
         return NextResponse.json(responseData);
-
     } catch (error) {
+        await session.abortTransaction(); 
         console.error('Error in POST /comments:', error);
         return NextResponse.json({ status: 500, message: 'Internal Server Error' });
+    }finally {
+        session.endSession(); 
     }
 }
+
+
+

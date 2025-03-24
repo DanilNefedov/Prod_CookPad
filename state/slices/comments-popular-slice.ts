@@ -26,7 +26,7 @@ export const commVideoFetch = createAsyncThunk<commListData[], {config_id: strin
     'commentsPopular/commVideoFetch',
     async function (data, { rejectWithValue }) {
         try {
-            const urlList = `/api/popular/comments/popular?config_id=${data.config_id}&user_id=${data.user_id}`
+            const urlList = `/api/popular/comments?config_id=${data.config_id}&user_id=${data.user_id}`
             const responseList = await fetch(urlList);
 
             if (!responseList.ok) return rejectWithValue('Server Error!');
@@ -50,7 +50,7 @@ export const newCommPopular = createAsyncThunk<commListData, {data:commListData,
     async function (data, { rejectWithValue, dispatch }) {
         try {
             // const { id, count } = data
-            const urlList = `/api/popular/comments/popular`
+            const urlList = `/api/popular/comments`
 
             const response = await fetch(urlList, {
                 method: 'POST',
@@ -88,7 +88,7 @@ export const likedComment = createAsyncThunk<LikedCommnetDataT, LikedCommnetData
     'commentsPopular/likedComment',
     async function (data, { rejectWithValue }) {
         try {
-            const urlList = `/api/popular/like/comment`
+            const urlList = `/api/popular/comment/like`
 
             const response = await fetch(urlList, {
                 method: 'PUT',
@@ -153,6 +153,39 @@ const commentsPopularSlice = createSlice({
                 state.status = false,
                 // console.log(action.payload)
                 state.comm_list.push(action.payload)
+
+            })
+
+
+            .addCase(likedComment.pending, (state) => {
+                state.status = true,
+                state.error = false
+            })
+            .addCase(likedComment.fulfilled, (state, action: PayloadAction<LikedCommnetDataT, string>) => {
+                state.error = false,
+                state.status = false
+                // console.log(action.payload)
+                
+                const thisComm = action.payload.reply ? 
+                state.comm_list.find(el => el.id_comment === action.payload.id_comment) 
+                : state.comm_list.find(el => el.id_comment === action.payload.id_comment)
+
+
+                console.log(thisComm, action.payload.reply, action.payload)
+                if(thisComm){
+                    console.log(thisComm, action.payload.reply)
+                    if(action.payload.reply){
+                        const thisReply = thisComm.reply_list?.find(el => el.id_comment === action.payload.id_comment)
+                        console.log(thisReply, action.payload.reply)
+                        if(thisReply){
+                            thisReply.liked = !action.payload.liked
+                            thisReply.likes_count = action.payload.liked ? thisReply.likes_count - 1 : thisReply.likes_count + 1
+                        }
+                    }else{
+                        thisComm.liked = !action.payload.liked
+                        thisComm.likes_count = action.payload.liked ? thisComm.likes_count - 1 : thisComm.likes_count + 1
+                    }
+                }                
 
             })
 
