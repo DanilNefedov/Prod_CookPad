@@ -1,6 +1,6 @@
 import connectDB from "@/app/lib/mongoose";
+import RecipePopularConfig from "@/app/models/popular-config";
 import Recipe from "@/app/models/recipe";
-import RecipePopularConfig from "@/app/models/recipe-popular-config";
 import { NextResponse } from "next/server"
 
 

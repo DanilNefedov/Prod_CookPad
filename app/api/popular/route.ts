@@ -2,7 +2,7 @@ import connectDB from "@/app/lib/mongoose";
 import Recipe from "@/app/models/recipe";
 import User from "@/app/models/user";
 import { popularList } from "@/app/types/types";
-import { add, divide, mean, multiply, round, sum } from "mathjs";
+import { add, bignumber, divide, evaluate, format, mean, multiply, parse, round, sum } from "mathjs";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import _ from 'lodash';
@@ -33,19 +33,34 @@ interface Top20ElementsT {
 //--------------------    average coefficient of action history with EVERY item in the category    -------//
 function categoryCoefUser(data: number[]): number {
     return round(mean(data), 15);
+    
 }
+// function categoryCoefUser(data: number[]): number {
+//     const coefMain = sum(data);
+//     console.log(data)
+//     const average = divide(coefMain, data.length);
+//     return parseFloat(format(average, { notation: 'fixed', precision: 15 }));
+// }
 
 
 function categoryCoefVideo(data: RecipeT, matchCoefficient: number): number {
     const { comments, fully, likes, saves, views } = data;
     
     
-    const newFully = add(fully, 1);
-    const coefLikes = round(add(divide(likes, views + 1), 1), 15);
-    const coefComm = round(add(divide(comments, views + 1), 1), 15);
-    const coefSaves = round(add(divide(saves, views + 1), 1), 15);
+    const newFully = round(add(fully, 1), 15);
+    const coefLikes = round(add(divide(likes, add(views, 1)), 1), 15);
+    const coefComm = round(add(divide(comments, add(views, 1)), 1), 15);
+    const coefSaves = round(add(divide(saves, add(views, 1)), 1), 15);
     
-
+    // const likesT = 123456789.123456;
+    // const viewsT = 987654321.987654;
+    // 987 654 322,987654
+    console.log(
+        round(multiply(mean([coefLikes, coefComm, coefSaves, newFully]), matchCoefficient), 15),
+        matchCoefficient, 
+        coefLikes, 
+        views
+    )
     return round(multiply(mean([coefLikes, coefComm, coefSaves, newFully]), matchCoefficient), 15);
 }
 
@@ -64,11 +79,17 @@ function getSortingByCategory(selectedElements: RecipeT[], userList: UserT[]) {
     const elementsWithMatchCoefficient = selectedElements.map(item => {
         const matchCount = calculateMatchCount(item.categories, userList);
 
-        const matchCoefficient = round(multiply(matchCount, divide(matchCount, item.categories.length)), 15);
+        
+        // const matchCoefficient = round(multiply(matchCount, divide(matchCount, item.categories.length)), 15);
+        const matchCoefficient = round(divide(matchCount, item.categories.length), 15);
         return { item, matchCount, matchCoefficient };
     });
 
-    return _.orderBy(elementsWithMatchCoefficient, ['matchCoefficient'], ['desc']).slice(0, 100).map(entry => ({
+    // console.log('getSortingByCategorygetSortingByCategorygetSortingByCategorygetSortingByCategory', _.orderBy(elementsWithMatchCoefficient, ['matchCoefficient'], ['desc']).slice(0, 5).map(entry => ({//100
+    //     item: entry.item,
+    //     matchCoefficient: calculateAverageCoef(entry.item, userList, entry.matchCoefficient)
+    // })))
+    return _.orderBy(elementsWithMatchCoefficient, ['matchCoefficient'], ['desc']).slice(0, 5).map(entry => ({//100
         item: entry.item,
         matchCoefficient: calculateAverageCoef(entry.item, userList, entry.matchCoefficient)
     }));
@@ -81,21 +102,35 @@ function calculateAverageCoef(item: RecipeT, userList: UserT[], matchCoefficient
     const matchingUsers = item.categories
         .map(category => userList.find(user => user.category === category))
         .filter((user): user is UserT => !!user);
-
-
 //----------------------------------- sum of the average coefficients of the categories (user) that matched the recipe ------------------//
-    const coefSum = sum(matchingUsers.map(user => categoryCoefUser(user.multiplier)));
+    // const coefSum = matchingUsers.map(user => {
+    //     const resCoef = categoryCoefUser(user.multiplier)
+    //     console.log(resCoef)
+    //     return resCoef
+    // }) 
+ 
+    const coefSum = parseFloat(round(
+        sum(matchingUsers.map(user => bignumber(categoryCoefUser(user.multiplier)))),
+        15
+    ).toString());
 
-
+    console.log(round(multiply(matchCoefficient, divide(coefSum, matchingUsers.length)), 15))
 //----------------------------------- sorting by highest sum of average coefficients ----------------------------//
     return matchingUsers.length > 0 ? round(multiply(matchCoefficient, divide(coefSum, matchingUsers.length)), 15) : 1;
 }
 
 
 
-
 //----------------------------------- sorting by other users' activity -----------------------------------//
-function orderByUsersImpact(top20Elements: Top20ElementsT[], count: number): RecipeT[] {
+function orderByUsersImpact(top20Elements: Top20ElementsT[], count: number): any[] {//RecipeT
+    // console.log('fullSortedfullSortedfullSortedfullSortedfullSortedfullSorted',_.orderBy(
+    //     top20Elements.map(elem => ({
+    //         item: elem.item,
+    //         matchCoefficient: categoryCoefVideo(elem.item, elem.matchCoefficient)
+    //     })),
+    //     ['matchCoefficient'],
+    //     ['desc']
+    // ),'fullSortedfullSortedfullSortedfullSortedfullSortedfullSorted',)
     return _.orderBy(
         top20Elements.map(elem => ({
             item: elem.item,
@@ -145,8 +180,14 @@ export async function GET(request: Request) {
         const list = await RecipePopularConfig.aggregate([{ $sample: { size: 200 } }]).session(session);
 
         const sortedByCateries = getSortingByCategory(list, userData.popular_config);
+        // console.log('sortedByCateriessortedByCateriessortedByCateriessortedByCateries',
+        //     sortedByCateries,
+        //     'sortedByCateriessortedByCateriessortedByCateriessortedByCateries',
+        // )
         const fullSorted = orderByUsersImpact(sortedByCateries, +count);
-
+        // console.log('fullSortedfullSortedfullSortedfullSortedfullSortedfullSorted',
+            // fullSorted,
+        // 'fullSortedfullSortedfullSortedfullSortedfullSortedfullSorted',)
         const finalData = await Promise.all(fullSorted.map(async (el) => {
             const recipeData = await Recipe.findOne({ _id: el.creator }).session(session);
             const authorData = await User.findOne({ connection_id: recipeData?.connection_id }).session(session);

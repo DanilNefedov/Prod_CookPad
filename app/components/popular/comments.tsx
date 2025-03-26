@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import SendIcon from '@mui/icons-material/Send';
-import { commVideoFetch, likedComment, newCommPopular } from "@/state/slices/comments-popular-slice";
+import { commVideoFetch, getReplies, likedComment, newCommPopular, newReplyComm } from "@/state/slices/comments-popular-slice";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -18,52 +18,53 @@ interface dataProps {
 
 
 export function Comments({ props }: { props: dataProps }) {
-    const { user_info, config_id} = props
+    const { user_info, config_id } = props
     const connection_id = user_info.connection_id
 
     const [comm, setComm] = useState<string>('')
     const [openReply, setOpenReply] = useState<string>('')
-    
+
     const dispatch = useAppDispatch()
     const commentsData = useAppSelector(state => state.comments)
-    const [infoReply, setInfoReply] = useState<{ id_comment: string, author_name: string, id_branch:string }>({
+    const [infoReply, setInfoReply] = useState<{ id_comment: string, author_name: string, id_branch: string }>({
         id_comment: '',
         author_name: '',
-        id_branch:''
+        id_branch: ''
     })
 
 
     useEffect(() => {
         if (config_id && connection_id !== '') {
-            dispatch(commVideoFetch({ config_id, user_id:connection_id }))
+            dispatch(commVideoFetch({ config_id, user_id: connection_id }))
         }
-        
+
 
     }, [config_id])
-    
+
     function sendComm() {
         console.log('sendComm')
         if (connection_id !== '') {
-        //     if (infoReply.id_comment !== '') {
+            if (infoReply.id_comment !== '') {
+                console.log(infoReply)
 
-        //         const data = {
-        //             id_comment: uuidv4(),
-        //             id_branch:openReply === '' ? infoReply.id_comment : openReply,
-        //             id_author: user_info?.connection_id,
-        //             author_avatar: user_info?.img,
-        //             author_name: user_info?.name,
-        //             id_parent: infoReply.id_comment,
-        //             name_parent: infoReply.author_name,
-        //             likes_count:0,
-        //             text: comm.trim(),
-        //         }
-        //         dispatch(newReplyComm({ data, id_recipe: config_id }))
-        //         setComm('')
-        //         // setDataAlgoPop(prevState => ({
-        //         //     ...prevState,
-        //         //     comment: prevState.comment + 1
-        //         // }));
-        //     } else {
+                const data = {
+                    id_comment: uuidv4(),
+                    id_branch:openReply === '' ? infoReply.id_comment : openReply,
+                    id_author: user_info?.connection_id,
+                    author_avatar: user_info?.img,
+                    author_name: user_info?.name,
+                    id_parent: infoReply.id_comment,
+                    name_parent: infoReply.author_name,
+                    likes_count:0,
+                    text: comm.trim(),
+                }
+                dispatch(newReplyComm({ data, config_id: config_id }))
+                setComm('')
+                //         // setDataAlgoPop(prevState => ({
+                //         //     ...prevState,
+                //         //     comment: prevState.comment + 1
+                //         // }));
+            } else {
                 const data = {
                     id_comment: uuidv4(),
                     id_author: connection_id,
@@ -71,11 +72,11 @@ export function Comments({ props }: { props: dataProps }) {
                     author_name: user_info?.name,
                     config_id: config_id,
                     text: comm.trim(),
-                    likes_count:0,
-                    reply_list:[],
+                    likes_count: 0,
+                    reply_list: [],
                     answer_count: 0,
                 }
-                dispatch(newCommPopular({data, comment_branch:true}))
+                dispatch(newCommPopular({ data, comment_branch: true }))
                 setComm('')
                 // setDataAlgoPop(prevState => ({
                 //     ...prevState,
@@ -83,40 +84,51 @@ export function Comments({ props }: { props: dataProps }) {
                 // }));
 
             }
-        // }
+        }
     }
 
-    // function handleReply(id_branch:string, id_comment: string, author_name: string) {
-    //     setInfoReply(infoReply.id_comment === id_comment ? { id_comment: '', author_name: '', id_branch:'' } : { id_branch, id_comment, author_name })
-    // }
+    function handleReply(id_branch: string, id_comment: string, author_name: string) {
+        setInfoReply(infoReply.id_comment === id_comment
+            ?
+            { id_comment: '', author_name: '', id_branch: '' }
+            :
+            { id_branch, id_comment, author_name }
+        )
+    }
 
 
     function handleReplies(id_comment: string) {
         console.log("handleReplies")
-        // if (user_info?.connection_id && user_info?.connection_id !== null) {
-            
-        //     const comment = stateCommVideo.comm_list.find(el => el.id_comment === id_comment);
-        //     const skip = comment ? (comment.reply_list ? comment.reply_list.length : 0) : 0;
-        //     dispatch(getReplies({ id_comment, skip, id_author:user_info?.connection_id}))
+        if (connection_id !== '') {
 
-        // }
-        
+            const comment = commentsData.comm_list.find(el => el.id_comment === id_comment);
+            const skip = comment ? (comment.reply_list ? comment.reply_list.length : 0) : 0;
+            dispatch(getReplies({ id_comment, skip, id_author:connection_id}))
+
+        }
+
     }
-    
-    function handleLike(id_comment:string, config_id:string, liked:boolean | undefined, reply:boolean, id_branch:string | undefined){
+
+    interface LikeT {
+        id_comment: string,
+        config_id: string,
+        liked: boolean | undefined,
+        reply: boolean,
+        id_branch: string | undefined
+    }
+    function handleLike({ id_comment, config_id, liked, reply, id_branch }: LikeT) {
         if (connection_id !== '' && liked !== undefined) {
-            console.log(liked,id_comment)
             dispatch(likedComment({
-                id_author:connection_id, 
-                id_branch: id_branch !== undefined  ? id_branch : '', 
-                id_comment, 
-                config_id, 
+                id_author: connection_id,
+                id_comment,
+                config_id,
                 // id_parent, 
-                liked, 
-                reply
+                liked,
+                reply,
+                id_branch: id_branch !== undefined ? id_branch : '',
             }))
         }
-        
+
     }
     console.log(commentsData)
     return (
@@ -155,7 +167,7 @@ export function Comments({ props }: { props: dataProps }) {
 
                             <Box sx={{ width: '100%', justifyContent: 'space-between', display: 'flex', mt: '7px' }}>
                                 <Button
-                                    // onClick={() => handleReply(el.id_comment, el.id_comment, el.author_name)}
+                                    onClick={() => handleReply(el.id_comment, el.id_comment, el.author_name)}
                                     sx={{
                                         p: '0',
                                         '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
@@ -165,20 +177,20 @@ export function Comments({ props }: { props: dataProps }) {
                                         color: infoReply.id_comment === el.id_comment ? 'primary.main' : 'text.secondary'
                                     }}>reply</Button>
                                 <Button
-                                    // onClick={() => {
-                                    //     if((openReply === '' || openReply !== el.id_comment) && el.answer_count > 0){
-                                    //         if(el.reply_list && el.reply_list.length === 0){
-                                    //             handleReplies(el.id_comment) 
-                                    //         }
-                                    //         setOpenReply(el.id_comment)
-                                    //     } 
-                                    // }}
+                                    onClick={() => {
+                                        if((openReply === '' || openReply !== el.id_comment) && el.answer_count > 0){
+                                            if(el.reply_list && el.reply_list.length === 0){
+                                                handleReplies(el.id_comment) 
+                                            }
+                                            setOpenReply(el.id_comment)
+                                        } 
+                                    }}
                                     sx={{
                                         p: '0',
-                                        '&:hover': { backgroundColor: "transparent", color: openReply === el.id_comment ? '#BDBDBD' :'primary.main'  },
+                                        '&:hover': { backgroundColor: "transparent", color: openReply === el.id_comment ? '#BDBDBD' : 'primary.main' },
                                         fontSize: "14px",
                                         textTransform: 'initial',
-                                        cursor:openReply === el.id_comment ? 'auto' : 'pointer',
+                                        cursor: openReply === el.id_comment ? 'auto' : 'pointer',
                                         minWidth: "0",
                                         color: openReply === el.id_comment ? '#BDBDBD' : 'text.secondary'
                                     }}>{el.answer_count} replies</Button>
@@ -190,13 +202,13 @@ export function Comments({ props }: { props: dataProps }) {
                                     textTransform: 'initial',
                                     minWidth: "0",
                                     color: 'text.secondary',
-                                    alignItems:'center',
+                                    alignItems: 'center',
                                     // maxHeight:'20px'
                                 }}
-                                onClick={() => handleLike(el.id_comment, config_id, el.liked, el.id_comment, false )}
+                                    onClick={() => handleLike({ id_comment: el.id_comment, config_id, liked: el.liked, reply: false, id_branch: undefined })}
                                 >
                                     {el.likes_count}
-                                    <FavoriteIcon sx={{ fontSize: "16px", m:'0 0 3px 3px', color:el.liked ? 'primary.main' : 'inherit' }}></FavoriteIcon>
+                                    <FavoriteIcon sx={{ fontSize: "16px", m: '0 0 3px 3px', color: el.liked ? 'primary.main' : 'inherit' }}></FavoriteIcon>
                                 </Button>
                             </Box>
                         </ListItem>
@@ -215,40 +227,40 @@ export function Comments({ props }: { props: dataProps }) {
                                 }
                             }}>
                                 {/* <ReplyComment props={{elem, id_branch:el.id_comment, handleLike, config_id:config_id, handleReply}}></ReplyComment> */}
-                            </ListItem>                           
+                            </ListItem>
 
-                        )):
-                        <></>
-                        }
-                        {
-                            openReply === el.id_comment && el.reply_list && el.reply_list?.length > 0 ? 
-                            <Box sx={{maxWidth:"50%",justifyContent:'center', m:'0 auto', display:"flex"}}>
-                                <Button sx={{
-                                    p: '0',
-                                    '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
-                                    fontSize: "14px",
-                                    textTransform: 'initial',
-                                    minWidth: "0",
-                                    color: 'text.secondary',
-                                    mr:'25px'
-                                }}
-                                onClick={() => handleReplies(el.id_comment)}
-                                >more</Button>
-                                <Button sx={{
-                                    p: '0',
-                                    '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
-                                    fontSize: "14px",
-                                    textTransform: 'initial',
-                                    minWidth: "0",
-                                    color: 'text.secondary'
-                                }}
-                                onClick={() => setOpenReply('')}
-                                >hide</Button>
-                            </Box>
-                            :
+                        )) :
                             <></>
                         }
-                         
+                        {
+                            openReply === el.id_comment && el.reply_list && el.reply_list?.length > 0 ?
+                                <Box sx={{ maxWidth: "50%", justifyContent: 'center', m: '0 auto', display: "flex" }}>
+                                    <Button sx={{
+                                        p: '0',
+                                        '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
+                                        fontSize: "14px",
+                                        textTransform: 'initial',
+                                        minWidth: "0",
+                                        color: 'text.secondary',
+                                        mr: '25px'
+                                    }}
+                                        onClick={() => handleReplies(el.id_comment)}
+                                    >more</Button>
+                                    <Button sx={{
+                                        p: '0',
+                                        '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
+                                        fontSize: "14px",
+                                        textTransform: 'initial',
+                                        minWidth: "0",
+                                        color: 'text.secondary'
+                                    }}
+                                        onClick={() => setOpenReply('')}
+                                    >hide</Button>
+                                </Box>
+                                :
+                                <></>
+                        }
+
                     </Box>
                 ))}
 

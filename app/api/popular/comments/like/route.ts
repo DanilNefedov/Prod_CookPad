@@ -57,7 +57,7 @@ export async function PUT(request: Request) {
                 return NextResponse.json({ message: 'User information not found' }, { status: 404 });
             }
 
-            const updatedConfig = categoryUser(user.popular_config, liked, 1.2, popularData.categories);
+            const updatedConfig = categoryUser(user.popular_config, liked, 1.1, popularData.categories);
             if (updatedConfig.length > 0) {
                 await User.updateOne(
                     { connection_id: id_author },
@@ -69,7 +69,13 @@ export async function PUT(request: Request) {
 
         await session.commitTransaction(); 
 
-        return NextResponse.json({ message: 'Success', data: dataReq });
+        return NextResponse.json({ message: 'Success', data: { 
+            id_comment, 
+            id_author, 
+            config_id, 
+            reply, 
+            liked: !liked 
+        }  });
     } catch (error) {
         console.error('PUT Error:', error);
         await session.abortTransaction(); 
@@ -79,77 +85,3 @@ export async function PUT(request: Request) {
     }
 }
 
-
-export async function PUT(request: Request) {//need to change and check
-    try {
-        await connectDB();
-
-        const dataReq = await request.json();
-        const { id_comment, id_author, config_id, reply, liked } = dataReq;
-        console.log(dataReq)
-
-        // Handle like or unlike comment
-        let like_doc = await LikesComments.findOne({ id_comment, id_author });
-
-        console.log(like_doc, liked)
-        
-        if (!like_doc) {
-            await new LikesComments({ id_comment, id_author, config_id });
-        } else if(liked && !like_doc.is_deleted){
-            like_doc.is_deleted = true;
-            like_doc.deletedAt = new Date();            
-            await like_doc.save();
-        }else if (!liked && like_doc.is_deleted) {
-            like_doc.is_deleted = false;
-            like_doc.deletedAt = undefined; 
-            await like_doc.save();
-        }
-
-       
-
-        // Prepare update query
-        const update = {
-            $inc: {
-                likes_count: liked ? -1 : 1,
-            },
-        };
-
-        if (reply) {
-            // await ReplyComment.updateOne({ id_comment }, update);
-        } else {
-            await CommentPopular.updateOne({ id_comment }, update);
-
-            // Handle popular data and user configuration updates
-            const popularData = await RecipePopularConfig.findById(config_id)
-            
-            if (!popularData) {
-                return NextResponse.json(
-                    { message: 'Popular content not found' },
-                    { status: 404 }
-                );
-            }
-
-            const user = await User.findOne({ connection_id: id_author })
-            
-            if (!user) {
-                return NextResponse.json(
-                    { message: 'User information not found' },
-                    { status: 404 }
-                );
-            }
-
-            const updatedConfig = categoryUser(user.popular_config, liked, 1.2, popularData.categories);
-
-            if (updatedConfig.length > 0) {
-                await User.updateOne({ connection_id: id_author }, { $set: { popular_config: updatedConfig } });
-            }
-        }
-
-        return NextResponse.json({ message: 'Success', data: dataReq });
-    } catch (error) {
-        return NextResponse.json(
-            { message: 'Internal Server Error', error },
-            { status: 500 }
-        );
-    }
-}

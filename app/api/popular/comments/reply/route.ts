@@ -1,0 +1,141 @@
+
+
+
+import { NextResponse } from 'next/server';
+import moment from 'moment';
+import { cloneDeep } from 'lodash';
+import mongoose from 'mongoose';
+import connectDB from '@/app/lib/mongoose';
+import ReplyComment from '@/app/models/reply-comments';
+import RecipePopularConfig from '@/app/models/popular-config';
+import CommentPopular from '@/app/models/comments-popular';
+import LikesComments from '@/app/models/likes-comments';
+
+
+
+
+
+export async function POST(request: Request) {
+    const session = await mongoose.startSession(); 
+    try {
+        await connectDB();
+        session.startTransaction();
+
+        const dataReq = await request.json();
+        const { data, config_id } = dataReq;
+
+        
+        const comment = new ReplyComment(data);
+        const res = await comment.save({ session }); 
+
+        const updatedPopularT = await RecipePopularConfig.findOne({_id: config_id})
+        console.log(res, updatedPopularT, config_id)
+
+        const updatedPopular = await RecipePopularConfig.findOneAndUpdate(
+            { _id: config_id },
+            { $inc: { comments: 1 } },
+            { new: true, session }
+        );
+
+        if (!updatedPopular) {
+            throw new Error('Popular document not found');
+        }
+
+        const updatedParentComm = await CommentPopular.findOneAndUpdate(
+            { id_comment: data.id_branch },
+            { $inc: { answer_count: 1 } },
+            { new: true, session } 
+        );
+
+        if (!updatedParentComm) {
+            throw new Error('Parent comment not found');
+        }
+
+        
+
+        const responseData = cloneDeep(data);
+        const createdMoment = moment(responseData.createdAt);
+        const timeAgo = createdMoment.fromNow();
+
+        responseData.liked = false;
+        responseData.createdAt = timeAgo;
+
+
+        await session.commitTransaction(); 
+
+
+        return NextResponse.json(responseData);
+    } catch (error) {
+        await session.abortTransaction(); 
+        
+        return NextResponse.json({
+            status: 500,
+            body: {
+                message: 'Internal Server Error',
+                error: error,
+            },
+        });
+    } finally {
+        session.endSession();
+    }
+}
+
+
+
+
+
+
+export async function GET(request: Request) {
+    try {
+        const { searchParams } = new URL(request.url);
+        const id_comment = searchParams.get('id_comment');
+        const skipParam = searchParams.get('skip');
+        const id_author = searchParams.get('id_author');
+
+        if (!id_comment || !id_author) {
+            throw new Error('Missing required query parameters');
+        }
+
+        const skip = parseInt(skipParam as string, 10) || 0;
+
+        await connectDB();
+
+        const comments = await ReplyComment.find({ id_branch: id_comment })
+            .sort({ createdAt: 1 })
+            .skip(skip)
+            .limit(4);
+
+        const formattedComments = await Promise.all(
+            comments.map(async (el) => {
+                const createdMoment = moment(el.createdAt);
+                const timeAgo = createdMoment.fromNow();
+
+                const liked = !!(await LikesComments.findOne({
+                    id_comment: el.id_comment,
+                    id_author,
+                }));
+
+                return {
+                    id_comment: el.id_comment,
+                    id_author: el.id_author,
+                    id_branch: el.id_branch,
+                    author_avatar: el.author_avatar,
+                    author_name: el.author_name,
+                    id_parent: el.id_parent,
+                    name_parent: el.name_parent,
+                    liked: liked,
+                    likes_count: el.likes_count,
+                    text: el.text,
+                    createdAt: timeAgo,
+                };
+            })
+        );
+
+        return NextResponse.json(formattedComments);
+    } catch (error) {
+        return NextResponse.json({
+            status: 500,
+            error: { message: 'Internal Server Error', details: error },
+        });
+    }
+}

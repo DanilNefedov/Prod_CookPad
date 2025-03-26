@@ -132,7 +132,7 @@ const popularSlice = createSlice({
         builder
             .addCase(popularFetch.pending, (state) => {
                 state.status = true,
-                    state.error = false
+                state.error = false
             })
             .addCase(popularFetch.fulfilled, (state, action: PayloadAction<PopularListDataT[], string>) => {
                 state.error = false,
