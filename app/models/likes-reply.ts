@@ -1,10 +1,13 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema } from "mongoose";
 
 
 
 
 
-const LikesCommentsSchema = new Schema(
+
+
+
+const LikesReplySchma = new Schema(
     {
         id_author: {
             type: String,
@@ -29,12 +32,11 @@ const LikesCommentsSchema = new Schema(
     },
     {
         timestamps: true,
-        collection: 'likes-comments'
+        collection: 'likes-reply'
     }
 );
 
-LikesCommentsSchema.index({ deletedAt: 1 }, { expireAfterSeconds: 100 }); 
-
+LikesReplySchma.index({ deletedAt: 1 }, { expireAfterSeconds: 100 }); 
 // It is possible that there is a “race” error in the code. when the function to 
 // cancel object deletion is executed at the moment when the database deleted the object.
 
@@ -45,5 +47,6 @@ LikesCommentsSchema.index({ deletedAt: 1 }, { expireAfterSeconds: 100 });
 
 
 //Delayed deletion if the user changes their mind or clicks the like button frequently
-const LikesComments = mongoose.models.LikesComments || mongoose.model('LikesComments', LikesCommentsSchema);
-export default LikesComments;
+
+const LikesReply = mongoose.models.LikesReply || mongoose.model('LikesReply', LikesReplySchma);
+export default LikesReply;

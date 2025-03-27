@@ -538,6 +538,7 @@ export type PopularListDataT = {
 
 export type commListState = ErrorStatus & {
     comm_list:commListData[]
+    page:number
 }
 
 export type commListData = {
@@ -548,7 +549,8 @@ export type commListData = {
     config_id: string,
     text: string,
     answer_count:number,
-    likes_count:number,
+    likes_count:number
+    page_reply?:number,
     reply_list?:replyCommData[],
     createdAt?:string,
     liked?:boolean

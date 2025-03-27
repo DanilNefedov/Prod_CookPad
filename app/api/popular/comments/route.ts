@@ -18,16 +18,23 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url);
         const config_id = searchParams.get('config_id');
         const id_author = searchParams.get('user_id');
+        const page = parseInt(searchParams.get("page") || "1", 10);
 
-        if (!config_id || !id_author) {
+        if (!config_id || !id_author || !page) {
             return NextResponse.json({ status: 400, message: 'Missing parameters' });
         }
+
+        const pageSize = 5;
+        const skip = (page - 1) * pageSize;
+
+      
 
         await connectDB();
 
         const comments = await CommentPopular.find({ config_id })
-            .sort({ createdAt: 1 })
-            .limit(15)
+            .sort({ createdAt: 1 }) 
+            .skip(skip) 
+            .limit(pageSize) 
             .lean();
 
 
@@ -35,7 +42,8 @@ export async function GET(request: Request) {
 
         const likes = await LikesComments.find({
             id_comment: { $in: commentIds },
-            id_author
+            id_author,
+            is_deleted: false, 
         }).lean();
 
         const likedSet = new Set(likes.map((like) => like.id_comment));
@@ -55,7 +63,7 @@ export async function GET(request: Request) {
             createdAt: moment(el.createdAt).fromNow(),
         }));
 
-        return NextResponse.json(formattedComments);
+        return NextResponse.json({formattedComments, page});
         
     } catch (error) {
         console.error('Error fetching comments:', error);

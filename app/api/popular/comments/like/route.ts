@@ -6,6 +6,7 @@ import User from "@/app/models/user";
 import { NextResponse } from "next/server";
 import { categoryUser } from "../../functions";
 import mongoose from "mongoose";
+import ReplyComment from "@/app/models/reply-comments";
 
 
 
@@ -18,7 +19,7 @@ export async function PUT(request: Request) {
         session.startTransaction();
 
         const dataReq = await request.json();
-        const { id_comment, id_author, config_id, reply, liked } = dataReq;
+        const { id_comment, id_author, config_id, reply, liked,id_branch } = dataReq;
 
         if (!id_comment || !id_author || !config_id) {
             return NextResponse.json({ message: 'Missing required parameters' }, { status: 400 });
@@ -40,13 +41,13 @@ export async function PUT(request: Request) {
 
         const update = { $inc: { likes_count: liked ? -1 : 1 } };
         
-        if (reply) {
-            // await ReplyComment.updateOne({ id_comment }, update).session(session);
-        } else {
-            await CommentPopular.updateOne({ id_comment }, update).session(session);
-        }
+        // if (reply) {
+        //     await ReplyComment.updateOne({ id_comment }, update).session(session);
+        // } else {
+        await CommentPopular.updateOne({ id_comment }, update).session(session);
+        // }
 
-        if (!reply) {
+        // if (!reply) {
             const popularData = await RecipePopularConfig.findById(config_id).session(session);
             if (!popularData) {
                 return NextResponse.json({ message: 'Popular content not found' }, { status: 404 });
@@ -65,7 +66,7 @@ export async function PUT(request: Request) {
                     { session }
                 );
             }
-        }
+        // }
 
         await session.commitTransaction(); 
 
@@ -74,6 +75,7 @@ export async function PUT(request: Request) {
             id_author, 
             config_id, 
             reply, 
+            id_branch,
             liked: !liked 
         }  });
     } catch (error) {

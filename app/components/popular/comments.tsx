@@ -1,11 +1,12 @@
 import { collectionUser } from "@/app/types/types"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import SendIcon from '@mui/icons-material/Send';
 import { commVideoFetch, getReplies, likedComment, newCommPopular, newReplyComm } from "@/state/slices/comments-popular-slice";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { v4 as uuidv4 } from 'uuid';
+import { ReplyComment } from "./reply-comment";
 
 
 
@@ -15,31 +16,38 @@ interface dataProps {
     config_id: string,
 }
 
-
+export interface LikeT {
+    id_comment: string,
+    config_id: string,
+    liked: boolean | undefined,
+    reply: boolean,
+    id_branch: string | undefined
+}
 
 export function Comments({ props }: { props: dataProps }) {
     const { user_info, config_id } = props
     const connection_id = user_info.connection_id
+    const commentsData = useAppSelector(state => state.comments)
 
     const [comm, setComm] = useState<string>('')
     const [openReply, setOpenReply] = useState<string>('')
 
+
     const dispatch = useAppDispatch()
-    const commentsData = useAppSelector(state => state.comments)
+    
     const [infoReply, setInfoReply] = useState<{ id_comment: string, author_name: string, id_branch: string }>({
         id_comment: '',
         author_name: '',
         id_branch: ''
     })
 
-
     useEffect(() => {
         if (config_id && connection_id !== '') {
-            dispatch(commVideoFetch({ config_id, user_id: connection_id }))
+            dispatch(commVideoFetch({ config_id, user_id: connection_id, page:commentsData.page }))
         }
+    }, [config_id]);
+    
 
-
-    }, [config_id])
 
     function sendComm() {
         console.log('sendComm')
@@ -87,14 +95,22 @@ export function Comments({ props }: { props: dataProps }) {
         }
     }
 
-    function handleReply(id_branch: string, id_comment: string, author_name: string) {
-        setInfoReply(infoReply.id_comment === id_comment
-            ?
-            { id_comment: '', author_name: '', id_branch: '' }
-            :
-            { id_branch, id_comment, author_name }
-        )
-    }
+    // function handleReply(id_branch: string, id_comment: string, author_name: string) {
+    //     setInfoReply(infoReply.id_comment === id_comment
+    //         ?
+    //         { id_comment: '', author_name: '', id_branch: '' }
+    //         :
+    //         { id_branch, id_comment, author_name }
+    //     )
+    // }
+
+    const handleReply = useCallback((id_branch: string, id_comment: string, author_name: string) => {
+        setInfoReply((prev) =>
+            prev.id_comment === id_comment
+                ? { id_comment: "", author_name: "", id_branch: "" }
+                : { id_branch, id_comment, author_name }
+        );
+    }, []);
 
 
     function handleReplies(id_comment: string) {
@@ -102,34 +118,46 @@ export function Comments({ props }: { props: dataProps }) {
         if (connection_id !== '') {
 
             const comment = commentsData.comm_list.find(el => el.id_comment === id_comment);
-            const skip = comment ? (comment.reply_list ? comment.reply_list.length : 0) : 0;
-            dispatch(getReplies({ id_comment, skip, id_author:connection_id}))
+            // const skip = comment ? (comment.reply_list ? comment.reply_list.length : 0) : 0;
+            if(comment ){
+                dispatch(getReplies({ id_comment, page:comment.page_reply ? comment.page_reply+1 : 1 , id_author:connection_id}))
+            }
 
         }
 
     }
 
-    interface LikeT {
-        id_comment: string,
-        config_id: string,
-        liked: boolean | undefined,
-        reply: boolean,
-        id_branch: string | undefined
-    }
-    function handleLike({ id_comment, config_id, liked, reply, id_branch }: LikeT) {
-        if (connection_id !== '' && liked !== undefined) {
-            dispatch(likedComment({
-                id_author: connection_id,
-                id_comment,
-                config_id,
-                // id_parent, 
-                liked,
-                reply,
-                id_branch: id_branch !== undefined ? id_branch : '',
-            }))
-        }
+    
+    // function handleLike({ id_comment, config_id, liked, reply, id_branch }: LikeT) {
+    //     if (connection_id !== '' && liked !== undefined) {
+    //         dispatch(likedComment({
+    //             id_author: connection_id,
+    //             id_comment,
+    //             config_id,
+    //             // id_parent, 
+    //             liked,
+    //             reply,
+    //             id_branch: id_branch !== undefined ? id_branch : '',
+    //         }))
+    //     }
 
-    }
+    // }
+    const handleLike = useCallback(({ id_comment, config_id, liked, reply, id_branch }: LikeT) => {
+        if (connection_id !== "" && liked !== undefined) {
+            dispatch(
+                likedComment({
+                    id_author: connection_id,
+                    id_comment,
+                    config_id,
+                    liked,
+                    reply,
+                    id_branch: id_branch ?? "", 
+                })
+            );
+        }
+    }, [connection_id, dispatch]);
+
+
     console.log(commentsData)
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', pt: '20px', overflow: 'auto', }}>
@@ -226,7 +254,7 @@ export function Comments({ props }: { props: dataProps }) {
                                     mb: '20px'
                                 }
                             }}>
-                                {/* <ReplyComment props={{elem, id_branch:el.id_comment, handleLike, config_id:config_id, handleReply}}></ReplyComment> */}
+                                <ReplyComment props={{elem, id_branch:el.id_comment, handleLike, config_id:config_id, handleReply}}></ReplyComment>
                             </ListItem>
 
                         )) :
@@ -235,14 +263,17 @@ export function Comments({ props }: { props: dataProps }) {
                         {
                             openReply === el.id_comment && el.reply_list && el.reply_list?.length > 0 ?
                                 <Box sx={{ maxWidth: "50%", justifyContent: 'center', m: '0 auto', display: "flex" }}>
-                                    <Button sx={{
+                                    <Button 
+                                    disabled={Number.isNaN(el.page_reply)}
+                                    sx={{
                                         p: '0',
                                         '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
                                         fontSize: "14px",
                                         textTransform: 'initial',
                                         minWidth: "0",
                                         color: 'text.secondary',
-                                        mr: '25px'
+                                        mr: '25px',
+                                        
                                     }}
                                         onClick={() => handleReplies(el.id_comment)}
                                     >more</Button>

@@ -9,7 +9,7 @@ import connectDB from '@/app/lib/mongoose';
 import ReplyComment from '@/app/models/reply-comments';
 import RecipePopularConfig from '@/app/models/popular-config';
 import CommentPopular from '@/app/models/comments-popular';
-import LikesComments from '@/app/models/likes-comments';
+import LikesReply from '@/app/models/likes-reply';
 
 
 
@@ -89,31 +89,39 @@ export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
         const id_comment = searchParams.get('id_comment');
-        const skipParam = searchParams.get('skip');
+        const page = parseInt(searchParams.get("page") || "1", 10);
         const id_author = searchParams.get('id_author');
 
         if (!id_comment || !id_author) {
             throw new Error('Missing required query parameters');
         }
 
-        const skip = parseInt(skipParam as string, 10) || 0;
+        const pageSize = 4;
+        const skip = (page - 1) * pageSize;
 
         await connectDB();
 
         const comments = await ReplyComment.find({ id_branch: id_comment })
-            .sort({ createdAt: 1 })
-            .skip(skip)
-            .limit(4);
+        .sort({ createdAt: 1 }) 
+        .skip(skip) 
+        .limit(pageSize) 
+        .lean();
+
+        const totalCommentsCount = await ReplyComment.countDocuments({ id_branch: id_comment });
+
+
 
         const formattedComments = await Promise.all(
             comments.map(async (el) => {
                 const createdMoment = moment(el.createdAt);
                 const timeAgo = createdMoment.fromNow();
 
-                const liked = !!(await LikesComments.findOne({
+                const liked = !!(await LikesReply.findOne({
                     id_comment: el.id_comment,
                     id_author,
+                    is_deleted: false, 
                 }));
+                
 
                 return {
                     id_comment: el.id_comment,
@@ -131,7 +139,7 @@ export async function GET(request: Request) {
             })
         );
 
-        return NextResponse.json(formattedComments);
+        return NextResponse.json({formattedComments, page, totalCommentsCount});
     } catch (error) {
         return NextResponse.json({
             status: 500,

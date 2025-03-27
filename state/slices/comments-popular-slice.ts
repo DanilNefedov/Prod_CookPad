@@ -8,6 +8,7 @@ import { newCommCalc } from "./popular-slice";
 const initialState:commListState = {
     status: false,
     error: false,
+    page:1,
     comm_list: [
 
         // id_comment: string,
@@ -19,14 +20,17 @@ const initialState:commListState = {
     ]
 }
 
+interface ReturnCommDataT {
+    formattedComments:commListData[],
+    page:number
+}
 
 
-
-export const commVideoFetch = createAsyncThunk<commListData[], {config_id: string, user_id:string}, { rejectValue: string }>(
+export const commVideoFetch = createAsyncThunk<ReturnCommDataT, {config_id: string, user_id:string, page:number}, { rejectValue: string }>(
     'commentsPopular/commVideoFetch',
     async function (data, { rejectWithValue }) {
         try {
-            const urlList = `/api/popular/comments?config_id=${data.config_id}&user_id=${data.user_id}`
+            const urlList = `/api/popular/comments?config_id=${data.config_id}&user_id=${data.user_id}&page=${data.page}`
             const responseList = await fetch(urlList);
 
             if (!responseList.ok) return rejectWithValue('Server Error!');
@@ -89,7 +93,7 @@ export const likedComment = createAsyncThunk<LikedCommnetDataT, LikedCommnetData
     'commentsPopular/likedComment',
     async function (data, { rejectWithValue }) {
         try {
-            const urlList = `/api/popular/comments/like`
+            const urlList = data.reply ? '/api/popular/reply/like': `/api/popular/comments/like`
 
             const response = await fetch(urlList, {
                 method: 'PUT',
@@ -118,7 +122,7 @@ export const newReplyComm = createAsyncThunk<replyCommData, {data:replyCommData,
     async function (data, { rejectWithValue, dispatch }) {
         try {
             // const { id, count } = data
-            const urlList = `/api/popular/comments/reply`
+            const urlList = `/api/popular/reply`
 
             const response = await fetch(urlList, {
                 method: 'POST',
@@ -145,15 +149,17 @@ export const newReplyComm = createAsyncThunk<replyCommData, {data:replyCommData,
 
 interface returnDataT {
     dataList:replyCommData[],
+    page:number,
+    totalCommentsCount:number,
     id_comment:string
 }
 
-export const getReplies = createAsyncThunk<returnDataT, {id_comment: string, skip:number, id_author:string}, { rejectValue: string }>(
+export const getReplies = createAsyncThunk<returnDataT, {id_comment: string, page:number, id_author:string}, { rejectValue: string }>(
     'popular/getReplies',
     async function (data, { rejectWithValue }) {
         try {
             // const { id, count } = data
-            const urlList = `/api/popular/comments/reply?id_comment=${data.id_comment}&skip=${data.skip}&id_author=${data.id_author}`
+            const urlList = `/api/popular/reply?id_comment=${data.id_comment}&page=${data.page}&id_author=${data.id_author}`
             const responseList = await fetch(urlList);
 
             if (!responseList.ok) return rejectWithValue('Server Error!');
@@ -169,7 +175,9 @@ export const getReplies = createAsyncThunk<returnDataT, {id_comment: string, ski
             // console.log('rrer')
 
             const returnData= {
-                dataList,
+                dataList:dataList.formattedComments,
+                page:dataList.page,
+                totalCommentsCount:dataList.totalCommentsCount,
                 id_comment:data.id_comment
             }
             return returnData
@@ -201,14 +209,14 @@ const commentsPopularSlice = createSlice({
                 state.status = true,
                 state.error = false
             })
-            .addCase(commVideoFetch.fulfilled, (state, action: PayloadAction<commListData[], string>) => {
+            .addCase(commVideoFetch.fulfilled, (state, action: PayloadAction<ReturnCommDataT, string>) => {
                 state.error = false,
                 state.status = false,
                 // action.payload.map(el => {
                 //     state.comm_list.push(el)
                 // })
-
-                state.comm_list = action.payload
+                state.page = action.payload.page
+                state.comm_list = action.payload.formattedComments
             })
 
 
@@ -237,11 +245,10 @@ const commentsPopularSlice = createSlice({
                 
                 const thisComm = !reply ? state.comm_list.find(el => el.id_comment === id_comment) :
                 state.comm_list.find(el => el.id_comment === id_branch)
-                
                 if(thisComm) {
                     if(reply){
-                        const thisReply = thisComm.reply_list?.find(el => el.id_comment === id_comment)
 
+                        const thisReply = thisComm.reply_list?.find(el => el.id_comment === id_comment)
                         if(thisReply){
                             thisReply.liked = liked
                             thisReply.likes_count = liked ? thisReply.likes_count+1 : thisReply.likes_count-1
@@ -289,19 +296,24 @@ const commentsPopularSlice = createSlice({
             })
 
 
-             .addCase(getReplies.pending, (state) => {
-                            state.status = true,
-                            state.error = false
+            .addCase(getReplies.pending, (state) => {
+                state.status = true,
+                state.error = false
             })
             .addCase(getReplies.fulfilled, (state, action: PayloadAction<returnDataT, string>) => {
                 state.error = false,
                 state.status = false
                 
                 const thisComm = state.comm_list.find(el => el.id_comment === action.payload.id_comment)
-                if(thisComm){
+                if(thisComm && thisComm.reply_list){
                     // console.log('2')
                     // thisComm.reply_list?.push(...action.payload.dataList);
 
+                    if(action.payload.totalCommentsCount === thisComm.reply_list?.length + action.payload.dataList.length) {
+                        thisComm.page_reply = NaN;
+                    }else{
+                        thisComm.page_reply = action.payload.page;
+                    }
 
                     const existingIds = new Set(thisComm.reply_list?.map(reply => reply.id_comment));
                     const newReplies = action.payload.dataList.filter(reply => !existingIds.has(reply.id_comment));
