@@ -14,6 +14,14 @@ import CommentIcon from '@mui/icons-material/Comment';
 import { MediaSwiper } from "./media-swiper";
 import { all, BigNumber, create, evaluate, number } from "mathjs";
 import { Comments } from "./comments";
+import { resetComments } from "@/state/slices/comments-popular-slice";
+
+
+import 'swiper/css';
+import 'swiper/css/navigation';
+
+import './styles.css';
+
 
 
 
@@ -25,6 +33,8 @@ export function MainPopular() {
     const popularData = useAppSelector(state => state.popular)
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
+    const commentsData = useAppSelector(state => state.comments)
+    
     const [activeVideo, setActiveVideo] = useState<number>(0)
     const [openComment, setOpenComment] = useState<boolean>(false)
 
@@ -124,12 +134,22 @@ export function MainPopular() {
                     sx={{ position: 'absolute', p: '10px', backgroundColor: 'primary.main', top: '50px', zIndex: 1000 }}
                     onClick={() => {
                         setActiveVideo(activeVideo + 1)
+                        if(commentsData.comm_list.length > 0){
+                            setOpenComment(false)
+                            dispatch(resetComments())
+                        }
                         // handleNewVideo()
                     }}
                 >+</Box>
                 <Box
                     sx={{ position: 'absolute', p: '10px', backgroundColor: 'primary.main', bottom: "100px", zIndex: 1000 }}
-                    onClick={() => setActiveVideo(activeVideo !== 0 ? activeVideo - 1 : activeVideo)}
+                    onClick={() => {
+                        setActiveVideo(activeVideo !== 0 ? activeVideo - 1 : activeVideo)
+                        if(commentsData.comm_list.length > 0){
+                            setOpenComment(false)
+                            dispatch(resetComments())
+                        }
+                    }}
                 >-</Box>
 
 
@@ -203,6 +223,7 @@ export function MainPopular() {
                     <Comments props={{
                         user_info: userData?.user,
                         config_id: popularData.pop_list[activeVideo]?.config_id,
+                        activeVideo
                         // dataAlgoPop,
                         // setDataAlgoPop
                     }}></Comments>

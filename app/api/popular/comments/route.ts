@@ -48,6 +48,7 @@ export async function GET(request: Request) {
 
         const likedSet = new Set(likes.map((like) => like.id_comment));
 
+        const totalCommentsCount = await CommentPopular.countDocuments({config_id});
 
         const formattedComments = comments.map((el) => ({
             id_comment: el.id_comment,
@@ -63,7 +64,7 @@ export async function GET(request: Request) {
             createdAt: moment(el.createdAt).fromNow(),
         }));
 
-        return NextResponse.json({formattedComments, page});
+        return NextResponse.json({formattedComments, page, totalCommentsCount});
         
     } catch (error) {
         console.error('Error fetching comments:', error);

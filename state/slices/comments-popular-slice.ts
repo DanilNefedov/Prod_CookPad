@@ -22,7 +22,8 @@ const initialState:commListState = {
 
 interface ReturnCommDataT {
     formattedComments:commListData[],
-    page:number
+    page:number,
+    totalCommentsCount:number
 }
 
 
@@ -201,7 +202,12 @@ const commentsPopularSlice = createSlice({
                 // console.log('22w')
                 thisPop.answer_count += 1
             }
+        },
+        
+        resetComments: (state) =>{
+            state.page = 1
         }
+        
     },
     extraReducers: (builder) => {
         builder
@@ -210,13 +216,29 @@ const commentsPopularSlice = createSlice({
                 state.error = false
             })
             .addCase(commVideoFetch.fulfilled, (state, action: PayloadAction<ReturnCommDataT, string>) => {
-                state.error = false,
-                state.status = false,
+                state.error = false
+                state.status = false
                 // action.payload.map(el => {
                 //     state.comm_list.push(el)
                 // })
-                state.page = action.payload.page
-                state.comm_list = action.payload.formattedComments
+                // state.page = action.payload.page
+                // state.comm_list = action.payload.formattedComments
+                
+                
+                if (action.payload.page === 1) {
+                    state.comm_list = action.payload.formattedComments;
+                } else {
+                    const newComments = action.payload.formattedComments;
+                    state.comm_list.push(...newComments);
+                
+                    if (action.payload.totalCommentsCount === state.comm_list.length) {
+                        state.page = NaN; 
+                    } else {
+                        state.page = action.payload.page;
+                    }
+                }
+                
+            
             })
 
 
@@ -326,7 +348,7 @@ const commentsPopularSlice = createSlice({
 })
 
 
-export const { newReplyCalc } = commentsPopularSlice.actions;
+export const { newReplyCalc, resetComments } = commentsPopularSlice.actions;
 
 
 export default commentsPopularSlice.reducer
