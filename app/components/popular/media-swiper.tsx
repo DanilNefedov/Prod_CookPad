@@ -12,7 +12,7 @@ interface dataPorps {
 export function MediaSwiper({ props }: { props: dataPorps }) {
     const { main, media_id, media_type, media_url } = props.elem
 
-    console.log(main, media_id, media_type, media_url)
+    // console.log(main, media_id, media_type, media_url)
     return (
         <>
         {

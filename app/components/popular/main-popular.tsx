@@ -38,7 +38,10 @@ export function MainPopular() {
     const [activeVideo, setActiveVideo] = useState<number>(0)
     const [openComment, setOpenComment] = useState<boolean>(false)
 
-    const firstViewTracked = useRef<string>('');
+    // const firstViewTracked = useRef<string>('');
+
+    const viewedVideos = useRef<Set<string>>(new Set());
+
 
 
     useEffect(() => {
@@ -48,19 +51,34 @@ export function MainPopular() {
     }, [connection_id])
 
 
+    // useEffect(() => {
+    //     if (popularData.pop_list.length > 0) {
+
+    //         const firstRecipe = popularData.pop_list[0];
+
+    //         console.log(firstRecipe, firstViewTracked.current, firstViewTracked)
+    //         if (firstRecipe && firstViewTracked.current !== firstRecipe.id_recipe) {
+    //             console.log('2')
+    //             updateViews(firstRecipe.config_id);
+    //             firstViewTracked.current = firstRecipe.id_recipe;
+    //         }
+    //     }
+    // }, [popularData.pop_list]);
+
     useEffect(() => {
         if (popularData.pop_list.length > 0) {
             const firstRecipe = popularData.pop_list[0];
-
-            if (firstRecipe && firstViewTracked.current !== firstRecipe.id_recipe) {
+            if (!viewedVideos.current.has(firstRecipe.config_id)) {
                 updateViews(firstRecipe.config_id);
-                firstViewTracked.current = firstRecipe.id_recipe;
             }
         }
     }, [popularData.pop_list]);
-
+    
 
     async function updateViews(config_id: string) {
+        if (viewedVideos.current.has(config_id)) return
+        viewedVideos.current.add(config_id);
+
         try {
             const response = await fetch(`/api/popular`, {
                 method: 'PATCH',
@@ -81,7 +99,7 @@ export function MainPopular() {
 
     function handleLike() {
         if (connection_id !== '' && !popularData.status) {
-            console.log('3')
+            // console.log('3')
             dispatch(likePopContent({
                 config_id: popularData.pop_list[activeVideo]?.config_id,
                 liked: popularData.pop_list[activeVideo]?.liked,
@@ -104,7 +122,11 @@ export function MainPopular() {
 
 
 
-
+    function handleNewVideo(){
+        if (connection_id !== '') {
+            dispatch(popularFetch({ id: connection_id, count: 1 }))
+        }
+    }
 
     return (
         <Card sx={{ width: '100%', backgroundColor: "background.default", display: 'flex', m: '20px 0', height: '100%' }}>
@@ -133,12 +155,24 @@ export function MainPopular() {
                 <Box
                     sx={{ position: 'absolute', p: '10px', backgroundColor: 'primary.main', top: '50px', zIndex: 1000 }}
                     onClick={() => {
-                        setActiveVideo(activeVideo + 1)
-                        if(commentsData.comm_list.length > 0){
-                            setOpenComment(false)
-                            dispatch(resetComments())
-                        }
+                        // setActiveVideo(activeVideo + 1)
                         // handleNewVideo()
+                        // updateViews(popularData.pop_list[activeVideo+1].config_id)
+                        // if(commentsData.comm_list.length > 0){
+                        //     setOpenComment(false)
+                        //     dispatch(resetComments())
+                        // }
+                        if (activeVideo + 1 < popularData.pop_list.length) {
+                            setActiveVideo(activeVideo + 1);
+                            handleNewVideo();
+                            updateViews(popularData.pop_list[activeVideo + 1].config_id);
+                        }
+                    
+                        if (commentsData.comm_list.length > 0) {
+                            setOpenComment(false);
+                            dispatch(resetComments());
+                        }
+                        
                     }}
                 >+</Box>
                 <Box

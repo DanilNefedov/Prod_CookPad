@@ -34,7 +34,7 @@ function averageCalc({ multiplier, history_length_average }: AvarageDataT): numb
         const totalCount = math.add(history_length_average, math.bignumber(newValuesCount));
 
         const newAverage = math.divide(newSum, totalCount);
-
+        console.log(newAverage)
         return Number(newAverage.toString());
     } else {
         return Number(math.divide(firstSum, math.bignumber(multiplier.length)).toString());
@@ -157,22 +157,18 @@ export function categoryUser(popular_config: userT[], action: boolean, coef:numb
     } else {
         return popular_config.map(config => {
             if (categories.includes(config.category)) {
-                // const updatedConfig = { ...config };
-
                 const index = config.multiplier.indexOf(coef);
+
                 if (index !== -1) {
                     config.multiplier.splice(index, 1);
-                    config.history_length_average -= 1
-                    return config
+                    config.history_length_average -= 1;
                 } else {
                     config.multiplier.push(-coef);
-                    config.history_length_average += 1
-                    return config
+                    config.history_length_average += 1;
                 }
-            } else {
-                return config
             }
-        })
+            return config;
+        }).filter(config => config.multiplier.length > 0); 
     }
 
 

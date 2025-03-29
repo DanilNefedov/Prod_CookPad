@@ -109,7 +109,7 @@ export async function POST(request: Request) {
             return NextResponse.json({ status: 404, message: 'User not found' });
         }
 
-        const updatedConfig = categoryUser(user.popular_config, !data.comment, 1.2, updatedPopular.categories);
+        const updatedConfig = categoryUser(user.popular_config, data.comment, 1.2, updatedPopular.categories);
         if (updatedConfig.length > 0) {
             await User.updateOne(
                 { connection_id: data.id_author },

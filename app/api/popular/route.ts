@@ -32,6 +32,7 @@ interface Top20ElementsT {
 
 //--------------------    average coefficient of action history with EVERY item in the category    -------//
 function categoryCoefUser(data: number[]): number {
+    // console.log(data, round(mean(data), 15))
     return round(mean(data), 15);
     
 }
@@ -55,12 +56,12 @@ function categoryCoefVideo(data: RecipeT, matchCoefficient: number): number {
     // const likesT = 123456789.123456;
     // const viewsT = 987654321.987654;
     // 987 654 322,987654
-    console.log(
-        round(multiply(mean([coefLikes, coefComm, coefSaves, newFully]), matchCoefficient), 15),
-        matchCoefficient, 
-        coefLikes, 
-        views
-    )
+    // console.log(
+    //     round(multiply(mean([coefLikes, coefComm, coefSaves, newFully]), matchCoefficient), 15),
+    //     matchCoefficient, 
+    //     coefLikes, 
+    //     views
+    // )
     return round(multiply(mean([coefLikes, coefComm, coefSaves, newFully]), matchCoefficient), 15);
 }
 
@@ -85,7 +86,7 @@ function getSortingByCategory(selectedElements: RecipeT[], userList: UserT[]) {
         return { item, matchCount, matchCoefficient };
     });
 
-    // console.log('getSortingByCategorygetSortingByCategorygetSortingByCategorygetSortingByCategory', _.orderBy(elementsWithMatchCoefficient, ['matchCoefficient'], ['desc']).slice(0, 5).map(entry => ({//100
+    // console.log(_.orderBy(elementsWithMatchCoefficient, ['matchCoefficient'], ['desc']).slice(0, 5).map(entry => ({//100
     //     item: entry.item,
     //     matchCoefficient: calculateAverageCoef(entry.item, userList, entry.matchCoefficient)
     // })))
@@ -114,7 +115,7 @@ function calculateAverageCoef(item: RecipeT, userList: UserT[], matchCoefficient
         15
     ).toString());
 
-    console.log(round(multiply(matchCoefficient, divide(coefSum, matchingUsers.length)), 15))
+    // console.log('calculateAverageCoefcalculateAverageCoefcalculateAverageCoef',matchingUsers.length > 0 ? round(multiply(matchCoefficient, divide(coefSum, matchingUsers.length)), 15) : 1)
 //----------------------------------- sorting by highest sum of average coefficients ----------------------------//
     return matchingUsers.length > 0 ? round(multiply(matchCoefficient, divide(coefSum, matchingUsers.length)), 15) : 1;
 }
@@ -123,14 +124,14 @@ function calculateAverageCoef(item: RecipeT, userList: UserT[], matchCoefficient
 
 //----------------------------------- sorting by other users' activity -----------------------------------//
 function orderByUsersImpact(top20Elements: Top20ElementsT[], count: number): any[] {//RecipeT
-    // console.log('fullSortedfullSortedfullSortedfullSortedfullSortedfullSorted',_.orderBy(
-    //     top20Elements.map(elem => ({
-    //         item: elem.item,
-    //         matchCoefficient: categoryCoefVideo(elem.item, elem.matchCoefficient)
-    //     })),
-    //     ['matchCoefficient'],
-    //     ['desc']
-    // ),'fullSortedfullSortedfullSortedfullSortedfullSortedfullSorted',)
+    console.log('fullSortedfullSortedfullSortedfullSortedfullSortedfullSorted',_.orderBy(
+        top20Elements.map(elem => ({
+            item: elem.item,
+            matchCoefficient: categoryCoefVideo(elem.item, elem.matchCoefficient)
+        })),
+        ['matchCoefficient'],
+        ['desc']
+    ),'fullSortedfullSortedfullSortedfullSortedfullSortedfullSorted',)
     return _.orderBy(
         top20Elements.map(elem => ({
             item: elem.item,
@@ -177,13 +178,13 @@ export async function GET(request: Request) {
             return NextResponse.json({ message: 'User data not found' }, { status: 404 });
         }
 
-        const list = await RecipePopularConfig.aggregate([{ $sample: { size: 200 } }]).session(session);
+        const list = await RecipePopularConfig.aggregate([{ $sample: { size: 300 } }]).session(session);
 
         const sortedByCateries = getSortingByCategory(list, userData.popular_config);
-        // console.log('sortedByCateriessortedByCateriessortedByCateriessortedByCateries',
-        //     sortedByCateries,
-        //     'sortedByCateriessortedByCateriessortedByCateriessortedByCateries',
-        // )
+        console.log('sortedByCateriessortedByCateriessortedByCateriessortedByCateries',
+            sortedByCateries,
+            'sortedByCateriessortedByCateriessortedByCateriessortedByCateries',
+        )
         const fullSorted = orderByUsersImpact(sortedByCateries, +count);
         // console.log('fullSortedfullSortedfullSortedfullSortedfullSortedfullSorted',
             // fullSorted,
