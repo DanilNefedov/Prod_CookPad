@@ -38,6 +38,9 @@ export function MainPopular() {
     const [activeVideo, setActiveVideo] = useState<number>(0)
     const [openComment, setOpenComment] = useState<boolean>(false)
 
+    const [getAllIds, SetGetAllIds] = useState<string[]>([]);
+
+
     // const firstViewTracked = useRef<string>('');
 
     const viewedVideos = useRef<Set<string>>(new Set());
@@ -46,7 +49,8 @@ export function MainPopular() {
 
     useEffect(() => {
         if (connection_id !== '') {
-            dispatch(popularFetch({ id: connection_id, count: 10 }))
+            dispatch(popularFetch({ connection_id, count: 5, getAllIds:null}))
+            SetGetAllIds(popularData.pop_list.map(item => item.config_id));
         }
     }, [connection_id])
 
@@ -124,10 +128,13 @@ export function MainPopular() {
 
     function handleNewVideo(){
         if (connection_id !== '') {
-            dispatch(popularFetch({ id: connection_id, count: 1 }))
+            
+            SetGetAllIds(popularData.pop_list.map(item => item.config_id))
+            console.log(getAllIds)
+            dispatch(popularFetch({ connection_id, count: 1, getAllIds: getAllIds.length === 0 ? popularData.pop_list.map(item => item.config_id): getAllIds}))
         }
     }
-
+    console.log(getAllIds)
     return (
         <Card sx={{ width: '100%', backgroundColor: "background.default", display: 'flex', m: '20px 0', height: '100%' }}>
             <Box sx={{ maxWidth: '70%', position: 'relative', width: "100%" }}>
@@ -162,6 +169,8 @@ export function MainPopular() {
                         //     setOpenComment(false)
                         //     dispatch(resetComments())
                         // }
+                        // SetGetAllIds(popularData.pop_list.map(item => item.config_id));
+
                         if (activeVideo + 1 < popularData.pop_list.length) {
                             setActiveVideo(activeVideo + 1);
                             handleNewVideo();

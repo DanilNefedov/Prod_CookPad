@@ -37,17 +37,24 @@ const initialState: popularInitData = {
 
 
 
-export const popularFetch = createAsyncThunk<PopularListDataT[], { id: string, count: number }, { rejectValue: string }>(
+export const popularFetch = createAsyncThunk<PopularListDataT[], { connection_id: string, count: number, getAllIds:null | string[] }, { rejectValue: string }>(
     'popular/popularFetch',
     async function (data, { rejectWithValue }) {
         try {
-            const { id, count } = data
-            const urlList = `/api/popular?connection_id=${id}&count=${count}`
-            const responseList = await fetch(urlList);
-            
-            if (!responseList.ok) return rejectWithValue('Server Error!');
-            const dataList = await responseList.json()
+            console.log(data)
+            const response = await fetch('/api/popular', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) return rejectWithValue('Server Error!');
+
+            const dataList = await response.json()
             console.log(dataList)
+
             return dataList
 
         } catch (error) {
