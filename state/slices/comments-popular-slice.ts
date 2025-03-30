@@ -27,12 +27,17 @@ interface ReturnCommDataT {
 }
 
 
-export const commVideoFetch = createAsyncThunk<ReturnCommDataT, {config_id: string, user_id:string, page:number}, { rejectValue: string }>(
+export const commVideoFetch = createAsyncThunk<ReturnCommDataT, {config_id: string, user_id:string, page:number,newComments:string[]}, { rejectValue: string }>(
     'commentsPopular/commVideoFetch',
     async function (data, { rejectWithValue }) {
         try {
-            const urlList = `/api/popular/comments?config_id=${data.config_id}&user_id=${data.user_id}&page=${data.page}`
-            const responseList = await fetch(urlList);
+            const responseList = await fetch(`/api/popular/comments/all`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
 
             if (!responseList.ok) return rejectWithValue('Server Error!');
 
@@ -250,7 +255,7 @@ const commentsPopularSlice = createSlice({
                 state.error = false,
                 state.status = false,
                 // console.log(action.payload)
-                state.comm_list.push(action.payload)
+                state.comm_list.unshift(action.payload)
 
             })
 

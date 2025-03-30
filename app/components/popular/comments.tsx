@@ -34,6 +34,7 @@ export function Comments({ props }: { props: dataProps }) {
     const [comm, setComm] = useState<string>('')
     const [openReply, setOpenReply] = useState<string>('')
 
+    const [newComments, setNewComments] = useState<string[]>([])
 
     const dispatch = useAppDispatch()
 
@@ -46,7 +47,7 @@ export function Comments({ props }: { props: dataProps }) {
     useEffect(() => {
         if (config_id && connection_id !== '') {
             
-            dispatch(commVideoFetch({ config_id, user_id: connection_id, page: commentsData.page }))
+            dispatch(commVideoFetch({ config_id, user_id: connection_id, page: commentsData.page, newComments:[] }))
         }
     }, [config_id, activeVideo]);
 
@@ -88,6 +89,7 @@ export function Comments({ props }: { props: dataProps }) {
                     reply_list: [],
                     answer_count: 0,
                 }
+                setNewComments([...newComments, data.id_comment]);
                 dispatch(newCommPopular({ data, comment_branch: true }))
                 setComm('')
                 // setDataAlgoPop(prevState => ({
@@ -144,11 +146,11 @@ export function Comments({ props }: { props: dataProps }) {
 
  
     const fetchMoreComments = () => {
-        console.log('2')
+        console.log('2', newComments)
         if (Number.isNaN(commentsData.page)) return;
         // setPage((prev) => prev + 1);
         console.log('2')
-        dispatch(commVideoFetch({ config_id, user_id: connection_id, page: commentsData.page + 1}));
+        dispatch(commVideoFetch({ config_id, user_id: connection_id, page: commentsData.page + 1, newComments}));
     };
     console.log(commentsData, !Number.isNaN(commentsData.page))
     
