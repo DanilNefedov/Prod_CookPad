@@ -21,7 +21,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 import './styles.css';
-import { ContentPopular } from "./content-popular";
 import { InfoAboutContent } from "./info-about-content";
 
 
@@ -30,14 +29,13 @@ import { InfoAboutContent } from "./info-about-content";
 
 
 
-export function MainPopular() {
-
+export function ContentPopular() {
     const dispatch = useAppDispatch()
     const popularData = useAppSelector(state => state.popular)
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
     const commentsData = useAppSelector(state => state.comments)
-
+    
     const [activeVideo, setActiveVideo] = useState<number>(0)
     const [openComment, setOpenComment] = useState<boolean>(false)
 
@@ -45,7 +43,7 @@ export function MainPopular() {
 
     useEffect(() => {
         if (connection_id !== '') {
-            dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
+            dispatch(popularFetch({ connection_id, count: 5, getAllIds:null}))
         }
     }, [connection_id])
 
@@ -58,7 +56,7 @@ export function MainPopular() {
             }
         }
     }, [popularData.pop_list]);
-
+    
 
     async function updateViews(config_id: string) {
         if (viewedVideos.current.has(config_id)) return
@@ -82,29 +80,44 @@ export function MainPopular() {
     }
 
 
+  
 
 
 
-
-    function handleNewVideo() {
+    function handleNewVideo(){
         if (connection_id !== '') {
-            dispatch(popularFetch({ connection_id, count: 1, getAllIds: popularData.pop_list.map(item => item.config_id) }))
+            dispatch(popularFetch({ connection_id, count: 1, getAllIds: popularData.pop_list.map(item => item.config_id)}))
         }
     }
 
-    // const [testT, setTestT] = useState(1)
-    // function test (){
-    //     setTestT(testT+1)
-    // }
 
-    console.log('main-popular')
+
+
+    console.log('content-popular')
     return (
         <Card sx={{ width: '100%', backgroundColor: "background.default", display: 'flex', m: '20px 0', height: '100%' }}>
-            <Box sx={{ maxWidth: '70%', position: 'relative', width: "100%" }} >
+            <Box sx={{ maxWidth: '70%', position: 'relative', width: "100%" }}>
 
-                
-                <MediaSwiper props={{ activeVideo }} />
-                     
+                <Swiper
+                    key={activeVideo}
+                    pagination={{
+                        dynamicBullets: true,
+                        clickable: true,
+                    }}
+                    className="swiper-popular"
+                    slidesPerView={'auto'}
+                    modules={[Pagination]}
+                    spaceBetween={2}
+
+                >
+                    {popularData.pop_list[activeVideo]?.recipe_media.map((elem: MediaObj) => (
+                        <SwiperSlide key={elem.media_id} className="slide-popular">
+                            <MediaSwiper props={{ elem }} />
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+
+
                 <Box
                     sx={{ position: 'absolute', p: '10px', backgroundColor: 'primary.main', top: '50px', zIndex: 1000 }}
                     onClick={() => {
@@ -113,19 +126,19 @@ export function MainPopular() {
                             handleNewVideo();
                             updateViews(popularData.pop_list[activeVideo + 1].config_id);
                         }
-
+                    
                         if (commentsData.comm_list.length > 0) {
                             setOpenComment(false);
                             dispatch(resetComments());
                         }
-
+                        
                     }}
                 >+</Box>
                 <Box
                     sx={{ position: 'absolute', p: '10px', backgroundColor: 'primary.main', bottom: "100px", zIndex: 1000 }}
                     onClick={() => {
                         setActiveVideo(activeVideo !== 0 ? activeVideo - 1 : activeVideo)
-                        if (commentsData.comm_list.length > 0) {
+                        if(commentsData.comm_list.length > 0){
                             setOpenComment(false)
                             dispatch(resetComments())
                         }
@@ -134,22 +147,12 @@ export function MainPopular() {
 
 
 
-                {
-                    popularData.pop_list[activeVideo] && <InfoAboutContent props={{
-                        author:popularData.pop_list[activeVideo]?.author_info,
-                        likes:popularData.pop_list[activeVideo]?.likes,
-                        liked:popularData.pop_list[activeVideo]?.liked,
-                        saved:popularData.pop_list[activeVideo]?.saved,
-                        saves:popularData.pop_list[activeVideo]?.saves,
-                        comments:popularData.pop_list[activeVideo]?.comments,
-                        config_id:popularData.pop_list[activeVideo]?.config_id
-                    }}></InfoAboutContent>
-                }
+                <InfoAboutContent></InfoAboutContent>
 
             </Box>
 
 
-
+            
 
         </Card>
 

@@ -1,7 +1,7 @@
 import { collectionUser } from "@/app/types/types"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from "@mui/material"
-import { useCallback, useEffect, useState } from "react"
+import { memo, useCallback, useEffect, useState } from "react"
 import SendIcon from '@mui/icons-material/Send';
 import { commVideoFetch, getReplies, likedComment, newCommPopular, newReplyComm } from "@/state/slices/comments-popular-slice";
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -12,7 +12,6 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 
 
 interface dataProps {
-    user_info: collectionUser,
     config_id: string,
     activeVideo:number
 }
@@ -25,11 +24,13 @@ export interface LikeT {
     id_branch: string | undefined
 }
 
-export function Comments({ props }: { props: dataProps }) {
-    const { user_info, config_id, activeVideo } = props
-    const connection_id = user_info.connection_id
+// export function Comments({ props }: { props: dataProps }) {
+export const Comments = memo(({ props }: { props: dataProps }) => {
+
+    const {config_id, activeVideo } = props
+    const userData = useAppSelector(state => state.user)
+    const connection_id = userData?.user?.connection_id
     const commentsData = useAppSelector(state => state.comments)
-    const popularData = useAppSelector(state => state.popular)
 
     const [comm, setComm] = useState<string>('')
     const [openReply, setOpenReply] = useState<string>('')
@@ -55,17 +56,14 @@ export function Comments({ props }: { props: dataProps }) {
     
 
     function sendComm() {
-        console.log('sendComm')
         if (connection_id !== '') {
             if (infoReply.id_comment !== '') {
-                console.log(infoReply)
-
                 const data = {
                     id_comment: uuidv4(),
                     id_branch: openReply === '' ? infoReply.id_comment : openReply,
-                    id_author: user_info?.connection_id,
-                    author_avatar: user_info?.img,
-                    author_name: user_info?.name,
+                    id_author: connection_id,
+                    author_avatar: userData?.user.img,
+                    author_name: userData?.user.name,
                     id_parent: infoReply.id_comment,
                     name_parent: infoReply.author_name,
                     likes_count: 0,
@@ -73,16 +71,13 @@ export function Comments({ props }: { props: dataProps }) {
                 }
                 dispatch(newReplyComm({ data, config_id: config_id }))
                 setComm('')
-                //         // setDataAlgoPop(prevState => ({
-                //         //     ...prevState,
-                //         //     comment: prevState.comment + 1
-                //         // }));
+                
             } else {
                 const data = {
                     id_comment: uuidv4(),
                     id_author: connection_id,
-                    author_avatar: user_info?.img,
-                    author_name: user_info?.name,
+                    author_avatar: userData?.user.img,
+                    author_name: userData?.user.name,
                     config_id: config_id,
                     text: comm.trim(),
                     likes_count: 0,
@@ -92,10 +87,6 @@ export function Comments({ props }: { props: dataProps }) {
                 setNewComments([...newComments, data.id_comment]);
                 dispatch(newCommPopular({ data, comment_branch: true }))
                 setComm('')
-                // setDataAlgoPop(prevState => ({
-                //     ...prevState,
-                //     comment: prevState.comment + 1
-                // }));
 
             }
         }
@@ -113,11 +104,9 @@ export function Comments({ props }: { props: dataProps }) {
 
 
     function handleReplies(id_comment: string) {
-        console.log("handleReplies")
         if (connection_id !== '') {
 
             const comment = commentsData.comm_list.find(el => el.id_comment === id_comment);
-            // const skip = comment ? (comment.reply_list ? comment.reply_list.length : 0) : 0;
             if (comment) {
                 dispatch(getReplies({ id_comment, page: comment.page_reply ? comment.page_reply + 1 : 1, id_author: connection_id }))
             }
@@ -146,14 +135,12 @@ export function Comments({ props }: { props: dataProps }) {
 
  
     const fetchMoreComments = () => {
-        console.log('2', newComments)
         if (Number.isNaN(commentsData.page)) return;
-        // setPage((prev) => prev + 1);
-        console.log('2')
         dispatch(commVideoFetch({ config_id, user_id: connection_id, page: commentsData.page + 1, newComments}));
     };
-    console.log(commentsData, !Number.isNaN(commentsData.page))
     
+    
+    console.log('comments')
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', pt: '20px', overflow: 'auto', }}>
             
@@ -172,7 +159,6 @@ export function Comments({ props }: { props: dataProps }) {
                     scrollableTarget="scrollableTarget"
                     
                 >
-                    {commentsData.comm_list.length}
                     {commentsData.comm_list.map(el => (
                         <Box key={el.id_comment} sx={{ mb: '10px' }}>
                             <ListItem alignItems="flex-start" sx={{
@@ -344,4 +330,8 @@ export function Comments({ props }: { props: dataProps }) {
         </Box>
 
     )
-}
+}, (prevProps, nextProps) => {
+    return prevProps.props.config_id === nextProps.props.config_id &&
+           prevProps.props.activeVideo === nextProps.props.activeVideo
+});
+

@@ -43,7 +43,7 @@ export const commVideoFetch = createAsyncThunk<ReturnCommDataT, {config_id: stri
 
             const dataList = await responseList.json()
 
-            console.log(dataList)
+            // console.log(dataList)
             return dataList
 
         } catch (error) {
@@ -112,7 +112,7 @@ export const likedComment = createAsyncThunk<LikedCommnetDataT, LikedCommnetData
             if (!response.ok) return rejectWithValue('Server Error!');
             
             const dataReturn = await response.json()
-            console.log(data, dataReturn)
+            // console.log(data, dataReturn)
             return dataReturn.data
 
         } catch (error) {
