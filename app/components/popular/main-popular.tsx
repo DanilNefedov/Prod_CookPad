@@ -35,7 +35,7 @@ export function MainPopular() {
 
     const dispatch = useAppDispatch()
     const popularData = useAppSelector(state => state.popular)
-    const popularStatus = useAppSelector(state => state.popular.status)
+    // const popularStatus = useAppSelector(state => state.popular.status)
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
     const commentsData = useAppSelector(state => state.comments.comments)
@@ -95,9 +95,9 @@ export function MainPopular() {
     }
 
     const toggleComment = useCallback(() => {
-        if(!popularStatus){
+        // if(!popularStatus){
             setOpenComment(prev => !prev);
-        }
+        // }
     }, []);
 
     // const [testT, setTestT] = useState(1)
@@ -201,7 +201,11 @@ export function MainPopular() {
                     //         </InfiniteScroll>
                     //     </List>
                     //  </Box>
-                    <MainComments config_id={popularData.pop_list[activeVideo]?.config_id} activeVideo={activeVideo}></MainComments>
+                    // <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', pt: '20px', overflow: 'auto', }}>
+
+                        <MainComments config_id={popularData.pop_list[activeVideo]?.config_id} activeVideo={activeVideo}></MainComments>
+                        
+                    // </Box>
                     :
                     <></>
                 }

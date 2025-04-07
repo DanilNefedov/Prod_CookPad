@@ -8,6 +8,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { v4 as uuidv4 } from 'uuid';
 import { ReplyComment } from "./reply-comment";
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { InputComment } from "./input-comment";
+import { CommentsItem } from "./comments-item";
 
 
 
@@ -31,13 +33,13 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
     const commentsData = useAppSelector(state => state.comments.comments)
-    const repliesData = useAppSelector(state => state.comments.replies)
+    // const repliesData = useAppSelector(state => state.comments.replies)
 
-    const commentsStatus = useAppSelector(state => state.comments.status)
+    // const commentsStatus = useAppSelector(state => state.comments.status)
 
-    const [localLikeLoading, setLocalLikeLoading] = useState(false);
+    // const [localLikeLoading, setLocalLikeLoading] = useState(false);
 
-    const [comm, setComm] = useState<string>('')
+    // const [comm, setComm] = useState<string>('')
     const [openReply, setOpenReply] = useState<string>('')
 
     const [newComments, setNewComments] = useState<string[]>([])
@@ -57,10 +59,7 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
         }
     }, [config_id, activeVideo]);
 
-
-
-
-    function sendComm() {
+    const sendComm = useCallback((text: string) => {
         if (connection_id !== '') {
             if (infoReply.id_comment !== '') {
                 const data = {
@@ -72,11 +71,11 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
                     id_parent: infoReply.id_comment,
                     name_parent: infoReply.author_name,
                     likes_count: 0,
-                    text: comm.trim(),
+                    text: text.trim(),
                 }
                 dispatch(newReplyComm({ data, config_id: config_id }))
                 setNewReply([...newComments, data.id_comment])
-                setComm('')
+                // setComm('')
                 setOpenReply(openReply === '' ? infoReply.id_comment : openReply)
             } else {
                 const data = {
@@ -85,79 +84,75 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
                     author_avatar: userData?.user.img,
                     author_name: userData?.user.name,
                     config_id: config_id,
-                    text: comm.trim(),
+                    text: text.trim(),
                     likes_count: 0,
-                    // reply_list: [],
                     reply_count: 0,
                 }
                 setNewComments([...newComments, data.id_comment]);
                 dispatch(newCommPopular(data))
-                setComm('')
-
+                // setComm('')
             }
         }
-    }
+    }, [connection_id, config_id, dispatch, infoReply, newComments, openReply, userData])
 
-
-
-    const handleReply = useCallback((id_branch: string, id_comment: string, author_name: string) => {
-        setInfoReply((prev) =>
-            prev.id_comment === id_comment
-                ? { id_comment: "", author_name: "", id_branch: "" }
-                : { id_branch, id_comment, author_name }
-        );
-    }, []);
+    // const handleReply = useCallback((id_branch: string, id_comment: string, author_name: string) => {
+    //     setInfoReply((prev) =>
+    //         prev.id_comment === id_comment
+    //             ? { id_comment: "", author_name: "", id_branch: "" }
+    //             : { id_branch, id_comment, author_name }
+    //     );
+    // }, []);
 
 
 
 
-    function handleReplies(id_comment: string) {
-        const replyData = repliesData[id_comment];
+    // function handleReplies(id_comment: string) {
+    //     const replyData = repliesData[id_comment];
 
-        if (replyData && replyData.ids.length > 0) {
-            setOpenReply(id_comment)
-        }
+    //     if (replyData && replyData.ids.length > 0) {
+    //         setOpenReply(id_comment)
+    //     }
 
-        if (connection_id !== '') {
+    //     if (connection_id !== '') {
 
-            const comment = commentsData.entities[id_comment];
-
-
-            if (comment ) {
-                const nextPage = replyData && !Number.isNaN(replyData.page) ? replyData.page + 1 : 1;
-                setOpenReply(id_comment)
-                dispatch(getReplies({
-                    id_comment,
-                    page: nextPage,
-                    id_author: connection_id,
-                    newReply
-                }));
-            }
-        }
-
-    }
+    //         const comment = commentsData.entities[id_comment];
 
 
+    //         if (comment ) {
+    //             const nextPage = replyData && !Number.isNaN(replyData.page) ? replyData.page + 1 : 1;
+    //             setOpenReply(id_comment)
+    //             dispatch(getReplies({
+    //                 id_comment,
+    //                 page: nextPage,
+    //                 id_author: connection_id,
+    //                 newReply
+    //             }));
+    //         }
+    //     }
 
-    const handleLike = useCallback(({ id_comment, config_id, liked, reply, id_branch }: LikeT) => {
-        if (connection_id !== "" && liked !== undefined && !localLikeLoading) {
-            setLocalLikeLoading(true);
-            dispatch(
-                likedComment({
-                    id_author: connection_id,
-                    id_comment,
-                    config_id,
-                    liked,
-                    reply,
-                    id_branch
-                    // id_branch: id_branch ?? "",
-                })
-            )
-            .finally(() => {
-                    setLocalLikeLoading(false);
-                });
-        }
-    }, [connection_id, dispatch, localLikeLoading]);
+    // }
+
+
+
+    // const handleLike = useCallback(({ id_comment, config_id, liked, reply, id_branch }: LikeT) => {
+    //     if (connection_id !== "" && liked !== undefined && !localLikeLoading) {
+    //         setLocalLikeLoading(true);
+    //         dispatch(
+    //             likedComment({
+    //                 id_author: connection_id,
+    //                 id_comment,
+    //                 config_id,
+    //                 liked,
+    //                 reply,
+    //                 id_branch
+    //                 // id_branch: id_branch ?? "",
+    //             })
+    //         )
+    //         .finally(() => {
+    //                 setLocalLikeLoading(false);
+    //             });
+    //     }
+    // }, [connection_id, dispatch, localLikeLoading]);
 
 
 
@@ -191,6 +186,12 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
 
                 >
                     {commentsData.ids.map((id_comment) => {
+                        const comment = commentsData.entities[id_comment];
+                        return(
+                            <CommentsItem key={id_comment} newReply={newReply} id_comment={comment.id_comment} config_id={config_id}></CommentsItem>
+                        )
+                    })}
+                    {/* 
                         const comment = commentsData.entities[id_comment];
 
                         return (
@@ -332,7 +333,7 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
 
                             </Box>
                         )
-                    })}
+                    })} */}
 
                 </InfiniteScroll>
 
@@ -342,37 +343,12 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
 
             </List>
 
-            <Box sx={{ position: 'relative', marginTop: "10px" }}>
-                <TextField
-                    sx={{
-                        bgcolor: 'background.paper',
-                        width: '100%',
-                        overflow: 'hidden',
-                        '& .MuiInputBase-root': {
-                            p: '9px 52px 9px 7px',
-                            "&:after": {
-                                border: "transparent"
-                            }
-                        },
-                        borderRadius: '10px',
+            <InputComment 
+                sendComm={sendComm}
+            ></InputComment>
 
-                    }}
-                    id="filled-multiline-flexible"
-                    // label="Multiline"
-                    multiline
-                    maxRows={2}
-                    variant="filled"
-                    value={comm}
-                    onChange={(e) => setComm(e.target.value)}
-
-                />
-                <Button onClick={() => sendComm()} sx={{ position: 'absolute', right: '15px', top: 'calc(50% - 19px)', minWidth: '0' }}>
-                    <SendIcon ></SendIcon>
-                </Button>
-            </Box>
 
         </Box>
-
     )
 });
 
