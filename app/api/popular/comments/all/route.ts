@@ -1,9 +1,11 @@
 import connectDB from "@/app/lib/mongoose";
 import CommentPopular from "@/app/models/comments-popular";
 import LikesComments from "@/app/models/likes-comments";
-import moment from 'moment';
 import { NextResponse } from "next/server";
 import _ from 'lodash'; 
+import { CommListData } from "@/app/types/types";
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
 
 
@@ -52,6 +54,8 @@ export async function POST(request: Request) {
 
         const totalCommentsCount = await CommentPopular.countDocuments({config_id});
 
+        dayjs.extend(relativeTime)
+        
         const formattedComments = comments.map((el) => ({
             id_comment: el.id_comment,
             id_author: el.id_author,
@@ -60,12 +64,32 @@ export async function POST(request: Request) {
             config_id: el.config_id, // before el.id_video)| can be misstake
             text: el.text,
             liked: likedSet.has(el.id_comment), 
-            answer_count: el.answer_count,
+            reply_count: el.reply_count,
             likes_count: el.likes_count,
-            reply_list: [],
-            createdAt: moment(el.createdAt).fromNow(),
+            // reply_list: [],
+            createdAt: dayjs(el.createdAt).fromNow()
         }));
 
+        // const formattedComments = comments.reduce<Record<string, CommListData>>((acc, el) => {
+        //     const formattedComment = {
+        //         id_comment: el.id_comment,
+        //         id_author: el.id_author,
+        //         author_avatar: el.author_avatar,
+        //         author_name: el.author_name,
+        //         config_id: el.config_id,  // before el.id_video)| can be misstake
+        //         text: el.text,
+        //         liked: likedSet.has(el.id_comment),
+        //         reply_count: el.answer_count,  
+        //         likes_count: el.likes_count,
+        //         createdAt: moment(el.createdAt).fromNow(),
+        //     };
+        
+        //     acc[el.id_comment] = formattedComment;
+        
+        //     return acc;
+        // }, {});
+        console.log('formattedCommentsformattedCommentsformattedCommentsformattedComments',formattedComments)
+      
         return NextResponse.json({formattedComments, page, totalCommentsCount});
         
     } catch (error) {

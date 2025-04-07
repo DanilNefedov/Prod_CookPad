@@ -15,24 +15,26 @@ interface DataPropsT {
     saved:boolean,
     saves:number,
     comments:number,
-    config_id:string
+    config_id:string,
+    openComment: boolean;
+    toggleComment: () => void;
 }
 
 
 // export function InfoAboutContent({props}:{props:DataPropsT}) {
 export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
-    const { author, likes, liked, saved, saves, comments, config_id} = props
+    const { author, likes, liked, saved, saves, comments, config_id, openComment, toggleComment} = props
 
-    // const popularData = useAppSelector(state => state.popular)
+    const popularStatus = useAppSelector(state => state.popular.status)
     // const [activeVideo, setActiveVideo] = useState<number>(0)
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
-    const [openComment, setOpenComment] = useState<boolean>(false)
+    // const [openComment, setOpenComment] = useState<boolean>(false)
     const dispatch = useAppDispatch()
 
 
     function handleLike() {
-        if (connection_id !== '') {
+        if (connection_id !== '' && !popularStatus) {
             // console.log('3')
             dispatch(likePopContent({
                 config_id: config_id,
@@ -45,7 +47,7 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
 
 
     function handleSave() {
-        if (connection_id !== '') {
+        if (connection_id !== '' && !popularStatus) {
             dispatch(savePopContent({
                 config_id: config_id,
                 saved: saved,
@@ -95,7 +97,7 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
 
 
                 <IconButton
-                    onClick={() => setOpenComment(!openComment)}
+                    onClick={toggleComment}
                     sx={{ m: '10px 0', color: 'text.primary', p: '0', flexDirection: 'column', justifyContent: "center" }}>
                     <CommentIcon sx={{ color: `${openComment ? 'primary.main' : 'text.primary'}` }} >{comments}</CommentIcon>
                     <Typography>{comments}</Typography>
@@ -117,6 +119,7 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
     prevProps.props.liked === nextProps.props.liked &&
     prevProps.props.saved === nextProps.props.saved &&
     prevProps.props.saves === nextProps.props.saves &&
-    prevProps.props.comments === nextProps.props.comments
+    prevProps.props.comments === nextProps.props.comments &&
+    prevProps.props.openComment === nextProps.props.openComment
 });
 

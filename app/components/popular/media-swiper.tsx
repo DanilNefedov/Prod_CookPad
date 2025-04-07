@@ -14,14 +14,10 @@ import { shallowEqual } from "react-redux";
 
 
 
-interface DataPropsT {
-    activeVideo: number,
-}
 
 // export function MediaSwiper({ props }: { props: dataPorps }) {
-export const MediaSwiper = memo(({ props }: { props: DataPropsT }) => {
+export const MediaSwiper = memo(( {activeVideo}:{activeVideo:number} ) => {
 
-    const { activeVideo } = props
     const media = useAppSelector(
         state => state.popular.pop_list[activeVideo]?.recipe_media || [],
         shallowEqual
@@ -78,6 +74,4 @@ export const MediaSwiper = memo(({ props }: { props: DataPropsT }) => {
         </Swiper>
         
     )
-}, (prevProps, nextProps) => {
-    return prevProps.props.activeVideo === nextProps.props.activeVideo
-});
+}, );

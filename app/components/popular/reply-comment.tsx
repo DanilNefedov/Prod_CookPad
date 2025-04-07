@@ -1,20 +1,23 @@
-import { replyCommData } from "@/app/types/types"
 import { Avatar, Box, Button, ListItemAvatar, ListItemText, Typography } from "@mui/material"
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { LikeT } from "./comments";
+import { LikeT } from "./main-comments";
 import { memo, useMemo } from "react";
+import { ReplyCommData } from "@/app/types/types";
+import { useAppSelector } from "@/state/hook";
 
 
 
 
 interface dataProps {
-    elem:replyCommData,
-    id_branch:string,
+    id_comment_p:string,
+    id_branch_p:string,
     handleLike: (params: LikeT) => void
     config_id:string,
     handleReply:(id_branch:string, id_comment: string, author_name: string) => void
 }
-export const ReplyComment = memo( ({ props }: { props: dataProps }) => {
+export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, config_id, handleReply }:dataProps ) => {
+    const reply = useAppSelector(state => state.comments.replies[id_branch_p]?.entities[id_comment_p]);
+    
     const {
         author_avatar,
         author_name,
@@ -26,10 +29,10 @@ export const ReplyComment = memo( ({ props }: { props: dataProps }) => {
         likes_count,
         id_parent,
         id_branch,
-    } = props.elem;
+    } = reply;
 
 
-
+    console.log('replies',)
     return (
         <>
             <ListItemAvatar>
@@ -49,7 +52,7 @@ export const ReplyComment = memo( ({ props }: { props: dataProps }) => {
 
             <Box sx={{ width: '100%', justifyContent: 'space-between', display: 'flex', mt: '7px' }}>
                 <Button
-                    onClick={() => props.handleReply(id_branch, id_comment, author_name)}
+                    onClick={() => handleReply(id_branch, id_comment, author_name)}
                     sx={{
                         p: '0',
                         '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
@@ -75,7 +78,7 @@ export const ReplyComment = memo( ({ props }: { props: dataProps }) => {
                     minWidth: "0",
                     color: 'text.secondary'
                 }}
-                onClick={() => props.handleLike({id_comment, config_id:props.config_id, liked, reply:true, id_branch })}
+                onClick={() => handleLike({id_comment, config_id:config_id, liked, reply:true, id_branch })}
                 >
                     {likes_count}
                     <FavoriteIcon sx={{ fontSize: "16px", m:'0 0 3px 3px', color:liked ? "primary.main" : "inherit"  }}></FavoriteIcon>
@@ -83,5 +86,9 @@ export const ReplyComment = memo( ({ props }: { props: dataProps }) => {
             </Box>
         </>
     )
+}, (prevProps, nextProps) => {
+    return prevProps.id_comment_p === nextProps.id_comment_p &&
+        prevProps.id_branch_p === nextProps.id_branch_p &&
+        prevProps.config_id === nextProps.config_id
 })
 

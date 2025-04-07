@@ -13,7 +13,7 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CommentIcon from '@mui/icons-material/Comment';
 import { MediaSwiper } from "./media-swiper";
 import { all, BigNumber, create, evaluate, number } from "mathjs";
-import { Comments } from "./comments";
+import { Comments } from "./main-comments";
 import { resetComments } from "@/state/slices/comments-popular-slice";
 
 

@@ -1,0 +1,83 @@
+import { NextResponse } from 'next/server';
+import { cloneDeep } from 'lodash';
+import mongoose from 'mongoose';
+import connectDB from '@/app/lib/mongoose';
+import ReplyComment from '@/app/models/reply-comments';
+import RecipePopularConfig from '@/app/models/popular-config';
+import CommentPopular from '@/app/models/comments-popular';
+import LikesReply from '@/app/models/likes-reply';
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+
+
+
+
+
+
+
+
+
+
+export async function POST(request: Request) {
+    try {
+        // const page = parseInt(searchParams.get("page") || "1", 10);
+
+        const { id_comment, page, id_author, newReply } = await request.json();
+
+        if (!id_comment || !id_author) {
+            throw new Error('Missing required query parameters');
+        }
+
+        const pageSize = 4;
+        const skip = (page - 1) * pageSize;
+
+
+        await connectDB();
+
+        const comments = await ReplyComment.find({ id_branch: id_comment, id_comment: { $nin: newReply }  })
+        .sort({ createdAt: 1 }) 
+        .skip(skip) 
+        .limit(pageSize) 
+        .lean();
+
+        const totalCommentsCount = await ReplyComment.countDocuments({ id_branch: id_comment });
+
+
+        dayjs.extend(relativeTime)
+        
+        const formattedComments = await Promise.all(
+            comments.map(async (el) => {
+                const timeAgo = dayjs(el.createdAt).fromNow();
+
+                const liked = !!(await LikesReply.findOne({
+                    id_comment: el.id_comment,
+                    id_author,
+                    is_deleted: false, 
+                }));
+                
+
+                return {
+                    id_comment: el.id_comment,
+                    id_author: el.id_author,
+                    id_branch: el.id_branch,
+                    author_avatar: el.author_avatar,
+                    author_name: el.author_name,
+                    id_parent: el.id_parent,
+                    name_parent: el.name_parent,
+                    liked: liked,
+                    likes_count: el.likes_count,
+                    text: el.text,
+                    createdAt: timeAgo,
+                };
+            })
+        );
+
+        return NextResponse.json({formattedComments, page, totalCommentsCount});
+    } catch (error) {
+        return NextResponse.json({
+            status: 500,
+            error: { message: 'Internal Server Error', details: error },
+        });
+    }
+}

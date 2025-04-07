@@ -3,7 +3,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { likePopContent, popularFetch, savePopContent } from "@/state/slices/popular-slice";
-import { Avatar, Box, Button, Card, CardActions, CardContent, IconButton, Typography } from "@mui/material";
+import { Avatar, Box, Button, Card, CardActions, CardContent, IconButton, List, Typography } from "@mui/material";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from 'swiper/modules';
@@ -13,8 +13,8 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CommentIcon from '@mui/icons-material/Comment';
 import { MediaSwiper } from "./media-swiper";
 import { all, BigNumber, create, evaluate, number } from "mathjs";
-import { Comments } from "./comments";
-import { resetComments } from "@/state/slices/comments-popular-slice";
+import { MainComments } from "./main-comments";
+import { commVideoFetch, resetComments } from "@/state/slices/comments-popular-slice";
 
 
 import 'swiper/css';
@@ -23,6 +23,7 @@ import 'swiper/css/navigation';
 import './styles.css';
 import { ContentPopular } from "./content-popular";
 import { InfoAboutContent } from "./info-about-content";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 
 
@@ -34,9 +35,10 @@ export function MainPopular() {
 
     const dispatch = useAppDispatch()
     const popularData = useAppSelector(state => state.popular)
+    const popularStatus = useAppSelector(state => state.popular.status)
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
-    const commentsData = useAppSelector(state => state.comments)
+    const commentsData = useAppSelector(state => state.comments.comments)
 
     const [activeVideo, setActiveVideo] = useState<number>(0)
     const [openComment, setOpenComment] = useState<boolean>(false)
@@ -92,10 +94,27 @@ export function MainPopular() {
         }
     }
 
+    const toggleComment = useCallback(() => {
+        if(!popularStatus){
+            setOpenComment(prev => !prev);
+        }
+    }, []);
+
     // const [testT, setTestT] = useState(1)
     // function test (){
     //     setTestT(testT+1)
     // }
+
+    // const fetchMoreComments = useCallback(() => {
+    //         if (Number.isNaN(commentsData.page)) return;
+    //         dispatch(commVideoFetch({ 
+    //             config_id:popularData.pop_list[activeVideo]?.config_id, 
+    //             user_id: connection_id, 
+    //             page: commentsData.page + 1, 
+    //             newComments 
+    //         }));
+    // }, [commentsData.page, popularData.pop_list[activeVideo]?.config_id, connection_id, newComments, dispatch]);
+
 
     console.log('main-popular')
     return (
@@ -103,7 +122,7 @@ export function MainPopular() {
             <Box sx={{ maxWidth: '70%', position: 'relative', width: "100%" }} >
 
                 
-                <MediaSwiper props={{ activeVideo }} />
+                <MediaSwiper activeVideo={activeVideo} />
                      
                 <Box
                     sx={{ position: 'absolute', p: '10px', backgroundColor: 'primary.main', top: '50px', zIndex: 1000 }}
@@ -114,7 +133,7 @@ export function MainPopular() {
                             updateViews(popularData.pop_list[activeVideo + 1].config_id);
                         }
 
-                        if (commentsData.comm_list.length > 0) {
+                        if (commentsData.ids.length > 0) {
                             setOpenComment(false);
                             dispatch(resetComments());
                         }
@@ -125,7 +144,7 @@ export function MainPopular() {
                     sx={{ position: 'absolute', p: '10px', backgroundColor: 'primary.main', bottom: "100px", zIndex: 1000 }}
                     onClick={() => {
                         setActiveVideo(activeVideo !== 0 ? activeVideo - 1 : activeVideo)
-                        if (commentsData.comm_list.length > 0) {
+                        if (commentsData.ids.length > 0) {
                             setOpenComment(false)
                             dispatch(resetComments())
                         }
@@ -142,12 +161,51 @@ export function MainPopular() {
                         saved:popularData.pop_list[activeVideo]?.saved,
                         saves:popularData.pop_list[activeVideo]?.saves,
                         comments:popularData.pop_list[activeVideo]?.comments,
-                        config_id:popularData.pop_list[activeVideo]?.config_id
+                        config_id:popularData.pop_list[activeVideo]?.config_id,
+                        openComment, 
+                        toggleComment
                     }}></InfoAboutContent>
                 }
 
             </Box>
 
+
+            <CardContent sx={{ flexGrow: '1', display: 'flex', flexDirection: 'column' }}>
+                 <Typography gutterBottom variant="h5" component="div">
+                    {popularData.pop_list[activeVideo]?.recipe_name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                    {popularData.pop_list[activeVideo]?.description}
+                </Typography>
+                {openComment ?
+                    // <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', pt: '20px', overflow: 'auto', }}>
+            
+            
+                    //     <List sx={{ overflow:'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0" }} id="scrollableTarget">
+                    //         <InfiniteScroll
+                    //             dataLength={commentsData.list.length}
+                    //             next={fetchMoreComments}
+                    //             hasMore={!Number.isNaN(commentsData.page)}
+                    //             loader={<h4>Loading...</h4>}
+                    //             endMessage={
+                    //                 <p style={{ textAlign: 'center' }}>
+                    //                     <b>Yay! You have seen it all</b>
+                    //                 </p>
+                    //             }
+                    //             scrollableTarget="scrollableTarget"
+                                
+                    //         >
+                    //             {commentsData.list.map(el => (
+                    //                 ))}
+                                    
+                    //         </InfiniteScroll>
+                    //     </List>
+                    //  </Box>
+                    <MainComments config_id={popularData.pop_list[activeVideo]?.config_id} activeVideo={activeVideo}></MainComments>
+                    :
+                    <></>
+                }
+            </CardContent>
 
 
 

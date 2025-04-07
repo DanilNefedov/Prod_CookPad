@@ -3,12 +3,12 @@ import CommentPopular from "@/app/models/comments-popular";
 import LikesComments from "@/app/models/likes-comments";
 import RecipePopularConfig from "@/app/models/popular-config";
 import User from "@/app/models/user";
-import moment from 'moment';
 import { NextResponse } from "next/server";
 import { categoryUser } from "../functions";
 import _ from 'lodash'; 
 import mongoose from "mongoose";
-
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
 
 
@@ -85,8 +85,8 @@ export async function POST(request: Request) {
         await connectDB();
         session.startTransaction();
 
-        const { data } = await request.json();
-
+        const data = await request.json();
+        console.log('datadatadatadatadatadatadatadatadatadatadatadatadatadatadatadata',data)
         if (!data || !data.config_id || !data.id_author) {
             return NextResponse.json({ status: 400, message: 'Missing required fields' });
         }
@@ -119,6 +119,7 @@ export async function POST(request: Request) {
         }
 
         await session.commitTransaction(); 
+        dayjs.extend(relativeTime)
 
         const responseData = {
             id_comment: comment.id_comment,
@@ -127,10 +128,10 @@ export async function POST(request: Request) {
             author_name: comment.author_name,
             config_id: comment.config_id,
             text: comment.text,
-            answer_count: comment.answer_count,
+            reply_count: comment.reply_count,
             likes_count: comment.likes_count,
-            reply_list: [], 
-            createdAt: moment(comment.createdAt).fromNow(),
+            // reply_list: [], 
+            createdAt: dayjs(comment.createdAt).fromNow(),
             liked: false, 
         };
 

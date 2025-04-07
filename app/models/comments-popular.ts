@@ -39,7 +39,7 @@ const CommentsPopularSchema = new Schema(
         //     type: String,
         //     default: null,
         // },
-        answer_count:{
+        reply_count:{
             type: Number,
             required: true
         },

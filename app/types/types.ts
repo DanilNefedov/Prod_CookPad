@@ -1,4 +1,5 @@
 // import { Ingredients } from '@/types/types';
+import { createEntityAdapter } from "@reduxjs/toolkit";
 import { ReactNode } from "react";
 
 export interface RequestData <T>{
@@ -534,29 +535,41 @@ export type PopularListDataT = {
     comments:number,
 }
 
+// export type CommentState = ErrorStatus & {
+//     comments: {
+//         page:number,
+//         list:CommListData[]
+//     }; 
+//     replies: {
+//         page:number,
+//         list:ReplyCommData[]
+//     }; 
+// };
+// export type commListState = ErrorStatus & {
+//     comm_list:CommListData[]
+//     page:number
+// }
 
 
-export type commListState = ErrorStatus & {
-    comm_list:commListData[]
-    page:number
-}
 
-export type commListData = {
+
+
+export type CommListData = {
     id_comment: string,
     id_author: string,
     author_avatar:string,
     author_name:string,
     config_id: string,
     text: string,
-    answer_count:number,
+    reply_count:number,
     likes_count:number
-    page_reply?:number,
-    reply_list?:replyCommData[],
+    // page_reply?:number,
+    // reply_list?:ReplyCommData[],
     createdAt?:string,
     liked?:boolean
 }
 
-export type replyCommData = {
+export type ReplyCommData = {
     id_comment: string,
     id_author:string,
     id_branch:string, //id_comment from commListData
@@ -569,4 +582,5 @@ export type replyCommData = {
     createdAt?:string,
     liked?:boolean
 }
+
 // -------------------------------------  POPULAR ----------------------------//

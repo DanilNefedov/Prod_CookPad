@@ -1,8 +1,4 @@
-
-
-
 import { NextResponse } from 'next/server';
-import moment from 'moment';
 import { cloneDeep } from 'lodash';
 import mongoose from 'mongoose';
 import connectDB from '@/app/lib/mongoose';
@@ -10,6 +6,8 @@ import ReplyComment from '@/app/models/reply-comments';
 import RecipePopularConfig from '@/app/models/popular-config';
 import CommentPopular from '@/app/models/comments-popular';
 import LikesReply from '@/app/models/likes-reply';
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
 
 
@@ -43,7 +41,7 @@ export async function POST(request: Request) {
 
         const updatedParentComm = await CommentPopular.findOneAndUpdate(
             { id_comment: data.id_branch },
-            { $inc: { answer_count: 1 } },
+            { $inc: { reply_count: 1 } },
             { new: true, session } 
         );
 
@@ -52,10 +50,11 @@ export async function POST(request: Request) {
         }
 
         
+        dayjs.extend(relativeTime)
 
         const responseData = cloneDeep(data);
-        const createdMoment = moment(responseData.createdAt);
-        const timeAgo = createdMoment.fromNow();
+        const timeAgo = dayjs(responseData.createdAt).fromNow();
+
 
         responseData.liked = false;
         responseData.createdAt = timeAgo;
@@ -85,65 +84,65 @@ export async function POST(request: Request) {
 
 
 
-export async function GET(request: Request) {
-    try {
-        const { searchParams } = new URL(request.url);
-        const id_comment = searchParams.get('id_comment');
-        const page = parseInt(searchParams.get("page") || "1", 10);
-        const id_author = searchParams.get('id_author');
+// export async function GET(request: Request) {
+//     try {
+//         const { searchParams } = new URL(request.url);
+//         const id_comment = searchParams.get('id_comment');
+//         const page = parseInt(searchParams.get("page") || "1", 10);
+//         const id_author = searchParams.get('id_author');
 
-        if (!id_comment || !id_author) {
-            throw new Error('Missing required query parameters');
-        }
+//         if (!id_comment || !id_author) {
+//             throw new Error('Missing required query parameters');
+//         }
 
-        const pageSize = 4;
-        const skip = (page - 1) * pageSize;
+//         const pageSize = 4;
+//         const skip = (page - 1) * pageSize;
 
-        await connectDB();
+//         await connectDB();
 
-        const comments = await ReplyComment.find({ id_branch: id_comment })
-        .sort({ createdAt: 1 }) 
-        .skip(skip) 
-        .limit(pageSize) 
-        .lean();
+//         const comments = await ReplyComment.find({ id_branch: id_comment })
+//         .sort({ createdAt: 1 }) 
+//         .skip(skip) 
+//         .limit(pageSize) 
+//         .lean();
 
-        const totalCommentsCount = await ReplyComment.countDocuments({ id_branch: id_comment });
+//         const totalCommentsCount = await ReplyComment.countDocuments({ id_branch: id_comment });
 
 
+//         dayjs.extend(relativeTime)
+        
+//         const formattedComments = await Promise.all(
+//             comments.map(async (el) => {
+//                 const timeAgo = dayjs(el.createdAt).fromNow();
 
-        const formattedComments = await Promise.all(
-            comments.map(async (el) => {
-                const createdMoment = moment(el.createdAt);
-                const timeAgo = createdMoment.fromNow();
-
-                const liked = !!(await LikesReply.findOne({
-                    id_comment: el.id_comment,
-                    id_author,
-                    is_deleted: false, 
-                }));
+//                 const liked = !!(await LikesReply.findOne({
+//                     id_comment: el.id_comment,
+//                     id_author,
+//                     is_deleted: false, 
+//                 }));
                 
 
-                return {
-                    id_comment: el.id_comment,
-                    id_author: el.id_author,
-                    id_branch: el.id_branch,
-                    author_avatar: el.author_avatar,
-                    author_name: el.author_name,
-                    id_parent: el.id_parent,
-                    name_parent: el.name_parent,
-                    liked: liked,
-                    likes_count: el.likes_count,
-                    text: el.text,
-                    createdAt: timeAgo,
-                };
-            })
-        );
+//                 return {
+//                     id_comment: el.id_comment,
+//                     id_author: el.id_author,
+//                     id_branch: el.id_branch,
+//                     author_avatar: el.author_avatar,
+//                     author_name: el.author_name,
+//                     id_parent: el.id_parent,
+//                     name_parent: el.name_parent,
+//                     liked: liked,
+//                     likes_count: el.likes_count,
+//                     text: el.text,
+//                     createdAt: timeAgo,
+//                 };
+//             })
+//         );
 
-        return NextResponse.json({formattedComments, page, totalCommentsCount});
-    } catch (error) {
-        return NextResponse.json({
-            status: 500,
-            error: { message: 'Internal Server Error', details: error },
-        });
-    }
-}
+//         return NextResponse.json({formattedComments, page, totalCommentsCount});
+//     } catch (error) {
+//         return NextResponse.json({
+//             status: 500,
+//             error: { message: 'Internal Server Error', details: error },
+//         });
+//     }
+// }
