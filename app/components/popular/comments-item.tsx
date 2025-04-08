@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material"
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import { getReplies, likedComment } from "@/state/slices/comments-popular-slice";
 import { LikeT } from "./main-comments";
 import { ReplyComment } from "./reply-comment";
@@ -12,43 +12,41 @@ import { ReplyComment } from "./reply-comment";
 interface DataProps {
     id_comment:string, 
     config_id:string,
-    newReply:string[]
+    newReply:string[],
+    handleReply: (id_branch: string, id_comment: string, author_name: string) => void
 }
 
 
 
 
-export const CommentsItem = memo(({id_comment, config_id, newReply}: DataProps) => {
+export const CommentsItem = memo(({id_comment, config_id, newReply, handleReply}: DataProps) => {
     const commentsData = useAppSelector(state => state.comments.comments.entities[id_comment])
-    const [infoReply, setInfoReply] = useState<{ id_comment: string, author_name: string, id_branch: string }>({
-        id_comment: '',
-        author_name: '',
-        id_branch: ''
-    })
     const [openReply, setOpenReply] = useState<string>('')
-    const repliesData = useAppSelector(state => state.comments.replies)
+    const repliesData = useAppSelector(state => state.comments.replies[id_comment])
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
     const dispatch = useAppDispatch()
-    // const [newReply, setNewReply] = useState<string[]>([])
-    const [localLikeLoading, setLocalLikeLoading] = useState(false);
+    const localLikeLoadingRef = useRef(false);
 
-
+    const [activeRep, setActiveRep] = useState<string>('')
 
     // const comment = commentsData.entities[id_comment];
 
+    function openReplyT () {
+        setActiveRep(commentsData.id_comment)
+        handleReply(commentsData.id_comment, commentsData.id_comment, commentsData.author_name);
+    }
 
-
-    const handleReply = useCallback((id_branch: string, id_comment: string, author_name: string) => {
-        setInfoReply((prev) =>
-            prev.id_comment === id_comment
-                ? { id_comment: "", author_name: "", id_branch: "" }
-                : { id_branch, id_comment, author_name }
-        );
-    }, []);
+    // const handleReply = useCallback((id_branch: string, id_comment: string, author_name: string) => {
+    //     setInfoReply((prev) =>
+    //         prev.id_comment === id_comment
+    //             ? { id_comment: "", author_name: "", id_branch: "" }
+    //             : { id_branch, id_comment, author_name }
+    //     );
+    // }, []);
 
     function handleReplies(id_comment: string) {
-        const replyData = repliesData[id_comment];
+        const replyData = repliesData;
 
         if (replyData && replyData.ids.length > 0) {
             setOpenReply(id_comment)
@@ -74,8 +72,9 @@ export const CommentsItem = memo(({id_comment, config_id, newReply}: DataProps) 
     
     }
     const handleLike = useCallback(({ id_comment, config_id, liked, reply, id_branch }: LikeT) => {
-        if (connection_id !== "" && liked !== undefined && !localLikeLoading) {
-            setLocalLikeLoading(true);
+        // let localLikeLoadingRef = false;
+        if (connection_id !== "" && liked !== undefined && !localLikeLoadingRef.current) {
+            localLikeLoadingRef.current = true;
             dispatch(
                 likedComment({
                     id_author: connection_id,
@@ -88,12 +87,12 @@ export const CommentsItem = memo(({id_comment, config_id, newReply}: DataProps) 
                 })
             )
             .finally(() => {
-                    setLocalLikeLoading(false);
-                });
+                localLikeLoadingRef.current = false;
+            });
         }
-    }, [connection_id, dispatch, localLikeLoading]);
+    }, [connection_id, dispatch]);
 
-    console.log('comm-item')
+    console.log('comm-item',activeRep)
     return (
         <Box key={commentsData.id_comment} sx={{ mb: '10px' }}>
             <ListItem alignItems="flex-start" sx={{
@@ -102,7 +101,7 @@ export const CommentsItem = memo(({id_comment, config_id, newReply}: DataProps) 
 
                 flexWrap: "wrap",
                 border: '1px solid transparent',
-                borderColor: infoReply.id_comment === commentsData.id_comment ? 'text.secondary' : 'transparent',
+                borderColor: activeRep === commentsData.id_comment ? 'text.secondary' : 'transparent',
                 '&:last-child': {
                     mb: '0'
                 }
@@ -125,14 +124,14 @@ export const CommentsItem = memo(({id_comment, config_id, newReply}: DataProps) 
 
                 <Box sx={{ width: '100%', justifyContent: 'space-between', display: 'flex', mt: '7px' }}>
                     <Button
-                        onClick={() => handleReply(commentsData.id_comment, commentsData.id_comment, commentsData.author_name)}
+                        onClick={openReplyT}
                         sx={{
                             p: '0',
                             '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
                             fontSize: "14px",
                             textTransform: 'initial',
                             minWidth: "0",
-                            color: infoReply.id_comment === commentsData.id_comment ? 'primary.main' : 'text.secondary'
+                            color: activeRep === commentsData.id_comment ? 'primary.main' : 'text.secondary'
                         }}>reply</Button>
                     <Button
                         onClick={() => {
@@ -168,8 +167,8 @@ export const CommentsItem = memo(({id_comment, config_id, newReply}: DataProps) 
                     </Button>
                 </Box>
             </ListItem>
-            {openReply === commentsData.id_comment ? (repliesData[commentsData.id_comment]?.ids ?? []).map(replyId => {
-                const reply = repliesData[commentsData.id_comment]?.entities[replyId];
+            {openReply === commentsData.id_comment ? (repliesData?.ids ?? []).map(replyId => {
+                const reply = repliesData?.entities[replyId];
 
                 return (
                     <ListItem key={reply.id_comment} alignItems="flex-start" sx={{
@@ -200,10 +199,10 @@ export const CommentsItem = memo(({id_comment, config_id, newReply}: DataProps) 
                 <></>
             }
             {
-                openReply === commentsData.id_comment && repliesData[commentsData.id_comment]?.ids && repliesData[commentsData.id_comment]?.ids.length > 0 ?
+                openReply === commentsData.id_comment && repliesData?.ids && repliesData?.ids.length > 0 ?
                 <Box sx={{ maxWidth: "50%", justifyContent: 'center', m: '0 auto', display: "flex" }}>
                     <Button
-                        disabled={Number.isNaN(repliesData[commentsData.id_comment]?.page)}
+                        disabled={Number.isNaN(repliesData?.page)}
                         sx={{
                             p: '0',
                             '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
@@ -235,5 +234,5 @@ export const CommentsItem = memo(({id_comment, config_id, newReply}: DataProps) 
     )
 }, (prevProps, nextProps) => {
     return prevProps.id_comment === nextProps.id_comment &&
-    prevProps.config_id === nextProps.config_id
+    prevProps.config_id === nextProps.config_id 
 })

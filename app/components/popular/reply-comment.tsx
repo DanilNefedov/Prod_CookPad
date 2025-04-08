@@ -31,7 +31,10 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
         id_branch,
     } = reply;
 
-
+    function likeT(){
+        handleLike({id_comment, config_id:config_id, liked, reply:true, id_branch })
+    }
+    
     console.log('replies',)
     return (
         <>
@@ -78,7 +81,7 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
                     minWidth: "0",
                     color: 'text.secondary'
                 }}
-                onClick={() => handleLike({id_comment, config_id:config_id, liked, reply:true, id_branch })}
+                onClick={() => likeT()}
                 >
                     {likes_count}
                     <FavoriteIcon sx={{ fontSize: "16px", m:'0 0 3px 3px', color:liked ? "primary.main" : "inherit"  }}></FavoriteIcon>

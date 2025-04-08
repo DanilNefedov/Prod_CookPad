@@ -95,13 +95,13 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
         }
     }, [connection_id, config_id, dispatch, infoReply, newComments, openReply, userData])
 
-    // const handleReply = useCallback((id_branch: string, id_comment: string, author_name: string) => {
-    //     setInfoReply((prev) =>
-    //         prev.id_comment === id_comment
-    //             ? { id_comment: "", author_name: "", id_branch: "" }
-    //             : { id_branch, id_comment, author_name }
-    //     );
-    // }, []);
+    const handleReply = useCallback((id_branch: string, id_comment: string, author_name: string) => {
+        setInfoReply((prev) =>
+            prev.id_comment === id_comment
+                ? { id_comment: "", author_name: "", id_branch: "" }
+                : { id_branch, id_comment, author_name }
+        );
+    }, []);
 
 
 
@@ -188,7 +188,7 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
                     {commentsData.ids.map((id_comment) => {
                         const comment = commentsData.entities[id_comment];
                         return(
-                            <CommentsItem key={id_comment} newReply={newReply} id_comment={comment.id_comment} config_id={config_id}></CommentsItem>
+                            <CommentsItem key={id_comment} handleReply={handleReply} newReply={newReply} id_comment={comment.id_comment} config_id={config_id}></CommentsItem>
                         )
                     })}
                     {/* 
