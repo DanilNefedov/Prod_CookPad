@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material"
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { memo, useCallback, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { getReplies, likedComment } from "@/state/slices/comments-popular-slice";
 import { LikeT } from "./main-comments";
 import { ReplyComment } from "./reply-comment";
@@ -13,24 +13,45 @@ interface DataProps {
     id_comment:string, 
     config_id:string,
     newReply:string[],
-    handleReply: (id_branch: string, id_comment: string, author_name: string) => void
+    handleReply: (id_branch: string, id_comment: string, author_name: string) => void,
+    // isOpen:string
+    // mainOpen: (arg: string) => void
 }
 
 
 
 
-export const CommentsItem = memo(({id_comment, config_id, newReply, handleReply}: DataProps) => {
+export const CommentsItem = memo(({id_comment, config_id, newReply, handleReply,}: DataProps) => {
+    // const isOpen = openReply === commentsData.id_comment;
     const commentsData = useAppSelector(state => state.comments.comments.entities[id_comment])
     const [openReply, setOpenReply] = useState<string>('')
     const repliesData = useAppSelector(state => state.comments.replies[id_comment])
+    // const [replyLenght, setReplyLenght] = useState(repliesData && repliesData.ids ? repliesData.ids.length : 0)
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
     const dispatch = useAppDispatch()
     const localLikeLoadingRef = useRef(false);
-
     const [activeRep, setActiveRep] = useState<string>('')
 
     // const comment = commentsData.entities[id_comment];
+    const prevLengthRef = useRef<number>(repliesData?.ids?.length || 0)
+
+    useEffect(() => {
+        const currentLength = repliesData?.ids?.length || 0
+        const prevLength = prevLengthRef.current
+
+        if (currentLength > prevLength) {
+            setOpenReply(id_comment)
+        }
+
+        prevLengthRef.current = currentLength
+    }, [repliesData?.ids?.length, id_comment])
+   
+    // useEffect(() => {
+    //     if(repliesData && repliesData.ids){
+    //         setOpenReply(repliesData.ids.length > replyLenght ? id_comment : '')
+    //     }
+    // },[openReply])
 
     function openReplyT () {
         setActiveRep(commentsData.id_comment)
@@ -61,6 +82,7 @@ export const CommentsItem = memo(({id_comment, config_id, newReply, handleReply}
             if (commentsData.id_comment === id_comment) {
                 const nextPage = replyData && !Number.isNaN(replyData.page) ? replyData.page + 1 : 1;
                 setOpenReply(id_comment)
+                // openReplyCur = id_comment
                 dispatch(getReplies({
                     id_comment,
                     page: nextPage,
@@ -92,7 +114,11 @@ export const CommentsItem = memo(({id_comment, config_id, newReply, handleReply}
         }
     }, [connection_id, dispatch]);
 
-    console.log('comm-item',activeRep)
+    function closeRep(){
+        setOpenReply('')
+    }
+
+    console.log('comm-item', openReply, '222' )
     return (
         <Box key={commentsData.id_comment} sx={{ mb: '10px' }}>
             <ListItem alignItems="flex-start" sx={{
@@ -199,7 +225,7 @@ export const CommentsItem = memo(({id_comment, config_id, newReply, handleReply}
                 <></>
             }
             {
-                openReply === commentsData.id_comment && repliesData?.ids && repliesData?.ids.length > 0 ?
+               openReply === commentsData.id_comment && repliesData?.ids && repliesData?.ids.length > 0 ?
                 <Box sx={{ maxWidth: "50%", justifyContent: 'center', m: '0 auto', display: "flex" }}>
                     <Button
                         disabled={Number.isNaN(repliesData?.page)}
@@ -223,7 +249,7 @@ export const CommentsItem = memo(({id_comment, config_id, newReply, handleReply}
                         minWidth: "0",
                         color: 'text.secondary'
                     }}
-                        onClick={() => setOpenReply('')}
+                        onClick={closeRep}
                     >hide</Button>
                 </Box>
                 :
@@ -234,5 +260,6 @@ export const CommentsItem = memo(({id_comment, config_id, newReply, handleReply}
     )
 }, (prevProps, nextProps) => {
     return prevProps.id_comment === nextProps.id_comment &&
-    prevProps.config_id === nextProps.config_id 
+    prevProps.config_id === nextProps.config_id
+    // prevProps.isOpen === nextProps.isOpen
 })

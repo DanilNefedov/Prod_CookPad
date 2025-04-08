@@ -1,7 +1,7 @@
 import { collectionUser } from "@/app/types/types"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from "@mui/material"
-import { memo, useCallback, useEffect, useState } from "react"
+import { memo, useCallback, useEffect, useRef, useState } from "react"
 import SendIcon from '@mui/icons-material/Send';
 import { commVideoFetch, getReplies, likedComment, newCommPopular, newReplyComm } from "@/state/slices/comments-popular-slice";
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -41,6 +41,7 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
 
     // const [comm, setComm] = useState<string>('')
     const [openReply, setOpenReply] = useState<string>('')
+    // const openReply = useRef<string>('')
 
     const [newComments, setNewComments] = useState<string[]>([])
     const [newReply, setNewReply] = useState<string[]>([])
@@ -52,6 +53,10 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
         author_name: '',
         id_branch: ''
     })
+
+    const mainOpen = useCallback((arg:string) => {
+        setOpenReply(arg)
+    }, []);
 
     useEffect(() => {
         if (config_id && connection_id !== '' && commentsData.ids.length === 0) {
@@ -77,6 +82,7 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
                 setNewReply([...newComments, data.id_comment])
                 // setComm('')
                 setOpenReply(openReply === '' ? infoReply.id_comment : openReply)
+                // openReply.current = openReply.current === '' ? infoReply.id_comment : openReply.current
             } else {
                 const data = {
                     id_comment: uuidv4(),
@@ -166,7 +172,7 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
         }));
     }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
 
-    console.log('main-comments')
+    console.log('main-comments', )
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', pt: '20px', overflow: 'auto', }}>
 
@@ -188,7 +194,14 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
                     {commentsData.ids.map((id_comment) => {
                         const comment = commentsData.entities[id_comment];
                         return(
-                            <CommentsItem key={id_comment} handleReply={handleReply} newReply={newReply} id_comment={comment.id_comment} config_id={config_id}></CommentsItem>
+                            <CommentsItem key={id_comment} 
+                                // isOpen={openReply}
+                                // mainOpen={mainOpen}
+                                handleReply={handleReply} 
+                                newReply={newReply} 
+                                id_comment={comment.id_comment} 
+                                config_id={config_id}
+                            ></CommentsItem>
                         )
                     })}
                     {/* 
