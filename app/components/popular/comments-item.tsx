@@ -22,18 +22,15 @@ interface DataProps {
 
 
 export const CommentsItem = memo(({id_comment, config_id, newReply, handleReply,}: DataProps) => {
-    // const isOpen = openReply === commentsData.id_comment;
     const commentsData = useAppSelector(state => state.comments.comments.entities[id_comment])
     const [openReply, setOpenReply] = useState<string>('')
     const repliesData = useAppSelector(state => state.comments.replies[id_comment])
-    // const [replyLenght, setReplyLenght] = useState(repliesData && repliesData.ids ? repliesData.ids.length : 0)
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
     const dispatch = useAppDispatch()
     const localLikeLoadingRef = useRef(false);
     const [activeRep, setActiveRep] = useState<string>('')
 
-    // const comment = commentsData.entities[id_comment];
     const prevLengthRef = useRef<number>(repliesData?.ids?.length || 0)
 
     useEffect(() => {
@@ -47,40 +44,21 @@ export const CommentsItem = memo(({id_comment, config_id, newReply, handleReply,
         prevLengthRef.current = currentLength
     }, [repliesData?.ids?.length, id_comment])
    
-    // useEffect(() => {
-    //     if(repliesData && repliesData.ids){
-    //         setOpenReply(repliesData.ids.length > replyLenght ? id_comment : '')
-    //     }
-    // },[openReply])
+    
 
     function openReplyT () {
         setActiveRep(commentsData.id_comment)
         handleReply(commentsData.id_comment, commentsData.id_comment, commentsData.author_name);
     }
 
-    // const handleReply = useCallback((id_branch: string, id_comment: string, author_name: string) => {
-    //     setInfoReply((prev) =>
-    //         prev.id_comment === id_comment
-    //             ? { id_comment: "", author_name: "", id_branch: "" }
-    //             : { id_branch, id_comment, author_name }
-    //     );
-    // }, []);
 
-    function handleReplies(id_comment: string) {
-        const replyData = repliesData;
-
-        if (replyData && replyData.ids.length > 0) {
-            setOpenReply(id_comment)
-        }
-
+    function handleReplies({id_comment, more}:{id_comment:string, more:boolean}) {
         if (connection_id !== '') {
-
-            // const comment = commentsData.entities[id_comment];
-            // commentsData
-
-            // if (comment) {
-            if (commentsData.id_comment === id_comment) {
-                const nextPage = replyData && !Number.isNaN(replyData.page) ? replyData.page + 1 : 1;
+            if (repliesData && repliesData.ids.length > 0 && !more) {
+                setOpenReply(id_comment)
+                
+            }else{
+                const nextPage = repliesData && !Number.isNaN(repliesData.page) ? repliesData.page + 1 : 1;
                 setOpenReply(id_comment)
                 // openReplyCur = id_comment
                 dispatch(getReplies({
@@ -114,9 +92,7 @@ export const CommentsItem = memo(({id_comment, config_id, newReply, handleReply,
         }
     }, [connection_id, dispatch]);
 
-    function closeRep(){
-        setOpenReply('')
-    }
+    
 
     console.log('comm-item', openReply, '222' )
     return (
@@ -162,7 +138,7 @@ export const CommentsItem = memo(({id_comment, config_id, newReply, handleReply,
                     <Button
                         onClick={() => {
                             if ((openReply === '' || openReply !== commentsData.id_comment) && commentsData.reply_count > 0) {
-                                handleReplies(commentsData.id_comment)
+                                handleReplies({id_comment:commentsData.id_comment, more:false})
 
                             }
                         }}
@@ -239,7 +215,7 @@ export const CommentsItem = memo(({id_comment, config_id, newReply, handleReply,
                             mr: '25px',
 
                         }}
-                        onClick={() => handleReplies(commentsData.id_comment)}
+                        onClick={() => handleReplies({id_comment:commentsData.id_comment, more:true})}
                     >more</Button>
                     <Button sx={{
                         p: '0',
@@ -249,7 +225,11 @@ export const CommentsItem = memo(({id_comment, config_id, newReply, handleReply,
                         minWidth: "0",
                         color: 'text.secondary'
                     }}
-                        onClick={closeRep}
+                        onClick={() =>{
+                            if(openReply === commentsData.id_comment){
+                                setOpenReply('')
+                            }
+                        }}
                     >hide</Button>
                 </Box>
                 :

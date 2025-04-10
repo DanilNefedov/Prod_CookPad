@@ -95,25 +95,10 @@ export function MainPopular() {
     }
 
     const toggleComment = useCallback(() => {
-        // if(!popularStatus){
-            setOpenComment(prev => !prev);
-        // }
+        setOpenComment(prev => !prev);
     }, []);
 
-    // const [testT, setTestT] = useState(1)
-    // function test (){
-    //     setTestT(testT+1)
-    // }
 
-    // const fetchMoreComments = useCallback(() => {
-    //         if (Number.isNaN(commentsData.page)) return;
-    //         dispatch(commVideoFetch({ 
-    //             config_id:popularData.pop_list[activeVideo]?.config_id, 
-    //             user_id: connection_id, 
-    //             page: commentsData.page + 1, 
-    //             newComments 
-    //         }));
-    // }, [commentsData.page, popularData.pop_list[activeVideo]?.config_id, connection_id, newComments, dispatch]);
 
 
     console.log('main-popular')
@@ -178,34 +163,9 @@ export function MainPopular() {
                     {popularData.pop_list[activeVideo]?.description}
                 </Typography>
                 {openComment ?
-                    // <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', pt: '20px', overflow: 'auto', }}>
-            
-            
-                    //     <List sx={{ overflow:'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0" }} id="scrollableTarget">
-                    //         <InfiniteScroll
-                    //             dataLength={commentsData.list.length}
-                    //             next={fetchMoreComments}
-                    //             hasMore={!Number.isNaN(commentsData.page)}
-                    //             loader={<h4>Loading...</h4>}
-                    //             endMessage={
-                    //                 <p style={{ textAlign: 'center' }}>
-                    //                     <b>Yay! You have seen it all</b>
-                    //                 </p>
-                    //             }
-                    //             scrollableTarget="scrollableTarget"
-                                
-                    //         >
-                    //             {commentsData.list.map(el => (
-                    //                 ))}
-                                    
-                    //         </InfiniteScroll>
-                    //     </List>
-                    //  </Box>
-                    // <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', pt: '20px', overflow: 'auto', }}>
-
-                        <MainComments config_id={popularData.pop_list[activeVideo]?.config_id} activeVideo={activeVideo}></MainComments>
+                    
+                    <MainComments config_id={popularData.pop_list[activeVideo]?.config_id} activeVideo={activeVideo}></MainComments>
                         
-                    // </Box>
                     :
                     <></>
                 }

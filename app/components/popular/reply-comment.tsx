@@ -35,7 +35,7 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
         handleLike({id_comment, config_id:config_id, liked, reply:true, id_branch })
     }
     
-    console.log('replies',)
+    console.log('replies',reply)
     return (
         <>
             <ListItemAvatar>
@@ -55,7 +55,7 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
 
             <Box sx={{ width: '100%', justifyContent: 'space-between', display: 'flex', mt: '7px' }}>
                 <Button
-                    onClick={() => handleReply(id_branch, id_comment, author_name)}
+                    onClick={() => handleReply(id_branch_p, id_comment, author_name)}
                     sx={{
                         p: '0',
                         '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
