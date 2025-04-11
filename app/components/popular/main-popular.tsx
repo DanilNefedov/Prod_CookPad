@@ -21,7 +21,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 import './styles.css';
-import { ContentPopular } from "./content-popular";
 import { InfoAboutContent } from "./info-about-content";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -103,8 +102,8 @@ export function MainPopular() {
 
     console.log('main-popular')
     return (
-        <Card sx={{ width: '100%', backgroundColor: "background.default", display: 'flex', m: '20px 0', height: '100%' }}>
-            <Box sx={{ maxWidth: '70%', position: 'relative', width: "100%" }} >
+        <Card sx={{ maxWidth: '100%', position: 'relative',backgroundColor: "background.default", display: 'flex', width:"100%", height: '100%'}}>
+            <Box sx={{ maxWidth: '65%', position: 'relative', width: "100%" }} >
 
                 
                 <MediaSwiper activeVideo={activeVideo} />
@@ -155,11 +154,11 @@ export function MainPopular() {
             </Box>
 
 
-            <CardContent sx={{ flexGrow: '1', display: 'flex', flexDirection: 'column' }}>
-                 <Typography gutterBottom variant="h5" component="div">
+            <CardContent sx={{ flexGrow: '1', display: 'flex', flexDirection: 'column', maxWidth:'35%' }}>
+                 <Typography gutterBottom variant="h5" component="div" sx={{flexShrink: 0, textOverflow:'ellipsis', pb:'10px', lineHeight:'none', mb:'0', whiteSpace:'nowrap', overflow:'hidden',}}>
                     {popularData.pop_list[activeVideo]?.recipe_name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="body2" color="text.secondary" sx={{flexShrink: 0,fontSize:"16px", display:'block', pb:'20px', textOverflow:'ellipsis', whiteSpace:'nowrap', overflow:'hidden',}}>
                     {popularData.pop_list[activeVideo]?.description}
                 </Typography>
                 {openComment ?

@@ -6,6 +6,8 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CommentIcon from '@mui/icons-material/Comment';
 import { likePopContent, savePopContent } from "@/state/slices/popular-slice";
 import { PopularAuthorInfoT } from "@/app/types/types";
+import numbro from 'numbro';
+
 
 interface DataPropsT {
     // activeVideo:number,
@@ -56,11 +58,22 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
         }
     }
 
+    function formatCount (value: number): string  {
+        if (!value) return '';
+        if (value < 1000) return String(Math.floor(value));
+        return numbro(value).format({
+            average: true,
+            mantissa: 2,
+            trimMantissa: true,
+            spaceSeparated: false,
+        });
+    };
+
     console.log('info-content')
     return (
 
         <Box sx={{
-            backgroundColor: 'rgba(0, 0, 0, 0.2)',
+            backgroundColor: 'rgba(0, 0, 0, 0.35)',
             backdropFilter: 'blur(3px)',
             height: '100%',
             // width:'100px',
@@ -73,10 +86,11 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
             justifyContent: 'center',
             p: '0 7px',
             zIndex: 1000,
+            width:'80px'
         }}>
 
             <Avatar alt="name" src={author.author_img} />
-            <Typography sx={{ m: '10px 0' }}>{author.author_name}</Typography>
+            <Typography sx={{ m: '10px 0', textOverflow:'ellipsis', whiteSpace:'nowrap', overflow:'hidden', width:"70px", textAlign:'center' }}>{author.author_name}</Typography>
 
             <CardActions sx={{
                 display: 'flex',
@@ -92,22 +106,22 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
                     sx={{ m: '5px 0', color: 'text.primary', p: '0', flexDirection: 'column', justifyContent: "center" }}
                 >
                     <FavoriteIcon sx={{ color: `${liked ? 'primary.main' : 'text.primary'}` }}></FavoriteIcon>
-                    <Typography>{likes}</Typography>
+                    <Typography>{formatCount(Number(likes))}</Typography>
                 </IconButton>
 
 
                 <IconButton
                     onClick={toggleComment}
                     sx={{ m: '10px 0', color: 'text.primary', p: '0', flexDirection: 'column', justifyContent: "center" }}>
-                    <CommentIcon sx={{ color: `${openComment ? 'primary.main' : 'text.primary'}` }} >{comments}</CommentIcon>
-                    <Typography>{comments}</Typography>
+                    <CommentIcon sx={{ color: `${openComment ? 'primary.main' : 'text.primary'}` }} ></CommentIcon>
+                    <Typography>{formatCount(Number(comments))}</Typography>
                 </IconButton>
 
                 <IconButton
                     onClick={() => handleSave()}
                     sx={{ m: '5px 0', color: 'text.primary', p: '0', flexDirection: 'column', justifyContent: "center" }}>
-                    <BookmarkIcon sx={{ color: `${saved ? 'primary.main' : 'text.primary'}` }}>{saves}</BookmarkIcon>
-                    <Typography>{saves}</Typography>
+                    <BookmarkIcon sx={{ color: `${saved ? 'primary.main' : 'text.primary'}` }}></BookmarkIcon>
+                    <Typography>{formatCount(Number(saves))}</Typography>
                 </IconButton>
             </CardActions>
 

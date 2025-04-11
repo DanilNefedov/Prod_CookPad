@@ -1,6 +1,6 @@
 import { collectionUser } from "@/app/types/types"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
-import { Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from "@mui/material"
+import { Avatar, Box, Button, CircularProgress, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from "@mui/material"
 import { memo, useCallback, useEffect, useRef, useState } from "react"
 import SendIcon from '@mui/icons-material/Send';
 import { commVideoFetch, getReplies, likedComment, newCommPopular, newReplyComm } from "@/state/slices/comments-popular-slice";
@@ -115,15 +115,15 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
 
     console.log('main-comments', )
     return (
-        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', pt: '20px', overflow: 'auto', }}>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', overflow: 'auto', }}>
 
-
+            <CircularProgress color="secondary" size="35px"/>
             <List sx={{ overflow: 'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0" }} id="scrollableTarget">
                 <InfiniteScroll
                     dataLength={commentsData.ids.length}
                     next={fetchMoreComments}
                     hasMore={!Number.isNaN(commentsData.page)}
-                    loader={<h4>Loading...</h4>}
+                    loader={<div style={{margin:'0 auto', width:'100%', display:"inline-flex",justifyContent:'center', overflow:"none"}}><CircularProgress color="secondary" size="35px" /></div>}
                     endMessage={
                         <p style={{ textAlign: 'center' }}>
                             <b>Yay! You have seen it all</b>
