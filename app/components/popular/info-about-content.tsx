@@ -75,16 +75,17 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
         <Box sx={{
             backgroundColor: 'rgba(0, 0, 0, 0.35)',
             backdropFilter: 'blur(3px)',
-            height: '100%',
+            height: '320px',
             // width:'100px',
+            borderRadius:'15px 0 0 15px',
             position: "absolute",
-            top: '0',
+            top: 'calc(50% - 165px)',
             right: '0',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            p: '0 7px',
+            p: '20px 7px',
             zIndex: 1000,
             width:'80px'
         }}>

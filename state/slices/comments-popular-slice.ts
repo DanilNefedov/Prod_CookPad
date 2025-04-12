@@ -283,7 +283,11 @@ const commentsPopularSlice = createSlice({
         // },
         
         resetComments: (state) =>{
-            state.comments.page = 1
+            state.comments = commentsAdapter.getInitialState({
+                page: 1,
+                ids: [],
+                entities: {},
+            });
         }
         
     },

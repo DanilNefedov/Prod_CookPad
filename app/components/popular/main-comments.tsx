@@ -23,11 +23,11 @@ export interface LikeT {
     config_id: string,
     liked: boolean | undefined,
     reply: boolean,
-    id_branch: string 
+    id_branch: string
 }
 
 // export function Comments({ props }: { props: dataProps }) {
-export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
+export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
 
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
@@ -46,7 +46,7 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
         id_branch: ''
     })
 
-   
+
     useEffect(() => {
         if (config_id && connection_id !== '' && commentsData.ids.length === 0) {
             dispatch(commVideoFetch({ config_id, user_id: connection_id, page: commentsData.page, newComments: [] }))
@@ -55,9 +55,9 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
 
     const sendComm = useCallback((text: string) => {
         if (connection_id !== '') {
-            console.log(infoReply, )
+            console.log(infoReply,)
             if (infoReply.id_comment !== '') {
-                
+
                 const data = {
                     id_comment: uuidv4(),
                     id_branch: infoReply.id_branch,
@@ -69,7 +69,7 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
                     likes_count: 0,
                     text: text.trim(),
                 }
-                
+
                 dispatch(newReplyComm({ data, config_id: config_id }))
                 setNewReply([...newComments, data.id_comment])
                 // setOpenReply(openReply === '' ? infoReply.id_comment : openReply)
@@ -113,17 +113,16 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
         }));
     }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
 
-    console.log('main-comments', )
+    console.log('main-comments',commentsData)
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', overflow: 'auto', }}>
 
-            <CircularProgress color="secondary" size="35px"/>
-            <List sx={{ overflow: 'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0" }} id="scrollableTarget">
+            <Box sx={{ overflow: 'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0" }} id="scrollableTarget">
                 <InfiniteScroll
                     dataLength={commentsData.ids.length}
                     next={fetchMoreComments}
                     hasMore={!Number.isNaN(commentsData.page)}
-                    loader={<div style={{margin:'0 auto', width:'100%', display:"inline-flex",justifyContent:'center', overflow:"none"}}><CircularProgress color="secondary" size="35px" /></div>}
+                    loader={<div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}><CircularProgress color="secondary" size="35px" /></div>}
                     endMessage={
                         <p style={{ textAlign: 'center' }}>
                             <b>Yay! You have seen it all</b>
@@ -132,29 +131,32 @@ export const MainComments = memo(({ config_id, activeVideo }:  dataProps ) => {
                     scrollableTarget="scrollableTarget"
 
                 >
-                    {commentsData.ids.map((id_comment) => {
-                        const comment = commentsData.entities[id_comment];
-                        return(
-                            <CommentsItem key={id_comment} 
-                                // isOpen={openReply}
-                                // mainOpen={mainOpen}
-                                handleReply={handleReply} 
-                                newReply={newReply} 
-                                id_comment={comment.id_comment} 
-                                config_id={config_id}
-                            ></CommentsItem>
-                        )
-                    })}
-                    
+                    <List>
+                        {commentsData.ids.map((id_comment) => {
+                            const comment = commentsData.entities[id_comment];
+                            return (
+                                <CommentsItem key={id_comment}
+                                    // isOpen={openReply}
+                                    // mainOpen={mainOpen}
+                                    handleReply={handleReply}
+                                    newReply={newReply}
+                                    id_comment={comment.id_comment}
+                                    config_id={config_id}
+                                ></CommentsItem>
+                            )
+                        })}
+                    </List>
+
+
                 </InfiniteScroll>
 
 
 
 
 
-            </List>
+            </Box>
 
-            <InputComment 
+            <InputComment
                 sendComm={sendComm}
             ></InputComment>
 
