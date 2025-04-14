@@ -24,8 +24,8 @@ import './styles.css';
 import { InfoAboutContent } from "./info-about-content";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { mainBtnsPopular } from "@/app/(main)/popular/style";
-
-
+import { Mousewheel, Virtual } from 'swiper/modules'
+import type { Swiper as SwiperType } from 'swiper/types';
 
 
 
@@ -38,12 +38,12 @@ export function MainPopular() {
     // const popularStatus = useAppSelector(state => state.popular.status)
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
-    
+
 
     const [activeVideo, setActiveVideo] = useState<number>(0)
     const [openComment, setOpenComment] = useState<boolean>(false)
 
-
+    const swiperRef = useRef<SwiperType | null>(null);
 
     const viewedVideos = useRef<Set<string>>(new Set());
 
@@ -91,7 +91,7 @@ export function MainPopular() {
 
 
     function handleNewVideo() {
-        if (connection_id !== '') {
+        if (connection_id !== '' && popularData.pop_list.length - activeVideo < 5 ) {
             dispatch(popularFetch({ connection_id, count: 1, getAllIds: popularData.pop_list.map(item => item.config_id) }))
         }
     }
@@ -101,7 +101,7 @@ export function MainPopular() {
     }, []);
 
 
-
+  
 
     console.log('main-popular',)
     return (
@@ -110,7 +110,39 @@ export function MainPopular() {
                 <Box sx={{ maxWidth: '65%', position: 'relative', width: "100%" }} >
 
 
-                    <MediaSwiper activeVideo={activeVideo} />
+                    {/* <MediaSwiper activeVideo={activeVideo} /> */}
+
+                    <Swiper
+                        onSwiper={(swiper) => (swiperRef.current = swiper)}
+                        touchReleaseOnEdges
+                        direction="vertical"
+                        slidesPerView={1}
+                        mousewheel
+                        virtual
+                        allowTouchMove={false} 
+                        simulateTouch={false}
+                        onSlideChange={(swiper) => {
+                            const newIndex = swiper.activeIndex
+                            setActiveVideo(newIndex)
+                            const current = popularData.pop_list[newIndex]
+                            if (current) {
+                                updateViews(current.config_id)
+                                handleNewVideo()
+                                if (openComment) setOpenComment(false)
+                            }
+                        }}
+                        // threshold={2000}
+                        // thresholdTime={}
+                        initialSlide={activeVideo}
+                        modules={[Virtual, Mousewheel]}
+                        style={{ height: '100%' }}
+                    >
+                        {popularData.pop_list.map((item, index) => (
+                            <SwiperSlide key={item.config_id} virtualIndex={index}>
+                                <MediaSwiper activeVideo={activeVideo} />
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
 
 
 
@@ -137,7 +169,7 @@ export function MainPopular() {
                     <Typography gutterBottom variant="h5" component="div" sx={{ flexShrink: 0, textOverflow: 'ellipsis', pb: '10px', lineHeight: 'none', mb: '0', whiteSpace: 'nowrap', overflow: 'hidden', }}>
                         {popularData.pop_list[activeVideo]?.recipe_name}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ flexShrink: 0, fontSize: "16px", display: 'block', pb: '20px', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ flexShrink: 0, fontSize: "16px", display: 'block', pb: '20px', }}>
                         {popularData.pop_list[activeVideo]?.description}
                     </Typography>
                     {openComment ?
@@ -152,11 +184,15 @@ export function MainPopular() {
 
 
             </Card>
-            <Box sx={{ position: 'absolute',left: '105%',bottom:'20%', zIndex: 1000, display:'flex', flexDirection:'column', gap:'20px'}}>
+            <Box sx={{ position: 'absolute', left: '105%', bottom: '20%', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <Box
                     sx={mainBtnsPopular}
                     onClick={() => {
                         if (activeVideo + 1 < popularData.pop_list.length) {
+                            const newIndex = activeVideo + 1;
+                            swiperRef.current?.slideTo(newIndex);
+
+
                             setActiveVideo(activeVideo + 1);
                             handleNewVideo();
                             updateViews(popularData.pop_list[activeVideo + 1].config_id);
@@ -172,7 +208,11 @@ export function MainPopular() {
                 <Box
                     sx={mainBtnsPopular}
                     onClick={() => {
-                        setActiveVideo(activeVideo !== 0 ? activeVideo - 1 : activeVideo)
+                        if (activeVideo > 0) {
+                            const newIndex = activeVideo - 1;
+                            setActiveVideo(newIndex);
+                            swiperRef.current?.slideTo(newIndex); 
+                        }
                         if (openComment) {
                             setOpenComment(false)
                             // dispatch(resetComments())

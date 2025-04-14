@@ -27,6 +27,7 @@ export const MediaSwiper = memo(( {activeVideo}:{activeVideo:number} ) => {
     return (
 
         <Swiper
+            direction="horizontal"
             key={activeVideo}
             pagination={{
                 dynamicBullets: true,

@@ -12,7 +12,7 @@ export const mainBtnsPopular = {
     justifyContent:'center',
     border:'1px solid #777777',
     cursor:'pointer',
-    transition:'0.3s',
+    transition:'0.15s',
 
     "&:hover":{
         transform: "scale(1.1)"

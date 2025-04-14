@@ -37,7 +37,7 @@ export const InputComment = memo(({ sendComm }: DataProps) => {
                     },
                     borderRadius: '10px',
                 }}
-
+                placeholder="Type in a comment"
                 id="filled-multiline-flexible"
                 multiline
                 maxRows={2}
