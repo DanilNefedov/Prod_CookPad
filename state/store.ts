@@ -9,7 +9,7 @@ import listSlice from './slices/list-slice'
 import listRecipeSlice from './slices/list-recipe-slice'
 import popularSlice from './slices/popular-slice'
 import commentsPopular from './slices/comments-popular-slice'
-
+import commentContext from './slices/comments-context'
 
 export const store = configureStore({
     reducer:{
@@ -21,7 +21,8 @@ export const store = configureStore({
         list:listSlice,
         listRecipe:listRecipeSlice,
         popular:popularSlice,
-        comments:commentsPopular
+        comments:commentsPopular,
+        commentContext:commentContext
     }
 })
 

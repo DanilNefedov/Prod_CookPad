@@ -1,10 +1,11 @@
 import { Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material"
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { Dispatch, memo, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { getReplies, likedComment } from "@/state/slices/comments-popular-slice";
 import { LikeT } from "./main-comments";
 import { ReplyComment } from "./reply-comment";
+import { setActiveComment } from "@/state/slices/comments-context";
 
 
 
@@ -13,23 +14,23 @@ interface DataProps {
     id_comment: string,
     config_id: string,
     newReply: string[],
-    handleReply: (id_branch: string, id_comment: string, author_name: string) => void,
-    // isOpen:string
-    // mainOpen: (arg: string) => void
 }
 
 
 
 
-export const CommentsItem = memo(({ id_comment, config_id, newReply, handleReply, }: DataProps) => {
-    const commentsData = useAppSelector(state => state.comments.comments.entities[id_comment])
+export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps) => {
+
+    const isActive = useAppSelector(
+        state => state.commentContext.comment.id_comment === id_comment
+    );    
+    const commentsData = useAppSelector(state => state.comments.comments[config_id].entities[id_comment])
     const [openReply, setOpenReply] = useState<string>('')
     const repliesData = useAppSelector(state => state.comments.replies[id_comment])
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
     const dispatch = useAppDispatch()
     const localLikeLoadingRef = useRef(false);
-    const [activeRep, setActiveRep] = useState<string>('')
 
     const prevLengthRef = useRef<number>(repliesData?.ids?.length || 0)
 
@@ -46,10 +47,6 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply, handleReply
 
 
 
-    function openReplyT() {
-        setActiveRep(commentsData.id_comment)
-        handleReply(commentsData.id_comment, commentsData.id_comment, commentsData.author_name);
-    }
 
 
     function handleReplies({ id_comment, more }: { id_comment: string, more: boolean }) {
@@ -94,7 +91,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply, handleReply
 
 
 
-    console.log('comm-item', openReply, '222')
+    console.log('comm-item', '222')
     return (
         <ListItem sx={{ mb: '10px', p: 0, display: 'block' }}>
             <Box alignItems="flex-start" sx={{
@@ -105,37 +102,55 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply, handleReply
                 display: 'flex',
                 flexWrap: "wrap",
                 border: '1px solid transparent',
-                borderColor: activeRep === commentsData.id_comment ? 'text.secondary' : 'transparent',
+                borderColor: isActive ? 'text.secondary' : 'transparent',
                 '&:last-child': {
                     mb: '0'
                 }
             }}>
 
-                <ListItemAvatar>
-                    <Avatar alt="Remy Sharp" src={commentsData.author_avatar} />
-                </ListItemAvatar>
-                <ListItemText
-                    sx={{ '& .MuiTypography-root ': { maxWidth: '513px' } }}
-                    primary={commentsData.author_name}
-                    secondary={
-                        <>
-                            {commentsData.text}
-                        </>
-                    }
-                />
-                <Typography sx={{ fontSize: '14px', color: 'text.disabled', mt: '7px' }}>{commentsData.createdAt}</Typography>
+                <Box sx={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', p:'7px 0'}}>
+                    <ListItemAvatar sx={{minWidth:"0", pr:'10px'}}>
+                        <Avatar alt={commentsData.author_name} src={commentsData.author_avatar} />
+                    </ListItemAvatar>
+                    <ListItemText
+                        sx={{ m:"0", width:'65%', pr:'10px', '& .MuiTypography-root ': { color:'text.primary', fontSize:'16px'}, '& .MuiTypography-body1':{
+                            mb:'5px',
+                            textOverflow: "ellipsis",
+                            whiteSpace:'nowrap',
+                            overflow:"hidden",
+                        } }}
+                        primary={
+                            commentsData.author_name
+                        }
+                        secondary={
+                            
+                            <>
+                                {commentsData.text}
+                            </>
+                        }
+                    />
+                    <Typography sx={{ fontSize: '14px', color: 'text.disabled',alignSelf: 'flex-start', }}>{commentsData.createdAt}</Typography>
+                </Box>
+                
 
 
                 <Box sx={{ width: '100%', justifyContent: 'space-between', display: 'flex', mt: '7px' }}>
                     <Button
-                        onClick={openReplyT}
+                        onClick={() => {
+                            dispatch(setActiveComment(
+                                isActive ? 
+                                {id_comment: '', author_name: '', id_branch:''}
+                                :
+                                {id_comment: id_comment, author_name: commentsData.author_name, id_branch:id_comment}
+                            ))
+                        }}
                         sx={{
                             p: '0',
-                            '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
+                            '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
                             fontSize: "14px",
                             textTransform: 'initial',
                             minWidth: "0",
-                            color: activeRep === commentsData.id_comment ? 'primary.main' : 'text.secondary'
+                            color: isActive ? 'primary.main' : 'text.secondary'
                         }}>reply</Button>
                     <Button
                         onClick={() => {
@@ -143,15 +158,19 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply, handleReply
                                 handleReplies({ id_comment: commentsData.id_comment, more: false })
 
                             }
+
+                            if (openReply === commentsData.id_comment) {
+                                setOpenReply('')
+                            }
                         }}
                         sx={{
                             p: '0',
-                            '&:hover': { backgroundColor: "transparent", color: openReply === commentsData.id_comment ? '#BDBDBD' : 'primary.main' },
+                            '&:hover': { backgroundColor: "transparent", color: commentsData.reply_count > 0 ? 'text.primary' : 'text.secondary' },
                             fontSize: "14px",
                             textTransform: 'initial',
-                            cursor: openReply === commentsData.id_comment ? 'auto' : 'pointer',
+                            cursor: commentsData.reply_count > 0 ? 'pointer' : 'initial',
                             minWidth: "0",
-                            color: openReply === commentsData.id_comment ? '#BDBDBD' : 'text.secondary'
+                            color: openReply === commentsData.id_comment ? 'primary.main' : 'text.secondary'
                         }}>{commentsData.reply_count} replies</Button>
 
                     <Button sx={{
@@ -162,7 +181,6 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply, handleReply
                         minWidth: "0",
                         color: 'text.secondary',
                         alignItems: 'center',
-                        // maxHeight:'20px'
                     }}
                         onClick={() => handleLike({ id_comment: commentsData.id_comment, config_id, liked: commentsData.liked, reply: false, id_branch: '' })}
                     >
@@ -176,29 +194,16 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply, handleReply
                     const reply = repliesData?.entities[replyId];
 
                     return (
-                        <ListItem key={reply.id_comment} sx={{
-                            bgcolor: 'background.paper',
-                            borderRadius: '10px',
-                            m: '10px 0 ',
-                            ml: "auto",
-                            flexWrap: "wrap",
-                            border: '1px solid transparent',
-                            maxWidth: "90%",
-                            lignItems: "flex-start",
-                            // borderColor: infoReply.id_comment === el.id_comment ? 'text.secondary' : 'transparent',
-                            '&:last-child': {
-                                mb: '20px'
-                            }
-                        }}>
-                            <ReplyComment
-                                id_comment_p={reply.id_comment}
-                                id_branch_p={commentsData.id_comment}
-                                handleLike={handleLike}
-                                config_id={config_id}
-                                handleReply={handleReply}
-                            >
-                            </ReplyComment>
-                        </ListItem>
+                        <ReplyComment
+                            key={reply.id_comment}
+
+                            id_comment_p={reply.id_comment}
+                            id_branch_p={id_comment}
+                            handleLike={handleLike}
+                            config_id={config_id}
+                        >
+                        </ReplyComment>
+                        
 
                     )
                 }) :
@@ -213,7 +218,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply, handleReply
                             disabled={Number.isNaN(repliesData?.page)}
                             sx={{
                                 p: '0',
-                                '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
+                                '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
                                 fontSize: "14px",
                                 textTransform: 'initial',
                                 minWidth: "0",
@@ -225,7 +230,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply, handleReply
                         >more</Button>
                         <Button sx={{
                             p: '0',
-                            '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
+                            '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
                             fontSize: "14px",
                             textTransform: 'initial',
                             minWidth: "0",
@@ -245,7 +250,8 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply, handleReply
         </ListItem>
     )
 }, (prevProps, nextProps) => {
+   
     return prevProps.id_comment === nextProps.id_comment &&
-        prevProps.config_id === nextProps.config_id
-    // prevProps.isOpen === nextProps.isOpen
+        prevProps.config_id === nextProps.config_id 
+        
 })

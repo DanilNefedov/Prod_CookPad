@@ -135,7 +135,7 @@ export async function POST(request: Request) {
             liked: false, 
         };
 
-        return NextResponse.json(responseData);
+        return NextResponse.json({responseData, config_id:data.config_id});
     } catch (error) {
         await session.abortTransaction(); 
         console.error('Error in POST /comments:', error);

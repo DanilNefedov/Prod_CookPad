@@ -14,7 +14,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import { MediaSwiper } from "./media-swiper";
 import { all, BigNumber, create, evaluate, number } from "mathjs";
 import { MainComments } from "./main-comments";
-import { commVideoFetch, resetComments } from "@/state/slices/comments-popular-slice";
+import { commVideoFetch } from "@/state/slices/comments-popular-slice";
 
 
 import 'swiper/css';
@@ -38,10 +38,12 @@ export function MainPopular() {
     // const popularStatus = useAppSelector(state => state.popular.status)
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
-    const commentsData = useAppSelector(state => state.comments.comments)
+    
 
     const [activeVideo, setActiveVideo] = useState<number>(0)
     const [openComment, setOpenComment] = useState<boolean>(false)
+
+
 
     const viewedVideos = useRef<Set<string>>(new Set());
 
@@ -101,7 +103,7 @@ export function MainPopular() {
 
 
 
-    console.log('main-popular', commentsData)
+    console.log('main-popular',)
     return (
         <>
             <Card sx={{ maxWidth: '100%', position: 'relative', backgroundColor: "background.default", display: 'flex', width: "100%", height: '100%' }}>
@@ -160,9 +162,9 @@ export function MainPopular() {
                             updateViews(popularData.pop_list[activeVideo + 1].config_id);
                         }
 
-                        if (commentsData.ids.length > 0) {
+                        if (openComment) {
                             setOpenComment(false);
-                            dispatch(resetComments());
+                            // dispatch(resetComments());
                         }
 
                     }}
@@ -171,9 +173,9 @@ export function MainPopular() {
                     sx={mainBtnsPopular}
                     onClick={() => {
                         setActiveVideo(activeVideo !== 0 ? activeVideo - 1 : activeVideo)
-                        if (commentsData.ids.length > 0) {
+                        if (openComment) {
                             setOpenComment(false)
-                            dispatch(resetComments())
+                            // dispatch(resetComments())
                         }
                     }}
                 >-</Box>

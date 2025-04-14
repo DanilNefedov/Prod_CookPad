@@ -17,9 +17,11 @@ export type CommentState = {
     status: boolean;
     error: boolean;
     comments: {
-        page: number;
-        ids: string[];
-        entities: Record<string, CommListData>;
+        [parentId: string]: {
+            page: number;
+            ids: string[];
+            entities: Record<string, CommListData>;
+        }
     };
     replies: {
         [parentId: string]: {
@@ -33,11 +35,12 @@ export type CommentState = {
 const initialState: CommentState = {
     status: false,
     error: false,
-    comments: commentsAdapter.getInitialState({
-        page: 1,
-        ids: [],
-        entities: {},
-    }),
+    comments: {},
+    // comments: commentsAdapter.getInitialState({
+    //     page: 1,
+    //     ids: [],
+    //     entities: {},
+    // }),
     replies: {},  
 };
 
@@ -93,7 +96,8 @@ const initialState: CommentState = {
 interface ReturnCommDataT {
     formattedComments:CommListData[],
     page:number,
-    totalCommentsCount:number
+    totalCommentsCount:number,
+    config_id:string
 }
 
 
@@ -113,6 +117,8 @@ export const commVideoFetch = createAsyncThunk<ReturnCommDataT, {config_id: stri
 
             const dataList = await responseList.json()
 
+            // console.log(dataList)
+
             return dataList
 
         } catch (error) {
@@ -122,9 +128,13 @@ export const commVideoFetch = createAsyncThunk<ReturnCommDataT, {config_id: stri
     }
 )
 
+interface CommListDataReturn {
+    responseData:CommListData,
+    config_id:string
+}
 
 
-export const newCommPopular = createAsyncThunk<CommListData, CommListData, { rejectValue: string }>(
+export const newCommPopular = createAsyncThunk<CommListDataReturn, CommListData, { rejectValue: string }>(
     'commentsPopular/newCommPopular',
     async function (data, { rejectWithValue, dispatch }) {
         try {
@@ -191,8 +201,12 @@ export const likedComment = createAsyncThunk<LikedCommnetDataT, LikedCommnetData
     }
 )
 
+interface ReplyCommDataReturn{
+    responseData:ReplyCommData
+    config_id:string
+}
 
-export const newReplyComm = createAsyncThunk<ReplyCommData, {data:ReplyCommData, config_id:string}, { rejectValue: string }>(
+export const newReplyComm = createAsyncThunk<ReplyCommDataReturn, {data:ReplyCommData, config_id:string}, { rejectValue: string }>(
     'popular/newReplyComm',
     async function (data, { rejectWithValue, dispatch }) {
         try {
@@ -273,22 +287,15 @@ const commentsPopularSlice = createSlice({
     name: 'commentsPopular',
     initialState,
     reducers: {
-        // newReplyCalc:(state, action:PayloadAction<{id_branch:string}, string>) =>{
-        //     const thisPop = state.comments.list.find(el => el.id_comment === action.payload.id_branch)
-        //     // console.log('2w', thisPop)
-        //     if(thisPop){
-        //         // console.log('22w')
-        //         thisPop.reply_count += 1
-        //     }
-        // },
         
-        resetComments: (state) =>{
-            state.comments = commentsAdapter.getInitialState({
-                page: 1,
-                ids: [],
-                entities: {},
-            });
-        }
+        
+        // resetComments: (state) =>{
+        //     state.comments = commentsAdapter.getInitialState({
+        //         page: 1,
+        //         ids: [],
+        //         entities: {},
+        //     });
+        // }
         
     },
     extraReducers: (builder) => {
@@ -301,13 +308,31 @@ const commentsPopularSlice = createSlice({
                 state.error = false
                 state.status = false
                 
-                if (action.payload.page === 1) {
-                    commentsAdapter.setAll(state.comments, action.payload.formattedComments);
-                } else {
-                    commentsAdapter.addMany(state.comments, action.payload.formattedComments);
+                // if (action.payload.page === 1) {
+                //     commentsAdapter.setAll(state.comments, action.payload.formattedComments);
+                // } else {
+                //     commentsAdapter.addMany(state.comments, action.payload.formattedComments);
+                // }
+
+                // state.comments.page = action.payload.totalCommentsCount === state.comments.ids.length ? NaN : action.payload.page;
+
+
+
+                const { config_id, page, totalCommentsCount, formattedComments } = action.payload;
+
+                if (!state.comments[config_id]) {
+                state.comments[config_id] = commentsAdapter.getInitialState({ page: 1 });
                 }
 
-                state.comments.page = action.payload.totalCommentsCount === state.comments.ids.length ? NaN : action.payload.page;
+                const commentsState = state.comments[config_id];
+
+                if (page === 1) {
+                commentsAdapter.setAll(commentsState, formattedComments);
+                } else {
+                commentsAdapter.addMany(commentsState, formattedComments);
+                }
+
+                commentsState.page = totalCommentsCount === commentsState.ids.length ? NaN : page;
                
             })
 
@@ -316,15 +341,32 @@ const commentsPopularSlice = createSlice({
                 state.status = true,
                 state.error = false
             })
-            .addCase(newCommPopular.fulfilled, (state, action: PayloadAction<CommListData, string>) => {
-                state.error = false,
-                state.status = false,
-                // console.log(action.payload)
-                commentsAdapter.addOne(state.comments, action.payload)
+            .addCase(newCommPopular.fulfilled, (state, action: PayloadAction<CommListDataReturn, string>) => {
+                const { config_id, responseData } = action.payload;
 
-                state.comments.ids = [
-                    action.payload.id_comment,
-                    ...state.comments.ids.filter(id => id !== action.payload.id_comment)
+                state.error = false
+                state.status = false
+                // console.log(action.payload)
+                // commentsAdapter.addOne(state.comments, action.payload)
+
+                // state.comments.ids = [
+                //     action.payload.id_comment,
+                //     ...state.comments.ids.filter(id => id !== action.payload.id_comment)
+                // ];
+
+                if (!state.comments[config_id]) {
+                    state.comments[config_id] = {
+                        page: 1,
+                        ids: [],
+                        entities: {},
+                    };
+                }
+
+                commentsAdapter.addOne(state.comments[config_id], responseData);
+
+                state.comments[config_id].ids = [
+                    responseData.id_comment,
+                    ...state.comments[config_id].ids.filter(id => id !== responseData.id_comment),
                 ];
 
             })
@@ -335,19 +377,35 @@ const commentsPopularSlice = createSlice({
                 state.error = false
             })
             .addCase(likedComment.fulfilled, (state, action: PayloadAction<LikedCommnetDataT, string>) => {
-                const { id_comment, liked, reply, id_branch } = action.payload;
+                const { id_comment, liked, reply, id_branch, config_id } = action.payload;
                 state.error = false,
                 state.status = false
 
                 if (!reply) {
-                    const existingComment = state.comments.entities[id_comment];
-                    if (!existingComment) return;
+                    // const existingComment = state.comments.entities[id_comment];
+                    // if (!existingComment) return;
             
-                    commentsAdapter.updateOne(state.comments, {
+                    // commentsAdapter.updateOne(state.comments, {
+                    //     id: id_comment,
+                    //     changes: {
+                    //         liked,
+                    //         likes_count: liked ? existingComment.likes_count + 1 : existingComment.likes_count - 1,
+                    //     },
+                    // });
+
+                    const commentBlock = state.comments[config_id];
+                    if (!commentBlock) return;
+
+                    const existingComment = commentBlock.entities[id_comment];
+                    if (!existingComment) return;
+
+                    commentsAdapter.updateOne(commentBlock, {
                         id: id_comment,
                         changes: {
                             liked,
-                            likes_count: liked ? existingComment.likes_count + 1 : existingComment.likes_count - 1,
+                            likes_count: liked
+                                ? existingComment.likes_count + 1
+                                : existingComment.likes_count - 1,
                         },
                     });
                 } else {
@@ -372,14 +430,16 @@ const commentsPopularSlice = createSlice({
                 state.status = true,
                 state.error = false
             })
-            .addCase(newReplyComm.fulfilled, (state, action: PayloadAction<ReplyCommData, string>) => {
+            .addCase(newReplyComm.fulfilled, (state, action: PayloadAction<ReplyCommDataReturn, string>) => {
                 
                 
                 state.error = false;
                 state.status = false;
 
-                const reply = action.payload;
+                const data = action.payload;
+                const reply = data.responseData
                 const id_comment = reply.id_branch;
+                const config_id = data.config_id;
                 
                 if (!state.replies[id_comment]) {
                     state.replies[id_comment] = repliesAdapter.getInitialState({ page: 0 });
@@ -399,15 +459,31 @@ const commentsPopularSlice = createSlice({
                 ];
 
 
-                const parentComment = state.comments.entities[id_comment];
-                if (parentComment) {
-                    commentsAdapter.updateOne(state.comments, {
-                        id: id_comment,
-                        changes: {
-                            reply_count: parentComment.reply_count + 1
-                        }
-                    });
-                }
+                // const parentComment = state.comments.entities[id_comment];
+                // if (parentComment) {
+                //     commentsAdapter.updateOne(state.comments, {
+                //         id: id_comment,
+                //         changes: {
+                //             reply_count: parentComment.reply_count + 1
+                //         }
+                //     });
+                // }
+                
+
+                const commentBlock = state.comments[config_id];
+                if (!commentBlock) return;
+
+                const parentComment = commentBlock.entities[id_comment];
+                if (!parentComment) return;
+
+                commentsAdapter.updateOne(commentBlock, {
+                    id: id_comment,
+                    changes: {
+                        reply_count: parentComment.reply_count + 1,
+                    },
+                });
+
+                
 
             })
 
@@ -448,7 +524,7 @@ const commentsPopularSlice = createSlice({
 })
 
 
-export const { resetComments } = commentsPopularSlice.actions;
+// export const { resetComments } = commentsPopularSlice.actions;
 
 
 export default commentsPopularSlice.reducer

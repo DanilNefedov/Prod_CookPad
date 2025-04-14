@@ -6,17 +6,20 @@ import { Dispatch, memo, SetStateAction, useState } from "react";
 
 
 
-interface DataProps{
-    sendComm: (text:string) => void
+interface DataProps {
+    sendComm: (text: string) => void
 }
-export const InputComment = memo(({sendComm}: DataProps) => {
+export const InputComment = memo(({ sendComm }: DataProps) => {
     const [comm, setComm] = useState<string>('')
-    
+
     console.log('input')
 
     const handleSend = () => {
-        sendComm(comm);
-        setComm('')
+        if (comm.trim() !== '') {
+            sendComm(comm);
+            setComm('')
+        }
+
     };
 
     return (
@@ -34,12 +37,17 @@ export const InputComment = memo(({sendComm}: DataProps) => {
                     },
                     borderRadius: '10px',
                 }}
+
                 id="filled-multiline-flexible"
                 multiline
                 maxRows={2}
                 variant="filled"
                 value={comm}
-                onChange={(e) => setComm(e.target.value)}
+                onChange={(e) => {
+                    if (e.target.value.length <= 500) {
+                        setComm(e.target.value);
+                    }
+                }}
             />
             <Button onClick={handleSend} sx={{ position: 'absolute', right: '15px', top: 'calc(50% - 19px)', minWidth: '0' }}>
                 <SendIcon />

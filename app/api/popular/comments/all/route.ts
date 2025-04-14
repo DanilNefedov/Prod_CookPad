@@ -90,7 +90,7 @@ export async function POST(request: Request) {
         // }, {});
         console.log('formattedCommentsformattedCommentsformattedCommentsformattedComments',formattedComments)
       
-        return NextResponse.json({formattedComments, page, totalCommentsCount});
+        return NextResponse.json({formattedComments, page, totalCommentsCount, config_id});
         
     } catch (error) {
         console.error('Error fetching comments:', error);

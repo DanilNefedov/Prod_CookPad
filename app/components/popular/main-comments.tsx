@@ -1,7 +1,7 @@
 import { collectionUser } from "@/app/types/types"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { Avatar, Box, Button, CircularProgress, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from "@mui/material"
-import { memo, useCallback, useEffect, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import SendIcon from '@mui/icons-material/Send';
 import { commVideoFetch, getReplies, likedComment, newCommPopular, newReplyComm } from "@/state/slices/comments-popular-slice";
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -10,6 +10,7 @@ import { ReplyComment } from "./reply-comment";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { InputComment } from "./input-comment";
 import { CommentsItem } from "./comments-item";
+import { shallowEqual } from "react-redux";
 
 
 
@@ -31,48 +32,60 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
 
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
-    const commentsData = useAppSelector(state => state.comments.comments)
 
-    // const [openReply, setOpenReply] = useState<string>('')
+    const rawCommentsData = useAppSelector(state => state.comments.comments[config_id]);
+    const commentsData = useMemo(() => {
+      return rawCommentsData ?? {
+        page: 1,
+        ids: [],
+        entities: {},
+      };
+    }, [rawCommentsData]);
+
+
+    const contextComment = useAppSelector(state => ({
+        id_comment: state.commentContext.comment.id_comment,
+        author_name: state.commentContext.comment.author_name,
+        id_branch: state.commentContext.comment.id_branch
+    }),
+        shallowEqual
+    )
 
     const [newComments, setNewComments] = useState<string[]>([])
     const [newReply, setNewReply] = useState<string[]>([])
 
     const dispatch = useAppDispatch()
 
-    const [infoReply, setInfoReply] = useState<{ id_comment: string, author_name: string, id_branch: string }>({
-        id_comment: '',
-        author_name: '',
-        id_branch: ''
-    })
+    const scrollRef = useRef<HTMLDivElement>(null)
 
-
+    // console.log(useAppSelector(state => state.comments.comments))
     useEffect(() => {
         if (config_id && connection_id !== '' && commentsData.ids.length === 0) {
+            console.log('3233')
             dispatch(commVideoFetch({ config_id, user_id: connection_id, page: commentsData.page, newComments: [] }))
         }
     }, [config_id, activeVideo]);
 
     const sendComm = useCallback((text: string) => {
         if (connection_id !== '') {
-            console.log(infoReply,)
-            if (infoReply.id_comment !== '') {
+            console.log(contextComment)
+            if (contextComment.id_comment !== '') {
 
                 const data = {
                     id_comment: uuidv4(),
-                    id_branch: infoReply.id_branch,
+                    id_branch: contextComment.id_branch,
                     id_author: connection_id,
                     author_avatar: userData?.user.img,
                     author_name: userData?.user.name,
-                    id_parent: infoReply.id_comment,
-                    name_parent: infoReply.author_name,
+                    id_parent: contextComment.id_comment,
+                    name_parent: contextComment.author_name,
                     likes_count: 0,
                     text: text.trim(),
                 }
 
                 dispatch(newReplyComm({ data, config_id: config_id }))
                 setNewReply([...newComments, data.id_comment])
-                // setOpenReply(openReply === '' ? infoReply.id_comment : openReply)
+                // setOpenReply(openReply === '' ? contextComment.id_comment : openReply)
             } else {
                 const data = {
                     id_comment: uuidv4(),
@@ -89,17 +102,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
                 // setComm('')
             }
         }
-    }, [connection_id, config_id, dispatch, infoReply, newComments, userData])
-
-    const handleReply = useCallback((id_branch: string, id_comment: string, author_name: string) => {
-        setInfoReply((prev) =>
-            prev.id_comment === id_comment
-                ? { id_comment: "", author_name: "", id_branch: "" }
-                : { id_branch, id_comment, author_name }
-        );
-    }, []);
-
-
+    }, [connection_id, config_id, dispatch, newComments, contextComment, userData])
 
 
 
@@ -113,12 +116,29 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
         }));
     }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
 
-    console.log('main-comments',commentsData)
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            const el = scrollRef.current
+            if (el && el.scrollHeight <= el.clientHeight && !Number.isNaN(commentsData.page)) {
+                dispatch(commVideoFetch({
+                    config_id,
+                    user_id: connection_id,
+                    page: commentsData.page + 1,
+                    newComments
+                }))
+            }
+        }, 150)
+
+        return () => clearTimeout(timeout)
+    }, [commentsData.ids.length])
+
+    console.log('main-comments')
     return (
         <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', overflow: 'auto', }}>
 
-            <Box sx={{ overflow: 'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0" }} id="scrollableTarget">
+            <Box ref={scrollRef} sx={{ overflow: 'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0" }} id="scrollableTarget">
                 <InfiniteScroll
+                    style={{ overflow: 'initial' }}
                     dataLength={commentsData.ids.length}
                     next={fetchMoreComments}
                     hasMore={!Number.isNaN(commentsData.page)}
@@ -135,13 +155,12 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
                         {commentsData.ids.map((id_comment) => {
                             const comment = commentsData.entities[id_comment];
                             return (
-                                <CommentsItem key={id_comment}
-                                    // isOpen={openReply}
-                                    // mainOpen={mainOpen}
-                                    handleReply={handleReply}
-                                    newReply={newReply}
+                                <CommentsItem
+                                    key={id_comment}
+
                                     id_comment={comment.id_comment}
                                     config_id={config_id}
+                                    newReply={newReply}
                                 ></CommentsItem>
                             )
                         })}
