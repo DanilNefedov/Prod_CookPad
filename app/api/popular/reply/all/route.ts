@@ -8,6 +8,7 @@ import CommentPopular from '@/app/models/comments-popular';
 import LikesReply from '@/app/models/likes-reply';
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import updateLocale from 'dayjs/plugin/updateLocale'
 
 
 
@@ -45,6 +46,24 @@ export async function POST(request: Request) {
 
 
         dayjs.extend(relativeTime)
+        dayjs.extend(updateLocale)
+        dayjs.updateLocale('en', {
+            relativeTime: {
+                future: 'in %s',
+                past: '%s',
+                s: '1 s.',    
+                m: '1 m.',    
+                mm: '%d m.',  
+                h: '1 h.',    
+                hh: '%d h.',  
+                d: '1 d.',    
+                dd: '%d d.',  
+                M: '1 mo.',   
+                MM: '%d mo.', 
+                y: '1 y.',    
+                yy: '%d y.',  
+            },
+        })
         
         const formattedComments = await Promise.all(
             comments.map(async (el) => {

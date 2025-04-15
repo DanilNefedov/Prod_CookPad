@@ -6,7 +6,7 @@ import { getReplies, likedComment } from "@/state/slices/comments-popular-slice"
 import { LikeT } from "./main-comments";
 import { ReplyComment } from "./reply-comment";
 import { setActiveComment } from "@/state/slices/comments-context";
-
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 
 
@@ -171,7 +171,13 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
                             cursor: commentsData.reply_count > 0 ? 'pointer' : 'initial',
                             minWidth: "0",
                             color: openReply === commentsData.id_comment ? 'primary.main' : 'text.secondary'
-                        }}>{commentsData.reply_count} replies</Button>
+                        }}>
+                            {commentsData.reply_count} replies 
+                            <KeyboardArrowDownIcon sx={{
+                                transform: openReply === commentsData.id_comment ? 'rotate(180deg)' : 'rotate(0deg)',
+                                transition: 'transform 0.2s ease', 
+                            }} width={20} height={20}></KeyboardArrowDownIcon>
+                    </Button>
 
                     <Button sx={{
                         p: '0',

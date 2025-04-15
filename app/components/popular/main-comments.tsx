@@ -176,7 +176,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
                     scrollableTarget="scrollableTarget"
 
                 >
-                    <List>
+                    <List sx={{pt:"0"}}>
                         {commentsData.ids.map((id_comment) => {
                             const comment = commentsData.entities[id_comment];
                             return (

@@ -38,14 +38,13 @@ export function MainPopular() {
     // const popularStatus = useAppSelector(state => state.popular.status)
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
-
-
     const [activeVideo, setActiveVideo] = useState<number>(0)
     const [openComment, setOpenComment] = useState<boolean>(false)
-
-    const swiperRef = useRef<SwiperType | null>(null);
-
     const viewedVideos = useRef<Set<string>>(new Set());
+    const swiperRef = useRef<SwiperType | null>(null);
+    const cooldownRef = useRef(false);
+
+
 
     useEffect(() => {
         if (connection_id !== '') {
@@ -91,7 +90,7 @@ export function MainPopular() {
 
 
     function handleNewVideo() {
-        if (connection_id !== '' && popularData.pop_list.length - activeVideo < 5 ) {
+        if (connection_id !== '' && popularData.pop_list.length - activeVideo < 5) {
             dispatch(popularFetch({ connection_id, count: 1, getAllIds: popularData.pop_list.map(item => item.config_id) }))
         }
     }
@@ -101,7 +100,14 @@ export function MainPopular() {
     }, []);
 
 
-  
+    const handleCooldown = (callback: () => void) => {
+        if (cooldownRef.current) return;
+        cooldownRef.current = true;
+        callback();
+        setTimeout(() => {
+            cooldownRef.current = false;
+        }, 1000); 
+    };
 
     console.log('main-popular',)
     return (
@@ -117,7 +123,9 @@ export function MainPopular() {
                         touchReleaseOnEdges
                         direction="vertical"
                         slidesPerView={1}
-                        mousewheel
+                        mousewheel={{
+                            thresholdTime: 1000, 
+                        }}                        
                         virtual
                         allowTouchMove={false} 
                         simulateTouch={false}
@@ -131,8 +139,7 @@ export function MainPopular() {
                                 if (openComment) setOpenComment(false)
                             }
                         }}
-                        // threshold={2000}
-                        // thresholdTime={}
+                        
                         initialSlide={activeVideo}
                         modules={[Virtual, Mousewheel]}
                         style={{ height: '100%' }}
@@ -143,7 +150,6 @@ export function MainPopular() {
                             </SwiperSlide>
                         ))}
                     </Swiper>
-
 
 
 
@@ -184,39 +190,39 @@ export function MainPopular() {
 
 
             </Card>
-            <Box sx={{ position: 'absolute', left: '105%', bottom: '20%', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <Box sx={{ position: 'absolute', right: '0px', bottom: '20%', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 <Box
                     sx={mainBtnsPopular}
                     onClick={() => {
-                        if (activeVideo + 1 < popularData.pop_list.length) {
-                            const newIndex = activeVideo + 1;
-                            swiperRef.current?.slideTo(newIndex);
-
-
-                            setActiveVideo(activeVideo + 1);
-                            handleNewVideo();
-                            updateViews(popularData.pop_list[activeVideo + 1].config_id);
-                        }
-
-                        if (openComment) {
-                            setOpenComment(false);
-                            // dispatch(resetComments());
-                        }
-
+                        handleCooldown(() => {
+                            if (activeVideo + 1 < popularData.pop_list.length) {
+                                const newIndex = activeVideo + 1;
+                                swiperRef.current?.slideTo(newIndex);
+                                setActiveVideo(newIndex);
+                                handleNewVideo();
+                                updateViews(popularData.pop_list[newIndex].config_id);
+                            }
+                
+                            if (openComment) {
+                                setOpenComment(false);
+                            }
+                        });
                     }}
                 >+</Box>
                 <Box
                     sx={mainBtnsPopular}
                     onClick={() => {
-                        if (activeVideo > 0) {
-                            const newIndex = activeVideo - 1;
-                            setActiveVideo(newIndex);
-                            swiperRef.current?.slideTo(newIndex); 
-                        }
-                        if (openComment) {
-                            setOpenComment(false)
-                            // dispatch(resetComments())
-                        }
+                        handleCooldown(() => {
+                            if (activeVideo > 0) {
+                                const newIndex = activeVideo - 1;
+                                swiperRef.current?.slideTo(newIndex);
+                                setActiveVideo(newIndex);
+                            }
+                
+                            if (openComment) {
+                                setOpenComment(false);
+                            }
+                        });
                     }}
                 >-</Box>
             </Box>

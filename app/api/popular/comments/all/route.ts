@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { CommListData } from "@/app/types/types";
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import updateLocale from 'dayjs/plugin/updateLocale'
 
 
 
@@ -55,6 +56,25 @@ export async function POST(request: Request) {
         const totalCommentsCount = await CommentPopular.countDocuments({config_id});
 
         dayjs.extend(relativeTime)
+        dayjs.extend(updateLocale)
+        dayjs.updateLocale('en', {
+            relativeTime: {
+                future: 'in %s',
+                past: '%s',
+                s: '1 s.',    
+                m: '1 m.',    
+                mm: '%d m.',  
+                h: '1 h.',    
+                hh: '%d h.',  
+                d: '1 d.',    
+                dd: '%d d.',  
+                M: '1 mo.',   
+                MM: '%d mo.', 
+                y: '1 y.',    
+                yy: '%d y.',  
+            },
+        })
+          
         
         const formattedComments = comments.map((el) => ({
             id_comment: el.id_comment,
