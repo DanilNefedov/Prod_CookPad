@@ -6,6 +6,7 @@ import { ReplyCommData } from "@/app/types/types";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { setActiveComment } from "@/state/slices/comments-context";
+import numbro from "numbro";
 
 
 
@@ -48,6 +49,17 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
             {id_comment:id_comment, author_name:author_name, id_branch:id_branch_p }
         ))
     }
+
+    function formatCount (value: number): string  {
+        if (!value) return '';
+        if (value < 1000) return String(Math.floor(value));
+        return numbro(value).format({
+            average: true,
+            mantissa: 2,
+            trimMantissa: true,
+            spaceSeparated: false,
+        });
+    };
 
     console.log('replies',3333,)
     return (
@@ -109,7 +121,7 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
                 }}
                     onClick={() => likeT()}
                 >
-                    {likes_count}
+                    {formatCount(Number(likes_count))}
                     <FavoriteIcon sx={{ fontSize: "16px", m: '0 0 3px 3px', color: liked ? "primary.main" : "inherit" }}></FavoriteIcon>
                 </Button>
             </Box>

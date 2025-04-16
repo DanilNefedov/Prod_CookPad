@@ -16,12 +16,12 @@ import { shallowEqual } from "react-redux";
 
 
 // export function MediaSwiper({ props }: { props: dataPorps }) {
-export const MediaSwiper = memo(( {activeVideo}:{activeVideo:number} ) => {
+export const MediaSwiper = memo(({ activeVideo }: { activeVideo: number }) => {
 
     const media = useAppSelector(
         state => state.popular.pop_list[activeVideo]?.recipe_media || [],
         shallowEqual
-    );    
+    );
 
     console.log('media')
     return (
@@ -41,38 +41,48 @@ export const MediaSwiper = memo(( {activeVideo}:{activeVideo:number} ) => {
         >
             {media.map((elem: MediaObj) => (
                 <SwiperSlide key={elem.media_id} className="slide-popular">
-                     {
-                        elem.media_type === 'image' ?
-                        <CardMedia
-                            sx={{
-                                height: '100%',
-                                objectFit: 'cover',
-                            }}
-                            component='img'
-                            src={elem.media_url as string}
-                            loading="lazy"
-                        />
-                        :
-                        <CardMedia
-                            sx={{
-                                height: '100%',
-                                objectFit: 'cover',
-                            }}
-                            component='video'
-                            autoPlay
-                            loop
-                            muted
-                            poster={elem.media_url as string}
-                        >
-                            <source
-                                src={elem.media_url as string}
-                                type="video/mp4"
-                            />
-                        </CardMedia>
+                    {elem.media_id === '' ? 
+                    <Box sx={{width:'100%', height:'100%', backgroundColor: "background.default", }}></Box>
+                    :
+                    <Box >
+                        {
+                            elem.media_type === 'image' ?
+                                <CardMedia
+                                    sx={{
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        width:'100%',
+                                    }}
+                                    component='img'
+                                    src={elem.media_url as string}
+                                    loading="lazy"
+                                />
+                                :
+                                <CardMedia
+                                    sx={{
+                                        height: '100%',
+                                        objectFit: 'cover',
+                                        width:'100%',
+                                    }}
+                                    component='video'
+                                    autoPlay
+                                    loop
+                                    muted
+                                    poster={elem.media_url as string}
+                                >
+                                    <source
+                                        src={elem.media_url as string}
+                                        type="video/mp4"
+                                    />
+                                </CardMedia>
+                        }
+                    </Box>
                     }
+                    
+
                 </SwiperSlide>
             ))}
         </Swiper>
-        
+
     )
-}, );
+},);

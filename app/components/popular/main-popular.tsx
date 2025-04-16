@@ -3,7 +3,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { likePopContent, popularFetch, savePopContent } from "@/state/slices/popular-slice";
-import { Avatar, Box, Button, Card, CardActions, CardContent, IconButton, List, Typography } from "@mui/material";
+import { Avatar, Box, Button, Card, CardActions, CardContent, IconButton, List, Skeleton, Typography } from "@mui/material";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from 'swiper/modules';
@@ -26,6 +26,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { mainBtnsPopular } from "@/app/(main)/popular/style";
 import { Mousewheel, Virtual } from 'swiper/modules'
 import type { Swiper as SwiperType } from 'swiper/types';
+import { theme } from "@/config/ThemeMUI/theme";
 
 
 
@@ -106,52 +107,86 @@ export function MainPopular() {
         callback();
         setTimeout(() => {
             cooldownRef.current = false;
-        }, 1000); 
+        }, 1000);
     };
-
+    // const [activeVideo, setActiveVideo] = useState(0);
+    
     console.log('main-popular',)
+
+    //768768768768768768768
     return (
         <>
-            <Card sx={{ maxWidth: '100%', position: 'relative', backgroundColor: "background.default", display: 'flex', width: "100%", height: '100%' }}>
-                <Box sx={{ maxWidth: '65%', position: 'relative', width: "100%" }} >
+            <Card sx={{
+                position: 'relative',
+                display: 'flex',
+                overflow: "initial",
+                boxShadow: 'none',
+
+                m: "0 auto"
+            }}>
+                <Box sx={{
+                    position: 'relative',
+                    width: "100%",
+                    aspectRatio: "9 / 13",
+                    /* object-fit: cover; */
+                    maxWidth: "900px",
+                    height: "100%",
+                    maxHeight: 'calc(100vh - 40px)',
+                    backgroundColor: "background.default",
+                    borderRadius: '20px 20px 0 20px',
+
+                }} >
 
 
-                    {/* <MediaSwiper activeVideo={activeVideo} /> */}
 
-                    <Swiper
-                        onSwiper={(swiper) => (swiperRef.current = swiper)}
-                        touchReleaseOnEdges
-                        direction="vertical"
-                        slidesPerView={1}
-                        mousewheel={{
-                            thresholdTime: 1000, 
-                        }}                        
-                        virtual
-                        allowTouchMove={false} 
-                        simulateTouch={false}
-                        onSlideChange={(swiper) => {
-                            const newIndex = swiper.activeIndex
-                            setActiveVideo(newIndex)
-                            const current = popularData.pop_list[newIndex]
-                            if (current) {
-                                updateViews(current.config_id)
-                                handleNewVideo()
-                                if (openComment) setOpenComment(false)
-                            }
-                        }}
+                
+                   
+                        <Swiper
+                            onSwiper={(swiper) => (swiperRef.current = swiper)}
+                            touchReleaseOnEdges
+                            direction="vertical"
+                            slidesPerView={1}
+                            mousewheel={{
+                                thresholdTime: 1000,
+                            }}
+                            effect="none"
+                            virtual={{
+                                // addSlidesAfter:5,
+                                // addSlidesBefore:5
+                                
+                            }}
+                            allowTouchMove={false}
+                            simulateTouch={false}
+                            onSlideChange={(swiper) => {
+                                const newIndex = swiper.activeIndex
+                                setActiveVideo(newIndex)
+                                const current = popularData.pop_list[newIndex]
+                                if (current) {
+                                    updateViews(current.config_id)
+                                    handleNewVideo()
+                                    if (openComment) setOpenComment(false)
+                                }
+                            }}
+
+                            initialSlide={activeVideo}
+                            modules={[Virtual, Mousewheel]}
+                            style={{ height: '100%' }}
+                        >
+                            {popularData.pop_list.map((item, index) => (
+                                <SwiperSlide key={item.config_id} virtualIndex={index}>
+
+
+
+                                    <MediaSwiper activeVideo={activeVideo} />
+
+
+
+
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
+
                         
-                        initialSlide={activeVideo}
-                        modules={[Virtual, Mousewheel]}
-                        style={{ height: '100%' }}
-                    >
-                        {popularData.pop_list.map((item, index) => (
-                            <SwiperSlide key={item.config_id} virtualIndex={index}>
-                                <MediaSwiper activeVideo={activeVideo} />
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-
-
 
 
                     {
@@ -171,61 +206,87 @@ export function MainPopular() {
                 </Box>
 
 
-                <CardContent sx={{ flexGrow: '1', display: 'flex', flexDirection: 'column', maxWidth: '35%' }}>
-                    <Typography gutterBottom variant="h5" component="div" sx={{ flexShrink: 0, textOverflow: 'ellipsis', pb: '10px', lineHeight: 'none', mb: '0', whiteSpace: 'nowrap', overflow: 'hidden', }}>
-                        {popularData.pop_list[activeVideo]?.recipe_name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ flexShrink: 0, fontSize: "16px", display: 'block', pb: '20px', }}>
-                        {popularData.pop_list[activeVideo]?.description}
-                    </Typography>
-                    {openComment ?
+               
+                <Box sx={{
+                    position: 'absolute', right: '-200px', bottom: '11%', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '20px',
+                    [theme.breakpoints.down(1250)]: { right: '-10px' }
+                }}>
+                    <Box
+                        sx={mainBtnsPopular}
+                        onClick={() => {
+                            handleCooldown(() => {
+                                if (activeVideo + 1 < popularData.pop_list.length) {
+                                    const newIndex = activeVideo + 1;
+                                    swiperRef.current?.slideTo(newIndex);
+                                    setActiveVideo(newIndex);
+                                    handleNewVideo();
+                                    updateViews(popularData.pop_list[newIndex].config_id);
+                                }
 
-                        <MainComments config_id={popularData.pop_list[activeVideo]?.config_id} activeVideo={activeVideo}></MainComments>
+                                if (openComment) {
+                                    setOpenComment(false);
+                                }
+                            });
+                        }}
+                    >+</Box>
+                    <Box
+                        sx={mainBtnsPopular}
+                        onClick={() => {
+                            handleCooldown(() => {
+                                if (activeVideo > 0) {
+                                    const newIndex = activeVideo - 1;
+                                    swiperRef.current?.slideTo(newIndex);
+                                    setActiveVideo(newIndex);
+                                }
 
-                        :
-                        <></>
-                    }
-                </CardContent>
+                                if (openComment) {
+                                    setOpenComment(false);
+                                }
+                            });
+                        }}
+                    >-</Box>
+                </Box>
 
 
 
             </Card>
-            <Box sx={{ position: 'absolute', right: '0px', bottom: '20%', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                <Box
-                    sx={mainBtnsPopular}
-                    onClick={() => {
-                        handleCooldown(() => {
-                            if (activeVideo + 1 < popularData.pop_list.length) {
-                                const newIndex = activeVideo + 1;
-                                swiperRef.current?.slideTo(newIndex);
-                                setActiveVideo(newIndex);
-                                handleNewVideo();
-                                updateViews(popularData.pop_list[newIndex].config_id);
-                            }
-                
-                            if (openComment) {
-                                setOpenComment(false);
-                            }
-                        });
-                    }}
-                >+</Box>
-                <Box
-                    sx={mainBtnsPopular}
-                    onClick={() => {
-                        handleCooldown(() => {
-                            if (activeVideo > 0) {
-                                const newIndex = activeVideo - 1;
-                                swiperRef.current?.slideTo(newIndex);
-                                setActiveVideo(newIndex);
-                            }
-                
-                            if (openComment) {
-                                setOpenComment(false);
-                            }
-                        });
-                    }}
-                >-</Box>
+            <Box sx={{
+                backgroundColor: "background.default",
+                // flexGrow: '1', 
+                overflow: 'auto',
+                display: 'flex',
+                flexDirection: 'column',
+                borderRadius: '20px',
+                p: '10px 20px',
+                width: " 23%",
+                maxHeight: 'calc(100vh - 40px)',
+                // position: "absolute",
+                // top: 0,
+                // right: 0,
+                height: "100%",
+                [theme.breakpoints.down(1250)]: { maxWidth: '42%' }
+            }}>
+                <Typography gutterBottom variant="h5" component="h1" sx={{
+                    flexShrink: 0, textOverflow: 'ellipsis', pb: '10px', lineHeight: 'none', mb: '0', whiteSpace: 'nowrap', overflow: 'hidden',
+                    [theme.breakpoints.down('md')]: { fontSize: '20px', pb: '5px' }
+                }}>
+                    {popularData.pop_list[activeVideo]?.recipe_name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{
+                    flexShrink: 0, fontSize: "16px", display: 'block', pb: '20px',
+                    [theme.breakpoints.down('md')]: { fontSize: '14px', pb: '10px' }
+                }}>
+                    {popularData.pop_list[activeVideo]?.description}
+                </Typography>
+                {openComment ?
+
+                    <MainComments config_id={popularData.pop_list[activeVideo]?.config_id} activeVideo={activeVideo}></MainComments>
+
+                    :
+                    <></>
+                }
             </Box>
+            
 
         </>
 

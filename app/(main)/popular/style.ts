@@ -1,3 +1,4 @@
+import { theme } from "@/config/ThemeMUI/theme";
 
 
 
@@ -16,5 +17,10 @@ export const mainBtnsPopular = {
 
     "&:hover":{
         transform: "scale(1.1)"
+    },
+
+    [theme.breakpoints.down(1250)]:{
+        width:'35px',
+        height:'35px', 
     }
 }

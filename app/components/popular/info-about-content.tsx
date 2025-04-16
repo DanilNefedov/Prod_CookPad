@@ -7,17 +7,18 @@ import CommentIcon from '@mui/icons-material/Comment';
 import { likePopContent, savePopContent } from "@/state/slices/popular-slice";
 import { PopularAuthorInfoT } from "@/app/types/types";
 import numbro from 'numbro';
+import { theme } from "@/config/ThemeMUI/theme";
 
 
 interface DataPropsT {
     // activeVideo:number,
-    author:PopularAuthorInfoT,
-    likes:number,
-    liked:boolean,
-    saved:boolean,
-    saves:number,
-    comments:number,
-    config_id:string,
+    author: PopularAuthorInfoT,
+    likes: number,
+    liked: boolean,
+    saved: boolean,
+    saves: number,
+    comments: number,
+    config_id: string,
     openComment: boolean;
     toggleComment: () => void;
 }
@@ -25,7 +26,7 @@ interface DataPropsT {
 
 // export function InfoAboutContent({props}:{props:DataPropsT}) {
 export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
-    const { author, likes, liked, saved, saves, comments, config_id, openComment, toggleComment} = props
+    const { author, likes, liked, saved, saves, comments, config_id, openComment, toggleComment } = props
 
     const popularStatus = useAppSelector(state => state.popular.status)
     // const [activeVideo, setActiveVideo] = useState<number>(0)
@@ -58,7 +59,7 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
         }
     }
 
-    function formatCount (value: number): string  {
+    function formatCount(value: number): string {
         if (!value) return '';
         if (value < 1000) return String(Math.floor(value));
         return numbro(value).format({
@@ -73,25 +74,36 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
     return (
 
         <Box sx={{
-            backgroundColor: 'rgba(0, 0, 0, 0.35)',
+            backgroundColor: 'background.default',
             backdropFilter: 'blur(3px)',
             height: '320px',
             // width:'100px',
-            borderRadius:'15px 0 0 15px',
+            borderRadius: '0px 15px 15px 0px',
             position: "absolute",
-            top: 'calc(50% - 165px)',
-            right: '0',
+            bottom: '0',
+            right: '-79px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             p: '20px 7px',
             zIndex: 1000,
-            width:'80px'
+            width: '80px',
+            [theme.breakpoints.down('md')]: {
+                width:'65px',
+                height:'265px',
+                top: 'calc(50% - 122px)',
+            }
         }}>
 
-            <Avatar alt="name" src={author.author_img} />
-            <Typography sx={{ m: '10px 0', textOverflow:'ellipsis', whiteSpace:'nowrap', overflow:'hidden', width:"70px", textAlign:'center' }}>{author.author_name}</Typography>
+            <Avatar alt="name" src={author.author_img} sx={{ [theme.breakpoints.down('md')]: { width: '35px', height: "35px" } }} />
+            <Typography sx={{
+                m: '10px 0', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden', width: "70px", textAlign: 'center',
+                [theme.breakpoints.down('md')]: {
+                    fontSize: "14px",
+                    m: '5px 0'
+                }
+            }}>{author.author_name}</Typography>
 
             <CardActions sx={{
                 display: 'flex',
@@ -104,25 +116,46 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
             }}>
                 <IconButton
                     onClick={() => handleLike()}
-                    sx={{ m: '5px 0', color: 'text.primary', p: '0', flexDirection: 'column', justifyContent: "center" }}
+                    sx={{ m: '5px 0', color: 'text.primary', p: '0', flexDirection: 'column', justifyContent: "center",
+                        [theme.breakpoints.down('md')]:{m: '2px 0'}
+                     }}
                 >
-                    <FavoriteIcon sx={{ color: `${liked ? 'primary.main' : 'text.primary'}` }}></FavoriteIcon>
+                    <FavoriteIcon sx={{
+                        color: `${liked ? 'primary.main' : 'text.primary'}`,
+                        [theme.breakpoints.down('md')]: { width: '20px', height: "20px" }
+                    }}></FavoriteIcon>
                     <Typography>{formatCount(Number(likes))}</Typography>
                 </IconButton>
 
 
                 <IconButton
                     onClick={toggleComment}
-                    sx={{ m: '10px 0', color: 'text.primary', p: '0', flexDirection: 'column', justifyContent: "center" }}>
-                    <CommentIcon sx={{ color: `${openComment ? 'primary.main' : 'text.primary'}` }} ></CommentIcon>
-                    <Typography>{formatCount(Number(comments))}</Typography>
+                    sx={{ m: '10px 0', color: 'text.primary', p: '0', flexDirection: 'column', justifyContent: "center",
+                        [theme.breakpoints.down('md')]:{m: '5px 0'}
+                     }}>
+                    <CommentIcon sx={{
+                        color: `${openComment ? 'primary.main' : 'text.primary'}`,
+                        [theme.breakpoints.down('md')]: { width: '20px', height: "20px" }
+                    }} ></CommentIcon>
+                    <Typography sx={{
+                        [theme.breakpoints.down('md')]: {
+                            fontSize: "14px",}
+                    }}>{formatCount(Number(comments))}</Typography>
                 </IconButton>
 
                 <IconButton
                     onClick={() => handleSave()}
-                    sx={{ m: '5px 0', color: 'text.primary', p: '0', flexDirection: 'column', justifyContent: "center" }}>
-                    <BookmarkIcon sx={{ color: `${saved ? 'primary.main' : 'text.primary'}` }}></BookmarkIcon>
-                    <Typography>{formatCount(Number(saves))}</Typography>
+                    sx={{ m: '5px 0', color: 'text.primary', p: '0', flexDirection: 'column', justifyContent: "center",
+                        [theme.breakpoints.down('md')]:{m: '2px 0'}
+                     }}>
+                    <BookmarkIcon sx={{
+                        color: `${saved ? 'primary.main' : 'text.primary'}`,
+                        [theme.breakpoints.down('md')]: { width: '20px', height: "20px" }
+                    }}></BookmarkIcon>
+                    <Typography sx={{
+                        [theme.breakpoints.down('md')]: {
+                            fontSize: "14px",}
+                    }}>{formatCount(Number(saves))}</Typography>
                 </IconButton>
             </CardActions>
 
@@ -130,11 +163,11 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
     )
 }, (prevProps, nextProps) => {
     return prevProps.props.config_id === nextProps.props.config_id &&
-    prevProps.props.likes === nextProps.props.likes &&
-    prevProps.props.liked === nextProps.props.liked &&
-    prevProps.props.saved === nextProps.props.saved &&
-    prevProps.props.saves === nextProps.props.saves &&
-    prevProps.props.comments === nextProps.props.comments &&
-    prevProps.props.openComment === nextProps.props.openComment
+        prevProps.props.likes === nextProps.props.likes &&
+        prevProps.props.liked === nextProps.props.liked &&
+        prevProps.props.saved === nextProps.props.saved &&
+        prevProps.props.saves === nextProps.props.saves &&
+        prevProps.props.comments === nextProps.props.comments &&
+        prevProps.props.openComment === nextProps.props.openComment
 });
 
