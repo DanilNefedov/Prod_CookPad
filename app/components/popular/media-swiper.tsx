@@ -37,21 +37,21 @@ export const MediaSwiper = memo(({ activeVideo }: { activeVideo: number }) => {
             slidesPerView={'auto'}
             modules={[Pagination]}
             spaceBetween={2}
-
+            style={{zIndex:5, position:'relative', borderRadius: '20px 20px 0 20px',}}
         >
             {media.map((elem: MediaObj) => (
-                <SwiperSlide key={elem.media_id} className="slide-popular">
-                    {elem.media_id === '' ? 
-                    <Box sx={{width:'100%', height:'100%', backgroundColor: "background.default", }}></Box>
-                    :
-                    <Box >
-                        {
+               
+                <SwiperSlide key={elem.media_id} className="slide-popular" >
+                {/* {elem.media_id === ''  */}
+                    <Box sx={{width:'100%', height:'100%', borderRadius: '20px 20px 0 20px',}}>
+                       {
                             elem.media_type === 'image' ?
                                 <CardMedia
                                     sx={{
                                         height: '100%',
                                         objectFit: 'cover',
                                         width:'100%',
+                                        borderRadius: '20px 20px 0 20px',
                                     }}
                                     component='img'
                                     src={elem.media_url as string}
@@ -63,6 +63,7 @@ export const MediaSwiper = memo(({ activeVideo }: { activeVideo: number }) => {
                                         height: '100%',
                                         objectFit: 'cover',
                                         width:'100%',
+                                        borderRadius: '20px 20px 0 20px',
                                     }}
                                     component='video'
                                     autoPlay
@@ -75,13 +76,67 @@ export const MediaSwiper = memo(({ activeVideo }: { activeVideo: number }) => {
                                         type="video/mp4"
                                     />
                                 </CardMedia>
-                        }
+                     }
                     </Box>
-                    }
+                 {/* } */}
                     
 
                 </SwiperSlide>
-            ))}
+                // })
+            
+            
+            )
+
+                // {
+                //     elem.media_url === '' ? 
+                //     <Box sx={{width:'100%', height:'100%', backgroundColor: "background.default", }}></Box>
+                //     :
+                //     <SwiperSlide key={elem.media_id} className="slide-popular">
+                //     {elem.media_id === '' ? 
+                //     <Box sx={{width:'100%', height:'100%', backgroundColor: "background.default", }}></Box>
+                //     :
+                //     <Box >
+                //         {
+                //             elem.media_type === 'image' ?
+                //                 <CardMedia
+                //                     sx={{
+                //                         height: '100%',
+                //                         objectFit: 'cover',
+                //                         width:'100%',
+                //                     }}
+                //                     component='img'
+                //                     src={elem.media_url as string}
+                //                     loading="lazy"
+                //                 />
+                //                 :
+                //                 <CardMedia
+                //                     sx={{
+                //                         height: '100%',
+                //                         objectFit: 'cover',
+                //                         width:'100%',
+                //                     }}
+                //                     component='video'
+                //                     autoPlay
+                //                     loop
+                //                     muted
+                //                     poster={elem.media_url as string}
+                //                 >
+                //                     <source
+                //                         src={elem.media_url as string}
+                //                         type="video/mp4"
+                //                     />
+                //                 </CardMedia>
+                //         }
+                //     </Box>
+                //     }
+                    
+
+                // </SwiperSlide>
+                // })
+                
+            
+            
+            )}
         </Swiper>
 
     )

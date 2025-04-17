@@ -118,43 +118,49 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
     useEffect(() => {
         const el = scrollRef.current;
         if (!el || Number.isNaN(commentsData.page)) return;
-      
+    
         let isFetching = false;
-        let timeout: NodeJS.Timeout | null = null;
-      
+        let timeout: ReturnType<typeof setTimeout> | null = null;
+        
+        const scrollBuffer = 75; //additional space in case of scroll but we can still see the loading block.
+    
         const checkNeedFetch = () => {
-          if (el.scrollHeight <= el.clientHeight && !isFetching) {
-            isFetching = true;
-      
-            dispatch(commVideoFetch({
-              config_id,
-              user_id: connection_id,
-              page: commentsData.page + 1,
-              newComments
-            })).finally(() => {
-              isFetching = false;
-            });
-          }
+            if (!el || isFetching) return;
+    
+            const contentShort = el.scrollHeight <= el.clientHeight + scrollBuffer;
+    
+            if (contentShort) {
+                isFetching = true;
+    
+                dispatch(commVideoFetch({
+                    config_id,
+                    user_id: connection_id,
+                    page: commentsData.page + 1,
+                    newComments
+                })).finally(() => {
+                    isFetching = false;
+                });
+            }
         };
-      
+    
         const debouncedCheck = () => {
-          if (timeout) clearTimeout(timeout);
-          timeout = setTimeout(checkNeedFetch, 150); 
+            if (timeout) clearTimeout(timeout);
+            timeout = setTimeout(checkNeedFetch, 150);
         };
-      
+    
         const observer = new ResizeObserver(() => {
-          debouncedCheck();
+            debouncedCheck();
         });
-      
+    
         observer.observe(el);
-      
         debouncedCheck();
-      
+    
         return () => {
-          observer.disconnect();
-          if (timeout) clearTimeout(timeout);
+            observer.disconnect();
+            if (timeout) clearTimeout(timeout);
         };
-      }, [commentsData.page, config_id, connection_id, newComments]);
+    }, [commentsData.page, config_id, connection_id, newComments]);
+    
       
 
     console.log('main-comments')

@@ -61,6 +61,7 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
 
     function formatCount(value: number): string {
         if (!value) return '';
+        // if (value === 0) return '0'
         if (value < 1000) return String(Math.floor(value));
         return numbro(value).format({
             average: true,
@@ -87,7 +88,7 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
             alignItems: 'center',
             justifyContent: 'center',
             p: '20px 7px',
-            zIndex: 1000,
+            zIndex: 2,
             width: '80px',
             [theme.breakpoints.down('md')]: {
                 width:'65px',
@@ -124,7 +125,7 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
                         color: `${liked ? 'primary.main' : 'text.primary'}`,
                         [theme.breakpoints.down('md')]: { width: '20px', height: "20px" }
                     }}></FavoriteIcon>
-                    <Typography>{formatCount(Number(likes))}</Typography>
+                    <Typography>{likes > 0 ? formatCount(Number(likes)) : 0}</Typography>
                 </IconButton>
 
 
@@ -140,7 +141,7 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
                     <Typography sx={{
                         [theme.breakpoints.down('md')]: {
                             fontSize: "14px",}
-                    }}>{formatCount(Number(comments))}</Typography>
+                    }}>{ comments > 0 ? formatCount(Number(comments)) : 0}</Typography>
                 </IconButton>
 
                 <IconButton
@@ -155,7 +156,7 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
                     <Typography sx={{
                         [theme.breakpoints.down('md')]: {
                             fontSize: "14px",}
-                    }}>{formatCount(Number(saves))}</Typography>
+                    }}>{saves > 0 ? formatCount(Number(saves)) : 0}</Typography>
                 </IconButton>
             </CardActions>
 

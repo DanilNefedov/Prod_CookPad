@@ -27,8 +27,8 @@ import { mainBtnsPopular } from "@/app/(main)/popular/style";
 import { Mousewheel, Virtual } from 'swiper/modules'
 import type { Swiper as SwiperType } from 'swiper/types';
 import { theme } from "@/config/ThemeMUI/theme";
-
-
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 
 
 
@@ -118,25 +118,42 @@ export function MainPopular() {
         <>
             <Card sx={{
                 position: 'relative',
-                display: 'flex',
+                // display: 'flex',
                 overflow: "initial",
                 boxShadow: 'none',
-
-                m: "0 auto"
+                // height: "auto",
+                // flexShrink: 1,
+                m: "auto auto",
+                width:'100%',
+                // height:'100%',
+                aspectRatio: "9 / 16",
+                // maxWidth:'600px',
+                // maxHeight: 'calc(100vh - 40px)',
+                backgroundSize: "cover",
+                // aspect-ratio: 0.462428 / 1;
+                minWidth: "calc(500px - 9.5rem)",
+                minHeight: "calc(1081.25px - 20.5437rem)",
+                maxHeight: "calc(0px - 1rem + 100vh)",
+                maxWidth: "calc((0px - 1rem + 100vh) * 0.462428)",
+                alignSelf: "center",
             }}>
                 <Box sx={{
+
+
                     position: 'relative',
                     width: "100%",
-                    aspectRatio: "9 / 13",
+                    // aspectRatio: "9 / 16",
                     /* object-fit: cover; */
-                    maxWidth: "900px",
+                    // maxWidth: "600px",
+                    minHeight:'0',
+                    // height: "auto",
                     height: "100%",
-                    maxHeight: 'calc(100vh - 40px)',
+                    maxHeight:'100%',
+                    // maxHeight: 'calc(100vh - 40px)',
                     backgroundColor: "background.default",
                     borderRadius: '20px 20px 0 20px',
 
                 }} >
-
 
 
                 
@@ -170,17 +187,14 @@ export function MainPopular() {
 
                             initialSlide={activeVideo}
                             modules={[Virtual, Mousewheel]}
-                            style={{ height: '100%' }}
+                            style={{ height: '100%', zIndex:3 }}
                         >
                             {popularData.pop_list.map((item, index) => (
-                                <SwiperSlide key={item.config_id} virtualIndex={index}>
-
-
-
-                                    <MediaSwiper activeVideo={activeVideo} />
-
-
-
+                                <SwiperSlide key={item.config_id} virtualIndex={index} >
+                                    <Box sx={{width:'100%', height:'100%', borderRadius: '20px 20px 0 20px',}}>
+                                        <MediaSwiper activeVideo={activeVideo} />
+                                    </Box>
+                                    
 
                                 </SwiperSlide>
                             ))}
@@ -208,9 +222,25 @@ export function MainPopular() {
 
                
                 <Box sx={{
-                    position: 'absolute', right: '-200px', bottom: '11%', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '20px',
-                    [theme.breakpoints.down(1250)]: { right: '-10px' }
+                    position: 'absolute', right: '-60px', bottom: '400px', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '20px',
+                    // [theme.breakpoints.down(1250)]: { right: '-10px' }
                 }}>
+                    <Box
+                        sx={mainBtnsPopular}
+                        onClick={() => {
+                            handleCooldown(() => {
+                                if (activeVideo > 0) {
+                                    const newIndex = activeVideo - 1;
+                                    swiperRef.current?.slideTo(newIndex);
+                                    setActiveVideo(newIndex);
+                                }
+
+                                if (openComment) {
+                                    setOpenComment(false);
+                                }
+                            });
+                        }}
+                    ><KeyboardDoubleArrowUpIcon sx={{mb:'2px'}}></KeyboardDoubleArrowUpIcon></Box>
                     <Box
                         sx={mainBtnsPopular}
                         onClick={() => {
@@ -228,23 +258,8 @@ export function MainPopular() {
                                 }
                             });
                         }}
-                    >+</Box>
-                    <Box
-                        sx={mainBtnsPopular}
-                        onClick={() => {
-                            handleCooldown(() => {
-                                if (activeVideo > 0) {
-                                    const newIndex = activeVideo - 1;
-                                    swiperRef.current?.slideTo(newIndex);
-                                    setActiveVideo(newIndex);
-                                }
-
-                                if (openComment) {
-                                    setOpenComment(false);
-                                }
-                            });
-                        }}
-                    >-</Box>
+                    ><KeyboardDoubleArrowDownIcon></KeyboardDoubleArrowDownIcon></Box>
+                    
                 </Box>
 
 
@@ -258,8 +273,10 @@ export function MainPopular() {
                 flexDirection: 'column',
                 borderRadius: '20px',
                 p: '10px 20px',
-                width: " 23%",
+                width: "100%",
+                maxWidth:'450px',
                 maxHeight: 'calc(100vh - 40px)',
+                minHeight: 'calc(100vh - 40px)',
                 // position: "absolute",
                 // top: 0,
                 // right: 0,

@@ -19,8 +19,8 @@ export const mainBtnsPopular = {
         transform: "scale(1.1)"
     },
 
-    [theme.breakpoints.down(1250)]:{
-        width:'35px',
-        height:'35px', 
-    }
+    // [theme.breakpoints.down(1250)]:{
+    //     width:'35px',
+    //     height:'35px', 
+    // }
 }
