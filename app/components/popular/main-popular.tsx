@@ -29,8 +29,7 @@ import type { Swiper as SwiperType } from 'swiper/types';
 import { theme } from "@/config/ThemeMUI/theme";
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
-
-
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
 export function MainPopular() {
 
@@ -44,6 +43,7 @@ export function MainPopular() {
     const viewedVideos = useRef<Set<string>>(new Set());
     const swiperRef = useRef<SwiperType | null>(null);
     const cooldownRef = useRef(false);
+    const [openInfo, setOpenInfo] = useState<boolean>(false)
 
 
 
@@ -86,10 +86,6 @@ export function MainPopular() {
     }
 
 
-
-
-
-
     function handleNewVideo() {
         if (connection_id !== '' && popularData.pop_list.length - activeVideo < 5) {
             dispatch(popularFetch({ connection_id, count: 1, getAllIds: popularData.pop_list.map(item => item.config_id) }))
@@ -109,180 +105,234 @@ export function MainPopular() {
             cooldownRef.current = false;
         }, 1000);
     };
-    // const [activeVideo, setActiveVideo] = useState(0);
-    
+
+
+
+
     console.log('main-popular',)
 
     //768768768768768768768
+    //1024
     return (
         <>
-            <Card sx={{
-                position: 'relative',
-                // display: 'flex',
-                overflow: "initial",
-                boxShadow: 'none',
-                // height: "auto",
-                // flexShrink: 1,
-                m: "auto auto",
-                width:'100%',
-                // height:'100%',
-                aspectRatio: "9 / 16",
-                // maxWidth:'600px',
-                // maxHeight: 'calc(100vh - 40px)',
-                backgroundSize: "cover",
-                // aspect-ratio: 0.462428 / 1;
-                minWidth: "calc(500px - 9.5rem)",
-                minHeight: "calc(1081.25px - 20.5437rem)",
-                maxHeight: "calc(0px - 1rem + 100vh)",
-                maxWidth: "calc((0px - 1rem + 100vh) * 0.462428)",
-                alignSelf: "center",
-            }}>
+            <Card
+                sx={{
+                    position: 'relative',
+                    overflow: 'initial',
+                    boxShadow: 'none',
+                    m: '0 auto',
+                    backgroundSize: 'cover',
+                    backgroundColor: '#353842',
+                    borderRadius: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    alignSelf: "center",
+                    height: 'calc(100vh)',
+                    width: 'calc((100vh - 40px) * (9 / 16))',
+                    py: '20px',
+                    [theme.breakpoints.down(1030)]: { 
+                        pr:'80px'
+                    },
+                    [theme.breakpoints.down('md')]: {
+                        // justifyContent: 'space-between',
+                        m:'initial'
+                    }
+                }}>
                 <Box sx={{
 
 
-                    position: 'relative',
                     width: "100%",
-                    // aspectRatio: "9 / 16",
-                    /* object-fit: cover; */
-                    // maxWidth: "600px",
-                    minHeight:'0',
-                    // height: "auto",
-                    height: "100%",
-                    maxHeight:'100%',
-                    // maxHeight: 'calc(100vh - 40px)',
+                    aspectRatio: "9 / 16",
                     backgroundColor: "background.default",
                     borderRadius: '20px 20px 0 20px',
-
+                    position: 'relative',
                 }} >
 
 
-                
-                   
-                        <Swiper
-                            onSwiper={(swiper) => (swiperRef.current = swiper)}
-                            touchReleaseOnEdges
-                            direction="vertical"
-                            slidesPerView={1}
-                            mousewheel={{
-                                thresholdTime: 1000,
-                            }}
-                            effect="none"
-                            virtual={{
-                                // addSlidesAfter:5,
-                                // addSlidesBefore:5
-                                
-                            }}
-                            allowTouchMove={false}
-                            simulateTouch={false}
-                            onSlideChange={(swiper) => {
-                                const newIndex = swiper.activeIndex
-                                setActiveVideo(newIndex)
-                                const current = popularData.pop_list[newIndex]
-                                if (current) {
-                                    updateViews(current.config_id)
-                                    handleNewVideo()
-                                    if (openComment) setOpenComment(false)
-                                }
-                            }}
 
-                            initialSlide={activeVideo}
-                            modules={[Virtual, Mousewheel]}
-                            style={{ height: '100%', zIndex:3 }}
-                        >
-                            {popularData.pop_list.map((item, index) => (
-                                <SwiperSlide key={item.config_id} virtualIndex={index} >
-                                    <Box sx={{width:'100%', height:'100%', borderRadius: '20px 20px 0 20px',}}>
-                                        <MediaSwiper activeVideo={activeVideo} />
-                                    </Box>
-                                    
 
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                    <Swiper
+                        onSwiper={(swiper) => (swiperRef.current = swiper)}
+                        touchReleaseOnEdges
+                        direction="vertical"
+                        slidesPerView={1}
+                        mousewheel={{
+                            thresholdTime: 1000,
+                        }}
+                        effect="none"
+                        virtual
+                        allowTouchMove={false}
+                        simulateTouch={false}
+                        onSlideChange={(swiper) => {
+                            const newIndex = swiper.activeIndex
+                            setActiveVideo(newIndex)
+                            const current = popularData.pop_list[newIndex]
+                            if (current) {
+                                updateViews(current.config_id)
+                                handleNewVideo()
+                                if (openComment) setOpenComment(false)
+                            }
+                        }}
 
-                        
+                        initialSlide={activeVideo}
+                        modules={[Virtual, Mousewheel]}
+                        style={{ height: '100%', zIndex: 3 }}
+                    >
+                        {popularData.pop_list.map((item, index) => (
+                            <SwiperSlide key={item.config_id} virtualIndex={index} >
+                                <Box sx={{ width: '100%', height: '100%', borderRadius: '20px 20px 0 20px', }}>
+                                    <MediaSwiper activeVideo={activeVideo} />
+                                </Box>
+
+
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+
+
 
 
                     {
-                        popularData.pop_list[activeVideo] && <InfoAboutContent props={{
-                            author: popularData.pop_list[activeVideo]?.author_info,
-                            likes: popularData.pop_list[activeVideo]?.likes,
-                            liked: popularData.pop_list[activeVideo]?.liked,
-                            saved: popularData.pop_list[activeVideo]?.saved,
-                            saves: popularData.pop_list[activeVideo]?.saves,
-                            comments: popularData.pop_list[activeVideo]?.comments,
-                            config_id: popularData.pop_list[activeVideo]?.config_id,
-                            openComment,
-                            toggleComment
-                        }}></InfoAboutContent>
+                        popularData.pop_list[activeVideo] &&
+                        <Box sx={{
+                           
+                            position: "absolute",
+                            bottom: '0',
+                            right: '-79px',
+                            zIndex: 2,
+                            display: 'flex',
+                            flexDirection: 'column-reverse',
+                            alignItems:'center',
+                            gap: '20px',
+                            [theme.breakpoints.down('md')]: {
+                                width:'65px',
+                                height:'265px',
+                                right: '-64px',
+                                // top: 'calc(50% - 122px)',
+                            }
+                        }}>
+                            <InfoAboutContent props={{
+                                author: popularData.pop_list[activeVideo]?.author_info,
+                                likes: popularData.pop_list[activeVideo]?.likes,
+                                liked: popularData.pop_list[activeVideo]?.liked,
+                                saved: popularData.pop_list[activeVideo]?.saved,
+                                saves: popularData.pop_list[activeVideo]?.saves,
+                                comments: popularData.pop_list[activeVideo]?.comments,
+                                config_id: popularData.pop_list[activeVideo]?.config_id,
+                                openComment,
+                                toggleComment
+                            }}></InfoAboutContent>
+
+                            <Box sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '20px',
+                                width:"50px",
+                                [theme.breakpoints.down('md')]:{
+                                    width:"35px"
+                                }
+                            }}>
+                                <Box
+                                    sx={mainBtnsPopular}
+                                    onClick={() => {
+                                        handleCooldown(() => {
+                                            if (activeVideo > 0) {
+                                                const newIndex = activeVideo - 1;
+                                                swiperRef.current?.slideTo(newIndex);
+                                                setActiveVideo(newIndex);
+                                            }
+
+                                            if (openComment) {
+                                                setOpenComment(false);
+                                            }
+                                        });
+                                    }}
+                                ><KeyboardDoubleArrowUpIcon sx={{ mb: '2px', [theme.breakpoints.down('md')]:{width:"19px", height:'19px'} }}></KeyboardDoubleArrowUpIcon></Box>
+                                <Box
+                                    sx={mainBtnsPopular}
+                                    onClick={() => {
+                                        handleCooldown(() => {
+                                            if (activeVideo + 1 < popularData.pop_list.length) {
+                                                const newIndex = activeVideo + 1;
+                                                swiperRef.current?.slideTo(newIndex);
+                                                setActiveVideo(newIndex);
+                                                handleNewVideo();
+                                                updateViews(popularData.pop_list[newIndex].config_id);
+                                            }
+
+                                            if (openComment) {
+                                                setOpenComment(false);
+                                            }
+                                        });
+                                    }}
+                                ><KeyboardDoubleArrowDownIcon sx={{[theme.breakpoints.down('md')]:{width:"19px", height:'19px'}}}></KeyboardDoubleArrowDownIcon>
+                                </Box>
+
+
+
+                            </Box>
+                        </Box>
+
                     }
 
                 </Box>
 
-
-               
-                <Box sx={{
-                    position: 'absolute', right: '-60px', bottom: '400px', zIndex: 1000, display: 'flex', flexDirection: 'column', gap: '20px',
-                    // [theme.breakpoints.down(1250)]: { right: '-10px' }
-                }}>
-                    <Box
-                        sx={mainBtnsPopular}
-                        onClick={() => {
-                            handleCooldown(() => {
-                                if (activeVideo > 0) {
-                                    const newIndex = activeVideo - 1;
-                                    swiperRef.current?.slideTo(newIndex);
-                                    setActiveVideo(newIndex);
-                                }
-
-                                if (openComment) {
-                                    setOpenComment(false);
-                                }
-                            });
-                        }}
-                    ><KeyboardDoubleArrowUpIcon sx={{mb:'2px'}}></KeyboardDoubleArrowUpIcon></Box>
-                    <Box
-                        sx={mainBtnsPopular}
-                        onClick={() => {
-                            handleCooldown(() => {
-                                if (activeVideo + 1 < popularData.pop_list.length) {
-                                    const newIndex = activeVideo + 1;
-                                    swiperRef.current?.slideTo(newIndex);
-                                    setActiveVideo(newIndex);
-                                    handleNewVideo();
-                                    updateViews(popularData.pop_list[newIndex].config_id);
-                                }
-
-                                if (openComment) {
-                                    setOpenComment(false);
-                                }
-                            });
-                        }}
-                    ><KeyboardDoubleArrowDownIcon></KeyboardDoubleArrowDownIcon></Box>
-                    
-                </Box>
-
-
-
             </Card>
+
+           
+
+
+
             <Box sx={{
                 backgroundColor: "background.default",
                 // flexGrow: '1', 
-                overflow: 'auto',
+                // overflow: 'auto',
                 display: 'flex',
                 flexDirection: 'column',
                 borderRadius: '20px',
                 p: '10px 20px',
                 width: "100%",
-                maxWidth:'450px',
+                maxWidth: '450px',
                 maxHeight: 'calc(100vh - 40px)',
                 minHeight: 'calc(100vh - 40px)',
-                // position: "absolute",
+                position: "relative",
+                transition:'0.3s',
                 // top: 0,
                 // right: 0,
                 height: "100%",
-                [theme.breakpoints.down(1250)]: { maxWidth: '42%' }
+                [theme.breakpoints.down(1250)]: { maxWidth: '42%' },
+                [theme.breakpoints.down(1030)]: { 
+                    width: '300px', 
+                    minWidth:'300px', 
+                    marginRight:openInfo ? '0' : "calc(-268px - 50px)"  
+                } 
             }}>
+
+            <Box 
+            onClick={() => setOpenInfo(!openInfo)}
+            sx={{
+                display:'none',
+                position:"absolute",
+                backgroundColor:'red',
+                width:"50px",
+                height:'50px',
+                top:'75px',
+                left:"-50px",
+                justifyContent:'center', 
+                alignItems:'center',
+                borderRadius:'10px 0 0 10px',
+                bgcolor:'background.default',
+                [theme.breakpoints.down(1030)]: { display:'flex'}
+            }}>
+                <KeyboardArrowLeftIcon sx={{
+                    width:"45px", 
+                    height:"45px", 
+                    transition: 'transform 0.3s ease-in-out',
+                    transform: openInfo ? 'rotate(180deg)' : 'rotate(0deg)'}}
+                ></KeyboardArrowLeftIcon>
+            </Box>
+
                 <Typography gutterBottom variant="h5" component="h1" sx={{
                     flexShrink: 0, textOverflow: 'ellipsis', pb: '10px', lineHeight: 'none', mb: '0', whiteSpace: 'nowrap', overflow: 'hidden',
                     [theme.breakpoints.down('md')]: { fontSize: '20px', pb: '5px' }
@@ -290,7 +340,7 @@ export function MainPopular() {
                     {popularData.pop_list[activeVideo]?.recipe_name}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{
-                    flexShrink: 0, fontSize: "16px", display: 'block', pb: '20px',
+                    flexShrink: 0, fontSize: "16px", display: 'block', pb: '20px', wordBreak:'break-all',
                     [theme.breakpoints.down('md')]: { fontSize: '14px', pb: '10px' }
                 }}>
                     {popularData.pop_list[activeVideo]?.description}
@@ -303,7 +353,7 @@ export function MainPopular() {
                     <></>
                 }
             </Box>
-            
+
 
         </>
 

@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/state/hook";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { setActiveComment } from "@/state/slices/comments-context";
 import numbro from "numbro";
+import { theme } from "@/config/ThemeMUI/theme";
 
 
 
@@ -73,19 +74,63 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
             maxWidth: "90%",
             lignItems: "flex-start",
             borderColor: isActive ? 'text.secondary' : 'transparent',
+            p:'5px 7px',
             '&:last-child': {
                 mb: '0px'
-            }
+            },
+            [theme.breakpoints.down('md')]:{p:'4px 8px'}
+        
         }}>
-            <Box sx={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', p:'7px 0'}}>
-                <ListItemAvatar>
-                    <Avatar alt={author_name} src={author_avatar} />
+            <Box sx={{display:'flex', alignItems:'center', width:'100%', p:'0px'}}>
+                <ListItemAvatar sx={{minWidth:"0", mr:"10px"}}>
+                    <Avatar alt={author_name} src={author_avatar} sx={{width:"35px", height:'35px', 
+                        [theme.breakpoints.down('md')]:{width:"30px", height:'30px'}
+                    }}/>
                 </ListItemAvatar>
                 <ListItemText
-                    sx={{ m: "0", '& .MuiTypography-root ': { maxWidth: '513px', color: 'text.primary', fontSize: '16px' } }}
+                    sx={{ m: "0", '& .MuiTypography-root ': { maxWidth: '513px', color: 'text.primary', fontSize: '15px',
+                        [theme.breakpoints.down('md')]:{fontSize:"14px"}
+                     }, '& .MuiTypography-body1':{
+                        mb:'5px',}
+                    }}
                     primary={
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb:"5px" }}>{author_name}{id_parent === id_branch ? '' : <><ArrowRightIcon /> <span>{name_parent}</span></>}</Box>
-                        // `${author_name} ${id_parent === id_branch ? '' : <ArrowRightIcon/>+name_parent}`
+                        <Box sx={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            overflow: 'hidden', 
+                            gap: '4px', 
+                            minWidth: 0 
+                          }}>
+                            <Box
+                              component="span"
+                              sx={{
+                                minWidth: 0,
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: 'nowrap',
+                              }}
+                            >
+                              {author_name}
+                            </Box>
+                          
+                            {id_parent === id_branch ? null : (
+                              <>
+                                <ArrowRightIcon sx={{ flexShrink: 0, [theme.breakpoints.down('md')]:{width:"20px", height:'20px'} }} />
+                          
+                                <Box
+                                  component="span"
+                                  sx={{
+                                    minWidth: 0,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                  }}
+                                >
+                                  {name_parent}
+                                </Box>
+                              </>
+                            )}
+                          </Box>
                     }
                     secondary={
                         <>
@@ -93,7 +138,6 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
                         </>
                     }
                 />
-                <Typography sx={{ fontSize: '14px', color: 'text.disabled', alignSelf: 'flex-start', }}>{createdAt}</Typography>
             </Box>
 
 
@@ -107,17 +151,21 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
                         fontSize: "14px",
                         textTransform: 'initial',
                         minWidth: "0",
-                        color: isActive ? 'primary.main' : 'text.secondary'
-                    }}>reply</Button>
+                        color: isActive ? 'primary.main' : 'text.secondary',
+                        [theme.breakpoints.down('md')]:{fontSize:"12px"}
+                    }}>
+                    reply
+                </Button>
                
-
+                <Typography sx={{ fontSize: '14px', color: 'text.disabled', alignSelf: 'flex-start', [theme.breakpoints.down('md')]:{fontSize:"12px"}}}>{createdAt}</Typography>
                 <Button sx={{
                     p: '0',
                     '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
                     fontSize: "14px",
                     textTransform: 'initial',
                     minWidth: "0",
-                    color: 'text.secondary'
+                    color: 'text.secondary',
+                    [theme.breakpoints.down('md')]:{fontSize:"12px"}
                 }}
                     onClick={() => likeT()}
                 >

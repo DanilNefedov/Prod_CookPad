@@ -10,29 +10,21 @@ export default function Popular() {
 
     return(
         <Card sx={{ 
-            // width: 'calc(100% - 2px)', 
             overflow:"inherit", 
-            // backgroundColor: "background.default", 
             boxShadow:'none',
-            // display: 'flex', 
-            // m: '0 auto', 
-            // height:'calc(100% - 40px)', 
-            // maxWidth:'1400px', 
             position:'relative' ,
-            // justifyContent:'space-between',
             gap:"90px",
-
-
             height: "maxContent",
             display: "flex",
-        
             flexDirection: "row",
-            // -webkit-box-flex: 1;
             flexGrow: 1,
-            // -webkit-box-align: end;
-            alignItems: "end",
-            // -webkit-box-pack: center;
+            alignItems: "center",
             justifyContent: "center",
+            [theme.breakpoints.down(1030)]: { gap:"20px", },
+            [theme.breakpoints.down('md')]: {
+                justifyContent: "space-between",
+                // gap:"75px",
+            }
             }}>
             
             <MainPopular></MainPopular>

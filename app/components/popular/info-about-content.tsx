@@ -78,22 +78,15 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
             backgroundColor: 'background.default',
             backdropFilter: 'blur(3px)',
             height: '320px',
-            // width:'100px',
             borderRadius: '0px 15px 15px 0px',
-            position: "absolute",
-            bottom: '0',
-            right: '-79px',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             p: '20px 7px',
-            zIndex: 2,
             width: '80px',
             [theme.breakpoints.down('md')]: {
                 width:'65px',
-                height:'265px',
-                top: 'calc(50% - 122px)',
             }
         }}>
 

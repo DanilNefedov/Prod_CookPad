@@ -1,6 +1,7 @@
 import { Box, Button, TextField } from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import { Dispatch, memo, SetStateAction, useState } from "react";
+import { theme } from "@/config/ThemeMUI/theme";
 
 
 
@@ -33,9 +34,13 @@ export const InputComment = memo(({ sendComm }: DataProps) => {
                         p: '9px 52px 9px 7px',
                         "&:after": {
                             border: "transparent"
+                        },
+                        [theme.breakpoints.down('md')]:{
+                            fontSize:'15px'
                         }
                     },
                     borderRadius: '10px',
+                    
                 }}
                 placeholder="Type in a comment"
                 id="filled-multiline-flexible"

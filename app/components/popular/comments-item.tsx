@@ -127,7 +127,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
                 }}>
                     <ListItemAvatar sx={{minWidth:"0", pr:'10px',
                         [theme.breakpoints.down('md')]:{
-                            pr: '5px'
+                            pr: '7px'
                         }
                     }}>
                         <Avatar alt={commentsData.author_name} src={commentsData.author_avatar} sx={{
@@ -145,7 +145,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
                             textOverflow: "ellipsis",
                             whiteSpace:'nowrap',
                             overflow:"hidden",
-                            [theme.breakpoints.down('md')]:{mb:'0'}
+                            [theme.breakpoints.down('md')]:{mb:'5px'}
                         } }}
                         primary={
                             commentsData.author_name
