@@ -11,6 +11,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { InputComment } from "./input-comment";
 import { CommentsItem } from "./comments-item";
 import { shallowEqual } from "react-redux";
+import { theme } from "@/config/ThemeMUI/theme";
 
 
 
@@ -165,9 +166,13 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
 
     console.log('main-comments')
     return (
-        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', overflow: 'auto', }}>
+        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', overflow: 'auto',
+            
+         }}>
 
-            <Box ref={scrollRef} sx={{ overflow: 'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0" }} id="scrollableTarget">
+            <Box ref={scrollRef} sx={{ overflow: 'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0",
+                
+             }} id="scrollableTarget">
                 <InfiniteScroll
                     style={{ overflow: 'initial' }}
                     dataLength={commentsData.ids.length}

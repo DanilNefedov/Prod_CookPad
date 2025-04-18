@@ -8,6 +8,7 @@ import { likePopContent, savePopContent } from "@/state/slices/popular-slice";
 import { PopularAuthorInfoT } from "@/app/types/types";
 import numbro from 'numbro';
 import { theme } from "@/config/ThemeMUI/theme";
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 
 
 interface DataPropsT {
@@ -87,6 +88,11 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
             width: '80px',
             [theme.breakpoints.down('md')]: {
                 width:'65px',
+            },
+            [theme.breakpoints.down(769)]: {
+                bgcolor:'transparent',
+                backdropFilter:'none',
+                borderRadius:'10px 0 10px 0px'
             }
         }}>
 
@@ -112,7 +118,7 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
                     onClick={() => handleLike()}
                     sx={{ m: '5px 0', color: 'text.primary', p: '0', flexDirection: 'column', justifyContent: "center",
                         [theme.breakpoints.down('md')]:{m: '2px 0'}
-                     }}
+                    }}
                 >
                     <FavoriteIcon sx={{
                         color: `${liked ? 'primary.main' : 'text.primary'}`,
@@ -151,6 +157,10 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
                             fontSize: "14px",}
                     }}>{saves > 0 ? formatCount(Number(saves)) : 0}</Typography>
                 </IconButton>
+
+
+                
+
             </CardActions>
 
         </Box>

@@ -10,6 +10,7 @@ import './styles.css';
 import { useAppSelector } from "@/state/hook";
 import { memo } from "react";
 import { shallowEqual } from "react-redux";
+import { theme } from "@/config/ThemeMUI/theme";
 
 
 
@@ -41,12 +42,18 @@ export const MediaSwiper = memo(({ activeVideo }: { activeVideo: number }) => {
             slidesPerView={'auto'}
             modules={media.length > 1 ? [Pagination] : []}
             spaceBetween={2}
-            style={{zIndex:5, position:'relative', borderRadius: '20px 20px 0 20px',}}
+            style={{zIndex:5, position:'relative', 
+                
+            }}
         >
             {media.map((elem: MediaObj) => (
                
                 <SwiperSlide key={elem.media_id} className="slide-popular" >
-                    <Box sx={{width:'100%', height:'100%', borderRadius: '20px 20px 0 20px',}}>
+                    <Box sx={{width:'100%', height:'100%', borderRadius: '20px 20px 0 20px',
+                        [theme.breakpoints.down(769)]: {
+                            borderRadius: '20px 20px 20px 20px'
+                        }
+                    }}>
                        {
                             elem.media_type === 'image' ?
                                 <CardMedia
@@ -55,6 +62,9 @@ export const MediaSwiper = memo(({ activeVideo }: { activeVideo: number }) => {
                                         objectFit: 'cover',
                                         width:'100%',
                                         borderRadius: '20px 20px 0 20px',
+                                        [theme.breakpoints.down(769)]: {
+                                            borderRadius: '20px 20px 20px 20px'
+                                        }
                                     }}
                                     component='img'
                                     src={elem.media_url as string}
@@ -67,6 +77,9 @@ export const MediaSwiper = memo(({ activeVideo }: { activeVideo: number }) => {
                                         objectFit: 'cover',
                                         width:'100%',
                                         borderRadius: '20px 20px 0 20px',
+                                        [theme.breakpoints.down(769)]: {
+                                            borderRadius: '20px 20px 20px 20px'
+                                        }
                                     }}
                                     component='video'
                                     autoPlay

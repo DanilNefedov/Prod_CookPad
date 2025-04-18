@@ -44,6 +44,27 @@ export function MainPopular() {
     const swiperRef = useRef<SwiperType | null>(null);
     const cooldownRef = useRef(false);
     const [openInfo, setOpenInfo] = useState<boolean>(false)
+    const [expanded, setExpanded] = useState(false);
+    const commentRef = useRef<HTMLDivElement | null>(null);
+    
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                window.innerWidth <= 769 &&
+                openComment &&
+                commentRef.current &&
+                !commentRef.current.contains(event.target as Node)
+            ) {
+                setOpenComment(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [openComment]);
 
 
 
@@ -111,10 +132,12 @@ export function MainPopular() {
 
     console.log('main-popular',)
 
-    //768768768768768768768
+    //769769769769769769769
     //1024
     return (
         <>
+
+
             <Card
                 sx={{
                     position: 'relative',
@@ -131,12 +154,17 @@ export function MainPopular() {
                     height: 'calc(100vh)',
                     width: 'calc((100vh - 40px) * (9 / 16))',
                     py: '20px',
-                    [theme.breakpoints.down(1030)]: { 
-                        pr:'80px'
+                    [theme.breakpoints.down(1030)]: {
+                        pr: openInfo ? '30px' : '0'
                     },
-                    [theme.breakpoints.down('md')]: {
-                        // justifyContent: 'space-between',
-                        m:'initial'
+                    // [theme.breakpoints.down('md')]: {
+                    //     // justifyContent: 'space-between',
+                    //     m: 'initial'
+                    // },
+                    [theme.breakpoints.down(769)]: {
+                        p: '0',
+                        m: '0 auto',
+                        maxWidth: '100%'
                     }
                 }}>
                 <Box sx={{
@@ -147,8 +175,59 @@ export function MainPopular() {
                     backgroundColor: "background.default",
                     borderRadius: '20px 20px 0 20px',
                     position: 'relative',
+                    [theme.breakpoints.down(769)]: {
+                        borderRadius: '20px 20px 20px 20px'
+                    }
                 }} >
+                    <Box sx={{
+                        display: 'none',
+                        position: 'absolute',
+                        zIndex: "150",
+                        bottom: "0",
+                        left: '0px',
+                        width: '100%',
+                        p: "0 65px 0 15px",
+                        background: expanded ? `linear-gradient(
+                           180deg,
+                            hsl(0 0% 6% / 0.02) 0%,  
+                            hsl(0 0% 0% / 0.34) 20%,
+                            hsl(0 0% 0% / 0.54) 40%,
+                            hsl(0 0% 0% / 0.69) 60%,
+                            hsl(0 0% 0% / 0.8) 80%,
+                            hsl(0 0% 0% / 0.9) 100%
+                        )`: 'none',
+                        // bgcolor:'rgba(31, 33, 40, 0.55)',
+                        borderRadius: '0px 0 0px 20px',
+                        [theme.breakpoints.down(769)]: {
+                            display: 'block'
+                        }
+                    }}>
+                        <Typography gutterBottom variant="h5" component="h1" sx={{
+                            flexShrink: 0, textOverflow: 'ellipsis', pb: '5px', lineHeight: 'none', mb: '0', whiteSpace: 'nowrap', overflow: 'hidden',
+                            fontSize: '16px'
+                        }}>
+                            {popularData.pop_list[activeVideo]?.recipe_name}
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            onClick={() => setExpanded(prev => !prev)}
+                            sx={{
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                pb: '15px',
+                                flexShrink: 0,
+                                display: 'block',
+                                wordBreak: expanded ? 'break-word' : 'break-all',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                whiteSpace: expanded ? 'normal' : 'nowrap',
+                                transition: "0.3s"
+                            }}
+                        >
+                            {popularData.pop_list[activeVideo]?.description + "adsa kjdbasjkd basdasjdsjadgjkasgdjhasgdjhgashjdgashdb asjkdasdasjkdhkasdhj ashjdjasdjkasdjkasb jdasjkd asjkdasgdkjas"}
+                        </Typography>
 
+                    </Box>
 
 
 
@@ -196,20 +275,24 @@ export function MainPopular() {
                     {
                         popularData.pop_list[activeVideo] &&
                         <Box sx={{
-                           
+
                             position: "absolute",
                             bottom: '0',
                             right: '-79px',
                             zIndex: 2,
                             display: 'flex',
                             flexDirection: 'column-reverse',
-                            alignItems:'center',
+                            alignItems: 'center',
                             gap: '20px',
                             [theme.breakpoints.down('md')]: {
-                                width:'65px',
-                                height:'265px',
+                                width: '65px',
+                                height: '265px',
                                 right: '-64px',
                                 // top: 'calc(50% - 122px)',
+                            },
+                            [theme.breakpoints.down(769)]: {
+                                right: "0",
+                                zIndex: 100
                             }
                         }}>
                             <InfoAboutContent props={{
@@ -228,9 +311,12 @@ export function MainPopular() {
                                 display: 'flex',
                                 flexDirection: 'column',
                                 gap: '20px',
-                                width:"50px",
-                                [theme.breakpoints.down('md')]:{
-                                    width:"35px"
+                                width: "50px",
+                                [theme.breakpoints.down('md')]: {
+                                    width: "35px"
+                                },
+                                [theme.breakpoints.down(769)]: {
+                                    display: "none"
                                 }
                             }}>
                                 <Box
@@ -248,7 +334,7 @@ export function MainPopular() {
                                             }
                                         });
                                     }}
-                                ><KeyboardDoubleArrowUpIcon sx={{ mb: '2px', [theme.breakpoints.down('md')]:{width:"19px", height:'19px'} }}></KeyboardDoubleArrowUpIcon></Box>
+                                ><KeyboardDoubleArrowUpIcon sx={{ mb: '2px', [theme.breakpoints.down('md')]: { width: "19px", height: '19px' } }}></KeyboardDoubleArrowUpIcon></Box>
                                 <Box
                                     sx={mainBtnsPopular}
                                     onClick={() => {
@@ -266,7 +352,7 @@ export function MainPopular() {
                                             }
                                         });
                                     }}
-                                ><KeyboardDoubleArrowDownIcon sx={{[theme.breakpoints.down('md')]:{width:"19px", height:'19px'}}}></KeyboardDoubleArrowDownIcon>
+                                ><KeyboardDoubleArrowDownIcon sx={{ [theme.breakpoints.down('md')]: { width: "19px", height: '19px' } }}></KeyboardDoubleArrowDownIcon>
                                 </Box>
 
 
@@ -280,68 +366,105 @@ export function MainPopular() {
 
             </Card>
 
-           
 
 
 
-            <Box sx={{
-                backgroundColor: "background.default",
-                // flexGrow: '1', 
-                // overflow: 'auto',
-                display: 'flex',
-                flexDirection: 'column',
-                borderRadius: '20px',
-                p: '10px 20px',
-                width: "100%",
-                maxWidth: '450px',
-                maxHeight: 'calc(100vh - 40px)',
-                minHeight: 'calc(100vh - 40px)',
-                position: "relative",
-                transition:'0.3s',
-                // top: 0,
-                // right: 0,
-                height: "100%",
-                [theme.breakpoints.down(1250)]: { maxWidth: '42%' },
-                [theme.breakpoints.down(1030)]: { 
-                    width: '300px', 
-                    minWidth:'300px', 
-                    marginRight:openInfo ? '0' : "calc(-268px - 50px)"  
-                } 
-            }}>
 
-            <Box 
-            onClick={() => setOpenInfo(!openInfo)}
-            sx={{
-                display:'none',
-                position:"absolute",
-                backgroundColor:'red',
-                width:"50px",
-                height:'50px',
-                top:'75px',
-                left:"-50px",
-                justifyContent:'center', 
-                alignItems:'center',
-                borderRadius:'10px 0 0 10px',
-                bgcolor:'background.default',
-                [theme.breakpoints.down(1030)]: { display:'flex'}
-            }}>
-                <KeyboardArrowLeftIcon sx={{
-                    width:"45px", 
-                    height:"45px", 
-                    transition: 'transform 0.3s ease-in-out',
-                    transform: openInfo ? 'rotate(180deg)' : 'rotate(0deg)'}}
-                ></KeyboardArrowLeftIcon>
-            </Box>
+            <Box
+                ref={commentRef}
+                sx={{
+                    backgroundColor: "background.default",
+                    // flexGrow: '1', 
+                    // overflow: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    borderRadius: '20px',
+                    p: '10px 20px',
+                    width: "100%",
+                    maxWidth: '450px',
+                    maxHeight: 'calc(100vh - 40px)',
+                    minHeight: 'calc(100vh - 40px)',
+                    position: "relative",
+                    transition: '0.3s',
+                    // top: 0,
+                    // right: 0,
+                    height: "100%",
+                    [theme.breakpoints.down(1250)]: { maxWidth: '42%' },
+                    [theme.breakpoints.down(1030)]: {
+                        width: '300px',
+                        minWidth: '300px',
+                        marginRight: openInfo ? '0' : "calc(-275px - 50px)"
+                    },
+                    [theme.breakpoints.down('md')]: {
+                        width: '300px',
+                        minWidth: '300px',
+                        marginRight: openInfo ? '0' : "calc(-265px - 50px)"
+                    },
+                    [theme.breakpoints.down(769)]: {
+                        mr: '0',
+                        width: 'calc((100vh - 40px) * (9 / 16))',
+                        maxWidth: 'calc(100% + 2px)',
+                        bottom: openComment ? '0%' : "-100%",
+                        p: '20px ',
+
+                        // mb:openComment ? '0%' : '-150%',
+                        position: 'absolute',
+                        zIndex: '400',
+
+                        borderRadius: '20px 20px 0 0',
+
+                        // width: "100%",
+                        // maxWidth: '450px',
+                        maxHeight: '60%',
+                        minHeight: '60%',
+                        height: '100%',
+                    }
+                }}>
+
+
+                <Box
+                    onClick={() => setOpenInfo(!openInfo)}
+                    sx={{
+                        display: 'none',
+                        position: "absolute",
+                        backgroundColor: 'red',
+                        width: "50px",
+                        height: '50px',
+                        top: '75px',
+                        left: "-50px",
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: '10px 0 0 10px',
+                        bgcolor: 'background.default',
+                        [theme.breakpoints.down(1030)]: { display: 'flex' },
+                        [theme.breakpoints.down(769)]: {
+                            display: 'none'
+                        }
+                    }}>
+                    <KeyboardArrowLeftIcon sx={{
+                        width: "45px",
+                        height: "45px",
+                        transition: 'transform 0.3s ease-in-out',
+                        transform: openInfo ? 'rotate(180deg)' : 'rotate(0deg)'
+                    }}
+                    ></KeyboardArrowLeftIcon>
+                </Box>
 
                 <Typography gutterBottom variant="h5" component="h1" sx={{
                     flexShrink: 0, textOverflow: 'ellipsis', pb: '10px', lineHeight: 'none', mb: '0', whiteSpace: 'nowrap', overflow: 'hidden',
-                    [theme.breakpoints.down('md')]: { fontSize: '20px', pb: '5px' }
+                    [theme.breakpoints.down('md')]: { fontSize: '20px', pb: '5px' },
+                    [theme.breakpoints.down(769)]: {
+                        display: "none"
+                    }
                 }}>
                     {popularData.pop_list[activeVideo]?.recipe_name}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={{
-                    flexShrink: 0, fontSize: "16px", display: 'block', pb: '20px', wordBreak:'break-all',
-                    [theme.breakpoints.down('md')]: { fontSize: '14px', pb: '10px' }
+                    flexShrink: 0, fontSize: "16px", display: 'block', pb: '20px', wordBreak: 'break-all',
+                    [theme.breakpoints.down('md')]: { fontSize: '14px', pb: '10px' },
+                    [theme.breakpoints.down(769)]: {
+                        display: "none"
+                    }
                 }}>
                     {popularData.pop_list[activeVideo]?.description}
                 </Typography>

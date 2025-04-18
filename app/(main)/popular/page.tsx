@@ -20,10 +20,19 @@ export default function Popular() {
             flexGrow: 1,
             alignItems: "center",
             justifyContent: "center",
-            [theme.breakpoints.down(1030)]: { gap:"20px", },
+            [theme.breakpoints.down(1030)]: { gap:"60px", },
             [theme.breakpoints.down('md')]: {
                 justifyContent: "space-between",
                 // gap:"75px",
+            },
+            // [theme.breakpoints.down(769)]: {
+            //     flexDirection: "column",
+            //     gap:'0',
+            //     maxHeight:'calc(100vh - 40px)'
+            // }
+            // [theme.breakpoints.down(820)]: { gap:"40px", },
+            [theme.breakpoints.down(769)]: {
+                flexDirection:'column'            
             }
             }}>
             
