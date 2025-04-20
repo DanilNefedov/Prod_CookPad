@@ -14,45 +14,46 @@ import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import { deleteUnitListRecipe, newAmountListRecipe, shopUnitListRecipe } from "@/state/slices/list-recipe-slice"
 import { handleAmountChange } from "../function"
 import { shallowEqual } from "react-redux"
+import { UnitsList } from "@/app/types/types"
 
 
 
 export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_id: string, unit_id: string, recipe_id?: string }) => {
     const unitData = useAppSelector(state => {
-    let thisIngredient;
-    if (recipe_id) {
-        thisIngredient = state.listRecipe.recipes
-            .find(el => el.recipe_id === recipe_id)
-            ?.ingredients_list.find(ing => ing._id === ingredient_id);
-    } else {
-        thisIngredient = state.list.list_ingr.find(el => el._id === ingredient_id);
-    }
-    
-    if (!thisIngredient) return null;
-    return {
-        unitInfo: thisIngredient.units.find(el => el._id === unit_id),
-        ingredientId: thisIngredient._id,
-    };
+        let thisIngredient;
+        if (recipe_id) {
+            thisIngredient = state.listRecipe.recipes
+                .find(el => el.recipe_id === recipe_id)
+                ?.ingredients_list.find(ing => ing._id === ingredient_id);
+        } else {
+            thisIngredient = state.list.list_ingr.find(el => el._id === ingredient_id);
+        }
+        
+        if (!thisIngredient) return null;
+        return {
+            unitInfo: thisIngredient.units.find(el => el._id === unit_id),
+            ingredientId: thisIngredient._id,
+        };
     }, shallowEqual); 
-    if (!unitData?.unitInfo) return null;
-    
-    const userStore = useAppSelector(state => state.user) 
-    const [editAmount, setEditAmount] = useState<string | null>(null);    
-    const thisUnit = unitData?.unitInfo
-    const [amount, setAmount] = useState<string>(thisUnit ? thisUnit.amount.toString() : '0');
+
+    const userStore = useAppSelector(state => state.user); 
     const pathName = usePathname();
     const dispatch = useAppDispatch();
-    const id = userStore?.user?.connection_id
+    const id = userStore?.user?.connection_id;
+    const [editAmount, setEditAmount] = useState<string | null | undefined>(null);    
+    const thisUnit = unitData?.unitInfo;
+    const [amount, setAmount] = useState<string>(thisUnit ? thisUnit.amount.toString() : '0');
 
-    // if (!unitData || unitData === undefined || !unitData.unitInfo) return null;
+    if (!unitData || unitData === undefined || !unitData.unitInfo) return null;
+
 
     
    
 
 
 
-    function deleteUnitIngr(ingredient_id: string, unit_id: string) {
-        if (id !== '') {
+    function deleteUnitIngr(ingredient_id: string, unit_id: string | undefined) {
+        if (id !== '' && unit_id) {
             if(pathName === '/list'){
                 dispatch(deleteUnitIngrFetch({ ingredient_id, unit_id }))
             }
@@ -65,10 +66,10 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
     }
 
 
-    const confirmAmount = useCallback((_id: string) => {
+    const confirmAmount = useCallback((_id: string | undefined) => {
         const numberAmount = evaluate(amount)
 
-        if (id !== '' && numberAmount !== thisUnit?.amount) {
+        if (id !== '' && numberAmount !== thisUnit?.amount && _id) {
             if (pathName === '/list') {
                 dispatch(changeAmountFetch({ ingredient_id: unitData.ingredientId, unit_id: _id, amount: numberAmount }));
             }else if(pathName === '/list-recipe' && recipe_id){
@@ -77,7 +78,7 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
             }   
         } 
         setEditAmount(null);
-    }, [id, amount, pathName, dispatch, recipe_id, thisUnit.amount, unitData.ingredientId]);
+    }, [id, amount, pathName, dispatch, recipe_id, thisUnit?.amount, unitData.ingredientId]);
     
 
    
@@ -90,9 +91,9 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
     
 
 
-    function toggleShopUnit(_id: string, shop_unit: boolean) {
+    function toggleShopUnit(_id: string | undefined, shop_unit: boolean | undefined) {
         console.log('toggleShopUnit')
-        if (id !== '' && unitData) {
+        if (id !== '' && unitData && shop_unit && _id) {
             if(pathName === '/list'){
                 dispatch(shopUnitUpdate({ ingredient_id: unitData.ingredientId, unit_id: _id, shop_unit }))
             }
@@ -107,9 +108,9 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
 
     
     return (
-        <Box key={thisUnit._id} sx={{...blockUnits, opacity:`${thisUnit.shop_unit ? 0.4 : 1}`, 
+        <Box key={thisUnit?._id} sx={{...blockUnits, opacity:`${thisUnit?.shop_unit ? 0.4 : 1}`, 
         backgroundColor:pathName ==='/list' ? 'background.paper' : 'background.default'}}>
-            {editAmount === thisUnit._id ?
+            {editAmount && editAmount === thisUnit?._id ?
                 <TextField 
                     onKeyDown={(e) => {
                         if (['-', '+', 'e'].includes(e.key)) {
@@ -118,7 +119,7 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
 
                         if (e.key === 'Enter') {
                             e.preventDefault(); 
-                            confirmAmount(thisUnit._id); 
+                            confirmAmount(thisUnit?._id); 
                         }
                     }}
                     
@@ -128,32 +129,32 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
                     onChange={(e) => handleAmount(e)}
                 />
                 :
-                <ListItemText sx={{ paddingRight: '4px', [theme.breakpoints.down(1050)]: { '& span':{fontSize:'14px'}} }} primary={thisUnit.amount} />
+                <ListItemText sx={{ paddingRight: '4px', [theme.breakpoints.down(1050)]: { '& span':{fontSize:'14px'}} }} primary={thisUnit?.amount} />
             }
 
             <ListItemText
                 sx={{ mr: '10px', flex:'none', [theme.breakpoints.down(1050)]: { '& span':{fontSize:'14px'}}}}
-                primary={thisUnit.choice}
+                primary={thisUnit?.choice}
             />
 
-            <Button onClick={() => toggleShopUnit(thisUnit._id, thisUnit.shop_unit)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
+            <Button onClick={() => toggleShopUnit(thisUnit?._id, thisUnit?.shop_unit)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
                 <ShoppingBagOutlinedIcon sx={{ width: '18px' }}></ShoppingBagOutlinedIcon>
             </Button>
 
 
-            {editAmount !== thisUnit._id ?
-                <Button onClick={() => setEditAmount(thisUnit._id)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
+            {editAmount !== thisUnit?._id ?
+                <Button onClick={() => setEditAmount(thisUnit?._id)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
                     <EditIcon sx={{ width: '18px' }}></EditIcon>
                 </Button>
                 :
-                <Button onClick={() => confirmAmount(thisUnit._id)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
+                <Button onClick={() => confirmAmount(thisUnit?._id)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
                     <CheckIcon sx={{ width: '18px' }}></CheckIcon>
                 </Button>
             }
-            <CalcUnit props={{ elem:thisUnit, id, ingredient_id:unitData.ingredientId, amount, setAmount, recipe_id }}></CalcUnit>
+            <CalcUnit props={{ elem:thisUnit as UnitsList, id, ingredient_id:unitData.ingredientId, amount, setAmount, recipe_id }}></CalcUnit>
             {/* <Convert props={{ elem, id, ingredient_id: el._id, editAmount, recipe_id }}></Convert> */}
            
-            <Button onClick={() => deleteUnitIngr(unitData.ingredientId, thisUnit._id)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
+            <Button onClick={() => deleteUnitIngr(unitData.ingredientId, thisUnit?._id)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
                 <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
             </Button>
         </Box>

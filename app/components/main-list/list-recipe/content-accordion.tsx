@@ -18,10 +18,10 @@ interface dataProps {
 export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
     const {recipe_id, status } = props   
     const ingredients_list = useAppSelector(state => state.listRecipe.recipes.find(el => el.recipe_id === recipe_id)?.ingredients_list);
-    if (!ingredients_list) return null; 
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
     const [sortBy, setSortBy] = useState<string | null>(null);
-    
+
+    if (!ingredients_list) return null; 
 
 
 
