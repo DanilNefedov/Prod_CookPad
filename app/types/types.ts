@@ -251,7 +251,8 @@ export type TempalateRecipe = {
 export type CookPageT = TempalateRecipe & {
     instruction:string,
     sorting:string[],
-    ingredients:IngredientForAutocomplite[],//for save form
+    ingredients:IngredientFullData[]
+    // ingredients:IngredientForAutocomplite[],//for save form
 }
 
 export type FetchCookPage = {

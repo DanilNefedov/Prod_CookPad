@@ -176,9 +176,10 @@ export function ContentCook() {
                     <Box sx={{ '& .swiper': { position: 'static', m: '0 15px' }, p: '0', position: 'relative' }}>
             
                         {findCook?.ingredients && findCook?.ingredients.length > 0 ?
-                        <IngredientSwiper props={{findCook:findCook?.ingredients, id}}></IngredientSwiper>
+                        <IngredientSwiper props={{findCook:findCook.ingredients, id}}></IngredientSwiper>
                         :
                         <></>
+                        
                         }
                         
                     </Box>

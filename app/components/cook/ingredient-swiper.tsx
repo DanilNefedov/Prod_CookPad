@@ -16,7 +16,6 @@ interface PropsData {
     id: string
 }
 
-
 export function IngredientSwiper({ props }: { props: PropsData }) {
     const { findCook, id } = props;
     const itemCount = findCook?.length || 0;
