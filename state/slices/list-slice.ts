@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 const initialState: IListState = {
-    status: false,
+    status: true,
     error: false,
     connection_id: '',
     list_ingr: [

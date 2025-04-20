@@ -1,5 +1,5 @@
 import { MediaObj } from "@/app/types/types";
-import { Box, CardMedia } from "@mui/material";
+import { Box, CardMedia, CircularProgress } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from 'swiper/modules';
 
@@ -8,16 +8,17 @@ import 'swiper/css/navigation';
 
 import './styles.css';
 import { useAppSelector } from "@/state/hook";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { shallowEqual } from "react-redux";
 import { theme } from "@/config/ThemeMUI/theme";
+import { containerSlideMediaSwiper, mediaSwiperElement } from "@/app/(main)/popular/style";
 
 
 
 
 
-// export function MediaSwiper({ props }: { props: dataPorps }) {
 export const MediaSwiper = memo(({ activeVideo }: { activeVideo: number }) => {
+    const [loaded, setLoaded] = useState<Record<string, boolean>>({});
 
     const media = useAppSelector(
         state => state.popular.pop_list[activeVideo]?.recipe_media || [],
@@ -25,6 +26,18 @@ export const MediaSwiper = memo(({ activeVideo }: { activeVideo: number }) => {
     );
 
     console.log('media')
+
+
+
+    // if (!media) {
+    //     return (
+    //         <Box style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
+    //             <CircularProgress color="secondary" size="35px" />
+    //         </Box>
+
+    //     );
+    // }
+
     return (
 
         <Swiper
@@ -33,72 +46,72 @@ export const MediaSwiper = memo(({ activeVideo }: { activeVideo: number }) => {
             pagination={
                 media.length > 1
                     ? {
-                          dynamicBullets: true,
-                          clickable: true,
-                      }
+                        dynamicBullets: true,
+                        clickable: true,
+                    }
                     : false
             }
             className="swiper-popular"
             slidesPerView={'auto'}
             modules={media.length > 1 ? [Pagination] : []}
             spaceBetween={2}
-            style={{zIndex:5, position:'relative', 
-                
+            style={{
+                zIndex: 5, position: 'relative',
+
             }}
         >
             {media.map((elem: MediaObj) => (
-               
-                <SwiperSlide key={elem.media_id} className="slide-popular" >
-                    <Box sx={{width:'100%', height:'100%', borderRadius: '20px 20px 0 20px',
-                        [theme.breakpoints.down(769)]: {
-                            borderRadius: '20px 20px 20px 20px'
-                        }
-                    }}>
-                       {
-                            elem.media_type === 'image' ?
-                                <CardMedia
-                                    sx={{
-                                        height: '100%',
-                                        objectFit: 'cover',
-                                        width:'100%',
-                                        borderRadius: '20px 20px 0 20px',
-                                        [theme.breakpoints.down(769)]: {
-                                            borderRadius: '20px 20px 20px 20px'
-                                        }
-                                    }}
-                                    component='img'
-                                    src={elem.media_url as string}
-                                    loading="lazy"
-                                />
-                                :
-                                <CardMedia
-                                    sx={{
-                                        height: '100%',
-                                        objectFit: 'cover',
-                                        width:'100%',
-                                        borderRadius: '20px 20px 0 20px',
-                                        [theme.breakpoints.down(769)]: {
-                                            borderRadius: '20px 20px 20px 20px'
-                                        }
-                                    }}
-                                    component='video'
-                                    autoPlay
-                                    loop
-                                    muted
-                                    poster={elem.media_url as string}
-                                >
-                                    <source
-                                        src={elem.media_url as string}
-                                        type="video/mp4"
-                                    />
-                                </CardMedia>
-                     }
-                    </Box>
-                    
 
+                <SwiperSlide key={elem.media_id} className="slide-popular">
+                    <Box sx={{ ...containerSlideMediaSwiper, position: 'relative' }}>
+                        {(!loaded[elem.media_id]) && (
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    zIndex: 10,
+                                }}
+                            >
+                                <CircularProgress color="secondary" size="35px" />
+                            </Box>
+                        )}
+
+                        {elem.media_type === 'image' ? (
+                            <CardMedia
+                                sx={{
+                                    ...mediaSwiperElement,
+                                    opacity: loaded[elem.media_id] ? 1 : 0,
+                                    transition: 'opacity 0.3s ease',
+                                }}
+                                component='img'
+                                src={elem.media_url as string}
+                                loading="lazy"
+                                onLoad={() => setLoaded(prev => ({ ...prev, [elem.media_id]: true }))}
+                            />
+                        ) : (
+                            <CardMedia
+                                sx={{
+                                    ...mediaSwiperElement,
+                                    opacity: loaded[elem.media_id] ? 1 : 0,
+                                    transition: 'opacity 0.3s ease',
+                                }}
+                                component='video'
+                                autoPlay
+                                loop
+                                muted
+                                poster={elem.media_url as string}
+                                onCanPlayThrough={() => setLoaded(prev => ({ ...prev, [elem.media_id]: true }))}
+                            >
+                                <source
+                                    src={elem.media_url as string}
+                                    type="video/mp4"
+                                />
+                            </CardMedia>
+                        )}
+                    </Box>
                 </SwiperSlide>
-            
-            
             )
 
             )}

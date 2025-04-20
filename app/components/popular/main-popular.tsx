@@ -1,29 +1,19 @@
 'use client'
 
-
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { likePopContent, popularFetch, savePopContent } from "@/state/slices/popular-slice";
-import { Avatar, Box, Button, Card, CardActions, CardContent, IconButton, List, Skeleton, Typography } from "@mui/material";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { popularFetch, } from "@/state/slices/popular-slice";
+import { Box, Card,  CircularProgress,  Typography } from "@mui/material";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from 'swiper/modules';
-import { MediaObj } from "@/app/types/types";
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
-import CommentIcon from '@mui/icons-material/Comment';
 import { MediaSwiper } from "./media-swiper";
-import { all, BigNumber, create, evaluate, number } from "mathjs";
 import { MainComments } from "./main-comments";
-import { commVideoFetch } from "@/state/slices/comments-popular-slice";
-
-
 import 'swiper/css';
 import 'swiper/css/navigation';
-
 import './styles.css';
 import { InfoAboutContent } from "./info-about-content";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { mainBtnsPopular } from "@/app/(main)/popular/style";
+import { btnOpenInfoMobile, containerActiveInfo, containerSwichBtns, descriptionRecipe, mainBtnsPopular, mainCardContent, 
+         mainContainerInfoComments, mainDescriptionRecipe, mainNameRecipe, mobileNameDescriptionContainer, nameRecipe, 
+         viewContentContainer } from "@/app/(main)/popular/style";
 import { Mousewheel, Virtual } from 'swiper/modules'
 import type { Swiper as SwiperType } from 'swiper/types';
 import { theme } from "@/config/ThemeMUI/theme";
@@ -31,11 +21,12 @@ import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrow
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 
-export function MainPopular() {
 
+
+
+export function MainPopular() {
     const dispatch = useAppDispatch()
     const popularData = useAppSelector(state => state.popular)
-    // const popularStatus = useAppSelector(state => state.popular.status)
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
     const [activeVideo, setActiveVideo] = useState<number>(0)
@@ -128,110 +119,38 @@ export function MainPopular() {
     };
 
 
-
-
+   
     console.log('main-popular',)
-
-    //769769769769769769769
-    //1024
     return (
         <>
-
-
             <Card
-                sx={{
-                    position: 'relative',
-                    overflow: 'initial',
-                    boxShadow: 'none',
-                    m: '0 auto',
-                    backgroundSize: 'cover',
-                    backgroundColor: '#353842',
-                    borderRadius: '20px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    alignSelf: "center",
-                    height: 'calc(100vh)',
-                    width: 'calc((100vh - 40px) * (9 / 16))',
-                    py: '20px',
-                    [theme.breakpoints.down(1030)]: {
-                        pr: openInfo ? '30px' : '0'
-                    },
-                    // [theme.breakpoints.down('md')]: {
-                    //     // justifyContent: 'space-between',
-                    //     m: 'initial'
-                    // },
-                    [theme.breakpoints.down(769)]: {
-                        p: '0',
-                        m: '0 auto',
-                        maxWidth: '100%'
-                    }
-                }}>
-                <Box sx={{
+                onClick={() => {
+                    if (openComment) setOpenComment(false);
+                }}
+                sx={(theme) => mainCardContent(theme, openInfo)}
+                >
+                <Box sx={viewContentContainer} >
+                    <Box sx={(theme) => mobileNameDescriptionContainer(theme, expanded)}>
 
-
-                    width: "100%",
-                    aspectRatio: "9 / 16",
-                    backgroundColor: "background.default",
-                    borderRadius: '20px 20px 0 20px',
-                    position: 'relative',
-                    [theme.breakpoints.down(769)]: {
-                        borderRadius: '20px 20px 20px 20px'
-                    }
-                }} >
-                    <Box sx={{
-                        display: 'none',
-                        position: 'absolute',
-                        zIndex: "150",
-                        bottom: "0",
-                        left: '0px',
-                        width: '100%',
-                        p: "0 65px 0 15px",
-                        background: expanded ? `linear-gradient(
-                           180deg,
-                            hsl(0 0% 6% / 0.02) 0%,  
-                            hsl(0 0% 0% / 0.34) 20%,
-                            hsl(0 0% 0% / 0.54) 40%,
-                            hsl(0 0% 0% / 0.69) 60%,
-                            hsl(0 0% 0% / 0.8) 80%,
-                            hsl(0 0% 0% / 0.9) 100%
-                        )`: 'none',
-                        // bgcolor:'rgba(31, 33, 40, 0.55)',
-                        borderRadius: '0px 0 0px 20px',
-                        [theme.breakpoints.down(769)]: {
-                            display: 'block'
-                        }
-                    }}>
-                        <Typography gutterBottom variant="h5" component="h1" sx={{
-                            flexShrink: 0, textOverflow: 'ellipsis', pb: '5px', lineHeight: 'none', mb: '0', whiteSpace: 'nowrap', overflow: 'hidden',
-                            fontSize: '16px'
-                        }}>
+                        <Typography gutterBottom variant="h5" component="h1" sx={nameRecipe}>
                             {popularData.pop_list[activeVideo]?.recipe_name}
                         </Typography>
                         <Typography
                             variant="body2"
                             onClick={() => setExpanded(prev => !prev)}
-                            sx={{
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                pb: '15px',
-                                flexShrink: 0,
-                                display: 'block',
-                                wordBreak: expanded ? 'break-word' : 'break-all',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: expanded ? 'normal' : 'nowrap',
-                                transition: "0.3s"
-                            }}
+                            sx={(theme) => descriptionRecipe(theme, expanded)}
                         >
-                            {popularData.pop_list[activeVideo]?.description + "adsa kjdbasjkd basdasjdsjadgjkasgdjhasgdjhgashjdgashdb asjkdasdasjkdhkasdhj ashjdjasdjkasdjkasb jdasjkd asjkdasgdkjas"}
+                            {popularData.pop_list[activeVideo]?.description }
                         </Typography>
 
                     </Box>
 
-
-
-                    <Swiper
+                    {/* { popularData.status ? 
+                        <Box style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
+                            <CircularProgress color="secondary" size="35px" />
+                        </Box> 
+                        : */}
+                        <Swiper
                         onSwiper={(swiper) => (swiperRef.current = swiper)}
                         touchReleaseOnEdges
                         direction="vertical"
@@ -258,7 +177,13 @@ export function MainPopular() {
                         modules={[Virtual, Mousewheel]}
                         style={{ height: '100%', zIndex: 3 }}
                     >
-                        {popularData.pop_list.map((item, index) => (
+                        {popularData.pop_list.map((item, index) =>(
+
+                            popularData.status || !popularData ? 
+                            <Box key={index} style={{ margin: '0 auto', width: '100%', height:'100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
+                                <CircularProgress color="secondary" size="35px" />
+                            </Box>
+                            :
                             <SwiperSlide key={item.config_id} virtualIndex={index} >
                                 <Box sx={{ width: '100%', height: '100%', borderRadius: '20px 20px 0 20px', }}>
                                     <MediaSwiper activeVideo={activeVideo} />
@@ -266,35 +191,17 @@ export function MainPopular() {
 
 
                             </SwiperSlide>
-                        ))}
+                        )
+                        
+                        )}
                     </Swiper>
-
-
-
+                    {/* }  */}
+                    
 
                     {
                         popularData.pop_list[activeVideo] &&
-                        <Box sx={{
+                        <Box sx={containerActiveInfo}>
 
-                            position: "absolute",
-                            bottom: '0',
-                            right: '-79px',
-                            zIndex: 2,
-                            display: 'flex',
-                            flexDirection: 'column-reverse',
-                            alignItems: 'center',
-                            gap: '20px',
-                            [theme.breakpoints.down('md')]: {
-                                width: '65px',
-                                height: '265px',
-                                right: '-64px',
-                                // top: 'calc(50% - 122px)',
-                            },
-                            [theme.breakpoints.down(769)]: {
-                                right: "0",
-                                zIndex: 100
-                            }
-                        }}>
                             <InfoAboutContent props={{
                                 author: popularData.pop_list[activeVideo]?.author_info,
                                 likes: popularData.pop_list[activeVideo]?.likes,
@@ -307,18 +214,7 @@ export function MainPopular() {
                                 toggleComment
                             }}></InfoAboutContent>
 
-                            <Box sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                gap: '20px',
-                                width: "50px",
-                                [theme.breakpoints.down('md')]: {
-                                    width: "35px"
-                                },
-                                [theme.breakpoints.down(769)]: {
-                                    display: "none"
-                                }
-                            }}>
+                            <Box sx={containerSwichBtns}>
                                 <Box
                                     sx={mainBtnsPopular}
                                     onClick={() => {
@@ -354,93 +250,19 @@ export function MainPopular() {
                                     }}
                                 ><KeyboardDoubleArrowDownIcon sx={{ [theme.breakpoints.down('md')]: { width: "19px", height: '19px' } }}></KeyboardDoubleArrowDownIcon>
                                 </Box>
-
-
-
                             </Box>
                         </Box>
-
                     }
-
                 </Box>
 
             </Card>
-
-
-
-
-
             <Box
                 ref={commentRef}
-                sx={{
-                    backgroundColor: "background.default",
-                    // flexGrow: '1', 
-                    // overflow: 'auto',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    borderRadius: '20px',
-                    p: '10px 20px',
-                    width: "100%",
-                    maxWidth: '450px',
-                    maxHeight: 'calc(100vh - 40px)',
-                    minHeight: 'calc(100vh - 40px)',
-                    position: "relative",
-                    transition: '0.3s',
-                    // top: 0,
-                    // right: 0,
-                    height: "100%",
-                    [theme.breakpoints.down(1250)]: { maxWidth: '42%' },
-                    [theme.breakpoints.down(1030)]: {
-                        width: '300px',
-                        minWidth: '300px',
-                        marginRight: openInfo ? '0' : "calc(-275px - 50px)"
-                    },
-                    [theme.breakpoints.down('md')]: {
-                        width: '300px',
-                        minWidth: '300px',
-                        marginRight: openInfo ? '0' : "calc(-265px - 50px)"
-                    },
-                    [theme.breakpoints.down(769)]: {
-                        mr: '0',
-                        width: 'calc((100vh - 40px) * (9 / 16))',
-                        maxWidth: 'calc(100% + 2px)',
-                        bottom: openComment ? '0%' : "-100%",
-                        p: '20px ',
-
-                        // mb:openComment ? '0%' : '-150%',
-                        position: 'absolute',
-                        zIndex: '400',
-
-                        borderRadius: '20px 20px 0 0',
-
-                        // width: "100%",
-                        // maxWidth: '450px',
-                        maxHeight: '60%',
-                        minHeight: '60%',
-                        height: '100%',
-                    }
-                }}>
-
+                sx={(theme) => mainContainerInfoComments(theme, openInfo, openComment)}>
 
                 <Box
                     onClick={() => setOpenInfo(!openInfo)}
-                    sx={{
-                        display: 'none',
-                        position: "absolute",
-                        backgroundColor: 'red',
-                        width: "50px",
-                        height: '50px',
-                        top: '75px',
-                        left: "-50px",
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: '10px 0 0 10px',
-                        bgcolor: 'background.default',
-                        [theme.breakpoints.down(1030)]: { display: 'flex' },
-                        [theme.breakpoints.down(769)]: {
-                            display: 'none'
-                        }
-                    }}>
+                    sx={btnOpenInfoMobile}>
                     <KeyboardArrowLeftIcon sx={{
                         width: "45px",
                         height: "45px",
@@ -450,22 +272,10 @@ export function MainPopular() {
                     ></KeyboardArrowLeftIcon>
                 </Box>
 
-                <Typography gutterBottom variant="h5" component="h1" sx={{
-                    flexShrink: 0, textOverflow: 'ellipsis', pb: '10px', lineHeight: 'none', mb: '0', whiteSpace: 'nowrap', overflow: 'hidden',
-                    [theme.breakpoints.down('md')]: { fontSize: '20px', pb: '5px' },
-                    [theme.breakpoints.down(769)]: {
-                        display: "none"
-                    }
-                }}>
+                <Typography gutterBottom variant="h5" component="h1" sx={mainNameRecipe}>
                     {popularData.pop_list[activeVideo]?.recipe_name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary" sx={{
-                    flexShrink: 0, fontSize: "16px", display: 'block', pb: '20px', wordBreak: 'break-all',
-                    [theme.breakpoints.down('md')]: { fontSize: '14px', pb: '10px' },
-                    [theme.breakpoints.down(769)]: {
-                        display: "none"
-                    }
-                }}>
+                <Typography variant="body2" color="text.secondary" sx={mainDescriptionRecipe}>
                     {popularData.pop_list[activeVideo]?.description}
                 </Typography>
                 {openComment ?

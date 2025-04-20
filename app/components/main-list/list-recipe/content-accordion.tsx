@@ -1,6 +1,6 @@
 import { IListObj, UnitsList } from "@/app/types/types"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
-import { AccordionDetails, Box, Button, List, ListItem, ListItemAvatar, ListItemText, Table, TableBody, useMediaQuery } from "@mui/material"
+import { AccordionDetails, Box, Button, List, ListItem, ListItemAvatar, ListItemText, Table, TableBody, TableCell, TableRow, useMediaQuery } from "@mui/material"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Units } from "../list/units"
 import 'swiper/css';
@@ -18,17 +18,19 @@ import { theme } from "@/config/ThemeMUI/theme"
 import { MainTableHeader } from "../main-table-header"
 import { memo, useMemo, useState } from "react"
 import { MainTableBody } from "../main-table-body"
+import { UXLoading } from "../../ux-helpers/loading"
 
 
 
 interface dataProps {
-    recipe_id: string
+    recipe_id: string,
+    status:boolean
 }
 
 
 
 export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
-    const {recipe_id } = props
+    const {recipe_id, status } = props
     const ingredients_list = useAppSelector(state => state.listRecipe.recipes.find(el => el.recipe_id === recipe_id)?.ingredients_list)
     if(!ingredients_list) return null 
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
@@ -77,7 +79,15 @@ export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
                     }}></MainTableHeader>
 
                     <TableBody sx={{ overflow: 'auto', borderTop: '2px solid rgba(255, 0, 0, 0.12)' }}>
-                        {sortedList.map(el => (
+                        {
+                        status && ingredients_list.length === 0?
+                            <TableRow>
+                                <TableCell sx={{backgroundColor:'transparent', border:'0'}}>
+                                    <UXLoading props={{}}></UXLoading>
+                                </TableCell>
+                            </TableRow>
+                            :
+                        sortedList.map(el => (
                             <MainTableBody key={el._id} props={{
                                 ingredient_id:el._id,
                                 recipe_id

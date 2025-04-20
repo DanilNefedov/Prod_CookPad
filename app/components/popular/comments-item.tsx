@@ -9,6 +9,8 @@ import { setActiveComment } from "@/state/slices/comments-context";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import numbro from "numbro";
 import { theme } from "@/config/ThemeMUI/theme";
+import { containerAvatarComment, containerCommentItem, containerSecondBlockComm, dataComm, hideBtn, likeComm, moreBtn, repliesOpen, replyComm, textComment } from "@/app/(main)/popular/style";
+
 
 
 
@@ -17,7 +19,6 @@ interface DataProps {
     config_id: string,
     newReply: string[],
 }
-
 
 
 
@@ -33,7 +34,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
     const connection_id = userData?.user?.connection_id
     const dispatch = useAppDispatch()
     const localLikeLoadingRef = useRef(false);
-
+    const [avatar, setAvatar] = useState<string>('')
     const prevLengthRef = useRef<number>(repliesData?.ids?.length || 0)
 
     useEffect(() => {
@@ -49,7 +50,9 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
 
 
 
-
+    useEffect(() => {
+        setAvatar(commentsData.author_avatar)
+    }, [commentsData.author_avatar])
 
     function handleReplies({ id_comment, more }: { id_comment: string, more: boolean }) {
         if (connection_id !== '') {
@@ -102,29 +105,12 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
         });
     };
 
-    console.log('comm-item', '222')
+    console.log('comm-item', '222',)
     return (
         <ListItem sx={{ mb: '10px', p: 0, display: 'block' }}>
-            <Box alignItems="flex-start" sx={{
-                bgcolor: 'background.paper',
-                borderRadius: '10px',
-                p: '8px 16px',
-                width: "100%",
-                display: 'flex',
-                flexWrap: "wrap",
-                border: '1px solid transparent',
-                borderColor: isActive ? 'text.secondary' : 'transparent',
-                '&:last-child': {
-                    mb: '0'
-                },
-                [theme.breakpoints.down('md')]:{
-                    p: '4px 8px'
-                }
-            }}>
+            <Box sx={(theme) => containerCommentItem(theme, isActive)}>
 
-                <Box sx={{display:'flex', justifyContent:'space-between', alignItems:'center', width:'100%', p:'7px 0',
-                    [theme.breakpoints.down('md')]:{p:'4px 0'}
-                }}>
+                <Box sx={containerAvatarComment}>
                     <ListItemAvatar sx={{minWidth:"0", pr:'10px',
                         [theme.breakpoints.down('md')]:{
                             pr: '7px'
@@ -134,19 +120,10 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
                             [theme.breakpoints.down('md')]:{
                                 width:'30px', height:"30px"
                             }
-                        }}/>
+                        }}></Avatar>
                     </ListItemAvatar>
                     <ListItemText
-                        sx={{ m:"0", width:'65%',  '& .MuiTypography-root ': { color:'text.primary', fontSize:'16px', [theme.breakpoints.down('md')]:{
-                            fontSize:'14px',
-                            lineHeight:"initial"
-                        }}, '& .MuiTypography-body1':{
-                            mb:'5px',
-                            textOverflow: "ellipsis",
-                            whiteSpace:'nowrap',
-                            overflow:"hidden",
-                            [theme.breakpoints.down('md')]:{mb:'5px'}
-                        } }}
+                        sx={textComment}
                         primary={
                             commentsData.author_name
                         }
@@ -161,9 +138,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
                 
 
 
-                <Box sx={{ width: '100%', justifyContent: 'space-between', display: 'flex', mt: '7px',
-                    [theme.breakpoints.down('md')]:{ mt: '4px'}
-                 }}>
+                <Box sx={containerSecondBlockComm}>
                     
                     <Button
                         onClick={() => {
@@ -174,31 +149,12 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
                                 {id_comment: id_comment, author_name: commentsData.author_name, id_branch:id_comment}
                             ))
                         }}
-                        sx={{
-                            p: '0',
-                            '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
-                            fontSize: "14px",
-                            textTransform: 'initial',
-                            minWidth: "0",
-                            color: isActive ? 'primary.main' : 'text.secondary',
-                            [theme.breakpoints.down('md')]:{ fontSize:'12px'}
-                        }}>
+                        sx={(theme) => replyComm(theme, isActive)}>
                             reply
                     </Button>
-                    <Typography sx={{ fontSize: '14px', color: 'text.disabled',alignSelf: 'flex-start', 
-                        [theme.breakpoints.down('md')]:{ fontSize:'12px'}
-                    }}>{commentsData.createdAt}</Typography>
+                    <Typography sx={dataComm}>{commentsData.createdAt}</Typography>
 
-                    <Button sx={{
-                        p: '0',
-                        '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
-                        fontSize: "14px",
-                        textTransform: 'initial',
-                        minWidth: "0",
-                        color: 'text.secondary',
-                        alignItems: 'center',
-                        [theme.breakpoints.down('md')]:{ fontSize:'12px'}
-                    }}
+                    <Button sx={likeComm}
                         onClick={() => handleLike({ id_comment: commentsData.id_comment, config_id, liked: commentsData.liked, reply: false, id_branch: '' })}
                     >
                         {formatCount(Number(commentsData.likes_count))}
@@ -219,18 +175,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
                                 setOpenReply('')
                             }
                         }}
-                        sx={{
-                            whiteSpace: 'nowrap',
-                            m:'0 20px',
-                            p: '0',
-                            '&:hover': { backgroundColor: "transparent", color: commentsData.reply_count > 0 ? 'text.primary' : 'text.secondary' },
-                            fontSize: "14px",
-                            textTransform: 'initial',
-                            cursor: commentsData.reply_count > 0 ? 'pointer' : 'initial',
-                            minWidth: "0",
-                            color: openReply === commentsData.id_comment ? 'primary.main' : 'text.secondary',
-                            [theme.breakpoints.down('md')]:{ fontSize:'12px'}
-                        }}>
+                        sx={(theme) => repliesOpen(theme, commentsData.reply_count > 0, openReply === commentsData.id_comment)}>
                             {formatCount(Number(commentsData.reply_count))} replies 
                             <KeyboardArrowDownIcon sx={{
                                 transform: openReply === commentsData.id_comment ? 'rotate(180deg)' : 'rotate(0deg)',
@@ -268,26 +213,10 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
                     <Box sx={{ maxWidth: "50%", justifyContent: 'center', m: '0 auto', display: "flex" }}>
                         <Button
                             disabled={Number.isNaN(repliesData?.page)}
-                            sx={{
-                                p: '0',
-                                '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
-                                fontSize: "14px",
-                                textTransform: 'initial',
-                                minWidth: "0",
-                                color: 'text.secondary',
-                                mr: '25px',
-
-                            }}
+                            sx={moreBtn}
                             onClick={() => handleReplies({ id_comment: commentsData.id_comment, more: true })}
                         >more</Button>
-                        <Button sx={{
-                            p: '0',
-                            '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
-                            fontSize: "14px",
-                            textTransform: 'initial',
-                            minWidth: "0",
-                            color: 'text.secondary'
-                        }}
+                        <Button sx={hideBtn}
                             onClick={() => {
                                 if (openReply === commentsData.id_comment) {
                                     setOpenReply('')

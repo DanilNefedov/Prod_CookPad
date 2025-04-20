@@ -5,7 +5,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 const initialState: MainListRecipe = {
-    status: false,
+    status: true,
     error: false,
     connection_id: '',
     page:0,

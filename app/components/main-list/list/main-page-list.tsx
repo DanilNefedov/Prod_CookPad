@@ -8,7 +8,7 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ClearIcon from '@mui/icons-material/Clear';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Collapse, Grid2, IconButton, ListItemText, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, useMediaQuery } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Button, CircularProgress, Collapse, Grid2, IconButton, ListItemText, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, useMediaQuery } from '@mui/material';
 import { Fragment, memo, MouseEvent, useEffect, useMemo, useState } from 'react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -23,6 +23,7 @@ import { MainButtons } from './main-buttons';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { MainTableHeader } from '../main-table-header';
 import { MainTableBody } from '../main-table-body';
+import { UXLoading } from '../../ux-helpers/loading';
 
 // import { DataGrid } from "@mui/x-data-grid";
 // import { Search, SearchIconWrapper, StyledInputBase } from "./search-style";
@@ -30,7 +31,8 @@ import { MainTableBody } from '../main-table-body';
 
 export function MainListPage() {
     const dispatch = useAppDispatch()
-    const listStore = useAppSelector(state => state.list.list_ingr);    
+    const listStore = useAppSelector(state => state.list.list_ingr);
+    const listStatus = useAppSelector(state => state.list.status)
     const userStore = useAppSelector(state => state.user)
     const id = userStore?.user?.connection_id
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
@@ -49,7 +51,7 @@ export function MainListPage() {
     }, [dispatch, id]);
 
 
-  
+
 
 
     const sortedList = useMemo(() => {
@@ -70,7 +72,7 @@ export function MainListPage() {
     }, [sortBy, sortOrder, listStore]);
 
 
-    
+
     return (
         <Table sx={{
             minWidth: '0', '& .MuiTableCell-root': {
@@ -79,7 +81,7 @@ export function MainListPage() {
             },
 
         }} stickyHeader aria-label="sticky table">
-           
+
             <MainTableHeader props={{
                 sortOrder,
                 setSortOrder,
@@ -87,19 +89,29 @@ export function MainListPage() {
                 setSortBy
             }}></MainTableHeader>
 
-            <TableBody sx={{ overflow: 'auto', borderTop: '2px solid rgba(255, 0, 0, 0.12)' }}>
-                {sortedList.map((el) => (
-                    <MainTableBody key={el._id} props={{
-                        ingredient_id:el._id,
-                        
-                    }}>
-                    </MainTableBody>
 
-                   
-                ))
+
+            <TableBody sx={{ overflow: 'auto', borderTop: '2px solid rgba(255, 0, 0, 0.12)' }}>
+                {listStatus && listStore.length === 0?
+                    <TableRow>
+                        <TableCell sx={{backgroundColor:'transparent', border:'0'}}>
+                            <UXLoading props={{color:'#1F2128'}}></UXLoading>
+                        </TableCell>
+                    </TableRow>
+                    :
+                    sortedList.map((el) => (
+                        <MainTableBody key={el._id} props={{
+                            ingredient_id: el._id,
+
+                        }}>
+                        </MainTableBody>
+                    ))
+
                 }
 
             </TableBody>
+            
+
 
         </Table>
 

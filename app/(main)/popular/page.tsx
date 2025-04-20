@@ -1,16 +1,14 @@
 import { MainPopular } from "@/app/components/popular/main-popular";
 import { theme } from "@/config/ThemeMUI/theme";
-import { Box, Card } from "@mui/material";
-
-
+import { Card } from "@mui/material";
 
 
 
 export default function Popular() {
 
+
     return(
-        <Card sx={{ 
-            overflow:"inherit", 
+        <Card sx={{ overflow:"inherit", 
             boxShadow:'none',
             position:'relative' ,
             gap:"90px",
@@ -23,21 +21,14 @@ export default function Popular() {
             [theme.breakpoints.down(1030)]: { gap:"60px", },
             [theme.breakpoints.down('md')]: {
                 justifyContent: "space-between",
-                // gap:"75px",
             },
-            // [theme.breakpoints.down(769)]: {
-            //     flexDirection: "column",
-            //     gap:'0',
-            //     maxHeight:'calc(100vh - 40px)'
-            // }
-            // [theme.breakpoints.down(820)]: { gap:"40px", },
             [theme.breakpoints.down(769)]: {
                 flexDirection:'column'            
-            }
-            }}>
+            }}}>
+                <MainPopular></MainPopular>
             
-            <MainPopular></MainPopular>
         </Card>
+        
 
     )
 }

@@ -1,17 +1,13 @@
-import { collectionUser } from "@/app/types/types"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
-import { Avatar, Box, Button, CircularProgress, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from "@mui/material"
+import { Box, CircularProgress, List,  } from "@mui/material"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
-import SendIcon from '@mui/icons-material/Send';
-import { commVideoFetch, getReplies, likedComment, newCommPopular, newReplyComm } from "@/state/slices/comments-popular-slice";
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import { commVideoFetch, newCommPopular, newReplyComm } from "@/state/slices/comments-popular-slice";
 import { v4 as uuidv4 } from 'uuid';
-import { ReplyComment } from "./reply-comment";
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { InputComment } from "./input-comment";
 import { CommentsItem } from "./comments-item";
 import { shallowEqual } from "react-redux";
-import { theme } from "@/config/ThemeMUI/theme";
+import { mainCommentContainer } from "@/app/(main)/popular/style";
 
 
 
@@ -28,7 +24,6 @@ export interface LikeT {
     id_branch: string
 }
 
-// export function Comments({ props }: { props: dataProps }) {
 export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
 
     const userData = useAppSelector(state => state.user)
@@ -61,14 +56,12 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
 
     useEffect(() => {
         if (config_id && connection_id !== '' && commentsData.ids.length === 0) {
-            console.log('3233')
             dispatch(commVideoFetch({ config_id, user_id: connection_id, page: commentsData.page, newComments: [] }))
         }
     }, [config_id, activeVideo]);
 
     const sendComm = useCallback((text: string) => {
         if (connection_id !== '') {
-            console.log(contextComment)
             if (contextComment.id_comment !== '') {
 
                 const data = {
@@ -85,7 +78,6 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
 
                 dispatch(newReplyComm({ data, config_id: config_id }))
                 setNewReply([...newComments, data.id_comment])
-                // setOpenReply(openReply === '' ? contextComment.id_comment : openReply)
             } else {
                 const data = {
                     id_comment: uuidv4(),
@@ -99,7 +91,6 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
                 }
                 setNewComments([...newComments, data.id_comment]);
                 dispatch(newCommPopular(data))
-                // setComm('')
             }
         }
     }, [connection_id, config_id, dispatch, newComments, contextComment, userData])
@@ -166,9 +157,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
 
     console.log('main-comments')
     return (
-        <Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: '1', overflow: 'auto',
-            
-         }}>
+        <Box sx={mainCommentContainer}>
 
             <Box ref={scrollRef} sx={{ overflow: 'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0",
                 
@@ -178,10 +167,14 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
                     dataLength={commentsData.ids.length}
                     next={fetchMoreComments}
                     hasMore={!Number.isNaN(commentsData.page)}
-                    loader={<div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}><CircularProgress color="secondary" size="35px" /></div>}
+                    loader={
+                        <div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
+                            <CircularProgress color="secondary" size="35px" />
+                        </div>
+                    }
                     endMessage={
                         <p style={{ textAlign: 'center' }}>
-                            <b>Yay! You have seen it all</b>
+                            <span style={{color:'#8E94A4', fontSize:"14px"}}>nothing else</span>
                         </p>
                     }
                     scrollableTarget="scrollableTarget"

@@ -1,13 +1,13 @@
 import { Avatar, Box, Button, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material"
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { LikeT } from "./main-comments";
-import { memo, useMemo, useState } from "react";
-import { ReplyCommData } from "@/app/types/types";
+import { memo, } from "react";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { setActiveComment } from "@/state/slices/comments-context";
 import numbro from "numbro";
 import { theme } from "@/config/ThemeMUI/theme";
+import { avatarReply, containerPrimaryReplyText, dataReply, fullTextReply, likesReply, replyContainer, replyReplyBtn } from "@/app/(main)/popular/style";
 
 
 
@@ -64,43 +64,15 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
 
     console.log('replies',3333,)
     return (
-        <ListItem sx={{
-            bgcolor: 'background.paper',
-            borderRadius: '10px',
-            m: '10px 0 ',
-            ml: "auto",
-            flexWrap: "wrap",
-            border: '1px solid transparent',
-            maxWidth: "90%",
-            lignItems: "flex-start",
-            borderColor: isActive ? 'text.secondary' : 'transparent',
-            p:'5px 7px',
-            '&:last-child': {
-                mb: '0px'
-            },
-            [theme.breakpoints.down('md')]:{p:'4px 8px'}
-        
-        }}>
+        <ListItem sx={(theme) => replyContainer(theme, isActive)}>
             <Box sx={{display:'flex', alignItems:'center', width:'100%', p:'0px'}}>
                 <ListItemAvatar sx={{minWidth:"0", mr:"10px"}}>
-                    <Avatar alt={author_name} src={author_avatar} sx={{width:"35px", height:'35px', 
-                        [theme.breakpoints.down('md')]:{width:"30px", height:'30px'}
-                    }}/>
+                    <Avatar alt={author_name} src={author_avatar} sx={avatarReply}/>
                 </ListItemAvatar>
                 <ListItemText
-                    sx={{ m: "0", '& .MuiTypography-root ': { maxWidth: '513px', color: 'text.primary', fontSize: '15px',
-                        [theme.breakpoints.down('md')]:{fontSize:"14px"}
-                     }, '& .MuiTypography-body1':{
-                        mb:'5px',}
-                    }}
+                    sx={fullTextReply}
                     primary={
-                        <Box sx={{ 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            overflow: 'hidden', 
-                            gap: '4px', 
-                            minWidth: 0 
-                          }}>
+                        <Box sx={containerPrimaryReplyText}>
                             <Box
                               component="span"
                               sx={{
@@ -145,28 +117,12 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
             <Box sx={{ width: '100%', justifyContent: 'space-between', display: 'flex', mt: '7px' }}>
                 <Button
                     onClick={handleReply}
-                    sx={{
-                        p: '0',
-                        '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
-                        fontSize: "14px",
-                        textTransform: 'initial',
-                        minWidth: "0",
-                        color: isActive ? 'primary.main' : 'text.secondary',
-                        [theme.breakpoints.down('md')]:{fontSize:"12px"}
-                    }}>
+                    sx={(theme) => replyReplyBtn(theme, isActive)}>
                     reply
                 </Button>
                
-                <Typography sx={{ fontSize: '14px', color: 'text.disabled', alignSelf: 'flex-start', [theme.breakpoints.down('md')]:{fontSize:"12px"}}}>{createdAt}</Typography>
-                <Button sx={{
-                    p: '0',
-                    '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
-                    fontSize: "14px",
-                    textTransform: 'initial',
-                    minWidth: "0",
-                    color: 'text.secondary',
-                    [theme.breakpoints.down('md')]:{fontSize:"12px"}
-                }}
+                <Typography sx={dataReply}>{createdAt}</Typography>
+                <Button sx={likesReply}
                     onClick={() => likeT()}
                 >
                     {formatCount(Number(likes_count))}

@@ -6,6 +6,7 @@ import { Accordion, AccordionSummary, Box, Typography } from "@mui/material";
 import { useCallback, useEffect } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ContentAccordion } from "./content-accordion";
+import { UXLoading } from "../../ux-helpers/loading";
 
 
 
@@ -14,6 +15,7 @@ import { ContentAccordion } from "./content-accordion";
 export function MainListRecipe() {
     const dispatch = useAppDispatch()
     const listRecipeStore = useAppSelector(state => state.listRecipe)
+    const listRecipeStatus = useAppSelector(state => state.listRecipe.status)
     const userStore = useAppSelector(state => state.user)
     const connection_id = userStore.user.connection_id
 
@@ -37,7 +39,11 @@ export function MainListRecipe() {
 
     return (
         <Box sx={{height:'100%', }}>
-            {listRecipeStore?.recipes.map(el => (
+            {
+            listRecipeStatus && listRecipeStore.recipes.length === 0 ? 
+                <UXLoading props={{color:'#1F2128'}}></UXLoading>
+            :
+            listRecipeStore?.recipes.map(el => (
                 <Accordion 
                     // square={false}  
                     key={el.recipe_id} 
@@ -107,7 +113,7 @@ export function MainListRecipe() {
 
                     </AccordionSummary>
 
-                    <ContentAccordion props={{ recipe_id: el.recipe_id }}></ContentAccordion>
+                    <ContentAccordion props={{ recipe_id: el.recipe_id, status:listRecipeStatus }}></ContentAccordion>
                 </Accordion>
             ))}
 
