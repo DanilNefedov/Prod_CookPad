@@ -252,7 +252,11 @@ export type CookPageT = TempalateRecipe & {
     instruction:string,
     sorting:string[],
     ingredients:IngredientFullData[]
-    // ingredients:IngredientForAutocomplite[],//for save form
+}
+export type CookPageSaveT = TempalateRecipe & {
+    instruction:string,
+    sorting:string[],
+    ingredients:IngredientForAutocomplite[],//for save form
 }
 
 export type FetchCookPage = {
@@ -309,7 +313,7 @@ export type IRecipeSlice = ErrorStatus & {
 }
 
 
-export type IFetchDataRecipe = CookPageT & {
+export type IFetchDataRecipe = CookPageSaveT & {
     connection_id: string,
     // recipeData:CookPageT
 }
