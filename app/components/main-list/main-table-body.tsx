@@ -243,3 +243,6 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
     return prevProps.props.ingredient_id === nextProps.props.ingredient_id && 
            prevProps.props.recipe_id === nextProps.props.recipe_id;
 });
+
+
+MainTableBody.displayName = "MainTableBody"

@@ -2,7 +2,7 @@ import connectDB from "@/app/lib/mongoose";
 import Recipe from "@/app/models/recipe";
 import User from "@/app/models/user";
 import { popularList } from "@/app/types/types";
-import { add, bignumber, divide, evaluate, format, mean, multiply, parse, round, sum } from "mathjs";
+import { add, bignumber, divide,  mean, multiply, round, sum } from "mathjs";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import _ from 'lodash';

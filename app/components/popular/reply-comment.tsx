@@ -139,3 +139,6 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
         
 })
 
+
+
+ReplyComment.displayName = "ReplyComment"

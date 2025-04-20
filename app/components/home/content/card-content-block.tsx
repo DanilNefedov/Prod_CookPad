@@ -429,3 +429,6 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
         //    prevProps.props.description === nextProps.props.description;
     // You can add more specific comparisons if needed
 });
+
+
+CardContentBlock.displayName = "CardContentBlock"

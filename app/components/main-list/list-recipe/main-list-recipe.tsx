@@ -23,7 +23,7 @@ export function MainListRecipe() {
         if (connection_id !== '') {
             dispatch(preLoaderMain({ connection_id, page: listRecipeStore.page + 1 }))
         }
-    }, [connection_id])
+    }, [connection_id, dispatch, listRecipeStore.page])
 
 
     function getDataRecipe(recipe_id: string) {

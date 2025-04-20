@@ -69,7 +69,8 @@ export function AddNewUnit({ props }: { props: PropsData }) {
     return (
         <>
             <Button onClick={() => {
-                handleClose
+                if(handleClose) handleClose()
+            
                 setOpen(true)
             }} sx={isSmallScreen ? [btnsListUnitHover, styleBtnsAdaptiveMenu] : btnsListUnitHover}>
                 <AddCircleOutlineIcon></AddCircleOutlineIcon>

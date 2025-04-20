@@ -91,7 +91,7 @@ export function MainButtons({props}: {props:DataProps}) {
 
                         <MenuItem onClick={(e) => {
                             e.preventDefault()
-                            handleClose
+                            handleClose()
                         }} >
                             <AddNewUnit props={{ ingr: el, id, handleClose, recipe_id }} />
                         </MenuItem>

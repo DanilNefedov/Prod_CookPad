@@ -16,12 +16,12 @@ interface dataProps {
 
 
 export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
-    const {recipe_id, status } = props    
+    const {recipe_id, status } = props   
+    const ingredients_list = useAppSelector(state => state.listRecipe.recipes.find(el => el.recipe_id === recipe_id)?.ingredients_list);
+    if (!ingredients_list) return null; 
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
     const [sortBy, setSortBy] = useState<string | null>(null);
-    const ingredients_list = useAppSelector(state => state.listRecipe.recipes.find(el => el.recipe_id === recipe_id)?.ingredients_list)
-    if(!ingredients_list) return null 
-
+    
 
 
 
@@ -92,3 +92,6 @@ export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
 }, (prevProps, nextProps) => {
     return prevProps.props.recipe_id === nextProps.props.recipe_id;
 });
+
+
+ContentAccordion.displayName = "ContentAccordion"

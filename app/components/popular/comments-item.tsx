@@ -232,3 +232,5 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
         prevProps.config_id === nextProps.config_id 
         
 })
+
+CommentsItem.displayName = "CommentsItem"

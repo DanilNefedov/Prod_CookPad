@@ -39,7 +39,7 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
         if (currentValue !== amount) {
             setCurrentValue(amount);
         }
-    }, [amount]);
+    }, [amount, currentValue]);
     
 
     // const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -359,3 +359,4 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
     )
 })
 
+CalcUnit.displayName = "CalcUnit"

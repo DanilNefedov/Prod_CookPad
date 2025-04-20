@@ -44,6 +44,7 @@ export async function GET(request: Request) {
         });
 
     } catch (error) {
+        console.error(error)
         return NextResponse.json({
             status: 500,
             message: 'Try again after reloading the page'

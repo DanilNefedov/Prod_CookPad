@@ -10,7 +10,6 @@ import './styles.css';
 import { useAppSelector } from "@/state/hook";
 import { memo, useState } from "react";
 import { shallowEqual } from "react-redux";
-import { theme } from "@/config/ThemeMUI/theme";
 import { containerSlideMediaSwiper, mediaSwiperElement } from "@/app/(main)/popular/style";
 
 
@@ -119,3 +118,6 @@ export const MediaSwiper = memo(({ activeVideo }: { activeVideo: number }) => {
 
     )
 },);
+
+
+MediaSwiper.displayName = "MediaSwiper"
