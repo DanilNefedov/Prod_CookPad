@@ -44,7 +44,7 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
     const thisUnit = unitData?.unitInfo;
     const [amount, setAmount] = useState<string>(thisUnit ? thisUnit.amount.toString() : '0');
 
-    if (!unitData || unitData === undefined || !unitData.unitInfo) return null;
+   
 
 
     
@@ -69,7 +69,7 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
     const confirmAmount = useCallback((_id: string | undefined) => {
         const numberAmount = evaluate(amount)
 
-        if (id !== '' && numberAmount !== thisUnit?.amount && _id) {
+        if (id !== '' && numberAmount !== thisUnit?.amount && _id && unitData) {
             if (pathName === '/list') {
                 dispatch(changeAmountFetch({ ingredient_id: unitData.ingredientId, unit_id: _id, amount: numberAmount }));
             }else if(pathName === '/list-recipe' && recipe_id){
@@ -78,7 +78,7 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
             }   
         } 
         setEditAmount(null);
-    }, [id, amount, pathName, dispatch, recipe_id, thisUnit?.amount, unitData.ingredientId]);
+    }, [id, amount, pathName, dispatch, recipe_id, thisUnit?.amount, unitData?.ingredientId]);
     
 
    
@@ -104,7 +104,7 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
         }
     }
 
-
+    if (!unitData || unitData === undefined || !unitData.unitInfo) return null;
 
     
     return (

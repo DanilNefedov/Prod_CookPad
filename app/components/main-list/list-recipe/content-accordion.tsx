@@ -21,12 +21,14 @@ export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
     const [sortBy, setSortBy] = useState<string | null>(null);
 
-    if (!ingredients_list) return null; 
+    
 
 
 
     const sortedList = useMemo(() => {
         if (!sortBy) return ingredients_list;
+        
+        if (!ingredients_list) return null;
 
         return [...ingredients_list].sort((a, b) => {
             if (sortBy === 'name') {
@@ -42,6 +44,7 @@ export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
         });
     }, [sortBy, sortOrder, ingredients_list]);
 
+    if (!ingredients_list) return null; 
 
     return (
         <AccordionDetails sx={{ p: '0', overflow: 'auto', height: '100%', bgcolor: 'background.default', borderRadius: '10px' }}>
@@ -74,7 +77,7 @@ export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
                                 </TableCell>
                             </TableRow>
                             :
-                        sortedList.map(el => (
+                        sortedList && sortedList.map(el => (
                             <MainTableBody key={el._id} props={{
                                 ingredient_id:el._id,
                                 recipe_id
