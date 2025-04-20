@@ -45,3 +45,5 @@ export const InputComment = memo(({ sendComm }: DataProps) => {
         </Box>
     )
 })
+
+InputComment.displayName = 'InputComment';

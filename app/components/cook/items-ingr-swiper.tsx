@@ -2,13 +2,13 @@
 
 import { IngredientFullData } from "@/app/types/types";
 import { MouseEvent, useState } from "react";
-import { Avatar, Box, Button, ListItemAvatar, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
-import { addListIngr, avatartIngredient, btnAddNew, btnListItem, containerContentSlide, menuListItems } from "@/app/(main)/cook/[recipe_id]/styles";
+import { Box, Button, ListItemAvatar, ListItemText, Menu, MenuItem, Typography } from "@mui/material";
+import { addListIngr, btnAddNew, btnListItem, containerContentSlide, menuListItems } from "@/app/(main)/cook/[recipe_id]/styles";
 import { theme } from "@/config/ThemeMUI/theme";
 import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch } from "@/state/hook";
 import { newIngredientList, newUnitIngredientList, updateCookUnit } from "@/state/slices/list-slice";
-import { add, bignumber, format } from "mathjs";
+import { add, bignumber, } from "mathjs";
 
 
 interface propsData {

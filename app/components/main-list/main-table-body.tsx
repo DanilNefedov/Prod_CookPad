@@ -4,7 +4,7 @@ import { MainButtons } from "./list/main-buttons"
 import { imgIngrList, mainIngrList, nameIngredient } from "@/app/(main)/(main-list)/style"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Units } from "./list/units"
-import { IListObj, UnitsList } from "@/app/types/types"
+import { UnitsList } from "@/app/types/types"
 import { theme } from "@/config/ThemeMUI/theme"
 import { useAppSelector } from "@/state/hook"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -35,16 +35,15 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
     
         return state.list.list_ingr.find(el => el._id === ingredient_id);
     });
-    
+    const isMobile = useMediaQuery("(max-width:800px)");
+    const [expandedId, setExpandedId] = useState<string | null>(null);
+    const pathName = usePathname()
 
 
     if (!thisIngredient) return null;
 
 
 
-    const isMobile = useMediaQuery("(max-width:800px)");
-    const [expandedId, setExpandedId] = useState<string | null>(null);
-    const pathName = usePathname()
     
 
 

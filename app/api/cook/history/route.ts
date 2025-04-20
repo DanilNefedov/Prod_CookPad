@@ -36,7 +36,11 @@ export async function POST(req: Request) {
     }
 }
 
-
+interface linkT {
+    recipe_id:string
+    recipe_name:string
+    _id:string
+}
 
 
 export async function GET(request: Request) {
@@ -56,7 +60,7 @@ export async function GET(request: Request) {
             });
         }
 
-        const exists = cook.history_links.some((link: any) => link.recipe_id === recipe_id);
+        const exists = cook.history_links.some((link: linkT) => link.recipe_id === recipe_id);
         if(!exists){
             const dataCook = await Recipe.findOne({ recipe_id, connection_id })
             .select('-_id name recipe_id')

@@ -2,14 +2,12 @@
 
 import { UnitsList } from "@/app/types/types";
 import { useAppDispatch } from "@/state/hook";
-import { Dispatch } from "@reduxjs/toolkit";
 import { usePathname } from "next/navigation";
-import { ChangeEvent, memo, SetStateAction, useCallback, useEffect, useMemo, useState } from "react";
-import { create, all, parse } from 'mathjs'
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { create, all, } from 'mathjs'
 import { Alert, Box, Button, Menu, MenuItem, TextField } from "@mui/material";
 import { btnsListUnitHover, calcInput, containerCalcBtns, containerCalcGrid, menuCalc, unitBtnsImg } from "@/app/(main)/(main-list)/style";
 import CalculateIcon from '@mui/icons-material/Calculate';
-import EditIcon from '@mui/icons-material/Edit';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import CheckIcon from '@mui/icons-material/Check';
 import { changeAmountFetch } from "@/state/slices/list-slice";
@@ -126,10 +124,11 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
             return math.round(result, 4).toString();
 
         } catch (error) {
+            console.log(error)
             setMathError("Check the input data");
             return null;
         }
-    }, []);
+    }, [math]);
 
 
 
@@ -182,7 +181,7 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
             }
         }
 
-    }, [currentValue, isParenthesisOpen, amount]);
+    }, [currentValue, isParenthesisOpen, amount, handleEqual]);
 
 
     // function updateAmountCalc() {
@@ -236,7 +235,7 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
 
         //     }
         // }
-    }, [currentValue, id, pathName, ingredient_id, elem._id, dispatch]);
+    }, [currentValue, id, pathName, ingredient_id, elem._id, dispatch, amount, handleEqual, recipe_id, setAmount]);
 
 
     return (

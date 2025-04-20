@@ -126,3 +126,5 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
         prevProps.props.openComment === nextProps.props.openComment
 });
 
+
+InfoAboutContent.displayName = 'InfoAboutContent';

@@ -1,6 +1,5 @@
 import connectDB from "@/app/lib/mongoose";
 import ListIngredients from "@/app/models/list";
-import { IListObj } from "@/app/types/types";
 import { NextResponse } from "next/server";
 
 

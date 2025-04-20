@@ -1,19 +1,5 @@
-import { IListObj, UnitsList } from "@/app/types/types"
-import { useAppDispatch, useAppSelector } from "@/state/hook"
-import { AccordionDetails, Box, Button, List, ListItem, ListItemAvatar, ListItemText, Table, TableBody, TableCell, TableRow, useMediaQuery } from "@mui/material"
-import { Swiper, SwiperSlide } from "swiper/react"
-import { Units } from "../list/units"
-import 'swiper/css';
-import 'swiper/css/navigation';
-import { Navigation } from 'swiper/modules';
-// import '../list/styles.css';
-import { blockSwiperAccordion, btnsListUnitHover, contentAccordionList, imgIngrList, nameIngredient } from "@/app/(main)/(main-list)/style"
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import { AddNewUnit } from "../list/add-unit"
-import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { deleteIngrRecipeList, shopIngrListRecipe } from "@/state/slices/list-recipe-slice"
+import { useAppSelector } from "@/state/hook"
+import { AccordionDetails, Table, TableBody, TableCell, TableRow,  } from "@mui/material"
 import { theme } from "@/config/ThemeMUI/theme"
 import { MainTableHeader } from "../main-table-header"
 import { memo, useMemo, useState } from "react"
@@ -30,11 +16,12 @@ interface dataProps {
 
 
 export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
-    const {recipe_id, status } = props
-    const ingredients_list = useAppSelector(state => state.listRecipe.recipes.find(el => el.recipe_id === recipe_id)?.ingredients_list)
-    if(!ingredients_list) return null 
+    const {recipe_id, status } = props    
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
     const [sortBy, setSortBy] = useState<string | null>(null);
+    const ingredients_list = useAppSelector(state => state.listRecipe.recipes.find(el => el.recipe_id === recipe_id)?.ingredients_list)
+    if(!ingredients_list) return null 
+
 
 
 

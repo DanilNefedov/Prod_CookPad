@@ -1,7 +1,7 @@
 import { cellHeader, sortBtnHeader } from "@/app/(main)/(main-list)/style";
 import { Box, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, } from "react";
 import { usePathname } from "next/navigation";
 
 

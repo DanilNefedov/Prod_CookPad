@@ -1,5 +1,6 @@
 import connectDB from "@/app/lib/mongoose";
 import ListRecipe from "@/app/models/list-recipe";
+import { IListObj } from "@/app/types/types";
 import { NextResponse } from "next/server";
 
 
@@ -30,7 +31,7 @@ export async function PATCH(request: Request) {
         }
 
         const updatedIngredient = updatedRecipe.recipe.ingredients_list.find(
-            (ingr: any) => ingr._id.toString() === ingredient_id
+            (ingr: IListObj) => ingr._id.toString() === ingredient_id
         );
 
         if (!updatedIngredient) {

@@ -2,8 +2,6 @@ import connectDB from "@/app/lib/mongoose";
 import CommentPopular from "@/app/models/comments-popular";
 import LikesComments from "@/app/models/likes-comments";
 import { NextResponse } from "next/server";
-import _ from 'lodash'; 
-import { CommListData } from "@/app/types/types";
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import updateLocale from 'dayjs/plugin/updateLocale'

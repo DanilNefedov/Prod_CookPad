@@ -1,32 +1,12 @@
 'use client'
-import { blockList, btnsListUnitHover, cellHeader, imgIngrList, mainIngrList, nameIngredient, sortBtnHeader } from '@/app/(main)/(main-list)/style';
-import { UnitsList } from '@/app/types/types';
 import { useAppDispatch, useAppSelector } from '@/state/hook';
-import { deleteIngredientFetch, fetchList, toggleShopIngrFetch } from '@/state/slices/list-slice';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ClearIcon from '@mui/icons-material/Clear';
-import { Accordion, AccordionDetails, AccordionSummary, Box, Button, CircularProgress, Collapse, Grid2, IconButton, ListItemText, Menu, MenuItem, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography, useMediaQuery } from '@mui/material';
-import { Fragment, memo, MouseEvent, useEffect, useMemo, useState } from 'react';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import { Navigation } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { AddNewUnit } from './add-unit';
-import './styles.css';
-import { Units } from './units';
+import { fetchList, } from '@/state/slices/list-slice';
+import { Table, TableBody, TableCell,TableRow,} from '@mui/material';
+import { useEffect, useMemo, useState } from 'react';
 import { theme } from '@/config/ThemeMUI/theme';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { MainButtons } from './main-buttons';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { MainTableHeader } from '../main-table-header';
 import { MainTableBody } from '../main-table-body';
 import { UXLoading } from '../../ux-helpers/loading';
-
-// import { DataGrid } from "@mui/x-data-grid";
-// import { Search, SearchIconWrapper, StyledInputBase } from "./search-style";
 
 
 export function MainListPage() {

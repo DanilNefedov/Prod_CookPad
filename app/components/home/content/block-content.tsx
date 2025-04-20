@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo } from "react";
+import { useEffect, } from "react";
 import { useNavigationState } from "../context-navigation";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { fetchRecipes } from "@/state/slices/recipe-slice";
@@ -9,12 +9,6 @@ import { Box, Button } from "@mui/material";
 import { styleLink } from "../header/header";
 import { theme } from "@/config/ThemeMUI/theme";
 
-// useFetchOnDependency({ 
-//   url: `api/recipe?connection_id=${id}&page=${recipeStore.page + 1}`, 
-//   data: null, 
-//   dep: [id], 
-//   actionName: fetchRecipes, 
-// })
 
 export function BlockContent() {
   const dispatch = useAppDispatch();
@@ -23,17 +17,7 @@ export function BlockContent() {
   const id = useAppSelector(state => state.user?.user?.connection_id);
   const { nav } = useNavigationState()
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const url = `api/recipe?connection_id=${id}&page=${recipeStore.page + 1}`
-
-  //     if (id !== '' && recipeStore.recipes.length === 0) {
-  //       dispatch(fetchRecipes(url))
-  //     }
-  //   }
-
-  //   fetchData();
-  // }, [id]);
+  
 
   useEffect(() => {
     async function fetchData() {
@@ -50,21 +34,16 @@ export function BlockContent() {
 
   const filteredRecipes = recipes.filter(recipe => recipe.sorting.includes(nav.toLowerCase()));
   
-  // const filteredRecipes = useMemo(() => {
-  //   return recipes.filter(recipe => recipe.sorting.includes(nav));
-  // }, [recipes, nav]);
-
-
   console.log(recipes, filteredRecipes, nav)
   return (
     <>
       {recipes.length > 0 ? (
-        (nav === 'all' ? recipes : filteredRecipes).map(({ recipe_id, media, name, time, recipe_type, description, favorite }) => (
+        (nav === 'all' ? recipes : filteredRecipes).map(({ recipe_id, }) => (
           <CardContentBlock
             key={recipe_id}
             props={{ recipe_id, id}}
 
-            // props={{ recipe_id, media, name, time, recipe_type, description, favorite, id }}
+            
           />
         ))
       ) 

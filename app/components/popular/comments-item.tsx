@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material"
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { Dispatch, memo, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { getReplies, likedComment } from "@/state/slices/comments-popular-slice";
 import { LikeT } from "./main-comments";
 import { ReplyComment } from "./reply-comment";
@@ -34,7 +34,6 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
     const connection_id = userData?.user?.connection_id
     const dispatch = useAppDispatch()
     const localLikeLoadingRef = useRef(false);
-    const [avatar, setAvatar] = useState<string>('')
     const prevLengthRef = useRef<number>(repliesData?.ids?.length || 0)
 
     useEffect(() => {
@@ -50,9 +49,6 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
 
 
 
-    useEffect(() => {
-        setAvatar(commentsData.author_avatar)
-    }, [commentsData.author_avatar])
 
     function handleReplies({ id_comment, more }: { id_comment: string, more: boolean }) {
         if (connection_id !== '') {

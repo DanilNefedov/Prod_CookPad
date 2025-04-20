@@ -1,16 +1,13 @@
 import { blockUnits, btnsListUnitHover, inputUnitList, unitBtnsImg } from "@/app/(main)/(main-list)/style"
-import { IListObj, UnitsList } from "@/app/types/types"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { Box, Button, ListItemText, TextField } from "@mui/material"
 import { usePathname } from "next/navigation"
-import { ChangeEvent, memo, useCallback, useMemo, useState } from "react"
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import { ChangeEvent, memo, useCallback, useState } from "react"
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
-import ClearIcon from '@mui/icons-material/Clear';
 import { CalcUnit } from "./calc-unit"
 import { changeAmountFetch, deleteUnitIngrFetch, shopUnitUpdate } from "@/state/slices/list-slice"
-import { bignumber, e, evaluate, parse } from "mathjs"
+import { evaluate, } from "mathjs"
 import { theme } from "@/config/ThemeMUI/theme"
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
@@ -21,34 +18,36 @@ import { shallowEqual } from "react-redux"
 
 
 export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_id: string, unit_id: string, recipe_id?: string }) => {
-    const userStore = useAppSelector(state => state.user)
-    const id = userStore?.user?.connection_id
-
     const unitData = useAppSelector(state => {
-        let thisIngredient;
-        if (recipe_id) {
-            thisIngredient = state.listRecipe.recipes
-                .find(el => el.recipe_id === recipe_id)
-                ?.ingredients_list.find(ing => ing._id === ingredient_id);
-        } else {
-            thisIngredient = state.list.list_ingr.find(el => el._id === ingredient_id);
-        }
-        
-        if (!thisIngredient) return null;
-        return {
-            unitInfo: thisIngredient.units.find(el => el._id === unit_id),
-            ingredientId: thisIngredient._id,
-        };
+    let thisIngredient;
+    if (recipe_id) {
+        thisIngredient = state.listRecipe.recipes
+            .find(el => el.recipe_id === recipe_id)
+            ?.ingredients_list.find(ing => ing._id === ingredient_id);
+    } else {
+        thisIngredient = state.list.list_ingr.find(el => el._id === ingredient_id);
+    }
+    
+    if (!thisIngredient) return null;
+    return {
+        unitInfo: thisIngredient.units.find(el => el._id === unit_id),
+        ingredientId: thisIngredient._id,
+    };
     }, shallowEqual); 
     
     if (!unitData || !unitData.unitInfo) return null;
-    
-    const thisUnit = unitData.unitInfo;
-    
-    const [editAmount, setEditAmount] = useState<string | null>(null);
+    const userStore = useAppSelector(state => state.user) 
+    const [editAmount, setEditAmount] = useState<string | null>(null);    
+    const thisUnit = unitData.unitInfo
     const [amount, setAmount] = useState<string>(thisUnit.amount.toString());
     const pathName = usePathname();
     const dispatch = useAppDispatch();
+    const id = userStore?.user?.connection_id
+
+
+;
+    
+   
 
 
 
@@ -78,7 +77,7 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
             }   
         } 
         setEditAmount(null);
-    }, [id, amount, pathName, dispatch]);
+    }, [id, amount, pathName, dispatch, recipe_id, thisUnit.amount, unitData.ingredientId]);
     
 
    

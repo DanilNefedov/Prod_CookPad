@@ -1,5 +1,6 @@
 import connectDB from "@/app/lib/mongoose";
 import ListRecipe from "@/app/models/list-recipe";
+import { IListObj, UnitsList } from "@/app/types/types";
 import { NextResponse } from "next/server";
 
 
@@ -57,7 +58,7 @@ export async function PATCH(request: Request) {
         }
 
 
-        const updatedIngredient = updatedDocument.recipe.ingredients_list.find((ing: any) => 
+        const updatedIngredient = updatedDocument.recipe.ingredients_list.find((ing: IListObj) => 
             ing._id?.toString() === ingredient_id
         );
 
@@ -69,7 +70,7 @@ export async function PATCH(request: Request) {
             );
         }
 
-        const updatedUnit = updatedIngredient.units.find((unit: any) => 
+        const updatedUnit = updatedIngredient.units.find((unit: UnitsList) => 
             unit._id?.toString() === unit_id
         );
 

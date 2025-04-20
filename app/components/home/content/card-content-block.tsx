@@ -11,20 +11,12 @@ import { bottomTypeFavCard, contentPostionAbsolute, cookBtn, favoriteBtnActive, 
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import DeleteIcon from '@mui/icons-material/Delete';
-
-
-
 import { Swiper, SwiperSlide } from 'swiper/react';
-// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
-
 import './swiper-media.css';
-
-// import required modules
 import { Navigation } from 'swiper/modules';
-import { memo, useCallback, useState } from "react";
-import { TempalateRecipe } from "@/app/types/types";
+import { memo, useState } from "react";
 import { useAppDispatch, useAppSelector } from '@/state/hook';
 import { SwiperMediaCard } from './swiper-media-card';
 import { deleteRecipe, setFavoriteRecipe } from '@/state/slices/recipe-slice';
@@ -34,17 +26,13 @@ import { newListRecipe } from '@/state/slices/list-recipe-slice';
 
 
 
-// interface propsData extends TempalateRecipe {
-//     id: string
-// }
+
 interface propsData {
     recipe_id:string,
     id:string
 }
 
 export const CardContentBlock = memo(({ props }: { props: propsData }) => {
-// export function CardContentBlock({ props }: { props: propsData }) {
-    // const { recipe_id, media, name, time, recipe_type, description, favorite, id } = props
     const { recipe_id, id} = props
     const recipes = useAppSelector(state => state.recipe.recipes.find(el => el.recipe_id === recipe_id));
     
@@ -73,21 +61,7 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
             dispatch(setFavoriteRecipe(data))
         }
     }
-    // const handlerFavorite = useCallback((recipe_id: string, favorite: boolean): void => {
-    //     if (recipe_id && id !== '') {
-    //         const data = { connection_id: id, recipe_id, favorite }
-    //         dispatch(setFavoriteRecipe(data))
-    //     }
-    // }, [id, dispatch]);
-    // const handlerFavorite = useCallback(
-    //     (recipe_id: string, favorite: boolean): void => {
-    //       if (recipe_id && id !== '') {
-    //         const data = { connection_id: id, recipe_id, favorite };
-    //         dispatch(setFavoriteRecipe(data));
-    //       }
-    //     },
-    //     [id, dispatch] 
-    //   );
+   
     function addToList() {
         if (id !== '' && recipe_id) {
             dispatch(newListRecipe({ connection_id: id, recipe_id: recipe_id }))

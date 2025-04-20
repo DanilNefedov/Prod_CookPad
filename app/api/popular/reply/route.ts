@@ -1,14 +1,12 @@
 import { NextResponse } from 'next/server';
-// import { cloneDeep } from 'lodash';
 import mongoose from 'mongoose';
 import connectDB from '@/app/lib/mongoose';
 import ReplyComment from '@/app/models/reply-comments';
 import RecipePopularConfig from '@/app/models/popular-config';
 import CommentPopular from '@/app/models/comments-popular';
-import LikesReply from '@/app/models/likes-reply';
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-const _ = require('lodash');
+import _ from 'lodash';
 import updateLocale from 'dayjs/plugin/updateLocale'
 
 

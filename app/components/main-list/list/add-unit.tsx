@@ -1,10 +1,9 @@
 import { amountNewUnit, btnsListUnitHover, btnsModal, modalContainer, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/style";
-import { IListObj, NewUnitObj } from "@/app/types/types";
+import { IListObj } from "@/app/types/types";
 import { useAppDispatch } from "@/state/hook";
 import { Autocomplete, Box, Button, ListItem, Modal, TextField, Typography, useMediaQuery } from "@mui/material";
 import { usePathname } from "next/navigation";
 import { ChangeEvent, useState } from "react";
-import AddIcon from '@mui/icons-material/Add';
 import { secondTextInput } from "@/app/main-styles";
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -30,25 +29,6 @@ export function AddNewUnit({ props }: { props: PropsData }) {
     const [unit, setUnit] = useState<string>('');
     const pathName = usePathname()
     const isSmallScreen = useMediaQuery("(max-width:800px)");
-
-    // console.log('2')
-    // const uuid = uuidv4();
-    // const { el, _id} = ingr
-
-    // function handleAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    //     console.log('handleAmount')
-    //     // const value = e.target.value;
-    //     const value = e.target.value === '' ? '0' : e.target.value;
-    //     // Регулярное выражение: Число от 0 до 9999.9999 (не более 4 знаков после точки)
-    //     const regex = /^(?:\d{1,4})(?:\.\d{0,4})?$/;
-
-    //     if (value === '' || regex.test(value)) {
-    //         setAmount(value);
-    //     }
-    //     // if (value === '' || (!isNaN(parseFloat(value)) && parseFloat(value) >= 0 && parseFloat(value) <= 999)) {
-    //     //     setAmount(parseFloat(value))
-    //     // }
-    // };
 
     function handleAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const resIntupChange = handleAmountChange(e.target.value)
@@ -88,7 +68,7 @@ export function AddNewUnit({ props }: { props: PropsData }) {
 
     return (
         <>
-            <Button onClick={(e) => {
+            <Button onClick={() => {
                 handleClose
                 setOpen(true)
             }} sx={isSmallScreen ? [btnsListUnitHover, styleBtnsAdaptiveMenu] : btnsListUnitHover}>

@@ -55,7 +55,7 @@ export function MainPopular() {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [openComment]);
+    }, [openComment,]);
 
 
 
@@ -63,7 +63,7 @@ export function MainPopular() {
         if (connection_id !== '') {
             dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
         }
-    }, [connection_id])
+    }, [connection_id, dispatch])
 
 
     useEffect(() => {

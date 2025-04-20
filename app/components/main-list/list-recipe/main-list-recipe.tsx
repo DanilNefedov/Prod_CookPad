@@ -3,7 +3,7 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { ingredientsListRecipe, preLoaderMain } from "@/state/slices/list-recipe-slice";
 import { Accordion, AccordionSummary, Box, Typography } from "@mui/material";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ContentAccordion } from "./content-accordion";
 import { UXLoading } from "../../ux-helpers/loading";

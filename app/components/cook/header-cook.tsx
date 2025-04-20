@@ -1,14 +1,14 @@
 'use client'
 
-import { btnsCookHeader, scrollBox } from "@/app/(main)/cook/[recipe_id]/styles";
+import { btnsCookHeader, } from "@/app/(main)/cook/[recipe_id]/styles";
 import { btnMain } from "@/app/main-styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { Box, Button } from "@mui/material";
 import Link from "next/link";
 import { DeleteButton } from "./delete";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
-import { fetchHistoryCook, newCookHistory } from "@/state/slices/cook-history";
+import {  useEffect, useState } from "react";
+import { fetchHistoryCook, } from "@/state/slices/cook-history";
 
 
 
@@ -30,7 +30,7 @@ export function HeaderCook() {
             // console.log('2')
             dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id, recipe_id, recipe_name: recipeName }));
         }
-    }, [userStore.user.connection_id, dispatch]);
+    }, [userStore.user.connection_id, dispatch, recipeName, recipe_id]);
 
     useEffect(() => {
         if (!isDeleting) return; 
@@ -54,7 +54,7 @@ export function HeaderCook() {
         }
 
         setIsDeleting(false);
-    }, [cookHistoryStore.history_links]);
+    }, [cookHistoryStore.history_links, isDeleting, recipe_id, router]);
 
 
     return (

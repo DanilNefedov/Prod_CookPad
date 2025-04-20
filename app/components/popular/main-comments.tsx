@@ -58,7 +58,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
         if (config_id && connection_id !== '' && commentsData.ids.length === 0) {
             dispatch(commVideoFetch({ config_id, user_id: connection_id, page: commentsData.page, newComments: [] }))
         }
-    }, [config_id, activeVideo]);
+    }, [config_id, activeVideo, commentsData.ids.length, commentsData.page, connection_id, dispatch]);
 
     const sendComm = useCallback((text: string) => {
         if (connection_id !== '') {
@@ -151,7 +151,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
             observer.disconnect();
             if (timeout) clearTimeout(timeout);
         };
-    }, [commentsData.page, config_id, connection_id, newComments]);
+    }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
     
       
 
@@ -213,3 +213,5 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
     )
 });
 
+
+MainComments.displayName = 'MainComments';

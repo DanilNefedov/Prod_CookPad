@@ -6,7 +6,6 @@ import User from "@/app/models/user";
 import { NextResponse } from "next/server";
 import { categoryUser } from "../../functions";
 import mongoose from "mongoose";
-import ReplyComment from "@/app/models/reply-comments";
 
 
 
@@ -25,7 +24,7 @@ export async function PUT(request: Request) {
             return NextResponse.json({ message: 'Missing required parameters' }, { status: 400 });
         }
 
-        let like_doc = await LikesComments.findOne({ id_comment, id_author }).session(session);
+        const like_doc = await LikesComments.findOne({ id_comment, id_author }).session(session);
         
         if (!like_doc) {
             await new LikesComments({ id_comment, id_author, config_id }).save({ session });

@@ -2,8 +2,6 @@ import { theme } from "@/config/ThemeMUI/theme";
 import { Box, Button, IconButton, Menu, MenuItem, TableCell, useMediaQuery } from "@mui/material";
 import { MouseEvent, useState } from "react";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import ClearIcon from '@mui/icons-material/Clear';
 import { AddNewUnit } from "./add-unit";
 import { btnsListUnitHover, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/style";
 import { useAppDispatch, useAppSelector } from "@/state/hook";

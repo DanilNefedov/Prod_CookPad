@@ -25,7 +25,7 @@ export async function PUT(request: Request) {
             return NextResponse.json({ message: 'Missing required parameters' }, { status: 400 });
         }
         
-        let like_doc = await LikesReply.findOne({ id_comment, id_author }).session(session);
+        const like_doc = await LikesReply.findOne({ id_comment, id_author }).session(session);
         
         if (!like_doc) {
             await new LikesReply({ id_comment, id_author, config_id }).save({session});

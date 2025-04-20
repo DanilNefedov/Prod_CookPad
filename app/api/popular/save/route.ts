@@ -45,7 +45,7 @@ export async function PUT(request: Request) {
             return NextResponse.json({ message: 'Failed to update saves' }, { status: 500 });
         }
 
-        let save_doc = await SavesPopular.findOne({ config_id, user_id }).session(session);
+        const save_doc = await SavesPopular.findOne({ config_id, user_id }).session(session);
 
         if (!save_doc) {
             await new SavesPopular({ user_id, config_id }).save({ session });
