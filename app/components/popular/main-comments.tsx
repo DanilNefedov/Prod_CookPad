@@ -185,6 +185,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
                         </p>
                     }
                     scrollableTarget="scrollableTarget"
+                    pullDownToRefreshThreshold={10}
 
                 >
                     <List sx={{ pt: "0" }}>
