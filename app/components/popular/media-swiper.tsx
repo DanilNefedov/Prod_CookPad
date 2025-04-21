@@ -9,20 +9,22 @@ import 'swiper/css/navigation';
 import './styles.css';
 import { memo, useState } from "react";
 import { containerSlideMediaSwiper, mediaSwiperElement } from "@/app/(main)/popular/style";
+import { useAppSelector } from "@/state/hook";
+import { shallowEqual } from "react-redux";
 
 
 
 
-
-export const MediaSwiper = memo(({ media }: { media: MediaObj[] }) => {
+export const MediaSwiper = memo(({ configId }: { configId: string }) => {
     const [loaded, setLoaded] = useState<Record<string, boolean>>({});
-
-    // const media = useAppSelector(
-    //     state => state.popular.pop_list[activeVideo]?.recipe_media || [],
-    //     shallowEqual
-    // );
-
-    console.log('media')
+    
+    const media = useAppSelector(
+        state => {
+            const item = state.popular.pop_list.find(item => item.config_id === configId);
+            return item?.recipe_media || [];
+        },
+        shallowEqual 
+    );
 
 
 
@@ -115,7 +117,9 @@ export const MediaSwiper = memo(({ media }: { media: MediaObj[] }) => {
         </Swiper>
 
     )
-},);
+}, (prevProps, nextProps) => {
+    return prevProps.configId === nextProps.configId;
+});
 
 
 MediaSwiper.displayName = "MediaSwiper"

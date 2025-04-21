@@ -199,7 +199,8 @@ export function MainPopular() {
                             :
                             <SwiperSlide key={item.config_id} virtualIndex={index}> 
                                 <Box sx={{ width: '100%', height: '100%', borderRadius: '20px 20px 0 20px' }}>
-                                    <MediaSwiper media={item.recipe_media} />
+                                    <MediaSwiper configId={item.config_id} />
+                                    {/* activeVideo={activeVideo} */}
                                 </Box>
                             </SwiperSlide>
                         ))}
