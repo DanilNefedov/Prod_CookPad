@@ -102,9 +102,14 @@ export const bottomDescriptionCard = {
 
 export const favoriteBtnActive ={ 
     color: 'primary.main', 
-    '&:hover': { 
+    '@media (hover: hover)': {
+      '&:hover': {
         color: 'primary.main' 
+      },
     },
+    // '&:hover': { 
+    //     color: 'primary.main' 
+    // },
     [theme.breakpoints.down("md")]: {
         height:'17px',
         width:'19px'
