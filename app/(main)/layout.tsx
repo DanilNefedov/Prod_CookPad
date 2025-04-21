@@ -2,7 +2,6 @@ import { Container, Paper } from "@mui/material";
 import { NavigationSite } from "../components/navigation-site/navigation";
 import { ClientUser } from "../components/client-side-handler/client-user";
 import { theme } from "@/config/ThemeMUI/theme";
-import './style.css'
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   const styledPaperHome = {
