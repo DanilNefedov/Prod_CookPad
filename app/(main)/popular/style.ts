@@ -1,6 +1,6 @@
 import { theme } from "@/config/ThemeMUI/theme";
 import { Theme } from "@mui/material";
-import { fontWeight, SystemStyleObject } from "@mui/system";
+import { SystemStyleObject } from "@mui/system";
 
 
 export const mainCardContent = (theme: Theme, openInfo: boolean): SystemStyleObject<Theme> => ({
