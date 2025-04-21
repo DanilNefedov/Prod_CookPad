@@ -38,7 +38,6 @@ export function MainPopular() {
     const [expanded, setExpanded] = useState(false);
     const commentRef = useRef<HTMLDivElement | null>(null);
     
-
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
@@ -55,16 +54,13 @@ export function MainPopular() {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [openComment,]);
-
-
+    }, [openComment]);
 
     useEffect(() => {
         if (connection_id !== '') {
             dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
         }
     }, [connection_id, dispatch])
-
 
     useEffect(() => {
         if (popularData.pop_list.length > 0) {
@@ -75,6 +71,25 @@ export function MainPopular() {
         }
     }, [popularData.pop_list]);
 
+    // Add an effect to update virtual slides when data is changed
+    useEffect(() => {
+        if (swiperRef.current && popularData.pop_list.length > 0) {
+            // Update virtual slides without resetting the position
+            swiperRef.current.virtual.update(true);
+        }
+    }, [popularData.pop_list]);
+
+    // Separate effect for loading new data when approaching the end of the list
+    useEffect(() => {
+        if (activeVideo >= popularData.pop_list.length - 2) {
+            handleNewVideo();
+        }
+        
+        const current = popularData.pop_list[activeVideo];
+        if (current && !viewedVideos.current.has(current.config_id)) {
+            updateViews(current.config_id);
+        }
+    }, [activeVideo, popularData.pop_list.length]);
 
     async function updateViews(config_id: string) {
         if (viewedVideos.current.has(config_id)) return
@@ -97,17 +112,19 @@ export function MainPopular() {
         }
     }
 
-
     function handleNewVideo() {
         if (connection_id !== '' && popularData.pop_list.length - activeVideo < 5) {
-            dispatch(popularFetch({ connection_id, count: 1, getAllIds: popularData.pop_list.map(item => item.config_id) }))
+            dispatch(popularFetch({ 
+                connection_id, 
+                count: 1, 
+                getAllIds: popularData.pop_list.map(item => item.config_id) 
+            }))
         }
     }
 
     const toggleComment = useCallback(() => {
         setOpenComment(prev => !prev);
     }, []);
-
 
     const handleCooldown = (callback: () => void) => {
         if (cooldownRef.current) return;
@@ -117,10 +134,8 @@ export function MainPopular() {
             cooldownRef.current = false;
         }, 1000);
     };
-
-
    
-    console.log('main-popular',)
+    console.log('main-popular')
     return (
         <>
             <Card
@@ -150,7 +165,7 @@ export function MainPopular() {
                             <CircularProgress color="secondary" size="35px" />
                         </Box> 
                         : */}
-                        <Swiper
+                    <Swiper
                         onSwiper={(swiper) => (swiperRef.current = swiper)}
                         touchReleaseOnEdges
                         direction="vertical"
@@ -158,42 +173,36 @@ export function MainPopular() {
                         mousewheel={{
                             thresholdTime: 1000,
                         }}
-                        effect="none"
                         virtual
-                        allowTouchMove={false}
-                        simulateTouch={false}
+                        freeMode={false}
+                        touchRatio={1.5}
+                        threshold={20}
+                        allowTouchMove={true}
+                        simulateTouch={true}
                         onSlideChange={(swiper) => {
-                            const newIndex = swiper.activeIndex
-                            setActiveVideo(newIndex)
-                            const current = popularData.pop_list[newIndex]
-                            if (current) {
-                                updateViews(current.config_id)
-                                handleNewVideo()
-                                if (openComment) setOpenComment(false)
-                            }
+                            const newIndex = swiper.activeIndex;
+                            if (newIndex === activeVideo) return;
+                            
+                            setActiveVideo(newIndex);
+                            
+                            if (openComment) setOpenComment(false);
+                            
                         }}
-
-                        initialSlide={activeVideo}
                         modules={[Virtual, Mousewheel]}
                         style={{ height: '100%', zIndex: 3 }}
                     >
-                        {popularData.pop_list.map((item, index) =>(
-
-                            popularData.status || !popularData ? 
-                            <Box key={index} style={{ margin: '0 auto', width: '100%', height:'100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
+                        {popularData.pop_list.map((item, index) => (
+                            popularData.status && index >= popularData.pop_list.length - 1 ? 
+                            <Box key={index} style={{ margin: '0 auto', width: '100%', height: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
                                 <CircularProgress color="secondary" size="35px" />
                             </Box>
                             :
-                            <SwiperSlide key={item.config_id} virtualIndex={index} >
-                                <Box sx={{ width: '100%', height: '100%', borderRadius: '20px 20px 0 20px', }}>
-                                    <MediaSwiper activeVideo={activeVideo} />
+                            <SwiperSlide key={item.config_id} virtualIndex={index}> 
+                                <Box sx={{ width: '100%', height: '100%', borderRadius: '20px 20px 0 20px' }}>
+                                    <MediaSwiper media={item.recipe_media} />
                                 </Box>
-
-
                             </SwiperSlide>
-                        )
-                        
-                        )}
+                        ))}
                     </Swiper>
                     {/* }  */}
                     

@@ -16,13 +16,13 @@ import { containerSlideMediaSwiper, mediaSwiperElement } from "@/app/(main)/popu
 
 
 
-export const MediaSwiper = memo(({ activeVideo }: { activeVideo: number }) => {
+export const MediaSwiper = memo(({ media }: { media: MediaObj[] }) => {
     const [loaded, setLoaded] = useState<Record<string, boolean>>({});
 
-    const media = useAppSelector(
-        state => state.popular.pop_list[activeVideo]?.recipe_media || [],
-        shallowEqual
-    );
+    // const media = useAppSelector(
+    //     state => state.popular.pop_list[activeVideo]?.recipe_media || [],
+    //     shallowEqual
+    // );
 
     console.log('media')
 
@@ -41,7 +41,7 @@ export const MediaSwiper = memo(({ activeVideo }: { activeVideo: number }) => {
 
         <Swiper
             direction="horizontal"
-            key={activeVideo}
+            // key={activeVideo}
             pagination={
                 media.length > 1
                     ? {
