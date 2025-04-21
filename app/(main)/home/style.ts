@@ -118,8 +118,10 @@ export const favoriteBtnActive ={
 
 export const favoriteBtnDesactive = { 
     color: '#8E94A4', 
-    '&:hover': { 
+    '@media (hover: hover)': {
+      '&:hover': {
         color: 'primary.main' 
+      },
     },
     [theme.breakpoints.down("md")]: {
         height:'17px',
