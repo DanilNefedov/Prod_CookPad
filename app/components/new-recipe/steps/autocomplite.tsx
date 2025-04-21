@@ -245,7 +245,8 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                             display="flex"
                             alignItems="center"
                             sx={{
-                                ':hover': { backgroundColor: '#1F2128' },
+                                '@media (hover: hover) and (pointer: fine)': {
+                                ':hover': { backgroundColor: '#1F2128' },},
                                 width: '100%',
                             }}
                         >
@@ -262,9 +263,10 @@ export function Autocomplite(props: { props: AutocompleteProps }) {
                                     sx={{
                                         '&.MuiMenuItem-root': {
                                             color: '#fff',
+                                            '@media (hover: hover) and (pointer: fine)': {
                                             '&:hover': {
                                                 backgroundColor: '#1F2128',
-                                            },
+                                            },},
                                             '&.Mui-selected': {
                                                 backgroundColor: '#1F2128',
                                                 color: '#fff',

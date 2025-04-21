@@ -9,10 +9,11 @@ export function LogOut() {
         lineHeight: 'inherit',
         textTransform: 'initial',
         color: 'text.secondary',
+        '@media (hover: hover) and (pointer: fine)': {
         ':hover': {
             bgcolor: 'primary.main',
             color: 'text.primary'
-        },
+        },},
         width: '100%',
 
         [theme.breakpoints.down("md")]: {

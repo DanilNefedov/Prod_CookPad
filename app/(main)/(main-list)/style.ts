@@ -110,13 +110,14 @@ export const btnsListUnitHover = {
     maxWidth:'35px',
     minWidth:'0',
     p:'5px',
-    
-    '&:hover': {
-        backgroundColor: 'primary.main',
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': {
+            backgroundColor: 'primary.main',
 
-        '& .MuiSvgIcon-root': {
-            color: 'background.paper'
-        }
+            '& .MuiSvgIcon-root': {
+                color: 'background.paper'
+            }
+        },
     },
     [theme.breakpoints.down(800)]: {
         
@@ -126,14 +127,15 @@ export const btnsListUnitHover = {
         '& span':{
             lineHeight:'initial',
         },
+        '@media (hover: hover) and (pointer: fine)': {
+            '&:hover': {
+                backgroundColor: 'background.default',
 
-        '&:hover': {
-            backgroundColor: 'background.default',
-
-            '& .MuiSvgIcon-root': {
-                color: 'primary.main'
-            }
-        },
+                '& .MuiSvgIcon-root': {
+                    color: 'primary.main'
+                }
+            },
+        }
         // '&:hover': {
         //     backgroundColor: 'background.paper',
 
@@ -239,14 +241,16 @@ export const btnsModal = {
     minWidth: 'initial',
     margin: '0 5px',
     backgroundColor:'background.default',
-
-    '&:hover': {
-        backgroundColor: 'primary.main'
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': {
+            backgroundColor: 'primary.main'
+        }, 
+        '&:hover svg': {
+            color: '#fff'
+        },
     },
 
-    '&:hover svg': {
-        color: '#fff'
-    },
+   
     [theme.breakpoints.down('md')]: {
         width:"30px",
         height:'30px',

@@ -77,11 +77,11 @@ cookBtn = {
     transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1), 
                 box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1), 
                 border-color 250ms cubic-bezier(0.4, 0, 0.2, 1);}
-
+@media (hover: hover) and (pointer: fine) {
 .cookLinkMainContent:hover{
     background-color: #FF7269;
     /* color: ; */
-}
+}}
 
 @media screen and (max-width:899px){
     .cookLinkMainContent{

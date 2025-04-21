@@ -283,7 +283,8 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                             <Button onClick={handleOpen} size="small" sx={{
                                 minWidth: '0', p: '0',
                                 color: `${open ? 'primary.dark' : 'text.disabled'}`,
-                                '&:hover': { backgroundColor: 'transparent' },
+                                '@media (hover: hover) and (pointer: fine)': {
+                                    '&:hover': { backgroundColor: 'transparent' },},
                                 [theme.breakpoints.down("md")]: {
                                     height: '22px',
                                     width: '19px'
@@ -292,8 +293,10 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                                 <DeleteIcon sx={{
                                     width: '100%',
                                     height: '100%',
-                                    '&:hover': { 
-                                        color: 'primary.main' 
+                                    '@media (hover: hover) and (pointer: fine)': {
+                                        '&:hover': { 
+                                            color: 'primary.main' 
+                                        },
                                     },
                                 }}></DeleteIcon>
                             </Button>
@@ -316,7 +319,8 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                         <Button onClick={handleOpen} size="small" sx={{
                             minWidth: '0', p: '0',
                             color: `${open ? 'primary.dark' : 'text.disabled'}`,
-                            '&:hover': { backgroundColor: 'transparent' },
+                            '@media (hover: hover) and (pointer: fine)': {
+                            '&:hover': { backgroundColor: 'transparent' },},
                             [theme.breakpoints.down("md")]: {
                                 height: '22px',
                                 width: '19px'
@@ -381,9 +385,10 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                                     p: '3px 15px',
                                     color: 'text.primary',
                                     backgroundColor: 'background.default',
+                                    '@media (hover: hover) and (pointer: fine)': {
                                     "&:hover": {
                                         backgroundColor: 'primary.dark'
-                                    },
+                                    },},
                                     [theme.breakpoints.down(500)]: {
                                         p:'3px 10px',
                                         borderRadius:'10px',
@@ -397,9 +402,10 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                                     p: '3px 15px',
                                     color: 'text.primary',
                                     backgroundColor: 'background.default',
+                                    '@media (hover: hover) and (pointer: fine)': {
                                     "&:hover": {
                                         backgroundColor: 'primary.dark'
-                                    },
+                                    },},
                                     [theme.breakpoints.down(500)]: {
                                         p:'3px 10px',
                                         borderRadius:'10px',

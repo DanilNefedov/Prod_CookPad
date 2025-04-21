@@ -218,10 +218,10 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
                         horizontal: 'right',
                     }}
                     sx={{
-                        '& .MuiPaper-root': { backgroundColor: "#585B66" }, '& .MuiMenuItem-root:hover': {
+                        '& .MuiPaper-root': { backgroundColor: "#585B66" }, '@media (hover: hover) and (pointer: fine)': {'& .MuiMenuItem-root:hover': {
                             backgroundColor: 'background.paper',
                             cursor: 'auto'
-                        },
+                        },},
                         '& .MuiList-root': {
                             p: '5px 10px'
                         },

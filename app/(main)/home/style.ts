@@ -136,9 +136,11 @@ export const cookBtn = {
     color: 'text.primary', 
     textTransform: 'initial', 
     fontSize: '15px', 
-    "&:hover": { 
-        backgroundColor: 'primary.main', 
-        color: "text.primary" 
+    '@media (hover: hover) and (pointer: fine)': {
+        "&:hover": { 
+            backgroundColor: 'primary.main', 
+            color: "text.primary" 
+        },
     },
 
     [theme.breakpoints.down("md")]: {

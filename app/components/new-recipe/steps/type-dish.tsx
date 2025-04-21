@@ -130,10 +130,10 @@ export function TypeDish() {
             '&.MuiMenuItem-root': {
               // backgroundColor: '#1F2128',
               color: '#fff',
-
+              '@media (hover: hover) and (pointer: fine)': {
               '&:hover': {
                 backgroundColor: '#1F2128',
-              },
+              },},
               '&.Mui-selected': {
                 backgroundColor: '#1F2128',
                 color: '#fff',

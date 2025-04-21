@@ -78,9 +78,10 @@ export const mainBtnsPopular = {
     border:'1px solid #777777',
     cursor:'pointer',
     transition:'0.15s',
-
-    "&:hover":{
-        transform: "scale(1.1)"
+    '@media (hover: hover) and (pointer: fine)': {
+        "&:hover":{
+            transform: "scale(1.1)"
+        },
     },
     [theme.breakpoints.down('md')]: {
         width:'35px',
@@ -407,7 +408,9 @@ export const containerSecondBlockComm = {
 
 export const replyComm = (theme: Theme, isActive:boolean): SystemStyleObject<Theme> => ({
     p: '0',
-    '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
+    },
     fontSize: "14px",
     textTransform: 'initial',
     minWidth: "0",
@@ -426,7 +429,9 @@ export const dataComm = {
 
 export const likeComm = {
     p: '0',
-    '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
+    },
     fontSize: "14px",
     textTransform: 'initial',
     minWidth: "0",
@@ -440,7 +445,9 @@ export const repliesOpen = (theme: Theme, count:boolean, openReply:boolean): Sys
     whiteSpace: 'nowrap',
     m:'0 20px',
     p: '0',
-    '&:hover': { backgroundColor: "transparent", color: count  ? 'text.primary' : 'text.secondary' }, // >0
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': { backgroundColor: "transparent", color: count  ? 'text.primary' : 'text.secondary' }, // >0
+    },
     fontSize: "14px",
     textTransform: 'initial',
     cursor: count  ? 'pointer' : 'initial', // > 0
@@ -452,7 +459,9 @@ export const repliesOpen = (theme: Theme, count:boolean, openReply:boolean): Sys
 
 export const moreBtn = {
     p: '0',
-    '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
+    },
     fontSize: "14px",
     textTransform: 'initial',
     minWidth: "0",
@@ -464,8 +473,10 @@ export const moreBtn = {
 
 export const hideBtn = {
     p: '0',
-    '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
-    fontSize: "14px",
+    '@media (hover: hover) and (pointer: fine)': {
+    '   &:hover': { backgroundColor: "transparent", color: 'text.primary' },
+    },
+   fontSize: "14px",
     textTransform: 'initial',
     minWidth: "0",
     color: 'text.secondary'
@@ -522,7 +533,9 @@ export const containerPrimaryReplyText = {
 
 export const replyReplyBtn = (theme: Theme, isActive:boolean): SystemStyleObject<Theme> => ({
     p: '0',
-    '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
+    },
     fontSize: "14px",
     textTransform: 'initial',
     minWidth: "0",
@@ -540,7 +553,9 @@ export const dataReply = {
 
 export const likesReply = {
     p: '0',
-    '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
+    },
     fontSize: "14px",
     textTransform: 'initial',
     minWidth: "0",

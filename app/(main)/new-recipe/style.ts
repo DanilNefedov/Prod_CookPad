@@ -16,13 +16,15 @@ export const VisuallyHiddenInput = styled('input')({
 
 
 export const btnsSwiperMedia = {
-    '&:hover': {
-        backgroundColor: 'background.paper'
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': {
+            backgroundColor: 'background.paper'
+        },
+        '&:hover .MuiSvgIcon-root': {
+            color: 'primary.main'
+        },
     },
-
-    '&:hover .MuiSvgIcon-root': {
-        color: 'primary.main'
-    },
+    
     position: 'absolute',
     backgroundColor: 'background.paper',
     top: '10px',

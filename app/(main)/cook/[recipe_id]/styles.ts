@@ -40,8 +40,10 @@ export const btnsCookHeader = {
     minWidth: '110px',
     width: '100%',
     m: '8px auto',
-    '& .hover': {
-        backgroundColor: 'primary.light'
+    '@media (hover: hover) and (pointer: fine)': {
+        '& .hover': {
+            backgroundColor: 'primary.light'
+        },
     },
     whiteSpace: "nowrap",
     overflow: "hidden",
@@ -60,13 +62,15 @@ export const deleteHeaderCook = {
     borderRadius: '50%',
     width: '30px',
     height: '30px',
-    '&:hover': {
-        backgroundColor: 'primary.main'
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': {
+            backgroundColor: 'primary.main'
+        },
+        '&:hover svg': {
+            color: '#fff'
+        }
     },
 
-    '&:hover svg': {
-        color: '#fff'
-    }
 }
 
 
@@ -164,9 +168,11 @@ export const addListIngr = {
     textTransform:'none',
     p:'2px 7px',
     lineHeight:'1.7',
-    '&:hover':{
-        color:'text.primary',
-        backgroundColor:'primary.main',
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover':{
+            color:'text.primary',
+            backgroundColor:'primary.main',
+        },
     },
     display:'block',
     mt:'10px',
@@ -191,13 +197,16 @@ export const menuListItems = {
 
 export const btnListItem = {
     pointerEvents: 'auto',
-    '&:hover':{
-        backgroundColor:'primary.dark'
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover':{
+            backgroundColor:'primary.dark'
+        },
+        '& svg:hover':{
+            color:'text.primary'
+        },
     },
 
-    '& svg:hover':{
-        color:'text.primary'
-    },
+    
     p:'4px 4px',
     width:'auto',
     minWidth:'auto',
@@ -215,7 +224,9 @@ export const btnAddNew = {
     textTransform:'capitalize',
     backgroundColor:'background.paper',
     p:'5px 10px',
-    '&:hover':{
-        backgroundColor:'primary.dark',
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover':{
+            backgroundColor:'primary.dark',
+        }
     }
 }
