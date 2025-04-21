@@ -1,6 +1,6 @@
 import { theme } from "@/config/ThemeMUI/theme";
 import { Theme } from "@mui/material";
-import { SystemStyleObject } from "@mui/system";
+import { fontWeight, SystemStyleObject } from "@mui/system";
 
 
 export const mainCardContent = (theme: Theme, openInfo: boolean): SystemStyleObject<Theme> => ({
@@ -100,7 +100,8 @@ export const nameRecipe = {
     mb: '0', 
     whiteSpace: 'nowrap', 
     overflow: 'hidden',
-    fontSize: '16px'
+    fontSize: '16px',
+    fontWeight:'bold',
 }
 
 

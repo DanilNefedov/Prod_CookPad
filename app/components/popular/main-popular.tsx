@@ -145,6 +145,9 @@ export function MainPopular() {
                 sx={(theme) => mainCardContent(theme, openInfo)}
                 >
                 <Box sx={viewContentContainer} >
+
+
+                    {/* FOR MOBILE */}
                     <Box sx={(theme) => mobileNameDescriptionContainer(theme, expanded)}>
 
                         <Typography gutterBottom variant="h5" component="h1" sx={nameRecipe}>
@@ -159,6 +162,10 @@ export function MainPopular() {
                         </Typography>
 
                     </Box>
+                    {/* FOR MOBILE */}
+
+
+
 
                     {/* { popularData.status ? 
                         <Box style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>

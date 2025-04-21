@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook"
-import { Box, CircularProgress, List,  } from "@mui/material"
+import { Box, CircularProgress, List, } from "@mui/material"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { commVideoFetch, newCommPopular, newReplyComm } from "@/state/slices/comments-popular-slice";
 import { v4 as uuidv4 } from 'uuid';
@@ -31,12 +31,14 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
 
     const rawCommentsData = useAppSelector(state => state.comments.comments[config_id]);
     const commentsData = useMemo(() => {
-      return rawCommentsData ?? {
-        page: 1,
-        ids: [],
-        entities: {},
-      };
+        return rawCommentsData ?? {
+            page: 1,
+            ids: [],
+            entities: {},
+        };
     }, [rawCommentsData]);
+
+
 
 
     const contextComment = useAppSelector(state => ({
@@ -107,25 +109,27 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
             newComments
         }));
     }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
+
+
     console.log(commentsData.page)
 
     useEffect(() => {
         const el = scrollRef.current;
         if (!el || Number.isNaN(commentsData.page)) return;
-    
+
         let isFetching = false;
         let timeout: ReturnType<typeof setTimeout> | null = null;
-        
-        const scrollBuffer = 75; //additional space in case of scroll but we can still see the loading block.
-    
+
+        const scrollBuffer = 20; //additional space in case of scroll but we can still see the loading block. 75
+
         const checkNeedFetch = () => {
             if (!el || isFetching) return;
-    
+
             const contentShort = el.scrollHeight <= el.clientHeight + scrollBuffer;
-    
+
             if (contentShort) {
                 isFetching = true;
-    
+
                 dispatch(commVideoFetch({
                     config_id,
                     user_id: connection_id,
@@ -136,34 +140,35 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
                 });
             }
         };
-    
+
         const debouncedCheck = () => {
             if (timeout) clearTimeout(timeout);
             timeout = setTimeout(checkNeedFetch, 150);
         };
-    
+
         const observer = new ResizeObserver(() => {
             debouncedCheck();
         });
-    
+
         observer.observe(el);
         debouncedCheck();
-    
+
         return () => {
             observer.disconnect();
             if (timeout) clearTimeout(timeout);
         };
     }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
-    
-      
 
-    console.log('main-comments')
+
+
+    console.log('main-comments', commentsData.page)
     return (
         <Box sx={mainCommentContainer}>
 
-            <Box ref={scrollRef} sx={{ overflow: 'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0",
-                height:"100%"
-             }} id="scrollableTarget">
+            <Box ref={scrollRef} sx={{
+                overflow: 'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0",
+                height: "100%"
+            }} id="scrollableTarget">
                 <InfiniteScroll
                     style={{ overflow: 'initial' }}
                     dataLength={commentsData.ids.length}
@@ -176,13 +181,13 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
                     }
                     endMessage={
                         <p style={{ textAlign: 'center' }}>
-                            <span style={{color:'#8E94A4', fontSize:"14px"}}>nothing else</span>
+                            <span style={{ color: '#8E94A4', fontSize: "14px" }}>nothing else</span>
                         </p>
                     }
                     scrollableTarget="scrollableTarget"
 
                 >
-                    <List sx={{pt:"0"}}>
+                    <List sx={{ pt: "0" }}>
                         {commentsData.ids.map((id_comment) => {
                             const comment = commentsData.entities[id_comment];
                             return (
