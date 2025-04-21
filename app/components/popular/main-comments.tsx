@@ -162,7 +162,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
         <Box sx={mainCommentContainer}>
 
             <Box ref={scrollRef} sx={{ overflow: 'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0",
-                
+                height:"100%"
              }} id="scrollableTarget">
                 <InfiniteScroll
                     style={{ overflow: 'initial' }}
