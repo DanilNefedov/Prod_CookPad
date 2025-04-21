@@ -59,7 +59,7 @@ export function NavigationSite() {
                 display: 'flex', 
                 flexDirection: 'column', 
                 justifyContent: 'space-between', 
-                height: '100%', 
+                height: '100vh', 
                 paddingTop: '17px',
                 paddingBottom: '25px', '&.MuiContainer-root': {
                     paddingLeft: '12px',
