@@ -47,7 +47,7 @@ export default function FormBuild() {
                 },
                 display: "flex",
                 flexDirection: "column",
-                height: "100vh",
+                height: "100dvh",
                 padding: "10px 0",
             }}>
 
@@ -63,7 +63,7 @@ export default function FormBuild() {
                         // mr: '10px',
                         mt: '20px',
                         width: '100%',
-                        maxHeight:'84vh',
+                        maxHeight:'84dvh',
                     }}
                     noValidate
                     autoComplete="off"
