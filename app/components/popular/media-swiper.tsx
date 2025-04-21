@@ -7,9 +7,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 import './styles.css';
-import { useAppSelector } from "@/state/hook";
 import { memo, useState } from "react";
-import { shallowEqual } from "react-redux";
 import { containerSlideMediaSwiper, mediaSwiperElement } from "@/app/(main)/popular/style";
 
 
