@@ -98,6 +98,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
 
 
     const fetchMoreComments = useCallback(() => {
+        console.log(commentsData.page)
         if (Number.isNaN(commentsData.page)) return;
         dispatch(commVideoFetch({
             config_id,
@@ -106,6 +107,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
             newComments
         }));
     }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
+    console.log(commentsData.page)
 
     useEffect(() => {
         const el = scrollRef.current;
