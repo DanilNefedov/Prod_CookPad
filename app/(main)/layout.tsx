@@ -24,7 +24,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
       <NavigationSite></NavigationSite>
       <Paper sx={styledPaperHome}>
         <Container maxWidth={false} sx={{
-          height: '100%',
+          height: '100dvh',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',

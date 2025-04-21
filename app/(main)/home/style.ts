@@ -13,7 +13,7 @@ export const mainContent = {
 }
 
 export const mainContainer = {
-    height: '100%',
+    height: '100dvh',
     display: 'flex',
     flexWrap: 'wrap', '&.MuiContainer-root': {
         paddingLeft: 0,
