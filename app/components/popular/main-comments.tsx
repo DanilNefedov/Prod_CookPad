@@ -36,7 +36,8 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
             ids: [],
             entities: {},
         };
-    }, [rawCommentsData]);
+    }, [rawCommentsData?.page, rawCommentsData?.ids.length]);
+    
 
 
 
@@ -48,6 +49,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
     }),
         shallowEqual
     )
+    const [hasMore, setHasMore] = useState(true);
 
     const [newComments, setNewComments] = useState<string[]>([])
     const [newReply, setNewReply] = useState<string[]>([])

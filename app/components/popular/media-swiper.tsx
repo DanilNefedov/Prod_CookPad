@@ -7,7 +7,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 import './styles.css';
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { containerSlideMediaSwiper, mediaSwiperElement } from "@/app/(main)/popular/style";
 import { useAppSelector } from "@/state/hook";
 import { shallowEqual } from "react-redux";
@@ -18,30 +18,34 @@ import { shallowEqual } from "react-redux";
 export const MediaSwiper = memo(({ configId }: { configId: string }) => {
     const [loaded, setLoaded] = useState<Record<string, boolean>>({});
     
+    //Add a unique timestamp to URLs to bypass browser cache when downloading media
+    const [mediaUrls, setMediaUrls] = useState<Record<string, string>>({});
+
     const media = useAppSelector(
         state => {
             const item = state.popular.pop_list.find(item => item.config_id === configId);
             return item?.recipe_media || [];
         },
-        shallowEqual 
+        shallowEqual
     );
 
 
+    //Add a unique timestamp to URLs to bypass browser cache when downloading media
+    useEffect(() => {
+        const newUrls: Record<string, string> = {};
+        media.forEach((elem) => {
+            const uniqueUrl = `${elem.media_url}&t=${elem.media_id}`;
+            newUrls[elem.media_id] = uniqueUrl;
+        });
+        setMediaUrls(newUrls);
+    }, [media]);
 
-    // if (!media) {
-    //     return (
-    //         <Box style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
-    //             <CircularProgress color="secondary" size="35px" />
-    //         </Box>
 
-    //     );
-    // }
-
+   
     return (
 
         <Swiper
             direction="horizontal"
-            // key={activeVideo}
             pagination={
                 media.length > 1
                     ? {
@@ -85,7 +89,7 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
                                     transition: 'opacity 0.3s ease',
                                 }}
                                 component='img'
-                                src={elem.media_url as string}
+                                src={mediaUrls[elem.media_id]}
                                 loading="lazy"
                                 onLoad={() => setLoaded(prev => ({ ...prev, [elem.media_id]: true }))}
                             />
@@ -100,11 +104,11 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
                                 autoPlay
                                 loop
                                 muted
-                                poster={elem.media_url as string}
+                                poster={mediaUrls[elem.media_id]}
                                 onCanPlayThrough={() => setLoaded(prev => ({ ...prev, [elem.media_id]: true }))}
                             >
                                 <source
-                                    src={elem.media_url as string}
+                                    src={mediaUrls[elem.media_id]}
                                     type="video/mp4"
                                 />
                             </CardMedia>
