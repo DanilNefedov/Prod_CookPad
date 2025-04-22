@@ -59,7 +59,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
     const scrollRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (config_id && connection_id && !isFirstLoaded) {
+        if (config_id && connection_id) {
             dispatch(commVideoFetch({
                 config_id,
                 user_id: connection_id,
@@ -67,7 +67,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
                 newComments: []
             })).unwrap().then(() => setIsFirstLoaded(true));
         }
-    }, [config_id, connection_id, isFirstLoaded, dispatch]);
+    }, [config_id, connection_id, dispatch]);
     
     
 
@@ -109,7 +109,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
 
 
     const fetchMoreComments = useCallback(() => {
-        if (!isFirstLoaded || Number.isNaN(commentsData.page)) return;
+        if (Number.isNaN(commentsData.page)) return;
     
         dispatch(commVideoFetch({
             config_id,
@@ -117,7 +117,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
             page: commentsData.page + 1,
             newComments
         }));
-    }, [isFirstLoaded, commentsData.page, config_id, connection_id, newComments, dispatch]);
+    }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
     
 
 
