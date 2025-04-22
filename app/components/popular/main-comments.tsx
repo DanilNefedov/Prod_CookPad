@@ -175,7 +175,10 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
                     hasMore={!Number.isNaN(commentsData.page)}
                     loader={
                         <div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
-                            <CircularProgress color="secondary" size="35px" />
+                            {/* <CircularProgress color="secondary" size="35px" /> */}
+                            {'page:' + commentsData.page}
+                            {'commentsData.entities[0]:' + commentsData.entities[0]}
+                            {'ids:' + commentsData.ids[0]}
                         </div>
                     }
                     endMessage={
@@ -191,13 +194,19 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
                         {commentsData.ids.map((id_comment) => {
                             const comment = commentsData.entities[id_comment];
                             return (
-                                <CommentsItem
+                                <>
+                                    <div className="">{'page:' + commentsData.page}</div>
+                                    <div className="">{'commentsData.entities:' + commentsData.entities[commentsData.ids[0]].id_comment}</div>
+                                    <div className="">{'ids:' + commentsData.ids}</div>
+                                    <CommentsItem
                                     key={id_comment}
 
                                     id_comment={comment.id_comment}
                                     config_id={config_id}
                                     newReply={newReply}
                                 ></CommentsItem>
+                                </>
+                                
                             )
                         })}
                     </List>
