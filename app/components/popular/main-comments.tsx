@@ -56,7 +56,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
     const scrollRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (config_id && connection_id !== '' && commentsData.ids.length === 0) {
+        if (config_id && connection_id !== '' && (!rawCommentsData || !rawCommentsData.ids || rawCommentsData.ids.length === 0)) {
             dispatch(commVideoFetch({ config_id, user_id: connection_id, page: 1, newComments: [] }))
         }
     }, [config_id, activeVideo, commentsData.ids.length, connection_id, dispatch]);
