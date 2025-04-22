@@ -49,6 +49,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
     }),
         shallowEqual
     )
+    const [isFirstLoaded, setIsFirstLoaded] = useState(false);
 
     const [newComments, setNewComments] = useState<string[]>([])
     const [newReply, setNewReply] = useState<string[]>([])
@@ -58,14 +59,16 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
     const scrollRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        // if (config_id && connection_id !== '' && commentsData.ids.length === 0) {
-        //     dispatch(commVideoFetch({ config_id, user_id: connection_id, page: commentsData.page, newComments: [] }))
-        // }
-        if (config_id && connection_id !== '' && rawCommentsData === undefined) {
-            dispatch(commVideoFetch({ config_id, user_id: connection_id, page: 1, newComments: [] }))
+        if (config_id && connection_id && !rawCommentsData && !isFirstLoaded) {
+            dispatch(commVideoFetch({
+                config_id,
+                user_id: connection_id,
+                page: 1,
+                newComments: []
+            })).then(() => setIsFirstLoaded(true));
         }
-          
-    }, [config_id, activeVideo, commentsData.ids.length, commentsData.page, connection_id, dispatch]);
+    }, [config_id, connection_id, rawCommentsData, dispatch, isFirstLoaded]);
+    
 
     const sendComm = useCallback((text: string) => {
         if (connection_id !== '') {
@@ -105,22 +108,23 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
 
 
     const fetchMoreComments = useCallback(() => {
-        console.log(commentsData.page)
-        if (Number.isNaN(commentsData.page)) return;
+        if (!isFirstLoaded || Number.isNaN(commentsData.page)) return;
+    
         dispatch(commVideoFetch({
             config_id,
             user_id: connection_id,
             page: commentsData.page + 1,
             newComments
         }));
-    }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
+    }, [isFirstLoaded, commentsData.page, config_id, connection_id, newComments, dispatch]);
+    
 
 
     console.log(commentsData.page)
 
     useEffect(() => {
         const el = scrollRef.current;
-        if (!el || Number.isNaN(commentsData.page)) return;
+        if (!el || Number.isNaN(commentsData.page) || !isFirstLoaded) return;
 
         let isFetching = false;
         let timeout: ReturnType<typeof setTimeout> | null = null;
