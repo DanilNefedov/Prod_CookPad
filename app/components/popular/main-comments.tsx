@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook"
-import { Box, List, } from "@mui/material"
+import { Box, CircularProgress, List, } from "@mui/material"
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { commVideoFetch, newCommPopular, newReplyComm } from "@/state/slices/comments-popular-slice";
 import { v4 as uuidv4 } from 'uuid';
@@ -115,7 +115,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
 
     useEffect(() => {
         const el = scrollRef.current;
-        if (!el || Number.isNaN(commentsData.page) || commentsData.page === 1) return;
+        if (!el || Number.isNaN(commentsData.page)) return;
 
         let isFetching = false;
         let timeout: ReturnType<typeof setTimeout> | null = null;
@@ -161,7 +161,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
 
 
 
-    console.log('main-comments', commentsData.page)
+    console.log('main-comments', commentsData)
     return (
         <Box sx={mainCommentContainer}>
 
@@ -176,10 +176,8 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
                     hasMore={!Number.isNaN(commentsData.page)}
                     loader={
                         <div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
-                            {/* <CircularProgress color="secondary" size="35px" /> */}
-                            {'page:' + commentsData.page}
-                            {'commentsData.entities[0]:' + commentsData.entities[0]}
-                            {'ids:' + commentsData.ids[0]}
+                            <CircularProgress color="secondary" size="35px" />
+                            
                         </div>
                     }
                     endMessage={
@@ -195,18 +193,14 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
                         {commentsData.ids.map((id_comment) => {
                             const comment = commentsData.entities[id_comment];
                             return (
-                                <>
-                                    <div className="">{'page:' + commentsData.page}</div>
-                                    <div className="">{'commentsData.entities:' + commentsData.entities[commentsData.ids[0]].id_comment}</div>
-                                    <div className="">{'ids:' + commentsData.ids}</div>
-                                    <CommentsItem
+                                    
+                                <CommentsItem
                                     key={id_comment}
 
                                     id_comment={comment.id_comment}
                                     config_id={config_id}
                                     newReply={newReply}
                                 ></CommentsItem>
-                                </>
                                 
                             )
                         })}
