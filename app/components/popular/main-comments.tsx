@@ -171,7 +171,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
                 height: "100%"
             }} id="scrollableTarget">
                 <InfiniteScroll
-                    style={{ overflow: 'initial' }}
+                    style={{ overflow: 'initial', height:"100%" }}
                     dataLength={commentsData.ids.length}
                     next={fetchMoreComments}
                     hasMore={!Number.isNaN(commentsData.page)}

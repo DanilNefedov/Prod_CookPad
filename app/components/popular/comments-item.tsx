@@ -92,7 +92,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
 
     function formatCount (value: number): string  {
         if (!value) return '';
-        if (value < 1000) return String(Math.floor(value));
+        if (value < 1000) return value.toString();
         return numbro(value).format({
             average: true,
             mantissa: 2,
@@ -172,7 +172,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
                             }
                         }}
                         sx={(theme) => repliesOpen(theme, commentsData.reply_count > 0, openReply === commentsData.id_comment)}>
-                            {formatCount(Number(commentsData.reply_count))} replies 
+                            { commentsData.reply_count === 0 ? 0 : formatCount(Number(commentsData.reply_count)) } replies 
                             <KeyboardArrowDownIcon sx={{
                                 transform: openReply === commentsData.id_comment ? 'rotate(180deg)' : 'rotate(0deg)',
                                 transition: 'transform 0.2s ease', 

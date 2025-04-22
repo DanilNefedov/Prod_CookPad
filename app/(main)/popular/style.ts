@@ -261,7 +261,7 @@ export const mainCommentContainer = {
     justifyContent: 'space-between', 
     flexGrow: '1', 
     overflow: 'auto',
-            
+    height: "100%"
 }
 
 
