@@ -23,19 +23,22 @@ export interface LikeT {
     reply: boolean,
     id_branch: string
 }
-export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
+export const MainComments = memo(({ config_id, }: dataProps) => {
 
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
 
     const rawCommentsData = useAppSelector(state => state.comments.comments[config_id]);
     const commentsData = useMemo(() => {
-        return rawCommentsData ?? {
-            page: 1, 
-            ids: [],
-            entities: {},
-        };
-    }, [rawCommentsData?.page, rawCommentsData?.ids.length]);
+        if (!rawCommentsData) {
+            return {
+                page: 1,
+                ids: [],
+                entities: {},
+            };
+        }
+        return rawCommentsData;
+    }, [rawCommentsData]);
     
     
 
@@ -52,21 +55,25 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
 
     const [newComments, setNewComments] = useState<string[]>([])
     const [newReply, setNewReply] = useState<string[]>([])
+    const [initialLoadDone, setInitialLoadDone] = useState(false);
 
     const dispatch = useAppDispatch()
 
     const scrollRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (config_id && connection_id !== '') {
+        if (config_id && connection_id !== '' && !initialLoadDone) {
+            
             dispatch(commVideoFetch({ 
                 config_id, 
                 user_id: connection_id, 
-                page: 1,  
+                page: 1, 
                 newComments: [] 
-            }));
+            })).then(() => {
+                setInitialLoadDone(true);
+            });
         }
-    }, [config_id, activeVideo, connection_id, dispatch]); 
+    }, [config_id, connection_id, dispatch, initialLoadDone]);
 
 
     const sendComm = useCallback((text: string) => {
@@ -155,7 +162,6 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
     }, [commentsData.page, commentsData.ids.length, config_id, connection_id, newComments, dispatch]);
     
 
-    const hasMoreComments = commentsData.ids.length > 0 && !Number.isNaN(commentsData.page);
     console.log('main-comments', commentsData.page)
     return (
         <Box sx={mainCommentContainer}>
@@ -168,7 +174,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
                     style={{ overflow: 'initial', height:"100%" }}
                     dataLength={commentsData.ids.length}
                     next={fetchMoreComments}
-                    hasMore={hasMoreComments}
+                    hasMore={!Number.isNaN(commentsData.page) && commentsData.page >= 1}
                     loader={
                         <div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
                             <CircularProgress color="secondary" size="35px" />
