@@ -59,10 +59,14 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
 
     useEffect(() => {
         if (config_id && connection_id !== '') {
-            dispatch(commVideoFetch({ config_id, user_id: connection_id, page: 1, newComments: [] }))
+            dispatch(commVideoFetch({ 
+                config_id, 
+                user_id: connection_id, 
+                page: 1,  
+                newComments: [] 
+            }));
         }
-    }, [config_id, activeVideo, connection_id, dispatch]);
-
+    }, [config_id, activeVideo, connection_id, dispatch]); 
 
 
     const sendComm = useCallback((text: string) => {
