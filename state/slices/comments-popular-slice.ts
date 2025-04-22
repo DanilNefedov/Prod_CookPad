@@ -305,28 +305,24 @@ const commentsPopularSlice = createSlice({
                 state.error = false
             })
             .addCase(commVideoFetch.fulfilled, (state, action: PayloadAction<ReturnCommDataT, string>) => {
-                state.error = false;
-    state.status = false;
-   
-    const { config_id, page, totalCommentsCount, formattedComments } = action.payload;
+                state.error = false
+                state.status = false
+               
+                const { config_id, page, totalCommentsCount, formattedComments } = action.payload;
 
-    if (!state.comments[config_id]) {
-        state.comments[config_id] = commentsAdapter.getInitialState({ page: 1 });
-    }
+                if (!state.comments[config_id]) {
+                state.comments[config_id] = commentsAdapter.getInitialState({ page: 1 });
+                }
 
-    const commentsState = state.comments[config_id];
+                const commentsState = state.comments[config_id];
 
-    if (page === 1) {
-        commentsAdapter.setAll(commentsState, formattedComments);
-    } else {
-        commentsAdapter.addMany(commentsState, formattedComments);
-    }
+                if (page === 1) {
+                commentsAdapter.setAll(commentsState, formattedComments);
+                } else {
+                commentsAdapter.addMany(commentsState, formattedComments);
+                }
 
-    if (totalCommentsCount === commentsState.ids.length && totalCommentsCount > 0) {
-        commentsState.page = NaN; 
-    } else if (formattedComments.length > 0) {
-        commentsState.page = page; 
-    } 
+                commentsState.page = totalCommentsCount === commentsState.ids.length ? NaN : page;
                
             })
 

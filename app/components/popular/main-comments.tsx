@@ -23,24 +23,19 @@ export interface LikeT {
     reply: boolean,
     id_branch: string
 }
-export const MainComments = memo(({ config_id, }: dataProps) => {
+export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
 
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
 
     const rawCommentsData = useAppSelector(state => state.comments.comments[config_id]);
     const commentsData = useMemo(() => {
-        if (!rawCommentsData) {
-            return {
-                page: 1,
-                ids: [],
-                entities: {},
-            };
-        }
-        return rawCommentsData;
+        return rawCommentsData ?? {
+            page: 1,
+            ids: [],
+            entities: {},
+        };
     }, [rawCommentsData]);
-    
-    
 
 
 
@@ -55,26 +50,16 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
 
     const [newComments, setNewComments] = useState<string[]>([])
     const [newReply, setNewReply] = useState<string[]>([])
-    const [initialLoadDone, setInitialLoadDone] = useState(false);
 
     const dispatch = useAppDispatch()
 
     const scrollRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (config_id && connection_id !== '' && !initialLoadDone) {
-            
-            dispatch(commVideoFetch({ 
-                config_id, 
-                user_id: connection_id, 
-                page: 1, 
-                newComments: [] 
-            })).then(() => {
-                setInitialLoadDone(true);
-            });
+        if (config_id && connection_id !== '' && commentsData.ids.length === 0) {
+            dispatch(commVideoFetch({ config_id, user_id: connection_id, page: 1, newComments: [] }))
         }
-    }, [config_id, connection_id, dispatch, initialLoadDone]);
-
+    }, [config_id, activeVideo, commentsData.ids.length, connection_id, dispatch]);
 
     const sendComm = useCallback((text: string) => {
         if (connection_id !== '') {
@@ -115,7 +100,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
 
     const fetchMoreComments = useCallback(() => {
         console.log(commentsData.page)
-        if (Number.isNaN(commentsData.page)) return;
+        if (Number.isNaN(commentsData.page) && commentsData.page !== 1) return;
         dispatch(commVideoFetch({
             config_id,
             user_id: connection_id,
@@ -129,38 +114,51 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
 
     useEffect(() => {
         const el = scrollRef.current;
-        if (!el || Number.isNaN(commentsData.page) || commentsData.page < 1) return;
-    
+        if (!el || Number.isNaN(commentsData.page) || commentsData.page === 1) return;
+
         let isFetching = false;
-        const scrollBuffer = 20;
-    
+        let timeout: ReturnType<typeof setTimeout> | null = null;
+
+        const scrollBuffer = 20; //additional space in case of scroll but we can still see the loading block. 75
+
         const checkNeedFetch = () => {
-            if (isFetching) return;
-    
+            if (!el || isFetching) return;
+
             const contentShort = el.scrollHeight <= el.clientHeight + scrollBuffer;
-            if (contentShort && commentsData.ids.length > 0) {
+
+            if (contentShort) {
                 isFetching = true;
+
                 dispatch(commVideoFetch({
                     config_id,
                     user_id: connection_id,
                     page: commentsData.page + 1,
-                    newComments,
+                    newComments
                 })).finally(() => {
                     isFetching = false;
                 });
             }
         };
-    
-        const handleScroll = () => {
-            checkNeedFetch();
+
+        const debouncedCheck = () => {
+            if (timeout) clearTimeout(timeout);
+            timeout = setTimeout(checkNeedFetch, 150);
         };
-    
-        el.addEventListener('scroll', handleScroll);
+
+        const observer = new ResizeObserver(() => {
+            debouncedCheck();
+        });
+
+        observer.observe(el);
+        debouncedCheck();
+
         return () => {
-            el.removeEventListener('scroll', handleScroll);
+            observer.disconnect();
+            if (timeout) clearTimeout(timeout);
         };
-    }, [commentsData.page, commentsData.ids.length, config_id, connection_id, newComments, dispatch]);
-    
+    }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
+
+
 
     console.log('main-comments', commentsData.page)
     return (
@@ -171,10 +169,10 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
                 height: "100%"
             }} id="scrollableTarget">
                 <InfiniteScroll
-                    style={{ overflow: 'initial', height:"100%" }}
+                    style={{ overflow: 'initial' }}
                     dataLength={commentsData.ids.length}
                     next={fetchMoreComments}
-                    hasMore={!Number.isNaN(commentsData.page) && commentsData.page >= 1}
+                    hasMore={!Number.isNaN(commentsData.page)}
                     loader={
                         <div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
                             <CircularProgress color="secondary" size="35px" />
