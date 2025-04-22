@@ -24,7 +24,7 @@ export interface LikeT {
     id_branch: string
 }
 
-export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
+export const MainComments = memo(({ config_id, }: dataProps) => {
 
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
