@@ -119,7 +119,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
         let isFetching = false;
         let timeout: ReturnType<typeof setTimeout> | null = null;
 
-        const scrollBuffer = 20; //additional space in case of scroll but we can still see the loading block. 75
+        const scrollBuffer = 75; //additional space in case of scroll but we can still see the loading block. 75
 
         const checkNeedFetch = () => {
             if (!el || isFetching) return;
@@ -184,7 +184,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
                         </p>
                     }
                     scrollableTarget="scrollableTarget"
-                    pullDownToRefreshThreshold={10}
+                    // pullDownToRefreshThreshold={10}
 
                 >
                     <List sx={{ pt: "0" }}>
