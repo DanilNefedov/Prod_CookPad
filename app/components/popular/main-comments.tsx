@@ -23,8 +23,7 @@ export interface LikeT {
     reply: boolean,
     id_branch: string
 }
-
-export const MainComments = memo(({ config_id, }: dataProps) => {
+export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
 
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
@@ -32,11 +31,12 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
     const rawCommentsData = useAppSelector(state => state.comments.comments[config_id]);
     const commentsData = useMemo(() => {
         return rawCommentsData ?? {
-            page: 1,
+            page: 1, 
             ids: [],
             entities: {},
         };
     }, [rawCommentsData?.page, rawCommentsData?.ids.length]);
+    
     
 
 
@@ -49,7 +49,6 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
     }),
         shallowEqual
     )
-    const [isFirstLoaded, setIsFirstLoaded] = useState(false);
 
     const [newComments, setNewComments] = useState<string[]>([])
     const [newReply, setNewReply] = useState<string[]>([])
@@ -59,17 +58,12 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
     const scrollRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (config_id && connection_id) {
-            dispatch(commVideoFetch({
-                config_id,
-                user_id: connection_id,
-                page: 1,
-                newComments: []
-            })).unwrap().then(() => setIsFirstLoaded(true));
+        if (config_id && connection_id !== '') {
+            dispatch(commVideoFetch({ config_id, user_id: connection_id, page: 1, newComments: [] }))
         }
-    }, [config_id, connection_id, dispatch]);
-    
-    
+    }, [config_id, activeVideo, connection_id, dispatch]);
+
+
 
     const sendComm = useCallback((text: string) => {
         if (connection_id !== '') {
@@ -109,8 +103,8 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
 
 
     const fetchMoreComments = useCallback(() => {
+        console.log(commentsData.page)
         if (Number.isNaN(commentsData.page)) return;
-    
         dispatch(commVideoFetch({
             config_id,
             user_id: connection_id,
@@ -118,28 +112,27 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
             newComments
         }));
     }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
-    
 
 
     console.log(commentsData.page)
 
     useEffect(() => {
         const el = scrollRef.current;
-        if (!el || Number.isNaN(commentsData.page) || !isFirstLoaded) return;
-
+        if (!el || Number.isNaN(commentsData.page) || commentsData.page < 1) return;
+        
         let isFetching = false;
         let timeout: ReturnType<typeof setTimeout> | null = null;
-
-        const scrollBuffer = 20; //additional space in case of scroll but we can still see the loading block. 75
-
+        
+        const scrollBuffer = 20;
+        
         const checkNeedFetch = () => {
             if (!el || isFetching) return;
-
+            
             const contentShort = el.scrollHeight <= el.clientHeight + scrollBuffer;
-
-            if (contentShort) {
+            
+            if (contentShort && commentsData.ids.length > 0) { 
                 isFetching = true;
-
+                
                 dispatch(commVideoFetch({
                     config_id,
                     user_id: connection_id,
@@ -167,8 +160,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
             observer.disconnect();
             if (timeout) clearTimeout(timeout);
         };
-    }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
-
+    }, [commentsData.page, commentsData.ids.length, config_id, connection_id, newComments, dispatch]);
 
 
     console.log('main-comments', commentsData.page)
