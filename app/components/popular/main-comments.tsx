@@ -123,50 +123,39 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
     useEffect(() => {
         const el = scrollRef.current;
         if (!el || Number.isNaN(commentsData.page) || commentsData.page < 1) return;
-        
+    
         let isFetching = false;
-        let timeout: ReturnType<typeof setTimeout> | null = null;
-        
         const scrollBuffer = 20;
-        
+    
         const checkNeedFetch = () => {
-            if (!el || isFetching) return;
-            
+            if (isFetching) return;
+    
             const contentShort = el.scrollHeight <= el.clientHeight + scrollBuffer;
-            
-            if (contentShort && commentsData.ids.length > 0) { 
+            if (contentShort && commentsData.ids.length > 0) {
                 isFetching = true;
-                
                 dispatch(commVideoFetch({
                     config_id,
                     user_id: connection_id,
                     page: commentsData.page + 1,
-                    newComments
+                    newComments,
                 })).finally(() => {
                     isFetching = false;
                 });
             }
         };
-
-        const debouncedCheck = () => {
-            if (timeout) clearTimeout(timeout);
-            timeout = setTimeout(checkNeedFetch, 150);
+    
+        const handleScroll = () => {
+            checkNeedFetch();
         };
-
-        const observer = new ResizeObserver(() => {
-            debouncedCheck();
-        });
-
-        observer.observe(el);
-        debouncedCheck();
-
+    
+        el.addEventListener('scroll', handleScroll);
         return () => {
-            observer.disconnect();
-            if (timeout) clearTimeout(timeout);
+            el.removeEventListener('scroll', handleScroll);
         };
     }, [commentsData.page, commentsData.ids.length, config_id, connection_id, newComments, dispatch]);
+    
 
-
+    const hasMoreComments = commentsData.ids.length > 0 && !Number.isNaN(commentsData.page);
     console.log('main-comments', commentsData.page)
     return (
         <Box sx={mainCommentContainer}>
@@ -179,7 +168,7 @@ export const MainComments = memo(({ config_id, activeVideo }: dataProps) => {
                     style={{ overflow: 'initial', height:"100%" }}
                     dataLength={commentsData.ids.length}
                     next={fetchMoreComments}
-                    hasMore={!Number.isNaN(commentsData.page)}
+                    hasMore={hasMoreComments}
                     loader={
                         <div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
                             <CircularProgress color="secondary" size="35px" />
