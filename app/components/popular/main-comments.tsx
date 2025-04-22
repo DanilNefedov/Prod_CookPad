@@ -59,15 +59,16 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
     const scrollRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (config_id && connection_id && !rawCommentsData && !isFirstLoaded) {
+        if (config_id && connection_id && !isFirstLoaded) {
             dispatch(commVideoFetch({
                 config_id,
                 user_id: connection_id,
                 page: 1,
                 newComments: []
-            })).then(() => setIsFirstLoaded(true));
+            })).unwrap().then(() => setIsFirstLoaded(true));
         }
-    }, [config_id, connection_id, rawCommentsData, dispatch, isFirstLoaded]);
+    }, [config_id, connection_id, isFirstLoaded, dispatch]);
+    
     
 
     const sendComm = useCallback((text: string) => {
