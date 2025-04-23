@@ -122,51 +122,51 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
 
     console.log(commentsData.page)
 
-    useEffect(() => {
-        const el = scrollRef.current;
-        if (!el || Number.isNaN(commentsData.page) || commentsData.page === 0) return;
+    // useEffect(() => {
+    //     const el = scrollRef.current;
+    //     if (!el || Number.isNaN(commentsData.page) || commentsData.page === 0) return;
 
-        let isFetching = false;
-        let timeout: ReturnType<typeof setTimeout> | null = null;
+    //     let isFetching = false;
+    //     let timeout: ReturnType<typeof setTimeout> | null = null;
 
-        const scrollBuffer = 75; //additional space in case of scroll but we can still see the loading block. 75
+    //     const scrollBuffer = 75; //additional space in case of scroll but we can still see the loading block. 75
 
-        const checkNeedFetch = () => {
-            if (!el || isFetching) return;
+    //     const checkNeedFetch = () => {
+    //         if (!el || isFetching) return;
 
-            const contentShort = el.scrollHeight <= el.clientHeight + scrollBuffer;
+    //         const contentShort = el.scrollHeight <= el.clientHeight + scrollBuffer;
 
-            if (contentShort) {
-                isFetching = true;
+    //         if (contentShort) {
+    //             isFetching = true;
 
-                dispatch(commVideoFetch({
-                    config_id,
-                    user_id: connection_id,
-                    page: commentsData.page + 1,
-                    newComments
-                })).finally(() => {
-                    isFetching = false;
-                });
-            }
-        };
+    //             dispatch(commVideoFetch({
+    //                 config_id,
+    //                 user_id: connection_id,
+    //                 page: commentsData.page + 1,
+    //                 newComments
+    //             })).finally(() => {
+    //                 isFetching = false;
+    //             });
+    //         }
+    //     };
 
-        const debouncedCheck = () => {
-            if (timeout) clearTimeout(timeout);
-            timeout = setTimeout(checkNeedFetch, 150);
-        };
+    //     const debouncedCheck = () => {
+    //         if (timeout) clearTimeout(timeout);
+    //         timeout = setTimeout(checkNeedFetch, 150);
+    //     };
 
-        const observer = new ResizeObserver(() => {
-            debouncedCheck();
-        });
+    //     const observer = new ResizeObserver(() => {
+    //         debouncedCheck();
+    //     });
 
-        observer.observe(el);
-        debouncedCheck();
+    //     observer.observe(el);
+    //     debouncedCheck();
 
-        return () => {
-            observer.disconnect();
-            if (timeout) clearTimeout(timeout);
-        };
-    }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
+    //     return () => {
+    //         observer.disconnect();
+    //         if (timeout) clearTimeout(timeout);
+    //     };
+    // }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
 
 
 
