@@ -70,6 +70,7 @@ export const likePopContent = createAsyncThunk<{ config_id: string, liked: boole
     'popular/likePopContent',
     async function (data, { rejectWithValue }) {
         try {
+            console.log(data)
             const response = await fetch('/api/popular/like', {
                 method: 'PUT',
                 headers: {
@@ -164,8 +165,8 @@ const popularSlice = createSlice({
                 // console.log(action.payload)
                 const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
                 if (thisPop) {
-                    thisPop.liked = !action.payload.liked
-                    thisPop.likes = action.payload.liked ? thisPop.likes - 1 : thisPop.likes + 1
+                    thisPop.liked = action.payload.liked
+                    thisPop.likes = action.payload.liked ? thisPop.likes + 1 : thisPop.likes - 1
                 }
 
 

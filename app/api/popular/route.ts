@@ -213,24 +213,39 @@ export async function POST(request: Request) {
         
         const [authors, userLikes, userSaves] = await Promise.all([
             User.find({ connection_id: { $in: connectionIds } }).session(session),
-            LikesPopular.aggregate([{ 
-                $search: { 
-                    index: 'liked-popular', 
-                    compound: { must: [
-                        { text: { query: configIds.join('|'), path: 'config_id' } },
-                        { text: { query: connection_id, path: 'user_id' } },
-                    ] } 
-                } 
-            }]),
-            SavesPopular.aggregate([{ 
-                $search: { 
-                    index: 'saved-popular', 
-                    compound: { must: [
-                        { text: { query: configIds.join('|'), path: 'config_id' } },
-                        { text: { query: connection_id, path: 'user_id' } },
-                    ] } 
-                } 
-            }])
+            LikesPopular.aggregate([
+                {
+                    $search: {
+                        index: 'liked-popular',
+                        compound: {
+                            must: [
+                                { text: { query: configIds.join('|'), path: 'config_id' } },
+                                { text: { query: connection_id, path: 'user_id' } }
+                            ]
+                        }
+                    }
+                },
+                {
+                    $match: { is_deleted: { $ne: true } } 
+                }
+            ]),
+            
+            SavesPopular.aggregate([
+                { 
+                    $search: { 
+                        index: 'saved-popular', 
+                        compound: { 
+                            must: [
+                                { text: { query: configIds.join('|'), path: 'config_id' } },
+                                { text: { query: connection_id, path: 'user_id' } },
+                            ] 
+                        } 
+                    } 
+                },
+                {
+                    $match: { is_deleted: { $ne: true } } 
+                }
+            ])
         ]);
         
         const recipeMap = recipes.reduce((map, recipe) => {

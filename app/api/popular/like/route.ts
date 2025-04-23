@@ -84,7 +84,7 @@ export async function PUT(request: Request) {
         }
 
         await session.commitTransaction(); 
-        return NextResponse.json({ config_id, liked }, { status: 200 });
+        return NextResponse.json({ config_id, liked:!liked }, { status: 200 });
 
     } catch (error) {
         console.error('PATCH Error:', error);
