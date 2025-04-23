@@ -30,11 +30,11 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
 
     const commentsData = useAppSelector(state => {
         return state.comments.comments[config_id] ?? {
-          page: 1,
-          ids: [],
-          entities: {},
+            page: 0,
+            ids: [],
+            entities: {},
         };
-      });
+    });
       
     // console.log(rawCommentsData)
     // const commentsData = useMemo(() => {
@@ -64,7 +64,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
     const scrollRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (config_id && connection_id && commentsData.ids.length === 0) {
+        if (config_id && connection_id && commentsData.page === 0) {
             dispatch(commVideoFetch({ config_id, user_id: connection_id, page: 1, newComments: [] }));
         }
     }, [config_id, connection_id, commentsData.ids.length, dispatch]);
@@ -110,7 +110,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
 
     const fetchMoreComments = useCallback(() => {
         console.log(commentsData.page)
-        if (Number.isNaN(commentsData.page) && commentsData.page !== 1) return;
+        if (Number.isNaN(commentsData.page) && commentsData.page === 0) return;
         dispatch(commVideoFetch({
             config_id,
             user_id: connection_id,
@@ -124,7 +124,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
 
     useEffect(() => {
         const el = scrollRef.current;
-        if (!el || Number.isNaN(commentsData.page)) return;
+        if (!el || Number.isNaN(commentsData.page) || commentsData.page === 0) return;
 
         let isFetching = false;
         let timeout: ReturnType<typeof setTimeout> | null = null;
@@ -182,7 +182,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
                     style={{ overflow: 'initial' }}
                     dataLength={commentsData.ids.length}
                     next={fetchMoreComments}
-                    hasMore={!Number.isNaN(commentsData.page) || commentsData.page <= 1}
+                    hasMore={!Number.isNaN(commentsData.page)}
                     loader={
                         <div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
                             <CircularProgress color="secondary" size="35px" />
