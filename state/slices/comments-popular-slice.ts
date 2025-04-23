@@ -307,7 +307,8 @@ const commentsPopularSlice = createSlice({
             .addCase(commVideoFetch.fulfilled, (state, action: PayloadAction<ReturnCommDataT, string>) => {
                 state.error = false
                 state.status = false
-               
+                
+                console.log(action.payload)
                 const { config_id, page, totalCommentsCount, formattedComments } = action.payload;
 
                 if (!state.comments[config_id]) {
