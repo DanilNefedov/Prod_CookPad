@@ -20,11 +20,14 @@ import { theme } from "@/config/ThemeMUI/theme";
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import useUserAFKPing from "@/app/hooks/ping";
 
 
 
 
 export function MainPopular() {
+    useUserAFKPing(9000);
+
     const dispatch = useAppDispatch()
     const popularData = useAppSelector(state => state.popular)
     const userData = useAppSelector(state => state.user)
