@@ -64,10 +64,10 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
     const scrollRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (config_id && connection_id && commentsData.page === 0) {
-            dispatch(commVideoFetch({ config_id, user_id: connection_id, page: 1, newComments: [] }));
+        if (config_id && connection_id && (commentsData.ids.length === 0 || commentsData.page === 0)) {
+          dispatch(commVideoFetch({ config_id, user_id: connection_id, page: 1, newComments: [] }));
         }
-    }, [config_id, connection_id, commentsData.ids.length, dispatch]);
+      }, [config_id, connection_id, commentsData.ids.length, commentsData.page, dispatch]);
     
     
 
@@ -109,15 +109,18 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
 
 
     const fetchMoreComments = useCallback(() => {
-        console.log(commentsData.page)
-        if (Number.isNaN(commentsData.page) && commentsData.page === 0) return;
-        dispatch(commVideoFetch({
-            config_id,
-            user_id: connection_id,
-            page: commentsData.page + 1,
-            newComments
-        }));
+        if (!Number.isNaN(commentsData.page) && commentsData.page > 0) {
+            dispatch(
+            commVideoFetch({
+                config_id,
+                user_id: connection_id,
+                page: commentsData.page + 1,
+                newComments
+            })
+            );
+        }
     }, [commentsData.page, config_id, connection_id, newComments, dispatch]);
+    
 
 
     console.log(commentsData.page)

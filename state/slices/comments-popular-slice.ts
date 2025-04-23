@@ -304,28 +304,28 @@ const commentsPopularSlice = createSlice({
                 state.status = true,
                 state.error = false
             })
-            .addCase(commVideoFetch.fulfilled, (state, action: PayloadAction<ReturnCommDataT, string>) => {
-                state.error = false
-                state.status = false
+            .addCase(commVideoFetch.fulfilled, (state, action: PayloadAction<ReturnCommDataT>) => {
+                state.status = false;
+                state.error = false;
                 
-                console.log(action.payload)
                 const { config_id, page, totalCommentsCount, formattedComments } = action.payload;
-
+                
                 if (!state.comments[config_id]) {
-                state.comments[config_id] = commentsAdapter.getInitialState({ page: 1 });
+                  state.comments[config_id] = commentsAdapter.getInitialState({ page: 0 });
                 }
-
+                
                 const commentsState = state.comments[config_id];
-
-                if (page === 1) {
-                commentsAdapter.setAll(commentsState, formattedComments);
-                } else {
-                commentsAdapter.addMany(commentsState, formattedComments);
+                
+                if (formattedComments && formattedComments.length > 0) {
+                  if (page === 1) {
+                    commentsAdapter.setAll(commentsState, formattedComments);
+                  } else {
+                    commentsAdapter.addMany(commentsState, formattedComments);
+                  }
                 }
-
-                commentsState.page = totalCommentsCount === commentsState.ids.length ? NaN : page;
-               
-            })
+                
+                commentsState.page = totalCommentsCount <= commentsState.ids.length ? NaN : page;
+              })
 
 
             .addCase(newCommPopular.pending, (state) => {
