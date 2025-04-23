@@ -28,15 +28,22 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
 
-    const rawCommentsData = useAppSelector(state => state.comments.comments[config_id]);
-    console.log(rawCommentsData)
-    const commentsData = useMemo(() => {
-        return rawCommentsData ?? {
-            page: 1,
-            ids: [],
-            entities: {},
+    const commentsData = useAppSelector(state => {
+        return state.comments.comments[config_id] ?? {
+          page: 1,
+          ids: [],
+          entities: {},
         };
-    }, [rawCommentsData]);
+      });
+      
+    // console.log(rawCommentsData)
+    // const commentsData = useMemo(() => {
+    //     return rawCommentsData ?? {
+    //         page: 1,
+    //         ids: [],
+    //         entities: {},
+    //     };
+    // }, [rawCommentsData]);
 
 
 
@@ -57,10 +64,11 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
     const scrollRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (config_id && connection_id !== '' && (!commentsData || commentsData.ids.length === 0)) {
-            dispatch(commVideoFetch({ config_id, user_id: connection_id, page: 1, newComments: [] }))
+        if (config_id && connection_id && commentsData.ids.length === 0) {
+            dispatch(commVideoFetch({ config_id, user_id: connection_id, page: 1, newComments: [] }));
         }
-    }, [config_id, connection_id, dispatch]);
+    }, [config_id, connection_id, commentsData.ids.length, dispatch]);
+    
     
 
     const sendComm = useCallback((text: string) => {
