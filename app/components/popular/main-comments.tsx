@@ -29,6 +29,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
     const connection_id = userData?.user?.connection_id
 
     const rawCommentsData = useAppSelector(state => state.comments.comments[config_id]);
+    console.log(rawCommentsData)
     const commentsData = useMemo(() => {
         return rawCommentsData ?? {
             page: 1,
@@ -56,7 +57,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
     const scrollRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (config_id && connection_id !== '' && (!rawCommentsData || rawCommentsData.ids.length === 0)) {
+        if (config_id && connection_id !== '' && (!commentsData || commentsData.ids.length === 0)) {
             dispatch(commVideoFetch({ config_id, user_id: connection_id, page: 1, newComments: [] }))
         }
     }, [config_id, connection_id, dispatch]);
@@ -173,7 +174,7 @@ export const MainComments = memo(({ config_id, }: dataProps) => {
                     style={{ overflow: 'initial' }}
                     dataLength={commentsData.ids.length}
                     next={fetchMoreComments}
-                    hasMore={!Number.isNaN(commentsData.page)}
+                    hasMore={!Number.isNaN(commentsData.page) || commentsData.page <= 1}
                     loader={
                         <div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
                             <CircularProgress color="secondary" size="35px" />
