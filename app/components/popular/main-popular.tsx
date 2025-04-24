@@ -49,10 +49,10 @@ export function MainPopular() {
                 commentRef.current &&
                 !commentRef.current.contains(event.target as Node)
             ) {
+                console.log('1231231')
                 setOpenComment(false);
             }
         };
-
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
@@ -142,9 +142,9 @@ export function MainPopular() {
     return (
         <>
             <Card
-                onClick={() => {
-                    if (openComment) setOpenComment(false);
-                }}
+                // onClick={() => {
+                //     if (openComment) setOpenComment(false);
+                // }}
                 sx={(theme) => mainCardContent(theme, openInfo)}
                 >
                 <Box sx={viewContentContainer} >

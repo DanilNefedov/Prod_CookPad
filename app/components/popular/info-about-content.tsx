@@ -33,13 +33,24 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
     const dispatch = useAppDispatch()
 
 
-    function handleLike() {
+    async function handleLike() {
         if (connection_id !== '' && !popularStatus) {
-            dispatch(likePopContent({
-                config_id: config_id,
-                liked: liked,
-                user_id: connection_id
-            }))
+            try {
+                const pingResponse = await fetch('/api/ping');
+                if (pingResponse.ok) {
+                    dispatch(likePopContent({
+                        config_id: config_id,
+                        liked: liked,
+                        user_id: connection_id
+                    }))
+                } else {
+                    console.warn('Ping failed: server might still be cold.');
+                }
+            } catch (e) {
+                console.warn('Ping request error:', e);
+            }
+
+
         }
 
     }
@@ -80,7 +91,7 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
                     sx={statsBtn}
                 >
                     <FavoriteIcon sx={
-                        [statsBtnMobileIcon, {color: `${liked ? 'primary.main' : 'text.primary'}`}]
+                        [statsBtnMobileIcon, { color: `${liked ? 'primary.main' : 'text.primary'}` }]
                     }></FavoriteIcon>
                     <Typography>{likes > 0 ? formatCount(Number(likes)) : 0}</Typography>
                 </IconButton>
@@ -88,29 +99,31 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
 
                 <IconButton
                     onClick={toggleComment}
-                    sx={[statsBtn, {m: '10px 0'}]}>
+                    sx={[statsBtn, { m: '10px 0' }]}>
                     <CommentIcon sx={
-                        [statsBtnMobileIcon, {color: `${openComment ? 'primary.main' : 'text.primary'}`}]
+                        [statsBtnMobileIcon, { color: `${openComment ? 'primary.main' : 'text.primary'}` }]
                     } ></CommentIcon>
                     <Typography sx={{
                         [theme.breakpoints.down('md')]: {
-                            fontSize: "14px",}
-                    }}>{ comments > 0 ? formatCount(Number(comments)) : 0}</Typography>
+                            fontSize: "14px",
+                        }
+                    }}>{comments > 0 ? formatCount(Number(comments)) : 0}</Typography>
                 </IconButton>
 
                 <IconButton
                     onClick={() => handleSave()}
                     sx={statsBtn}>
-                    <BookmarkIcon sx={[statsBtnMobileIcon, {color: `${saved ? 'primary.main' : 'text.primary'}`,}]
+                    <BookmarkIcon sx={[statsBtnMobileIcon, { color: `${saved ? 'primary.main' : 'text.primary'}`, }]
                     }></BookmarkIcon>
                     <Typography sx={{
                         [theme.breakpoints.down('md')]: {
-                            fontSize: "14px",}
+                            fontSize: "14px",
+                        }
                     }}>{saves > 0 ? formatCount(Number(saves)) : 0}</Typography>
                 </IconButton>
 
 
-                
+
 
             </CardActions>
 
