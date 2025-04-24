@@ -87,7 +87,7 @@ export const deleteRecipe = createAsyncThunk<{connection_id:string, recipe_id:st
                 return rejectWithValue('Server Error!');
             }
 
-            const recipeData = await response.json();
+            const recipeData = await response.json();    
             console.log(recipeData)
             return  data;
 

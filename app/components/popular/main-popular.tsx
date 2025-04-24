@@ -63,7 +63,7 @@ export function MainPopular() {
     }, [openComment]);
 
     useEffect(() => {
-        if (connection_id !== '') {
+        if (connection_id !== '' && popularData.pop_list.length === 0) {
             dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
         }
     }, [connection_id, dispatch])

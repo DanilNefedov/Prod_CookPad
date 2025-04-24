@@ -44,7 +44,7 @@ export const viewContentContainer = {
 export const mobileNameDescriptionContainer = (theme: Theme, expanded: boolean): SystemStyleObject<Theme> => ({
     display: 'none',
     position: 'absolute',
-    zIndex: "150",
+    zIndex: expanded ? "150" : "99",
     bottom: "0",
     left: '0px',
     width: '100%',

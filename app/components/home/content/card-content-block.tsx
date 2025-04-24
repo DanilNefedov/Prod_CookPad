@@ -71,9 +71,19 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
     function handleDelete(recipe_id: string) {
         if (id !== '' && recipe_id) {
             dispatch(deleteRecipe({ recipe_id, connection_id: id }))
+            .unwrap()
+            .then(() => {
+                console.log('all done')
+                window.location.reload();
+            })
+            .catch(() => {
+                console.error('Error when deleting a recipe')
+            })
         }
     }
 
+    // recipe_id a7d3ddfe-f919-40c4-a0b0-528f3f161cff
+    // config_id 67a49b38079d92bc13d4061a
 
 
     return (
