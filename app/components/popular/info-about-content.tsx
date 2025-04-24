@@ -33,14 +33,30 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
     const dispatch = useAppDispatch()
 
 
-    function handleLike() {
-        if (connection_id !== '' && !popularStatus) {
-            dispatch(likePopContent({
-                config_id: config_id,
-                liked: liked,
-                user_id: connection_id
-            }))
+    const wakeServer = async () => {
+        try {
+            const res = await fetch('/api/ping');
+            if (res.ok) return true;
+        } catch (err) {
+            console.warn('Ping failed:', err);
+        }
+        return false;
+    };
 
+
+    async function handleLike() {
+        const serverReady = await wakeServer();
+        if (serverReady) {
+            if (connection_id !== '' && !popularStatus) {
+                dispatch(likePopContent({
+                    config_id: config_id,
+                    liked: liked,
+                    user_id: connection_id
+                }))
+
+            }
+        } else {
+            console.warn('Server not ready even after ping.');
         }
 
     }

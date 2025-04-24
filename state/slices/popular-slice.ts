@@ -69,33 +69,26 @@ export const popularFetch = createAsyncThunk<PopularListDataT[], { connection_id
 export const likePopContent = createAsyncThunk<{ config_id: string, liked: boolean }, { config_id: string, liked: boolean, user_id: string}, { rejectValue: string } >(
     'popular/likePopContent',
     async function (data, { rejectWithValue }) {
-        const makeRequest = async (): Promise<Response> => {
-            return await fetch('/api/popular/like', {
+        try {
+            console.log(data)
+            const response = await fetch('/api/popular/like', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify(data)
             });
-        };
-        try {
-            let response = await makeRequest();
-      
-            if (response.status === 504) {
-              console.warn('504 Gateway Timeout. Retrying...');
-              await new Promise((res) => setTimeout(res, 1000));
-              response = await makeRequest();
-            }
-      
+
             if (!response.ok) return rejectWithValue('Server Error!');
-      
-            const returnData = await response.json();
-            return returnData;
-      
-          } catch (error) {
-            console.error('likePopContent error:', error);
-            throw error;
-          }
+
+            const returnData = await response.json()
+
+            return returnData
+
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
     }
 )
 
