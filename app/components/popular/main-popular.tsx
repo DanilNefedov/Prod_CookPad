@@ -20,7 +20,6 @@ import { theme } from "@/config/ThemeMUI/theme";
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import useUserAFKPing from "@/app/hooks/ping";
 
 
 
