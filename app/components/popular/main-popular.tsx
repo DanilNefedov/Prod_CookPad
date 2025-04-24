@@ -20,6 +20,7 @@ import { theme } from "@/config/ThemeMUI/theme";
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
+import { usePingGate } from "@/app/hooks/ping";
 
 
 
@@ -38,6 +39,10 @@ export function MainPopular() {
     const [openInfo, setOpenInfo] = useState<boolean>(false)
     const [expanded, setExpanded] = useState(false);
     const commentRef = useRef<HTMLDivElement | null>(null);
+    const pingGate = usePingGate()
+    
+
+
     
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -113,14 +118,18 @@ export function MainPopular() {
         }
     }
 
-    function handleNewVideo() {
-        if (connection_id !== '' && popularData.pop_list.length - activeVideo < 5) {
-            dispatch(popularFetch({ 
-                connection_id, 
-                count: 1, 
-                getAllIds: popularData.pop_list.map(item => item.config_id) 
-            }))
-        }
+   
+
+    async function handleNewVideo() {
+        pingGate(() => {
+            if (connection_id !== '' && popularData.pop_list.length - activeVideo < 5) {
+                dispatch(popularFetch({ 
+                    connection_id, 
+                    count: 1, 
+                    getAllIds: popularData.pop_list.map(item => item.config_id) 
+                }))
+            }
+        });
     }
 
     const toggleComment = useCallback(() => {

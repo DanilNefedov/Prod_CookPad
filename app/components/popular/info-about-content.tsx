@@ -9,6 +9,7 @@ import { PopularAuthorInfoT } from "@/app/types/types";
 import numbro from 'numbro';
 import { theme } from "@/config/ThemeMUI/theme";
 import { authorName, containerBtnsStats, statsBtn, statsBtnMobileIcon, statsRecipe } from "@/app/(main)/popular/style";
+import { usePingGate } from "@/app/hooks/ping";
 
 
 interface DataPropsT {
@@ -27,26 +28,27 @@ interface DataPropsT {
 export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
     const { author, likes, liked, saved, saves, comments, config_id, openComment, toggleComment } = props
 
+    const pingGate = usePingGate()
     const popularStatus = useAppSelector(state => state.popular.status)
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
     const dispatch = useAppDispatch()
 
 
-    const wakeServer = async () => {
-        try {
-            const res = await fetch('/api/ping');
-            if (res.ok) return true;
-        } catch (err) {
-            console.warn('Ping failed:', err);
-        }
-        return false;
-    };
+    // const wakeServer = async () => {
+    //     try {
+    //         const res = await fetch('/api/ping');
+    //         if (res.ok) return true;
+    //     } catch (err) {
+    //         console.warn('Ping failed:', err);
+    //     }
+    //     return false;
+    // };
 
 
-    async function handleLike() {
-        const serverReady = await wakeServer();
-        if (serverReady) {
+    function handleLike() {
+        // const serverReady = await wakeServer();
+        pingGate(() => {
             if (connection_id !== '' && !popularStatus) {
                 dispatch(likePopContent({
                     config_id: config_id,
@@ -55,21 +57,22 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
                 }))
 
             }
-        } else {
-            console.warn('Server not ready even after ping.');
-        }
+        });
 
     }
 
 
-    function handleSave() {
-        if (connection_id !== '' && !popularStatus) {
-            dispatch(savePopContent({
-                config_id: config_id,
-                saved: saved,
-                user_id: connection_id
-            }))
-        }
+    async function handleSave() {
+        // const serverReady = await wakeServer();
+        pingGate(() => {
+            if (connection_id !== '' && !popularStatus) {
+                dispatch(savePopContent({
+                    config_id: config_id,
+                    saved: saved,
+                    user_id: connection_id
+                }))
+            }
+        });
     }
 
     function formatCount(value: number): string {
