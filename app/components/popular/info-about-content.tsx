@@ -33,23 +33,13 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
     const dispatch = useAppDispatch()
 
 
-    async function handleLike() {
+    function handleLike() {
         if (connection_id !== '' && !popularStatus) {
-            try {
-                const pingResponse = await fetch('/api/ping');
-                if (pingResponse.ok) {
-                    dispatch(likePopContent({
-                        config_id: config_id,
-                        liked: liked,
-                        user_id: connection_id
-                    }))
-                } else {
-                    console.warn('Ping failed: server might still be cold.');
-                }
-            } catch (e) {
-                console.warn('Ping request error:', e);
-            }
-
+            dispatch(likePopContent({
+                config_id: config_id,
+                liked: liked,
+                user_id: connection_id
+            }))
 
         }
 

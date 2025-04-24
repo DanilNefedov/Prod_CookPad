@@ -26,7 +26,6 @@ import useUserAFKPing from "@/app/hooks/ping";
 
 
 export function MainPopular() {
-    useUserAFKPing(1000);
 
     const dispatch = useAppDispatch()
     const popularData = useAppSelector(state => state.popular)
