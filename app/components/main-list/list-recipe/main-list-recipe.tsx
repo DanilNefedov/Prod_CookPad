@@ -21,9 +21,10 @@ export function MainListRecipe() {
 
     useEffect(() => {
         if (connection_id !== '') {
-            dispatch(preLoaderMain({ connection_id, page: listRecipeStore.page + 1 }))
+            dispatch(preLoaderMain({ connection_id, page: 1 }))
         }
-    }, [connection_id, dispatch, listRecipeStore.page])
+    }, [connection_id, dispatch])
+    
 
 
     function getDataRecipe(recipe_id: string) {
@@ -36,7 +37,7 @@ export function MainListRecipe() {
     }
 
 
-
+    console.log('recipe')
     return (
         <Box sx={{height:'100%', }}>
             {

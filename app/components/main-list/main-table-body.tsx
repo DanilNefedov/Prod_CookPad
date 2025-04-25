@@ -52,7 +52,7 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
     const handleToggle = (id: string) => {
         setExpandedId((prevId) => (prevId === id ? null : id));
     }
-
+    console.log('main-table')
     return (
         <Fragment >
             <TableRow sx={{
@@ -116,7 +116,7 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
                                     whiteSpace: 'nowrap',
                                     textOverflow: 'ellipsis',
                                     maxWidth: '65px'
-                                }}>×{thisIngredient.units.length}</Typography>
+                                }}>x{thisIngredient.units.length}</Typography>
                                 <ExpandMoreIcon sx={{
                                     transition: "transform 0.3s ease",
                                     transform: expandedId === thisIngredient._id ? "rotate(180deg)" : "rotate(0deg)",

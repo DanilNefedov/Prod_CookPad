@@ -35,11 +35,16 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
+    // useEffect(() => {
+    //     if (currentValue !== amount) {
+    //         setCurrentValue(amount);
+    //     }
+    // }, [amount, currentValue]);
+
     useEffect(() => {
-        if (currentValue !== amount) {
-            setCurrentValue(amount);
-        }
-    }, [amount, currentValue]);
+        setCurrentValue(amount);
+    }, [amount]);
+    
     
 
     // const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -212,32 +217,10 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
             dispatch(newAmountListRecipe({connection_id: id, ingredient_id: ingredient_id, unit_id: elem._id, amount: numericValue, recipe_id }))
         }
 
-
-
-
-        // }else{
-        //     console.log('2345')
-        //     setMathError('Max number 9999.9999')
-        // }
-        // const result = math.evaluate(currentValue);
-        // setCurrentValue(result.toString());
-        // setAmount(result.toString())
-
-        // if(result.toString() !== 'Infinity' && result.toString() !== 'NaN'){
-        //     // console.log(result.toString())
-        //     if(id && id !== null){
-        //         const newAmount = parseFloat(result.toString())
-        //         if(pathName === '/list'){
-        //             dispatch(changeAmountFetch({ connection_id: id, ingredient_id: ingredient_id, unit_id: elem._id, amount: newAmount }))
-        //         }else if(pathName === '/list-recipe' && recipe_id){
-        //             dispatch(newAmountListRecipe({connection_id: id, ingredient_id: ingredient_id, unit_id: elem._id, amount: newAmount, recipe_id }))
-        //         }
-
-        //     }
-        // }
     }, [currentValue, id, pathName, ingredient_id, elem._id, dispatch, amount, handleEqual, recipe_id, setAmount]);
 
 
+    console.log('calc')
     return (
         <>
             <Button
@@ -357,6 +340,22 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
         </>
 
     )
+}, (prevProps, nextProps) => {
+    const prev = prevProps.props;
+        const next = nextProps.props;
+
+    const isRecipeIdEqual = 
+        ('recipe_id' in prev && 'recipe_id' in next)
+        ? prev.recipe_id === next.recipe_id
+        : true;
+
+    return (
+        prev.id === next.id &&
+        prev.ingredient_id === next.ingredient_id &&
+        prev.amount === next.amount &&
+        isRecipeIdEqual
+    );
 })
 
 CalcUnit.displayName = "CalcUnit"
+

@@ -15,12 +15,14 @@ export const mainContent = {
 export const mainContainer = {
     height: '100dvh',
     display: 'flex',
-    flexWrap: 'wrap', '&.MuiContainer-root': {
+    flexWrap: 'wrap', 
+    '&.MuiContainer-root': {
         paddingLeft: 0,
         paddingRight: 0,
     },
     borderRadius: '20px',
-    justifyContent:'space-between'
+    gap:'2%',
+    // justifyContent:'space-between'
 }
 
 
@@ -43,6 +45,7 @@ export const mainCard = {
     [theme.breakpoints.down(710)]: {
         height:'350px',
         width: '48%',
+        mb:"0",
 
         '&:nth-child(1)': {
             borderRadius: '10px 0 0 0',
@@ -58,7 +61,7 @@ export const mainCard = {
     [theme.breakpoints.down(500)]: {
         height:'250px',
         width: '48.5%',
-        m: '0 0 15px 0',
+        // m: '0 0 15px 0',
     }
     
 }

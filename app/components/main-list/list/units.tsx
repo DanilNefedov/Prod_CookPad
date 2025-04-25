@@ -92,8 +92,7 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
 
 
     function toggleShopUnit(_id: string | undefined, shop_unit: boolean | undefined) {
-        console.log('toggleShopUnit')
-        if (id !== '' && unitData && shop_unit && _id) {
+        if (id !== '' && unitData && shop_unit !== undefined && _id) {
             if(pathName === '/list'){
                 dispatch(shopUnitUpdate({ ingredient_id: unitData.ingredientId, unit_id: _id, shop_unit }))
             }
@@ -106,7 +105,7 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
 
     if (!unitData || unitData === undefined || !unitData.unitInfo) return null;
 
-    
+    console.log('unit')
     return (
         <Box key={thisUnit?._id} sx={{...blockUnits, opacity:`${thisUnit?.shop_unit ? 0.4 : 1}`, 
         backgroundColor:pathName ==='/list' ? 'background.paper' : 'background.default'}}>

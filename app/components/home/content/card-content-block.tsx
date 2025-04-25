@@ -2,7 +2,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Box, CardHeader, Menu, MenuItem, Modal, useMediaQuery } from "@mui/material";
+import { Box, CardHeader, Menu, MenuItem, useMediaQuery } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AvTimerIcon from '@mui/icons-material/AvTimer';
@@ -10,7 +10,6 @@ import Link from "next/link";
 import { bottomTypeFavCard, contentPostionAbsolute, cookBtn, favoriteBtnActive, favoriteBtnDesactive, mainCard } from "@/app/(main)/home/style";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -19,7 +18,7 @@ import { Navigation } from 'swiper/modules';
 import { memo, useState } from "react";
 import { useAppDispatch, useAppSelector } from '@/state/hook';
 import { SwiperMediaCard } from './swiper-media-card';
-import { deleteRecipe, setFavoriteRecipe } from '@/state/slices/recipe-slice';
+import { setFavoriteRecipe } from '@/state/slices/recipe-slice';
 import { theme } from '@/config/ThemeMUI/theme';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { newListRecipe } from '@/state/slices/list-recipe-slice';
@@ -37,9 +36,9 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
     const recipes = useAppSelector(state => state.recipe.recipes.find(el => el.recipe_id === recipe_id));
     
     const dispatch = useAppDispatch()
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    // const [open, setOpen] = useState(false);
+    // const handleOpen = () => setOpen(true);
+    // const handleClose = () => setOpen(false);
 
     const isMobile = useMediaQuery("(max-width:500px)");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -68,23 +67,21 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
         }
     }
 
-    function handleDelete(recipe_id: string) {
-        if (id !== '' && recipe_id) {
-            dispatch(deleteRecipe({ recipe_id, connection_id: id }))
-            .unwrap()
-            .then(() => {
-                console.log('all done')
-                window.location.reload();
-            })
-            .catch(() => {
-                console.error('Error when deleting a recipe')
-            })
-        }
-    }
+    // function handleDelete(recipe_id: string) {
+    //     if (id !== '' && recipe_id) {
+    //         dispatch(deleteRecipe({ recipe_id, connection_id: id }))
+    //         .unwrap()
+    //         .then(() => {
+    //             console.log('all done')
+    //             window.location.reload();
+    //         })
+    //         .catch(() => {
+    //             console.error('Error when deleting a recipe')
+    //         })
+    //     }
+    // }
 
-    // recipe_id a7d3ddfe-f919-40c4-a0b0-528f3f161cff
-    // config_id 67a49b38079d92bc13d4061a
-
+    
 
     return (
         <Card sx={mainCard}>
@@ -196,7 +193,7 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                     <ArrowLeftIcon viewBox="3 3 17 17" sx={{ fontSize: 35, borderRadius:'50%', margin: "-1px 0 0 -2px",
                 
                         [theme.breakpoints.down("md")]: { fontSize: 30 },
-                        [theme.breakpoints.down(600)]: { fontSize: 20 }
+                        [theme.breakpoints.down(600)]: { fontSize: 20, margin: "0px 0 0 -1px" }
                     }}></ArrowLeftIcon>
                 </Box>
             </Swiper>
@@ -289,7 +286,7 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                             <Button onClick={() => addToList()} size="small" sx={cookBtn}>To List</Button>
                         </MenuItem>
 
-                        <MenuItem onClick={handleCloseAdaptive} sx={{minHeight:'auto', justifyContent:'center', p:'4px 7px'}}>
+                        {/* <MenuItem onClick={handleCloseAdaptive} sx={{minHeight:'auto', justifyContent:'center', p:'4px 7px'}}>
                             <Button onClick={handleOpen} size="small" sx={{
                                 minWidth: '0', p: '0',
                                 color: `${open ? 'primary.dark' : 'text.disabled'}`,
@@ -310,7 +307,7 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                                     },
                                 }}></DeleteIcon>
                             </Button>
-                        </MenuItem>
+                        </MenuItem> */}
                     </Menu></>
 
                     :
@@ -326,7 +323,7 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                             >Cook</Link>
                         {/* </Button> */}
                         <Button onClick={() => addToList()} size="small" sx={cookBtn}>To List</Button>
-                        <Button onClick={handleOpen} size="small" sx={{
+                        {/* <Button onClick={handleOpen} size="small" sx={{
                             minWidth: '0', p: '0',
                             color: `${open ? 'primary.dark' : 'text.disabled'}`,
                             '@media (hover: hover) and (pointer: fine)': {
@@ -344,10 +341,9 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                                     width: '100%',
                                     height: '100%'
                                 }
-                                // width: '100%',
-                                // height: '100%'
+                                
                             }}></DeleteIcon>
-                        </Button>
+                        </Button> */}
                     </Box>
                 }
 
@@ -357,7 +353,7 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
 
 
 
-                <Modal
+                {/* <Modal
                     open={open}
                     onClose={handleClose}
                     aria-labelledby="modal-modal-title"
@@ -424,7 +420,7 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                                 }}>No</Button>
                         </Box>
                     </Box>
-                </Modal>
+                </Modal> */}
 
                 {/* </Box> */}
 
@@ -433,17 +429,11 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
     )
 }
 ,(prevProps, nextProps) => {
-    // Custom comparison function for memo
-    // Return true if props are "equal" (component doesn't need to re-render)
-    // Return false if props have changed (component needs to re-render)
+    
     
     return prevProps.props.recipe_id === nextProps.props.recipe_id &&
     prevProps.props.id === nextProps.props.id
-    // && 
-        //    prevProps.props.favorite === nextProps.props.favorite &&
-        //    prevProps.props.name === nextProps.props.name &&
-        //    prevProps.props.description === nextProps.props.description;
-    // You can add more specific comparisons if needed
+   
 });
 
 
