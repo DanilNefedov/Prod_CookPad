@@ -18,11 +18,10 @@ interface PropsData {
     ingr: IListObj;
     id: string;
     recipe_id?: string,
-    handleClose?: () => void
 }
 
 export function AddNewUnit({ props }: { props: PropsData }) {
-    const { ingr, id, recipe_id, handleClose } = props;
+    const { ingr, id, recipe_id, } = props;
     const [open, setOpen] = useState<boolean>(false)
     const dispatch = useAppDispatch()
     const [amount, setAmount] = useState<string>('0')
@@ -63,18 +62,17 @@ export function AddNewUnit({ props }: { props: PropsData }) {
 
     }
 
-    // console.log(amount)
+    console.log('add unit')
 
 
     return (
         <>
             <Button onClick={() => {
-                if(handleClose) handleClose()
+                // if(handleClose) handleClose()
             
                 setOpen(true)
             }} sx={isSmallScreen ? [btnsListUnitHover, styleBtnsAdaptiveMenu] : btnsListUnitHover}>
                 <AddCircleOutlineIcon></AddCircleOutlineIcon>
-                {/* <AddIcon fontSize="large" sx={{width:'30px', height:'100%', display:'block',}} ></AddIcon>  */}
                 {isSmallScreen ? <span>New</span> : <></>}
 
             </Button>

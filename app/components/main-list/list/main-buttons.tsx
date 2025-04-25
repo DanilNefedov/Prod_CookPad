@@ -11,6 +11,7 @@ import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { usePathname } from "next/navigation";
 import { deleteIngrRecipeList, shopIngrListRecipe } from "@/state/slices/list-recipe-slice";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 
 interface DataProps{
@@ -26,7 +27,7 @@ export function MainButtons({props}: {props:DataProps}) {
     const userStore = useAppSelector(state => state.user)
     const id = userStore?.user?.connection_id
     const pathName = usePathname()
-
+    const [openAddUnit, setOpenAddUnit] = useState(false);
 
     const isSmallScreen = useMediaQuery("(max-width:800px)");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -59,7 +60,7 @@ export function MainButtons({props}: {props:DataProps}) {
             
         }
     }
-    
+    console.log('mian-btns')
     return (
 
 
@@ -89,12 +90,10 @@ export function MainButtons({props}: {props:DataProps}) {
                             </Button>
                         </MenuItem>
 
-                        <MenuItem onClick={(e) => {
-                            e.preventDefault()
-                            handleClose()
-                        }} >
-                            <AddNewUnit props={{ ingr: el, id, handleClose, recipe_id }} />
+                        <MenuItem  >
+                            <AddNewUnit props={{ ingr: el, id, recipe_id }} />
                         </MenuItem>
+                
 
                         <MenuItem onClick={handleClose} >
                             <Button onClick={() => deleteIngredient(el._id)} sx={[btnsListUnitHover, styleBtnsAdaptiveMenu]}>
@@ -105,6 +104,8 @@ export function MainButtons({props}: {props:DataProps}) {
 
                         {/* </Box> */}
                     </Menu>
+
+                    
                 </>
             ) : (
                 <Box sx={{ display: "flex", justifyContent: "space-between", maxWidth:'130px', width:'100%', minWidth:'0' }}>
@@ -112,7 +113,7 @@ export function MainButtons({props}: {props:DataProps}) {
                         <ShoppingBagOutlinedIcon />
                     </Button>
 
-                    <AddNewUnit props={{ ingr: el, id, recipe_id }} />
+                    <AddNewUnit props={{ ingr: el, id, recipe_id, }} />
 
                     <Button onClick={() => deleteIngredient(el._id)} sx={btnsListUnitHover}>
                         <DeleteOutlineOutlinedIcon />

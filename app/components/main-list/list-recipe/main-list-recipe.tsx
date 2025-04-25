@@ -37,7 +37,7 @@ export function MainListRecipe() {
     }
 
 
-    console.log('recipe')
+    console.log('recipe', listRecipeStore)
     return (
         <Box sx={{height:'100%', }}>
             {

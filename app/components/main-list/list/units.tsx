@@ -105,7 +105,7 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
 
     if (!unitData || unitData === undefined || !unitData.unitInfo) return null;
 
-    console.log('unit')
+    console.log('unit', unitData)
     return (
         <Box key={thisUnit?._id} sx={{...blockUnits, opacity:`${thisUnit?.shop_unit ? 0.4 : 1}`, 
         backgroundColor:pathName ==='/list' ? 'background.paper' : 'background.default'}}>
@@ -159,9 +159,14 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
         </Box>
     )
 }, (prevProps, nextProps) => {
+    const isRecipeIdEqual = 
+        ('recipe_id' in prevProps && 'recipe_id' in nextProps)
+        ? prevProps.recipe_id === nextProps.recipe_id
+        : true;
+
     return prevProps.ingredient_id=== nextProps.ingredient_id && 
            prevProps.unit_id === nextProps.unit_id &&
-           prevProps.recipe_id === nextProps.recipe_id;
+           isRecipeIdEqual;
 });
 
 

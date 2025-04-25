@@ -342,7 +342,7 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
     )
 }, (prevProps, nextProps) => {
     const prev = prevProps.props;
-        const next = nextProps.props;
+    const next = nextProps.props;
 
     const isRecipeIdEqual = 
         ('recipe_id' in prev && 'recipe_id' in next)

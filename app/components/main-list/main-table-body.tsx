@@ -214,7 +214,7 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
                                     >
                                         {thisIngredient.units.map((elem: UnitsList) => (
                                             <SwiperSlide key={elem._id} className="slide-list-unit">
-                                                <Units ingredient_id={thisIngredient._id} unit_id={elem._id} />
+                                                <Units ingredient_id={thisIngredient._id} unit_id={elem._id} recipe_id={recipe_id}/>
                                             </SwiperSlide>
 
 
@@ -240,8 +240,13 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
         </Fragment>
     )
 }, (prevProps, nextProps) => {
+    const isRecipeIdEqual = 
+        ('recipe_id' in prevProps && 'recipe_id' in nextProps)
+        ? prevProps.recipe_id === nextProps.recipe_id
+        : true;
+
     return prevProps.props.ingredient_id === nextProps.props.ingredient_id && 
-           prevProps.props.recipe_id === nextProps.props.recipe_id;
+    isRecipeIdEqual;
 });
 
 
