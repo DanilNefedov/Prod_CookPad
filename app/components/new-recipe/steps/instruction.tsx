@@ -16,6 +16,8 @@ export function Instruction() {
             dispatch(instructionChange({ step: infoPageState?.step, instruction: e.target.value }))
         }
     }
+
+    console.log('Instruction')
     return (
         <>
             <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px' }}>Your instruction</Typography>

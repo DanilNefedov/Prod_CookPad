@@ -1,4 +1,3 @@
-import { useAppSelector } from "@/state/hook"
 import { TypeDish } from "./steps/type-dish";
 import { NameAndTime } from "./steps/name-and-time";
 import { Media } from "./steps/media";
@@ -7,10 +6,11 @@ import { Description } from "./steps/description";
 import { Instruction } from "./steps/instruction";
 
 
-export function SelectPage(){
-    const stepperState = useAppSelector(state => state.setpForm);
+export function SelectPage({step}:{step:number}){
+    // const stepperState = useAppSelector(state => state.setpForm);
+    console.log('SelectPage')
 
-    switch(stepperState.page_step){
+    switch(step){
         case 1:
             return <TypeDish></TypeDish>
         case 2:

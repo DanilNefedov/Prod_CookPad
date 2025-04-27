@@ -14,7 +14,7 @@ export function Ingredients() {
     const dispatch = useAppDispatch()
 
 
-    console.log(infoPageState?.ingredients)
+    console.log('Ingredients')
 
     return (
         <Container sx={{

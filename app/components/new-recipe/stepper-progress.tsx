@@ -7,6 +7,7 @@ import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 import { useAppSelector } from '@/state/hook';
 import { theme } from '@/config/ThemeMUI/theme';
+import { memo } from 'react';
 
 const namesErrors = [
     'Choose a recipe type', 
@@ -17,7 +18,8 @@ const namesErrors = [
     'Write the instructions',
 ];
 
-export function StepperProgress() {
+export const StepperProgress = memo(() => {
+    
     const stepperState = useAppSelector(state => state.setpForm)
     // console.log(stepperState)
 
@@ -26,7 +28,7 @@ export function StepperProgress() {
         const stepInfo = stepperState.steps_info.find((el) => el.step === step);
         return stepInfo?.open === true && stepInfo?.error_status === false;
     };
-
+    console.log('StepperProgress')
     return (
         <Box sx={{ width: '100%', mt: '10px' }}>
             <Stepper activeStep={stepperState.page_step - 1}
@@ -72,4 +74,4 @@ export function StepperProgress() {
             </Stepper>
         </Box>
     );
-}
+})

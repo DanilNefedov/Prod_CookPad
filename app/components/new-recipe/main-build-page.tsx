@@ -1,21 +1,23 @@
 'use client'
 import { Box, Button, Paper } from "@mui/material"
 import { styleLink } from "../home/header/header"
-import { changeSteps, hasOpen } from "@/state/slices/step-by-step"
-import { useAppDispatch, useAppSelector } from "@/state/hook"
+import { useAppDispatch, } from "@/state/hook"
 import { SelectPage } from "./select-page"
 import { saveForm } from "./save-form"
 import { theme } from "@/config/ThemeMUI/theme"
+import { useState } from "react"
+import { hasOpen } from "@/state/slices/stepper/error-open"
 
 
 
 
 export function MainBuildPage() {
-    const stepperState = useAppSelector(state => state.setpForm)
     const dispatch = useAppDispatch()
-    const userStore = useAppSelector(state => state.user)
-    const id = userStore?.user?.connection_id
-    const namaUser = userStore?.user?.name
+
+    const [step, setStep] = useState<number>(1)
+
+
+    console.log('MainBuildPage')
 
     return (
         <>
@@ -33,17 +35,16 @@ export function MainBuildPage() {
                 }
 
             }}>
-                <SelectPage></SelectPage>
+                <SelectPage step={step}></SelectPage>
 
-                {stepperState.page_step === 6 ? <Button variant="contained" color='darkButton' sx={{ ...styleLink, 
+                {step === 6 ? <Button variant="contained" color='darkButton' sx={{ ...styleLink, 
                 width: '150px', m: '0 auto',
                 [theme.breakpoints.down(500)]: {
                     width:"100px"
                 }
                 }} onClick={(e) => {
                     e.preventDefault()
-                    saveForm(stepperState, id, dispatch, namaUser)
-                    // savePhoto()
+                    // saveForm(stepperState, id, dispatch, namaUser)
                 }}>Save</Button> : <></>}
             </Paper>
 
@@ -52,23 +53,23 @@ export function MainBuildPage() {
 
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: '20px' }}>
-                <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: stepperState.page_step === 1 ? 'none' : 'block' }} onClick={(e) => {
+                <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: step === 1 ? 'none' : 'block' }} onClick={(e) => {
                     e.preventDefault()
-                    if (stepperState.page_step === 1) return false
+                    if (step === 1) return false
                     
                     // onHandlePrev()
-                    const newPage = stepperState.page_step - 1
-                    dispatch(changeSteps(newPage))
-                    dispatch(hasOpen(stepperState.page_step))
-                    console.log('111', stepperState)
+                    const newPage = step - 1
+                    setStep(newPage)
+                    // dispatch(changeSteps(newPage))
+                    dispatch(hasOpen(step))
                 }}>Back</Button>
-                <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: stepperState.page_step === 6 ? 'none' : 'block', ml: 'auto', mr:'0' }} onClick={(e) => {
+                <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: step === 6 ? 'none' : 'block', ml: 'auto', mr:'0' }} onClick={(e) => {
                     e.preventDefault()
                     // onHandleNext()
-                    const newPage = stepperState.page_step + 1
-                    dispatch(changeSteps(newPage))
-                    dispatch(hasOpen(stepperState.page_step))
-                    console.log('111', stepperState)
+                    const newPage = step + 1
+                    setStep(newPage)
+                    // dispatch(changeSteps(newPage))
+                    dispatch(hasOpen(step))
                 }}>Next</Button>
             </Box>
         </>

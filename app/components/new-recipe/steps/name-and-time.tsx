@@ -1,102 +1,120 @@
-import { btnIncDec, inputText, secondTextInput } from "@/app/main-styles"
+import { btnIncDec, secondTextInput } from "@/app/main-styles"
 import { theme } from "@/config/ThemeMUI/theme"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
-import { changeHours, changeMinutes, changeName } from "@/state/slices/step-by-step"
 import { Box, Button, TextField, Typography } from "@mui/material"
 import { ChangeEvent, FocusEvent } from "react"
+import { NameInput } from "./input-name"
+import { changeHours, changeMinutes, } from "@/state/slices/stepper/name-time"
+import { errorTime, } from "@/state/slices/stepper/error-open"
 
 
 
 export function NameAndTime() {
-    const stepperState = useAppSelector(state => state.setpForm)
-    const dispatch = useAppDispatch()
-    const infoPageState = stepperState.steps_info.find(el => el.step === stepperState.page_step)
+    const numbStep = 2
 
-    const handleName = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        if (!e.target.value || e.target.value.trim() === ''){
-            dispatch(changeName({step:stepperState.page_step, name_recipe:e.target.value, error_status:false}))
-          }else{
-            dispatch(changeName({step:stepperState.page_step, name_recipe:e.target.value, error_status:true}))
-          }
-    }
+    const nameTimeState = useAppSelector(state => state.nameTimeSlice.time)
+    const statusPage = useAppSelector(state => state.statusSlice.steps[numbStep].error_status.time)
+    const openPage = useAppSelector(state => state.statusSlice.steps[numbStep].open)
+    const dispatch = useAppDispatch()
+
+    console.log(statusPage)
+   
+
 
     const handleHourIncrement = (): void => {
-        const hours = infoPageState?.hours
-        if(hours !== undefined && (!isNaN(parseInt(hours)) && parseInt(hours) >= 0 && parseInt(hours) <= 59 && hours.length <= 2)){
-            if(infoPageState?.hours === '') dispatch(changeHours('0'))
-
+        const hours = nameTimeState.hours
+        if ((!isNaN(parseInt(hours)) && parseInt(hours) >= 0 && parseInt(hours) <= 59 && hours.length <= 2)) {
             dispatch(changeHours((parseInt(hours) + 1).toString()));
+            dispatch(errorTime(false))
         }
     };
 
     const handleHourDecrement = (): void => {
-        if(infoPageState?.hours !== undefined){
-            const hoursAsNumber = parseInt(infoPageState?.hours);
-            if (!isNaN(hoursAsNumber) && hoursAsNumber > 0) {
-                dispatch(changeHours((hoursAsNumber - 1).toString()));
-            }
-            if(infoPageState?.hours === '') dispatch(changeHours('0'))
+        const hoursAsNumber = parseInt(nameTimeState.hours);
+        if (!isNaN(hoursAsNumber) && hoursAsNumber > 0) {
+            dispatch(changeHours((hoursAsNumber - 1).toString()));
+            dispatch(errorTime(false))
+        }
+        if (hoursAsNumber - 1 === 0 && parseInt(nameTimeState.minutes) === 0) {
+            dispatch(errorTime(true))
+
         }
     };
 
+
+
     const handleMinuteIncrement = (): void => {
-        const minutes = infoPageState?.minutes
-        if(minutes !== undefined && (!isNaN(parseInt(minutes)) && parseInt(minutes) >= 0 && parseInt(minutes) <= 59 && minutes.length <= 2)){
-            if(infoPageState?.minutes === '') dispatch(changeMinutes('0'))
+        const minutes = nameTimeState.minutes
+        if ((!isNaN(parseInt(minutes)) && parseInt(minutes) >= 0 && parseInt(minutes) <= 59 && minutes.length <= 2)) {
             dispatch(changeMinutes((parseInt(minutes) + 1).toString()));
+            dispatch(errorTime(false))
         }
     };
 
     const handleMinuteDecrement = (): void => {
-        if(infoPageState?.minutes !== undefined){
-            const hoursAsNumber = parseInt(infoPageState?.minutes);
-            if (!isNaN(hoursAsNumber) && hoursAsNumber > 0) {
-                dispatch(changeMinutes((hoursAsNumber - 1).toString()));
-            }
-            if(infoPageState?.minutes === '') dispatch(changeMinutes('0'))
+        const hoursAsNumber = parseInt(nameTimeState.minutes);
+        if (!isNaN(hoursAsNumber) && hoursAsNumber > 0) {
+            dispatch(changeMinutes((hoursAsNumber - 1).toString()));
+            dispatch(errorTime(false))
         }
+        if (hoursAsNumber - 1 === 0 && parseInt(nameTimeState.hours) === 0) dispatch(errorTime(true))
+
+        
     };
+
+
 
     const handleHourChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const value = e.target.value;
+        const minutes = nameTimeState.minutes 
         if (value === '' || (!isNaN(parseInt(value)) && parseInt(value) >= 0 && parseInt(value) <= 60 && value.length <= 2)) {
             dispatch(changeHours(value));
+            dispatch(errorTime(false))
+            if(
+                (value === '' || value === '0' || value === '00') &&
+                (minutes === '' || minutes === '0' || minutes === '00')
+            ) dispatch(errorTime(true))
+
         }
+                
     };
 
     const handleMinuteChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const value = e.target.value;
+        const hours = nameTimeState.hours 
         if (value === '' || (!isNaN(parseInt(value)) && parseInt(value) >= 0 && parseInt(value) <= 60 && value.length <= 2)) {
             dispatch(changeMinutes(value));
+            dispatch(errorTime(false))
+            if(
+                (value === '' || value === '0' || value === '00') &&
+                (hours === '' || hours === '0' || hours === '00')
+            )  dispatch(errorTime(true))
         }
     };
 
+
+
     const handleEmpty = (e: FocusEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        if(value === '' && infoPageState?.hours === ''){
+        if (value === '' && nameTimeState.hours === '') {
             dispatch(changeHours('0'));
         }
 
-        if(value === '' && infoPageState?.minutes === ''){
+        if (value === '' && nameTimeState.minutes === '') {
             dispatch(changeMinutes('0'));
         }
     }
- 
 
-    // console.log(stepperState)
+
+    console.log('NameAndTime')
     return (
         <>
-            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px',[theme.breakpoints.down('md')]: {fontSize:'18px', mt:'10px'} }}>Enter the name of the recipe</Typography>
-            <TextField 
-                error={infoPageState?.open && !infoPageState.second_option?.error_status ? true : false}
-                id="outlined-basic" label="Name" variant="outlined"
-                value={infoPageState?.second_option?.name_recipe}
-                type="text"
-                onChange={(e) => handleName(e)}
-                sx={inputText}
-            />
-            <Box sx={{m:'0 8px'}}>
-                <Box sx={{display:'flex', alignItems:'center'}}>
+            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px' } }}>Enter the name of the recipe</Typography>
+            
+            <NameInput></NameInput>
+            
+            <Box sx={{ m: '0 8px' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Button
                         sx={btnIncDec}
                         onClick={(e) => {
@@ -104,12 +122,12 @@ export function NameAndTime() {
                             handleHourDecrement();
                         }}>-</Button>
                     <TextField id="outlined-basic" label="Hours" variant="outlined"
-                        value={infoPageState?.hours}
+                        value={nameTimeState.hours}
                         onChange={handleHourChange}
                         onBlur={handleEmpty}
                         type="number"
                         sx={secondTextInput}
-                        error={infoPageState?.open && !infoPageState?.error_status ? true : false}
+                        error={openPage && statusPage ? true : false}
                     />
                     <Button
                         sx={btnIncDec}
@@ -118,30 +136,30 @@ export function NameAndTime() {
                             handleHourIncrement();
                         }}>+</Button>
                 </Box>
-                <Box sx={{display:'flex', alignItems:'center'}}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Button
                         sx={btnIncDec}
                         onClick={(e) => {
-                        e.preventDefault();
-                        handleMinuteDecrement();
-                    }}>-</Button>
+                            e.preventDefault();
+                            handleMinuteDecrement();
+                        }}>-</Button>
                     <TextField id="outlined-basic" label="Minutes" variant="outlined"
-                        type="number" 
-                        value={infoPageState?.minutes}
+                        type="number"
+                        value={nameTimeState.minutes}
                         sx={secondTextInput}
                         onChange={handleMinuteChange}
                         onBlur={handleEmpty}
-                        error={infoPageState?.open && !infoPageState?.error_status ? true : false}
+                        error={openPage && statusPage ? true : false}
                     />
                     <Button
-                        sx={btnIncDec} 
+                        sx={btnIncDec}
                         onClick={(e) => {
-                        e.preventDefault();
-                        handleMinuteIncrement();
-                    }}>+</Button>
-                    
+                            e.preventDefault();
+                            handleMinuteIncrement();
+                        }}>+</Button>
+
                 </Box>
-                
+
             </Box>
 
 

@@ -18,7 +18,7 @@ export function Description() {
 
         }
     }
-
+    console.log('Description')
     return (
         <>
             <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px', } }}>Your description</Typography>

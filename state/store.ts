@@ -10,6 +10,13 @@ import listRecipeSlice from './slices/list-recipe-slice'
 import popularSlice from './slices/popular-slice'
 import commentsPopular from './slices/comments-popular-slice'
 import commentContext from './slices/comments-context'
+import stepTypeRecommend from './slices/stepper/type-recommend'
+import statusSlice from './slices/stepper/error-open'
+import nameTimeSlice from './slices/stepper/name-time'
+import mediaSlice from './slices/stepper/media'
+
+
+
 
 export const store = configureStore({
     reducer:{
@@ -22,7 +29,13 @@ export const store = configureStore({
         listRecipe:listRecipeSlice,
         popular:popularSlice,
         comments:commentsPopular,
-        commentContext:commentContext
+        commentContext:commentContext,
+
+
+        statusSlice:statusSlice,
+        stepTypeRecommend:stepTypeRecommend,
+        nameTimeSlice:nameTimeSlice,
+        mediaSlice:mediaSlice,
     }
 })
 

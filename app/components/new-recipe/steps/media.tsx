@@ -15,8 +15,9 @@ import './swiper-styles-media.css';
 import { Navigation } from 'swiper/modules';
 import { VisuallyHiddenInput, addMainMediaSwiper, btnsSwiperMedia, deleteMediaSwiper } from "@/app/(main)/new-recipe/style";
 import { SwiperStepMedia } from "./swiper-media";
-import { changeMedia, deleteMediaState, hasOpen, setMainMedia } from "@/state/slices/step-by-step";
 import { theme } from "@/config/ThemeMUI/theme";
+import { changeMedia, deleteMediaState, setMainMedia } from "@/state/slices/stepper/media";
+import { updateError } from "@/state/slices/stepper/error-open";
 
 
 
@@ -24,10 +25,10 @@ import { theme } from "@/config/ThemeMUI/theme";
 
 
 export function Media() {
-    const stepperState = useAppSelector(state => state.setpForm)
-    const infoPageState = stepperState.steps_info.find(el => el.step === stepperState.page_step)
+    const numbStep = 3
+    const pageState = useAppSelector(state => state.mediaSlice)
+    const statusPage = useAppSelector(state => state.statusSlice.steps[numbStep])
     const dispatch = useAppDispatch()
-    // console.log(infoPageState)
 
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +37,7 @@ export function Media() {
         if (files && files.length > 0 && files.length <= 10) {
             // console.log(files)
 
-            if (infoPageState) {
+            if (pageState) {
                 const dataFiles = []
 
                 for (let i = 0; i < files.length; i++) {
@@ -48,9 +49,8 @@ export function Media() {
 
                     dataFiles.push({ main: false, media_url: fileUrl, media_id: uuidv4(), media_type: fileType })
                 }
-                // console.log(dataFiles)
-                dispatch(changeMedia({ media: dataFiles, error_status: true, step: infoPageState?.step }));
-                dispatch(hasOpen(infoPageState?.step));
+                dispatch(changeMedia({ media: dataFiles,}));
+                dispatch(updateError({error:false, step:numbStep}))
             }
         }
 
@@ -59,18 +59,19 @@ export function Media() {
 
 
     function deleteMedia(media_id: string) {
-        if (infoPageState) {
-            dispatch(deleteMediaState({ step: infoPageState?.step, media_id }))
+        if(pageState.media.length <= 1){
+            dispatch(updateError({error:true, step:numbStep}))
         }
+        dispatch(deleteMediaState(media_id))
     }
 
     function handleMain(media_id: string) {
-        if (infoPageState) {
-            dispatch(setMainMedia({ step: infoPageState?.step, media_id }))
-        }
+        // if (pageState) {
+            dispatch(setMainMedia(media_id))
+        // }
     }
 
-    // console.log(infoPageState)
+    console.log('Media')
     return (
         <>
             <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px' } }}>Select media</Typography>
@@ -88,7 +89,7 @@ export function Media() {
                     <VisuallyHiddenInput type="file" id="media" accept="image/*, video/*" multiple onChange={(e) => handleFileChange(e)} />
                 </Button>
                 <Typography sx={{
-                    display: infoPageState?.open && !infoPageState?.error_status ? 'block' : 'none',
+                    display: statusPage.open && !statusPage.error_status.value ? 'block' : 'none',
                     fontSize: 13,
                     textAlign: 'center',
                     mt: 2,
@@ -110,7 +111,7 @@ export function Media() {
                     spaceBetween={1}
                 // lazy={true}
                 >
-                    {infoPageState?.media?.map(el => (
+                    {pageState.media.map(el => (
                         <SwiperSlide key={el.media_id} className={el.media_type === 'image' ? 'step-media-main-slide' : 'step-media-main-slide-video'} >
                             <SwiperStepMedia props={{ el }} />
                             {/* </SwiperStepMedia> */}

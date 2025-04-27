@@ -8,32 +8,7 @@ import { StepperProgress } from '@/app/components/new-recipe/stepper-progress';
 
 
 export default function FormBuild() {
-    // const { onHandlePrev, onHandleNext, step, updateFormData, saveFrom, formData } = useFormState();
     
-
-    // const activeSaveBtn = stepperState.steps_info.find(el => el?.open && !el?.error_status)
-
-
-    // const styleLink = {
-    //     // fontWeight:'400', 
-    //     lineHeight: 'inherit',
-    //     textTransform: 'initial',
-    //     color: 'text.secondary',
-
-    //     ':hover': {
-    //         bgcolor: 'primary.main',
-    //         color: 'text.primary'
-    //     },
-    //     // width:'100%',
-    //     backgroudColor: 'background.main'
-    // }
-
-    // function handleSave () {
-    //     saveForm(stepperState)
-
-    // }
-    // console.log(step, formData, ingredients)
-
     return (
         <Paper sx={{ display: "flex", alignItems: 'center', justifyContent: 'center', boxShadow: 'none', width: '100%', 
            
