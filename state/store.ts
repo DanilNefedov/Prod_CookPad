@@ -15,6 +15,7 @@ import statusSlice from './slices/stepper/error-open'
 import nameTimeSlice from './slices/stepper/name-time'
 import mediaSlice from './slices/stepper/media'
 import ingredientsSlice from './slices/stepper/ingredients'
+import descriptionSlice from './slices/stepper/description'
 
 
 
@@ -37,6 +38,7 @@ export const store = configureStore({
         nameTimeSlice:nameTimeSlice,
         mediaSlice:mediaSlice,
         ingredientsSlice:ingredientsSlice,
+        descriptionSlice:descriptionSlice,
     }
 })
 

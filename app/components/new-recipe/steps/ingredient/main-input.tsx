@@ -1,7 +1,7 @@
 import { secondTextInput } from "@/app/main-styles";
 import { IngredientForAutocomplite, ingredintFetch } from "@/app/types/types";
 import { theme } from "@/config/ThemeMUI/theme";
-import { useAppDispatch, useAppSelector } from "@/state/hook";
+import { useAppDispatch } from "@/state/hook";
 import { choiceAutocomplite } from "@/state/slices/stepper/ingredients";
 import { Autocomplete, Box, debounce, ListItem, TextField, Typography } from "@mui/material";
 import { memo, useEffect, useMemo, useState } from "react";
@@ -12,10 +12,11 @@ import { fetchLocationSuggestions } from "../request-search";
 interface PropsData {
     ingredient: IngredientForAutocomplite, 
     handleInputChange: (newInputValue: string) => void, 
+    error:boolean
 }
 
 
-export const MainInput = memo(({ ingredient, handleInputChange }: PropsData) => {
+export const MainInput = memo(({ ingredient, handleInputChange, error }: PropsData) => {
 
     const [options, setOptions] = useState<IngredientForAutocomplite[]>([]);
     const [value, setValue] = useState<IngredientForAutocomplite | null>(ingredient);
@@ -154,7 +155,7 @@ export const MainInput = memo(({ ingredient, handleInputChange }: PropsData) => 
                 // handleInputChange(value?.name === undefined ? '' : value?.name);
                 setInputValue(newInputValue)
             }}
-            renderInput={(params) => <TextField  {...params} placeholder="Add an ingredient" fullWidth />}//error={statusPage.open && !error ? true : false}
+            renderInput={(params) => <TextField  {...params} placeholder="Add an ingredient" fullWidth error={error ? true : false}/>}//error={statusPage.open && !error ? true : false}
             renderOption={(props, option) => (
                 <ListItem
                     sx={{
@@ -215,5 +216,6 @@ export const MainInput = memo(({ ingredient, handleInputChange }: PropsData) => 
     )
 }, (prevProps, nextProps) => {
     return prevProps.ingredient.ingredient_id === nextProps.ingredient.ingredient_id &&
-    prevProps.ingredient.name === nextProps.ingredient.name
+    prevProps.ingredient.name === nextProps.ingredient.name && 
+    prevProps.error === nextProps.error
 })

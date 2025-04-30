@@ -1,44 +1,78 @@
-import { TextField, Typography } from '@mui/material';
-import { inputText } from '@/app/main-styles';
-import { ChangeEvent } from "react";
-import { useAppDispatch, useAppSelector } from '@/state/hook';
-import { descriptionChange } from '@/state/slices/step-by-step';
-import { theme } from '@/config/ThemeMUI/theme';
+import { inputText } from "@/app/main-styles";
+import { theme } from "@/config/ThemeMUI/theme";
+import { useAppDispatch, useAppSelector } from "@/state/hook";
+import { setDescription } from "@/state/slices/stepper/description";
+import { updateError } from "@/state/slices/stepper/error-open";
+import { TextField, Typography } from "@mui/material";
+import { ChangeEvent, useEffect } from "react";
 
 
 
-export function Description() {
-    const stepperState = useAppSelector(state => state.setpForm)
-    const infoPageState = stepperState.steps_info.find(el => el.step === stepperState.page_step)
+
+
+
+
+
+
+export function Description () {
+    const numbStep = 5
+
+    const statePage = useAppSelector(state => state.descriptionSlice)
     const dispatch = useAppDispatch()
+    const statusPage = useAppSelector(state =>state.statusSlice.steps[numbStep]);
+
+
+    useEffect(() =>{
+        
+        if(statusPage.open && statePage.description.length === 0){
+            dispatch(updateError({step:numbStep, error:true}))
+        }
+    },[statusPage.open, statePage.description.length])
+
+
 
     function handleDescription(e: ChangeEvent<HTMLInputElement>) {
-        if (infoPageState?.step) {
-            dispatch(descriptionChange({ step: infoPageState?.step, description: e.target.value }))
-
+        const newValue = e.target.value;
+    
+        if (newValue.length <= 150) {
+            dispatch(setDescription(newValue));
+            dispatch(updateError({ step: numbStep, error: false }));
         }
     }
-    console.log('Description')
-    return (
+    
+
+    console.log(statusPage.open && statusPage.error_status.value)
+    return(
         <>
             <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px', } }}>Your description</Typography>
             <TextField
                 id="outlined-multiline-flexible"
                 label="Description"
-                value={infoPageState?.description}
+                value={statePage.description}
                 multiline
                 name="description"
                 maxRows={8}
                 minRows={4}
-                error={infoPageState?.open && !infoPageState?.error_status ? true : false}
+                error={statusPage.open && statusPage.error_status.value ? true : false}
                 helperText='max lenght 150 symbols'
                 onChange={handleDescription}
                 sx={{
                     ...inputText, '& .MuiOutlinedInput-root': {
-                        mb: '0px', '& fieldset': {
-                            borderColor: '#353842',
-
-                        }
+                        mb: '0px', 
+                        '&.Mui-focused fieldset': {
+                            borderColor: '#ffffff',
+                        },
+                       
+                        // '& fieldset': {
+                        //     borderColor: '#fff',
+                        // }
+                    },
+                    '& .MuiInputLabel-root': {
+                        top: '-10px',
+                        
+                    },
+                    '& .MuiFormLabel-root.Mui-focused':{
+                        color:"#fff"
                     },
                     '& .MuiInputBase-root': {
                         [theme.breakpoints.down('md')]: {

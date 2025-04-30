@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { Autocomplete, Box, TextField,  } from "@mui/material";
+import { Autocomplete, Box, TextField} from "@mui/material";
 import { ChangeEvent, memo, useCallback, useEffect, useRef, } from "react";
 import { secondTextInput } from "@/app/main-styles";
 import { theme } from "@/config/ThemeMUI/theme";
@@ -10,7 +10,7 @@ import { addErrorIngredient, deleteErrorIngredient } from "@/state/slices/steppe
 
 
 
-export const Autocomplite = memo(({ingredientId}: { ingredientId: string}) => {
+export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => {
     const numbStep = 4
     
     const ingredient = useAppSelector((state) => {
@@ -30,9 +30,14 @@ export const Autocomplite = memo(({ingredientId}: { ingredientId: string}) => {
     const dispatch = useAppDispatch();
     const inputValue = useRef<string>('');
     
+    
+
+
     const handleInputChange = useCallback((newInputValue: string) => {
         inputValue.current = newInputValue;
     }, []);
+
+    
 
       
     function changeAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -68,13 +73,15 @@ export const Autocomplite = memo(({ingredientId}: { ingredientId: string}) => {
     
             const emptyCount = [isNameEmpty, isAmountEmpty, isChoiceEmpty].filter(Boolean).length;
     
-            
+           
+
             if (emptyCount > 0 && emptyCount < 3) {
-                console.log(isNameEmpty, isAmountEmpty, isChoiceEmpty)
                 dispatch(addErrorIngredient(ingredientId));
+                
             } else {
-                console.log(isNameEmpty, isAmountEmpty, isChoiceEmpty)
                 dispatch(deleteErrorIngredient(ingredientId));
+                
+                
             }
         }
         
@@ -82,9 +89,10 @@ export const Autocomplite = memo(({ingredientId}: { ingredientId: string}) => {
     },[inputValue.current, ingredient.units, ingredientId, foundId])
 
     // console.log(ingredient)
-    console.log('Autocomplite', ingredient, inputValue.current)
+    console.log('Autocomplite',)
     return (
         <>
+        
             <Box sx={{
                 width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'background.default',
                 [theme.breakpoints.down('md')]: {
@@ -104,6 +112,7 @@ export const Autocomplite = memo(({ingredientId}: { ingredientId: string}) => {
             <MainInput 
                 ingredient={ingredient}
                 handleInputChange={handleInputChange}
+                error={foundId === ingredientId && openPage}
                 // inputValue={inputValue.current}
             ></MainInput>
 
@@ -239,5 +248,5 @@ export const Autocomplite = memo(({ingredientId}: { ingredientId: string}) => {
         </>
     );
 }, (prevProps, nextProps) => {
-    return prevProps.ingredientId === nextProps.ingredientId
+    return prevProps.ingredientId === nextProps.ingredientId 
 })

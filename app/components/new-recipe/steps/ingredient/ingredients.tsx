@@ -6,15 +6,37 @@ import { Autocomplite } from "./autocomplite"
 import InfoIcon from '@mui/icons-material/Info';
 import { theme } from "@/config/ThemeMUI/theme"
 import { addIngredient, deleteIngredient } from "@/state/slices/stepper/ingredients"
+import { useMemo } from "react"
 
 
 export function Ingredients() {
+    const numbStep = 4
 
     const stepperState = useAppSelector(state => state.ingredientsSlice)
     const dispatch = useAppDispatch()
+    const openPage = useAppSelector(state =>state.statusSlice.steps[numbStep].open);
 
 
-    console.log('Ingredients')
+    const showMinOneFilledWarning = useMemo(() => {
+        if (!openPage) return false;
+    
+        const ingredients = stepperState.ingredients;
+    
+        const hasAtLeastOneFilled = ingredients.some(ingredient => {
+            if (!('amount' in ingredient.units)) return false;
+    
+            const hasName = ingredient.name.trim() !== '';
+            const hasAmount = ingredient.units.amount > 0;
+            const hasChoice = ingredient.units.choice.trim() !== '';
+    
+            return hasName && hasAmount && hasChoice;
+        });
+    
+        return !hasAtLeastOneFilled;
+    }, [openPage, stepperState.ingredients]);
+    
+
+    console.log('Ingredients',)
 
     return (
         <Container sx={{
@@ -26,7 +48,7 @@ export function Ingredients() {
                 p:'5px'
             }
         }}>
-            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mb: '10px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px', mb:'0' } }}>
+            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mb: '10px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px', mb:'20px' } }}>
                 Specify the ingredients    
             </Typography>
             <Tooltip title="Press enter for new ingredients"
@@ -41,11 +63,24 @@ export function Ingredients() {
             <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', backgroundColor: 'background.paper', p: '20px', borderRadius: '10px',
                 [theme.breakpoints.down('md')]: {
                     p:'7px'
-                }
+                },
+                position:"relative",
              }}>
+                <Typography 
+                    color="primary"
+                    sx={{
+                        display: showMinOneFilledWarning ? 'block' : 'none',
+                        position:"absolute",
+                        top:'-26px',
+                        right:'calc(50% - 84px)',
+                        fontSize:"14px"
+                    }}
+                >Minimum 1 filled ingredient</Typography>
 
                 {stepperState.ingredients.map((ingredient: IngredientForAutocomplite) => (
-                    <Box key={ingredient.ingredient_id} sx={{ display: 'flex', alignItems: 'center', borderColor: 'background.default', width: '100%', mb: '10px',
+                    <Box key={ingredient.ingredient_id} sx={{ 
+                        
+                        display: 'flex', alignItems: 'center', borderColor: 'background.default', width: '100%', mb: '10px',
                         [theme.breakpoints.down('md')]: {
                             mb:'5px'
                         },
@@ -61,7 +96,10 @@ export function Ingredients() {
                             width:'30px',
                             height:'30px',
                             p:'5px'
-                        } }} onClick={() => dispatch(deleteIngredient({ ingredient_id: ingredient.ingredient_id as string }))}>X</Button>
+                        } }} 
+                            onClick={() => dispatch(deleteIngredient({ ingredient_id: ingredient.ingredient_id as string }))}
+                            disabled={stepperState.ingredients.length === 1 ? true : false}
+                        >X</Button>
                         <Divider sx={{height:'1px', bgcolor:"text.disabled", width:'100%', display:'none', [theme.breakpoints.down(500)]: {display:'block'}}}/>
                     </Box>))
                 }
