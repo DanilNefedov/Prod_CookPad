@@ -1,16 +1,16 @@
 import { btnMain } from "@/app/main-styles"
 import { IngredientForAutocomplite } from "@/app/types/types"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
-import { addIngredient, deleteIngredient } from "@/state/slices/step-by-step"
 import { Box, Button, Container, Divider, Tooltip, Typography } from "@mui/material"
 import { Autocomplite } from "./autocomplite"
 import InfoIcon from '@mui/icons-material/Info';
 import { theme } from "@/config/ThemeMUI/theme"
+import { addIngredient, deleteIngredient } from "@/state/slices/stepper/ingredients"
 
 
 export function Ingredients() {
-    const stepperState = useAppSelector(state => state.setpForm)
-    const infoPageState = stepperState.steps_info.find(el => el.step === stepperState.page_step)
+
+    const stepperState = useAppSelector(state => state.ingredientsSlice)
     const dispatch = useAppDispatch()
 
 
@@ -44,7 +44,7 @@ export function Ingredients() {
                 }
              }}>
 
-                {infoPageState?.ingredients?.map((ingredient: IngredientForAutocomplite) => (
+                {stepperState.ingredients.map((ingredient: IngredientForAutocomplite) => (
                     <Box key={ingredient.ingredient_id} sx={{ display: 'flex', alignItems: 'center', borderColor: 'background.default', width: '100%', mb: '10px',
                         [theme.breakpoints.down('md')]: {
                             mb:'5px'
@@ -55,7 +55,7 @@ export function Ingredients() {
                         }
                      }}>
 
-                        <Autocomplite props={{ ingredient, open: infoPageState?.open, error: infoPageState?.error_status }}></Autocomplite>
+                        <Autocomplite ingredientId={ingredient.ingredient_id} />
 
                         <Button sx={{ ...btnMain, mb: '0', minWidth: '40px', backgroundColor: 'background.default', padding: '7px 18px', fontWeight: '600', fontSize: '12px',[theme.breakpoints.down('md')]: {
                             width:'30px',

@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 interface StepStatus {
-    error_status: Record<string, boolean>;
+    error_status: Record<string, boolean | string[]>;
     open: boolean;
 }
 
@@ -37,7 +37,7 @@ const initialState: PageStatusP = {
         },
         4: {
             error_status: {
-                value: true
+                value: []
             }, 
             open: false 
         },
@@ -74,10 +74,12 @@ const statusSlice = createSlice({
 
         updateError(state, action: PayloadAction<{step:number, error:boolean}>){
             const stepNumber = action.payload.step;
-            if (state.steps[stepNumber] && stepNumber !== 2) {
+            if (state.steps[stepNumber] && stepNumber !== 2 && stepNumber !== 4) {
                 state.steps[stepNumber].error_status.value = action.payload.error;
             }
         },
+
+
 
         errorName(state, action: PayloadAction<boolean>){
             state.steps[2].error_status.name = action.payload
@@ -86,17 +88,44 @@ const statusSlice = createSlice({
         errorTime(state, action: PayloadAction<boolean>){
             state.steps[2].error_status.time = action.payload
             // state.steps[2].error_status.minutes = action.payload.minutes
-        }
+        },
 
+
+
+        addErrorIngredient(state, action: PayloadAction<string>) {
+            const value = state.steps[4].error_status.value;
+        
+            if (Array.isArray(value)) {
+                const arr = value as string[];
+                if (!arr.includes(action.payload)) {
+                    arr.push(action.payload);
+                }
+            }
+        },
+
+        deleteErrorIngredient(state, action: PayloadAction<string>) {
+            const value = state.steps[4].error_status.value;
+        
+            if (Array.isArray(value)) {
+                const arr = value as string[];
+                const index = arr.indexOf(action.payload);
+                if (index !== -1) {
+                    arr.splice(index, 1);
+                }
+            }
+        }
+        
+        
+        
+        
         
     }
-
 })
 
 
 
 
-export const { hasOpen, updateError, errorName, errorTime } = statusSlice.actions
+export const { hasOpen, updateError, errorName, errorTime, addErrorIngredient, deleteErrorIngredient } = statusSlice.actions
 
 
 export default statusSlice.reducer

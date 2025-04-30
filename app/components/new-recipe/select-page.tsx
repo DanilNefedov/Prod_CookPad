@@ -1,7 +1,7 @@
 import { TypeDish } from "./steps/type-dish";
 import { NameAndTime } from "./steps/name-and-time";
 import { Media } from "./steps/media";
-import { Ingredients } from "./steps/ingredients";
+import { Ingredients } from "./steps/ingredient/ingredients";
 import { Description } from "./steps/description";
 import { Instruction } from "./steps/instruction";
 
