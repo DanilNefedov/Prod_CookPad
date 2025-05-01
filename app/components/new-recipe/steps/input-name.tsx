@@ -29,7 +29,7 @@ export const NameInput = memo(() => {
 
 
 
-    console.log('input')
+    // console.log('input')
     return (
         <TextField
             error={open && statusPage ? true : false}

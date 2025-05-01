@@ -16,6 +16,7 @@ import nameTimeSlice from './slices/stepper/name-time'
 import mediaSlice from './slices/stepper/media'
 import ingredientsSlice from './slices/stepper/ingredients'
 import descriptionSlice from './slices/stepper/description'
+import instructionSlice from './slices/stepper/instruction'
 
 
 
@@ -39,6 +40,7 @@ export const store = configureStore({
         mediaSlice:mediaSlice,
         ingredientsSlice:ingredientsSlice,
         descriptionSlice:descriptionSlice,
+        instructionSlice:instructionSlice,
     }
 })
 

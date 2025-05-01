@@ -8,6 +8,8 @@ interface StepStatus {
 }
 
 interface PageStatusP  {
+    some_error:boolean
+    active_page:number
     steps: Record<number, StepStatus>; 
 }
 
@@ -15,6 +17,8 @@ interface PageStatusP  {
 
 
 const initialState: PageStatusP = {
+    active_page:3,
+    some_error:true,
     steps: {
         1: {
             error_status: {
@@ -113,10 +117,17 @@ const statusSlice = createSlice({
                     arr.splice(index, 1);
                 }
             }
+        },
+        
+        
+        setSomeError(state, action:PayloadAction<boolean>){
+            state.some_error = action.payload
+        },
+
+
+        setActivePage(state, action:PayloadAction<number>){
+            state.active_page = action.payload
         }
-        
-        
-        
         
         
     }
@@ -125,7 +136,7 @@ const statusSlice = createSlice({
 
 
 
-export const { hasOpen, updateError, errorName, errorTime, addErrorIngredient, deleteErrorIngredient } = statusSlice.actions
+export const { hasOpen, updateError, errorName, errorTime, addErrorIngredient, deleteErrorIngredient, setSomeError, setActivePage } = statusSlice.actions
 
 
 export default statusSlice.reducer

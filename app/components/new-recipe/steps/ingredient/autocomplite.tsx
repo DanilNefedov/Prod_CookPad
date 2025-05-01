@@ -89,7 +89,7 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
     },[inputValue.current, ingredient.units, ingredientId, foundId])
 
     // console.log(ingredient)
-    console.log('Autocomplite',)
+    // console.log('Autocomplite',)
     return (
         <>
         

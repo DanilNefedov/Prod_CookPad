@@ -78,7 +78,7 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: PropsDa
 
 
 
-    console.log('MainInput',)
+    // console.log('MainInput',)
     return (
         <Autocomplete
             id="ingredient"

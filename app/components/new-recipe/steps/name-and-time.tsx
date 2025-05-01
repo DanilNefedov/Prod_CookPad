@@ -17,7 +17,7 @@ export function NameAndTime() {
     const openPage = useAppSelector(state => state.statusSlice.steps[numbStep].open)
     const dispatch = useAppDispatch()
 
-    console.log(statusPage)
+    // console.log(statusPage)
    
 
 
@@ -106,7 +106,7 @@ export function NameAndTime() {
     }
 
 
-    console.log('NameAndTime')
+    // console.log('NameAndTime')
     return (
         <>
             <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px' } }}>Enter the name of the recipe</Typography>

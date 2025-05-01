@@ -37,7 +37,7 @@ export function TypeDish() {
    
   ];
 
-  console.log(stepperState)
+  // console.log(stepperState)
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     // console.log(e.target.value)
     dispatch(changeType(e.target.value))
@@ -53,7 +53,7 @@ export function TypeDish() {
   function handleOpenRecommendation() {
     dispatch(openRecommendation(stepperState.recommendation))
   }
-  console.log('TypeDish', statusPage)
+  // console.log('TypeDish', statusPage)
   return (
     <>
       <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px' } }}>Type of dish</Typography>

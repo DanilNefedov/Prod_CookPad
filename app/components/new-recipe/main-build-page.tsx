@@ -1,23 +1,22 @@
 'use client'
 import { Box, Button, Paper } from "@mui/material"
 import { styleLink } from "../home/header/header"
-import { useAppDispatch, } from "@/state/hook"
+import { useAppDispatch, useAppSelector, } from "@/state/hook"
 import { SelectPage } from "./select-page"
 import { saveForm } from "./save-form"
 import { theme } from "@/config/ThemeMUI/theme"
-import { useState } from "react"
-import { hasOpen } from "@/state/slices/stepper/error-open"
+import { hasOpen, setActivePage } from "@/state/slices/stepper/error-open"
 
 
 
 
 export function MainBuildPage() {
     const dispatch = useAppDispatch()
+    const statusPage = useAppSelector(state =>state.statusSlice.some_error);
+    const activePage = useAppSelector(state =>state.statusSlice.active_page);
 
-    const [step, setStep] = useState<number>(1)
 
-
-    console.log('MainBuildPage')
+    // console.log('MainBuildPage')
 
     return (
         <>
@@ -35,14 +34,18 @@ export function MainBuildPage() {
                 }
 
             }}>
-                <SelectPage step={step}></SelectPage>
+                <SelectPage step={activePage}></SelectPage>
 
-                {step === 6 ? <Button variant="contained" color='darkButton' sx={{ ...styleLink, 
-                width: '150px', m: '0 auto',
-                [theme.breakpoints.down(500)]: {
-                    width:"100px"
-                }
-                }} onClick={(e) => {
+                {activePage === 6 ? 
+                <Button variant="contained" color='darkButton' 
+                sx={{ ...styleLink, 
+                    width: '150px', m: '0 auto',
+                    [theme.breakpoints.down(500)]: {
+                        width:"100px"
+                    }
+                }} 
+                disabled={statusPage}
+                onClick={(e) => {
                     e.preventDefault()
                     // saveForm(stepperState, id, dispatch, namaUser)
                 }}>Save</Button> : <></>}
@@ -53,23 +56,23 @@ export function MainBuildPage() {
 
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: '20px' }}>
-                <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: step === 1 ? 'none' : 'block' }} onClick={(e) => {
+                <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: activePage === 1 ? 'none' : 'block' }} onClick={(e) => {
                     e.preventDefault()
-                    if (step === 1) return false
+                    if (activePage === 1) return false
                     
                     // onHandlePrev()
-                    const newPage = step - 1
-                    setStep(newPage)
+                    const newPage = activePage - 1
+                    dispatch(setActivePage(newPage))
                     // dispatch(changeSteps(newPage))
-                    dispatch(hasOpen(step))
+                    dispatch(hasOpen(activePage))
                 }}>Back</Button>
-                <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: step === 6 ? 'none' : 'block', ml: 'auto', mr:'0' }} onClick={(e) => {
+                <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: activePage === 6 ? 'none' : 'block', ml: 'auto', mr:'0' }} onClick={(e) => {
                     e.preventDefault()
                     // onHandleNext()
-                    const newPage = step + 1
-                    setStep(newPage)
+                    const newPage = activePage + 1
+                    dispatch(setActivePage(newPage))
                     // dispatch(changeSteps(newPage))
-                    dispatch(hasOpen(step))
+                    dispatch(hasOpen(activePage))
                 }}>Next</Button>
             </Box>
         </>

@@ -14,7 +14,7 @@ export function Ingredients() {
 
     const stepperState = useAppSelector(state => state.ingredientsSlice)
     const dispatch = useAppDispatch()
-    const openPage = useAppSelector(state =>state.statusSlice.steps[numbStep].open);
+    const openPage = useAppSelector(state => state.statusSlice.steps[numbStep].open);
 
 
     const showMinOneFilledWarning = useMemo(() => {
@@ -36,7 +36,8 @@ export function Ingredients() {
     }, [openPage, stepperState.ingredients]);
     
 
-    console.log('Ingredients',)
+   
+    // console.log('Ingredients',)
 
     return (
         <Container sx={{

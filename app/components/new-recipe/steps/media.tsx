@@ -118,15 +118,22 @@ export function Media() {
 
                             <Tooltip title="Main" >
                                 <IconButton sx={{
-                                    ...btnsSwiperMedia, ...addMainMediaSwiper, [theme.breakpoints.down(500)]: {
-                                        width: '25px',
-                                        height: '25px'
+                                    ...btnsSwiperMedia, ...addMainMediaSwiper, 
+                                    p:'4px',
+                                    width: '26px',
+                                    height: '26px',
+                                    [theme.breakpoints.down(500)]: {
+                                        width: '18px',
+                                        height: '18px',
                                     }
                                 }} onClick={() => handleMain(el.media_id)}>
                                     <GradeIcon sx={{
-                                        color: el.main ? 'primary.main' : 'text.primary', [theme.breakpoints.down(500)]: {
-                                            width: '18px',
-                                            height: '18px'
+                                        color: el.main ? 'primary.main' : 'text.primary', 
+                                        width: '20px',
+                                        height: '20px',
+                                        [theme.breakpoints.down(500)]: {
+                                            width: '14px',
+                                            height: '14px'
                                         }
                                     }} />
                                 </IconButton>
@@ -134,15 +141,22 @@ export function Media() {
 
                             <Tooltip title="Delete" >
                                 <IconButton sx={{
-                                    ...btnsSwiperMedia, ...deleteMediaSwiper, [theme.breakpoints.down(500)]: {
-                                        width: '25px',
-                                        height: '25px'
+                                    ...btnsSwiperMedia, ...deleteMediaSwiper, 
+                                    p:'4px',
+                                    width: '26px',
+                                    height: '26px',
+                                    [theme.breakpoints.down(500)]: {
+                                        width: '18px',
+                                        height: '18px'
                                     }
                                 }} onClick={() => deleteMedia(el.media_id)}>
                                     <ClearIcon sx={{
-                                        color: 'text.primary', [theme.breakpoints.down(500)]: {
-                                            width: '18px',
-                                            height: '18px'
+                                        color: 'text.primary', 
+                                        width: '20px',
+                                        height: '20px',
+                                        [theme.breakpoints.down(500)]: {
+                                            width: '14px',
+                                            height: '14px'
                                         }
                                     }} />
                                 </IconButton>
@@ -151,34 +165,48 @@ export function Media() {
                         </SwiperSlide>
                     ))}
                     <Box className='btn-next-step-media' sx={{
-                        borderRadius: '50%', backgroundColor: 'background.paper', width: '35px', height: '35px', right: '10px',
+                        cursor:"pointer",
+                        borderRadius: '50%', backgroundColor: 'background.paper', 
+                        width: '26px',
+                        height: '26px', 
+                        right: '10px',
                         [theme.breakpoints.down(500)]: {
-                            width: '25px',
-                            height: '25px'
+                            width: '18px',
+                            height: '18px',
+                            
                         }
 
                     }}>
                         <ArrowRightIcon viewBox="3 3 17 17" sx={{
-                            fontSize: 35, right: '1px', bottom: '1px', position: 'relative',
+                            fontSize: 35,  position: 'relative',
+                            width: '24px',
+                            height: '24px',
                             [theme.breakpoints.down(500)]: {
-                                width: '25px',
-                                height: '25px'
+                                width: '15px',
+                                height: '15px',
+                                right:"-1px",
                             }
                         }}></ArrowRightIcon>
                     </Box>
                     <Box className='btn-prev-step-media' sx={{
-                        borderRadius: '50%', backgroundColor: 'background.paper', width: '35px', height: '35px', left: '10px',
+                        cursor:"pointer",
+                        borderRadius: '50%', backgroundColor: 'background.paper',
+                        width: '26px',
+                        height: '26px',  
+                        left: '10px',
                         [theme.breakpoints.down(500)]: {
-                            width: '25px',
-                            height: '25px'
+                            width: '18px',
+                            height: '18px'
                         }
                     }}>
                         <ArrowLeftIcon viewBox="3 3 17 17" sx={{
-                            fontSize: 35, right: '3px', bottom: '1px', position: 'relative',
+                            fontSize: 35, right: '1px', position: 'relative',
+                            width: '24px',
+                            height: '24px',
                             [theme.breakpoints.down(500)]: {
-                                width: '25px',
-                                height: '25px',
-                                right: '2px'
+                                width: '15px',
+                                height: '15px',
+                                right: '0px'
                             }
                         }}></ArrowLeftIcon>
                     </Box>

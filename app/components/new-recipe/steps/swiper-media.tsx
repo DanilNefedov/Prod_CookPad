@@ -1,6 +1,7 @@
 
 import { MediaObj } from "@/app/types/types";
 import { CardMedia } from "@mui/material";
+import { memo } from "react";
 
 
 
@@ -9,20 +10,24 @@ interface propsData {
     el: MediaObj,
 }
 
-export function SwiperStepMedia({ props }: { props: propsData }) {
+
+export const SwiperStepMedia = memo(({ props }: { props: propsData }) => {
+
+// export function SwiperStepMedia({ props }: { props: propsData }) {
     const { el } = props
 
-    // console.log(el, el.media_type)
+    console.log('SwiperStepMedia')
     return (
         <>
         {
+            //aspect-ratio: 9 / 16;
             el.media_type === 'image' ?
             <CardMedia
                 sx={{
                     height: '100%',
                     objectFit: 'cover',
-                    maxHeight:'600px',
-                    
+                    // maxHeight:'600px',
+                    width:"100%"
                 }}
                 component='img'
                 src={el.media_url as string}
@@ -31,8 +36,10 @@ export function SwiperStepMedia({ props }: { props: propsData }) {
             :
             <CardMedia
                 sx={{
-                    maxHeight:'600px',
+                    // maxHeight:'600px',
+                    width:"100%",
                     height: '100%',
+                    objectFit: 'cover',
                     // objectFit: 'cover',
                 }}
                 component='video'
@@ -51,4 +58,6 @@ export function SwiperStepMedia({ props }: { props: propsData }) {
         
 
     )
-}
+},(prevProps, nextProps) => {
+    return prevProps.props.el.media_id === nextProps.props.el.media_id 
+})

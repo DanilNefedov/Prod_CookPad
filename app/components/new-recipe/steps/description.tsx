@@ -41,7 +41,7 @@ export function Description () {
     }
     
 
-    console.log(statusPage.open && statusPage.error_status.value)
+    // console.log(statusPage.open && statusPage.error_status.value)
     return(
         <>
             <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px', } }}>Your description</Typography>
@@ -63,12 +63,12 @@ export function Description () {
                             borderColor: '#ffffff',
                         },
                        
-                        // '& fieldset': {
-                        //     borderColor: '#fff',
-                        // }
+                        '& fieldset': {
+                            borderColor: '#353842',
+                        }
                     },
                     '& .MuiInputLabel-root': {
-                        top: '-10px',
+                        top: '0px',
                         
                     },
                     '& .MuiFormLabel-root.Mui-focused':{

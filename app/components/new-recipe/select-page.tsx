@@ -7,8 +7,6 @@ import { Instruction } from "./steps/instruction";
 
 
 export function SelectPage({step}:{step:number}){
-    // const stepperState = useAppSelector(state => state.setpForm);
-    console.log('SelectPage')
 
     switch(step){
         case 1:
