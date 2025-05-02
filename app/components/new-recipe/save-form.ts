@@ -146,13 +146,13 @@ export async function saveForm(
                 const data: IFetchDataRecipe = {
                     connection_id: userId,
                     recipe_id: idRecipe,
-                    name: stepNameTime.name.value ,
+                    name: stepNameTime.name.value.trim() ,
                     time: { hours: stepNameTime.time.hours, minutes: stepNameTime.time.minutes},
                     media: mediaArray || [],
                     recipe_type: stepTypeRecommendation.type_recipe,
-                    description: stepDescription.description,
+                    description: stepDescription.description.trim(),
                     sorting: [stepTypeRecommendation.type_recipe.toLowerCase()],
-                    instruction: stepInstruction.instruction as string,
+                    instruction: stepInstruction.instruction.trim(),
                     ingredients: ingredientsCopy,
                     favorite: false
                 }
@@ -169,9 +169,9 @@ export async function saveForm(
                     //descr - 100symb
                     //instruct - 250symb
                     const mediaF = mediaArray.length / 10
-                    const descrF = stepDescription.description.length < 100 ? stepDescription.description.length / 100 : 1
-                    const instF = stepInstruction.instruction.length < 250 ? stepInstruction.instruction.length / 250 : 1
-                    const nameF = stepNameTime.name.value !== '' ? 1 : 0
+                    const descrF = stepDescription.description.trim().length < 100 ? stepDescription.description.trim().length / 100 : 1
+                    const instF = stepInstruction.instruction.trim().length < 250 ? stepInstruction.instruction.trim().length / 250 : 1
+                    const nameF = stepNameTime.name.value.trim() !== '' ? 1 : 0
                     const timeF = stepNameTime.time.hours !== '' && stepNameTime.time.minutes !== '' ? 1 : 0
                     const typeF = stepTypeRecommendation.type_recipe !== '' ? 1 : 0
                     const ingrF = ingredientsCopy.length >= 1 ? 1 : 0

@@ -127,6 +127,11 @@ export function NameAndTime() {
                         onBlur={handleEmpty}
                         type="number"
                         sx={secondTextInput}
+                        onKeyDown={(e) => {
+                            if (['-', '+', 'e', ',', '.'].includes(e.key)) {
+                                e.preventDefault();
+                            }
+                        }}
                         error={openPage && statusPage ? true : false}
                     />
                     <Button
@@ -150,6 +155,11 @@ export function NameAndTime() {
                         onChange={handleMinuteChange}
                         onBlur={handleEmpty}
                         error={openPage && statusPage ? true : false}
+                        onKeyDown={(e) => {
+                            if (['-', '+', 'e', ',', '.'].includes(e.key)) {
+                                e.preventDefault();
+                            }
+                        }}
                     />
                     <Button
                         sx={btnIncDec}

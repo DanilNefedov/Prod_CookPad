@@ -119,6 +119,7 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: PropsDa
             filterSelectedOptions
             freeSolo
             value={value}
+                     
             noOptionsText="No ingredients"
             onChange={(event, newValue: IngredientForAutocomplite | string | null) => {
                 if (typeof newValue === 'string') {
@@ -152,10 +153,26 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: PropsDa
                 }
             }}
             onInputChange={(event, newInputValue) => {
-                // handleInputChange(value?.name === undefined ? '' : value?.name);
+                
                 setInputValue(newInputValue)
+                
+                // handleInputChange(value?.name === undefined ? '' : value?.name);
             }}
-            renderInput={(params) => <TextField  {...params} placeholder="Add an ingredient" fullWidth error={error ? true : false}/>}//error={statusPage.open && !error ? true : false}
+            renderInput={(params) => 
+                <TextField  
+                    {...params}  
+                    placeholder="Add an ingredient" 
+                    fullWidth 
+                    error={error ? true : false}
+                    slotProps={{
+                        htmlInput: {
+                            ...params.inputProps,
+                            maxLength:50
+                        },
+                        
+                    }}
+                />
+            }//error={statusPage.open && !error ? true : false}
             renderOption={(props, option) => (
                 <ListItem
                     sx={{

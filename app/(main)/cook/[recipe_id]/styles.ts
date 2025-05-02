@@ -2,7 +2,7 @@ import { theme } from "@/config/ThemeMUI/theme"
 
 export const mainBoxCook = {
     display: 'flex',
-    height: 'calc(100vh - 20px)',
+    height: 'calc(100dvh - 20px)',
     m: '10px 0',
 }
 
@@ -109,7 +109,7 @@ export const contentBlock = {
 export const contentContainer ={
     overflowX:'hidden',
     scrollbarColor: "#353842 #1F2128",
-    maxHeight:'calc(100vh - 74px)',
+    maxHeight:'calc(100dvh - 74px)',
     p:'15px 15px',
     position:'relative'
    

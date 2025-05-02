@@ -36,8 +36,7 @@ export function Ingredients() {
     }, [openPage, stepperState.ingredients]);
     
 
-   
-    // console.log('Ingredients',)
+    console.log('Ingredients',)
 
     return (
         <Container sx={{

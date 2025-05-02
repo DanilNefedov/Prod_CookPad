@@ -32,7 +32,7 @@ export function Description () {
 
 
     function handleDescription(e: ChangeEvent<HTMLInputElement>) {
-        const newValue = e.target.value.trim();
+        const newValue = e.target.value;
     
         if (newValue.length <= 150) {
             dispatch(setDescription(newValue));

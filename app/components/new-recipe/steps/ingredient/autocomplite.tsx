@@ -7,6 +7,7 @@ import { MainInput } from "./main-input";
 import { choiceUnits, ingredientAmount } from "@/state/slices/stepper/ingredients";
 import { shallowEqual } from "react-redux";
 import { addErrorIngredient, deleteErrorIngredient } from "@/state/slices/stepper/error-open";
+import { handleAmountChange } from "@/app/components/main-list/function";
 
 
 
@@ -42,14 +43,17 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
       
     function changeAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const newValue = e.target.value.trim();
-        if (newValue === '' || (newValue.length <= 5 && parseFloat(newValue) >= 0)) {
+
+        const resValue = handleAmountChange(newValue)
+        console.log(resValue)
+        // if (newValue === '' || (newValue.length <= 5 && parseFloat(newValue) >= 0)) {
             dispatch(
                 ingredientAmount({
                     ingredient_id: ingredient.ingredient_id,
-                    amount: newValue === '' ? 0 : parseFloat(newValue),
+                    amount: resValue === '' ? 0 : parseFloat(resValue),
                 })
             );
-        }
+        // }
     }
 
     function isDisabled() {
@@ -62,9 +66,10 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
     }
 
     function cahngeUnits(newValue: string) {
-        dispatch(choiceUnits({ ingredient_id: ingredient.ingredient_id, choice: newValue || '' }));
+        dispatch(choiceUnits({ ingredient_id: ingredient.ingredient_id, choice: newValue }));
+        
     }
-
+    
     useEffect(() => {
         if ('list' in ingredient.units) {
             const isNameEmpty = inputValue.current === '' && ingredient.name === '';
@@ -89,7 +94,7 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
     },[inputValue.current, ingredient.units, ingredientId, foundId])
 
     // console.log(ingredient)
-    // console.log('Autocomplite',)
+    console.log('Autocomplite',)
     return (
         <>
         
@@ -129,7 +134,7 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
                         e.preventDefault();
                     }
                 }}
-                value={'list' in ingredient.units && ingredient.units.amount !== 0 ? ingredient.units.amount : ''}//
+                value={'list' in ingredient.units && ingredient.units.amount !== 0 ? ingredient.units.amount : '0'}//
                 onChange={(e) => changeAmount(e)}
                 sx={{
                     ...secondTextInput,
@@ -180,10 +185,17 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
                             {...params}
                             placeholder="Units"
                             variant="outlined"
-                            inputProps={{
-                                ...params.inputProps,
-                                maxLength: 10,
+                            slotProps={{
+                                htmlInput: {
+                                    ...params.inputProps,
+                                    maxLength:15
+                                },
+                                
                             }}
+                            // inputProps={{
+                            //     ...params.inputProps,
+                            //     maxLength: 10,
+                            // }}
                             error={foundId === ingredientId && openPage ? true : false}
                         />
 
@@ -201,7 +213,7 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
                     },
                     paper: {
                       sx: {
-                        "& .MuiAutocomplete-option": {
+                        "& .MuiAutocomplete-listbox .MuiAutocomplete-option": {
                           [theme.breakpoints.down("md")]: {
                             minHeight: "33px",
                             fontSize:'14px'

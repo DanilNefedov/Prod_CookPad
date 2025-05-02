@@ -16,16 +16,23 @@ export const NameInput = memo(() => {
 
 
     const handleName = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        dispatch(changeName(e.target.value.trim()))
-
-        if (!e.target.value.trim() || e.target.value.trim() === '') {
-            console.log(e.target.value)
-            dispatch(errorName(true))
+        const value = e.target.value;
+    
+        if (value.length > 150) {
+            return; 
+        }
+    
+        dispatch(changeName(value));
+    
+        if (!value.trim() || value.trim() === '') {
+            console.log(value);
+            dispatch(errorName(true));
         } else {
-            console.log(e.target.value)
-            dispatch(errorName(false))
+            console.log(value);
+            dispatch(errorName(false));
         }
     }
+    
 
 
 
