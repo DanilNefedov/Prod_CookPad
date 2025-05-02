@@ -219,3 +219,7 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: PropsDa
     prevProps.ingredient.name === nextProps.ingredient.name && 
     prevProps.error === nextProps.error
 })
+
+
+
+MainInput.displayName = "MainInput"

@@ -47,3 +47,6 @@ export const NameInput = memo(() => {
     )
 
 })
+
+
+NameInput.displayName = "NameInput"

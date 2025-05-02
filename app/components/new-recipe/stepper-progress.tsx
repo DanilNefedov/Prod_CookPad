@@ -114,3 +114,6 @@ export const StepperProgress = memo(() => {
         </Box>
     );
 })
+
+
+StepperProgress.displayName = "StepperProgress"

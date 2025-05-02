@@ -61,3 +61,7 @@ export const SwiperStepMedia = memo(({ props }: { props: propsData }) => {
 },(prevProps, nextProps) => {
     return prevProps.props.el.media_id === nextProps.props.el.media_id 
 })
+
+
+
+SwiperStepMedia.displayName = "SwiperStepMedia"

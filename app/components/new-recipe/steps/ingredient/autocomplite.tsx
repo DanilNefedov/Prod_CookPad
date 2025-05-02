@@ -250,3 +250,6 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
 }, (prevProps, nextProps) => {
     return prevProps.ingredientId === nextProps.ingredientId 
 })
+
+
+Autocomplite.displayName = "Autocomplite"

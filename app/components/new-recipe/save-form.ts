@@ -1,12 +1,10 @@
 import { storage } from "@/firebase";
-import { resetState, StateStepper } from "@/state/slices/step-by-step";
 import { AppDispatch } from "@/state/store";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 import _ from "lodash";
 import { IFetchDataRecipe, IngredientForAutocomplite, unitsState } from "@/app/types/types";
 import { resetStateRecipes } from "@/state/slices/recipe-slice";
-import { useAppSelector } from "@/state/hook";
 import { StepTypeRecommend } from "@/state/slices/stepper/type-recommend";
 import { NameTimeT } from "@/state/slices/stepper/name-time";
 import { MediaT } from "@/state/slices/stepper/media";
