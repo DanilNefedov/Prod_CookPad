@@ -124,7 +124,7 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: PropsDa
                 if (typeof newValue === 'string') {
                     const newIngredient = {
                         ingredient_id: ingredient.ingredient_id,
-                        name: newValue,
+                        name: newValue.trim(),
                         new_ingredient: true,
                         media: '',
                         units: ['kg', 'g', 'ml', 'l'],
@@ -141,14 +141,14 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: PropsDa
                     dispatch(
                         choiceAutocomplite({
                             ingredient_id: ingredient.ingredient_id,
-                            name: newValue?.name || '',
+                            name: newValue?.name.trim() || '',
                             new_ingredient: newValue?.new_ingredient || false, // maybe only need to change it to false
                             media: newValue?.media || '',
                             units: newValue?.units as string[] || [],
                             // check_open_link: newValue?.ingredient_id || ''
                         })
                     );
-                    handleInputChange(newValue?.name || '')
+                    handleInputChange(newValue?.name.trim() || '')
                 }
             }}
             onInputChange={(event, newInputValue) => {

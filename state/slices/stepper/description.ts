@@ -1,14 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { resetAllState } from "./reset-action"
 
  
 
-interface InitialStateI {
+export interface InitialStateDescriptionI {
     description:string
 }
 
 
 
-const initialState: InitialStateI = {
+const initialState: InitialStateDescriptionI = {
     description: '',
 }
 
@@ -25,7 +26,10 @@ const descriptionSlice = createSlice({
 
         
        
-    }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(resetAllState, () => initialState);
+    },
 
 })
 

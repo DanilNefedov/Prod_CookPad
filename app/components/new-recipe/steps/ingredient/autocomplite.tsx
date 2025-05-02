@@ -41,7 +41,7 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
 
       
     function changeAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        const newValue = e.target.value;
+        const newValue = e.target.value.trim();
         if (newValue === '' || (newValue.length <= 5 && parseFloat(newValue) >= 0)) {
             dispatch(
                 ingredientAmount({
@@ -173,7 +173,7 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
                 options={'list' in ingredient.units && ingredient.units.list || []}
                 value={'list' in ingredient.units && ingredient.units.choice || ''}
                 onInputChange={(event, newValue) => {
-                    cahngeUnits(newValue)
+                    cahngeUnits(newValue.trim())
                 }}
                 renderInput={(params) => (
                         <TextField

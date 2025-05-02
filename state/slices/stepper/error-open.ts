@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { resetAllState } from "./reset-action";
 
 
 
@@ -17,7 +18,7 @@ interface PageStatusP  {
 
 
 const initialState: PageStatusP = {
-    active_page:3,
+    active_page:1,
     some_error:true,
     steps: {
         1: {
@@ -130,7 +131,10 @@ const statusSlice = createSlice({
         }
         
         
-    }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(resetAllState, () => initialState);
+    },
 })
 
 

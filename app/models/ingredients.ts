@@ -31,10 +31,10 @@ const IngredientsSchema = new Schema(
 );
 
 IngredientsSchema.pre('save', function (next) {
-    if (!this.isModified('open_for_link')) {
-        return next();
-    }
-    if (this.open_for_link === false) {
+    // if (!this.isModified('count')) {
+    //     return next();
+    // }
+    if (this.count <= 1) {
         this.deletedAt = new Date();
     } else {
         this.deletedAt = null;
@@ -44,7 +44,22 @@ IngredientsSchema.pre('save', function (next) {
 });
 
 
-IngredientsSchema.index({ deletedAt: 1 }, { expireAfterSeconds: 3 });
+
+// IngredientsSchema.pre('save', function (next) {
+//     if (!this.isModified('open_for_link')) {
+//         return next();
+//     }
+//     if (this.open_for_link === false) {
+//         this.deletedAt = new Date();
+//     } else {
+//         this.deletedAt = null;
+//     }
+
+//     next();
+// });
+
+
+IngredientsSchema.index({ deletedAt: 1 }, { expireAfterSeconds: 86400 }); //24 h
 
 // 30 * 24 * 60 * 60 = 30 days
 

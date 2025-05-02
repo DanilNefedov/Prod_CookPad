@@ -23,7 +23,7 @@ export function Instruction() {
 
 
     function handleInstruction(e: ChangeEvent<HTMLInputElement>) {
-        const newValue = e.target.value;
+        const newValue = e.target.value.trim();
 
         if (newValue.length <= 150) {
             dispatch(setInstruction(e.target.value))

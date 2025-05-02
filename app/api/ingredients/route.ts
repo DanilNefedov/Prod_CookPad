@@ -118,7 +118,7 @@ export async function POST(req: Request) {
       for (const ingredient of data) {
         await Ingredients.create({
           name: ingredient.name,
-          units: [ingredient.unit],
+          units: ['g','kg','ml','l','pcs'],
           count: 1,
           open_for_link: false,
           deletedAt: new Date()
@@ -148,21 +148,23 @@ export async function PATCH(req: Request) {
     const data = await req.json();
 
     for (const ingredient of data) {
+      console.log(ingredient)
       if (!ingredient.new_ingredient) {
         const updatedDoc = await Ingredients.findOneAndUpdate(
-          { name: new RegExp(`^${ingredient.name}$`, 'i') },
+          { name: new RegExp(`^${ingredient.name.trim()}$`, 'i') },
           {
             $inc: { count: 1 },
-            $addToSet: { units: ingredient.unit } //add a limit. for now it is possible to add a large number of units
+            $set: { open_for_link: true }
+            // $addToSet: { units: ingredient.unit } //add a limit. for now it is possible to add a large number of units
           },
           { new: true }
         );
-
-        const newOpenForLink = updatedDoc.count > 1 ? true : false;
-        await Ingredients.updateOne(
-          { _id: updatedDoc._id },
-          { $set: { open_for_link: newOpenForLink } }
-        );
+        console.log('updatedDocupdatedDocupdatedDoc',updatedDoc)
+        // const newOpenForLink = updatedDoc.count > 1 ? true : false;
+        // await Ingredients.updateOne(
+          // { _id: updatedDoc._id },
+          // { $set: { open_for_link: newOpenForLink } }
+        // );
       } else {
         toUpdate.push(ingredient);
       }

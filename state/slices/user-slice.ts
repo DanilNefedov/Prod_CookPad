@@ -42,7 +42,7 @@ const initialState: initUserStateType = {
 
 
 export const fetchUser = createAsyncThunk<collectionUser, string, { rejectValue: string }>(
-    'user/fetchUser',
+    'userSlice/fetchUser',
     async function (connection_id, { rejectWithValue, dispatch }) {
         try {
             const response = await fetch(`/api/user?connection_id=${connection_id}`);
@@ -63,7 +63,7 @@ export const fetchUser = createAsyncThunk<collectionUser, string, { rejectValue:
 );
 
 export const fetchClearUser = createAsyncThunk<[], {rejectValue: string}>(
-    'user/fetchClearUser',
+    'userSlice/fetchClearUser',
     async function (_, {rejectWithValue}){
         try{
             const data: [] = []
@@ -90,7 +90,7 @@ interface dataConfigUser {
 
 
 const userSlice = createSlice({
-    name: 'user',
+    name: 'userSlice',
     initialState,
     reducers: {
     },

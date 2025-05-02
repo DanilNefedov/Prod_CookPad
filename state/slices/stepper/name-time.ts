@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { resetAllState } from "./reset-action"
 
 
 
 
 
-interface NameTimeT{
+export interface NameTimeT{
     name:{
         value:string
     },
@@ -42,7 +43,10 @@ const nameTimeSlice = createSlice({
         changeMinutes(state, action: PayloadAction<string>) {
             state.time.minutes = action.payload
         },
-    }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(resetAllState, () => initialState);
+    },
 
 })
 

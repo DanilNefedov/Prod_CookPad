@@ -6,6 +6,8 @@ import { SelectPage } from "./select-page"
 import { saveForm } from "./save-form"
 import { theme } from "@/config/ThemeMUI/theme"
 import { hasOpen, setActivePage } from "@/state/slices/stepper/error-open"
+import { useStore } from "react-redux"
+import { RootState } from "@/state/store"
 
 
 
@@ -15,8 +17,25 @@ export function MainBuildPage() {
     const statusPage = useAppSelector(state =>state.statusSlice.some_error);
     const activePage = useAppSelector(state =>state.statusSlice.active_page);
 
+    const store = useStore<RootState>()
 
     // console.log('MainBuildPage')
+
+    function handleSave(){
+        const state = store.getState()
+
+        const stepTypeRecommendation = state.stepTypeRecommend
+        const stepNameTime = state.nameTimeSlice
+        const stepMedia = state.mediaSlice
+        const stepIngredients = state.ingredientsSlice
+        const stepDescription = state.descriptionSlice
+        const stepInstruction = state.instructionSlice
+        const userId = state.user.user.connection_id
+        const userName = state.user.user.name
+
+        saveForm(stepTypeRecommendation, stepNameTime, stepMedia, stepIngredients, stepDescription, stepInstruction, userId, userName, dispatch)
+
+    }
 
     return (
         <>
@@ -47,7 +66,8 @@ export function MainBuildPage() {
                 disabled={statusPage}
                 onClick={(e) => {
                     e.preventDefault()
-                    // saveForm(stepperState, id, dispatch, namaUser)
+                    handleSave()
+                    //stepperState, id, dispatch, namaUser
                 }}>Save</Button> : <></>}
             </Paper>
 

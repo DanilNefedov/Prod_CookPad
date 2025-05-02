@@ -1,6 +1,7 @@
 import { IngredientForAutocomplite } from "@/app/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from 'uuid';
+import { resetAllState } from "./reset-action";
 
 
 
@@ -8,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 
 
-interface IngredientT  {
+export interface IngredientT  {
     ingredients: IngredientForAutocomplite[]; 
 }
 
@@ -113,7 +114,10 @@ const ingredientsSlice = createSlice({
             
         },
 
-    }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(resetAllState, () => initialState);
+    },
 
 })
 

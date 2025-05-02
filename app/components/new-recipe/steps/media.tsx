@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { Box, Button, IconButton, Tooltip, Typography } from "@mui/material";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import GradeIcon from '@mui/icons-material/Grade';
@@ -28,6 +28,7 @@ export function Media() {
     const numbStep = 3
     const pageState = useAppSelector(state => state.mediaSlice)
     const statusPage = useAppSelector(state => state.statusSlice.steps[numbStep])
+    const [helperError, setHelperError] = useState<string>('')
     const dispatch = useAppDispatch()
 
 
@@ -36,7 +37,7 @@ export function Media() {
         // console.log(files)
         if (files && files.length > 0 && files.length <= 10) {
             // console.log(files)
-
+            setHelperError('')
             if (pageState) {
                 const dataFiles = []
 
@@ -52,6 +53,8 @@ export function Media() {
                 dispatch(changeMedia({ media: dataFiles,}));
                 dispatch(updateError({error:false, step:numbStep}))
             }
+        }else{
+            setHelperError('1 to 10 media files')
         }
 
 
@@ -89,7 +92,7 @@ export function Media() {
                     <VisuallyHiddenInput type="file" id="media" accept="image/*, video/*" multiple onChange={(e) => handleFileChange(e)} />
                 </Button>
                 <Typography sx={{
-                    display: statusPage.open && !statusPage.error_status.value ? 'block' : 'none',
+                    display: statusPage.open && statusPage.error_status.value ? 'block' : 'none',
                     fontSize: 13,
                     textAlign: 'center',
                     mt: 2,
@@ -99,6 +102,15 @@ export function Media() {
                 }} color={"error"} >Upload the media file</Typography>
 
 
+                <Typography sx={{
+                    display: helperError !== '' ? 'block' : 'none',
+                    fontSize: 13,
+                    textAlign: 'center',
+                    mt: 2,
+                    [theme.breakpoints.down('md')]: {
+                        mt: "0"
+                    }
+                }} color={"error"} >{helperError}</Typography>
 
                 <Swiper
                     modules={[Navigation]}
@@ -109,6 +121,7 @@ export function Media() {
 
                     }}
                     spaceBetween={1}
+                    style={{display:pageState.media.length !== 0 ? 'block' : 'none'}}
                 // lazy={true}
                 >
                     {pageState.media.map(el => (

@@ -4,8 +4,16 @@ import { AppDispatch } from "@/state/store";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 import _ from "lodash";
-import { IFetchDataRecipe, IngredientForAutocomplite } from "@/app/types/types";
+import { IFetchDataRecipe, IngredientForAutocomplite, unitsState } from "@/app/types/types";
 import { resetStateRecipes } from "@/state/slices/recipe-slice";
+import { useAppSelector } from "@/state/hook";
+import { StepTypeRecommend } from "@/state/slices/stepper/type-recommend";
+import { NameTimeT } from "@/state/slices/stepper/name-time";
+import { MediaT } from "@/state/slices/stepper/media";
+import { IngredientT } from "@/state/slices/stepper/ingredients";
+import { InitialStateDescriptionI } from "@/state/slices/stepper/description";
+import { InitialStateI } from "@/state/slices/stepper/instruction";
+import { resetAllState } from "@/state/slices/stepper/reset-action";
 
 
 
@@ -14,7 +22,6 @@ interface dataType {
     idRecipe: string,
     media_id: string,
     media_url: string,
-    // main:boolean
 }
 
 
@@ -24,9 +31,6 @@ async function uploadFile(data: dataType) {
 
     const response = await fetch(media_url);
     const blob = await response.blob();
-    // const metadata = {
-    //     contentType: 'image/jpeg'
-    // };
 
     const storageRef = ref(storage, `recipes/${id}/${idRecipe}/${media_id}`);
 
@@ -72,220 +76,234 @@ async function uploadFile(data: dataType) {
 
 
 
-export async function saveForm(state: StateStepper, id: string, dispatch: AppDispatch, namaUser: string) {
-    const activeSaveBtn = state.steps_info.find(el => el?.open && !el?.error_status)
+export async function saveForm(
+    stepTypeRecommendation:StepTypeRecommend, 
+    stepNameTime:NameTimeT, 
+    stepMedia:MediaT, 
+    stepIngredients:IngredientT, 
+    stepDescription:InitialStateDescriptionI, 
+    stepInstruction:InitialStateI,
+    userId:string, 
+    userName:string,
+    dispatch:AppDispatch
+) {//state: StateStepper, id: string, dispatch: AppDispatch, namaUser: string
+    // const activeSaveBtn = state.steps_info.find(el => el?.open && !el?.error_status)
+    // const typeRecommend = useAppSelector(state => state.stepTypeRecommend)
     const idRecipe = uuidv4()
-    console.log(activeSaveBtn, state.steps_info)
-    if (activeSaveBtn) return false
 
-    console.log(state.steps_info[2].media)
+    console.log(stepTypeRecommendation, stepNameTime, stepMedia, stepIngredients, stepDescription, stepInstruction, )
 
-
-    if (state.steps_info[2].media && state.steps_info[2].media?.length > 0 && id !== '') {
+    // if (activeSaveBtn) return false
 
 
-        const uploadPromises = state.steps_info[2].media.map(file => {
+
+    // if (state.steps_info[2].media && state.steps_info[2].media?.length > 0 && id !== '') {
+
+
+        const uploadPromises = stepMedia.media.map(file => {
             if (typeof file.media_url === 'string') {
                 const data = {
-                    id,
+                    id:userId,
                     idRecipe,
                     media_id: file.media_id,
                     media_url: file.media_url,
 
-                    // main:file.main
                 }
                 return uploadFile(data)
             }
 
         });
-        // console.log(uploadPromises)
 
 
         Promise.all(uploadPromises)
             .then(downloadURLs => {
-                if (state.steps_info[2].media) {
-                    // const ingredientsWithNames = state.steps_info[3].ingredients?.filter(ingredient => ingredient.name !== "");
-                    // const ingredientsCopy = JSON.parse(JSON.stringify(ingredientsWithNames));
+                // if (state.steps_info[2].media) {
+                // if (Array.isArray(stepIngredients.ingredients)) {
 
 
-                    const ingredientsWithNames = _.filter(state.steps_info[3].ingredients, ingredient => ingredient.name !== "");
-                    const ingredientsCopy = _.map(ingredientsWithNames, ingredient => _.omit(ingredient, ['new_ingredient']));
+                const ingredientsWithValues = stepIngredients.ingredients.filter(
+                    (ingredient): ingredient is IngredientForAutocomplite & { units: unitsState } =>
+                        ingredient.name.trim() !== '' &&
+                        typeof ingredient.units === 'object' &&
+                        !Array.isArray(ingredient.units) &&
+                        ingredient.units.amount !== 0 &&
+                        ingredient.units.choice.trim() !== ''
+                );
+                    
+                const ingredientsCopy = ingredientsWithValues.map(ingredient =>
+                    _.omit(ingredient, ['new_ingredient'])
+                );
+                    
 
+                console.log(ingredientsCopy)
+                const mediaArray =stepMedia.media.map((mediaObj, index) => {
+                    return {
+                        main: mediaObj.main,
+                        media_url: downloadURLs[index] as string,
+                        media_id: mediaObj.media_id,
+                        media_type: mediaObj.media_type
+                    };
+                });
 
-
-                    const mediaArray = state.steps_info[2].media?.map((mediaObj, index) => {
-                        return {
-                            main: mediaObj.main,
-                            media_url: downloadURLs[index] as string,
-                            media_id: mediaObj.media_id,
-                            media_type: mediaObj.media_type
-                        };
-                    });
-
-                    const data: IFetchDataRecipe = {
-                        connection_id: id,
-                        recipe_id: idRecipe,
-                        name: state.steps_info[1].second_option?.name_recipe as string,
-                        time: { hours: state.steps_info[1].hours as string, minutes: state.steps_info[1].minutes as string },
-                        media: mediaArray || [],
-                        recipe_type: state.steps_info[0].type_recipe as string,
-                        description: state.steps_info[4].description as string,
-                        sorting: [state.steps_info[0].type_recipe?.toLowerCase() as string],
-                        instruction: state.steps_info[5].instruction as string,
-                        ingredients: ingredientsCopy,
-                        favorite: false
-                    }
-
-
-                    // console.log(state.steps_info[0])
-                    if (state.steps_info[0].recommendation) {
-                        const ingredientNames = ingredientsCopy.map((el: IngredientForAutocomplite) => el.name);
-
-                        //media - 10
-                        //name - 1 
-                        //time - 1
-                        //type - 1
-                        //ingr - 1
-                        //descr - 100symb
-                        //instruct - 250symb
-                        const mediaF = mediaArray.length / 10
-                        const descrF = state.steps_info[4].description && state.steps_info[4].description?.length < 100 ? state.steps_info[4].description?.length / 100 : 1
-                        const instF = state.steps_info[5].instruction && state.steps_info[5].instruction?.length < 250 ? state.steps_info[5].instruction?.length / 250 : 1
-                        const nameF = state.steps_info[1].second_option?.name_recipe !== '' ? 1 : 0
-                        const timeF = state.steps_info[1].hours !== '' && state.steps_info[1].minutes !== '' ? 1 : 0
-                        const typeF = state.steps_info[0].type_recipe !== '' ? 1 : 0
-                        const ingrF = ingredientsCopy.length >= 1 ? 1 : 0
-
-
-                        // console.log(mediaF, descrF, instF, nameF, timeF, typeF, ingrF)
-                        const newDataRecomm = {
-                            fully: parseFloat(((mediaF + descrF + instF + nameF + timeF + typeF + ingrF) / 7).toFixed(16)),
-                            // liked: false,
-                            likes: 0,
-                            views: 0,
-                            saves: 0,
-                            comments: 0,
-                            categories: _.filter([
-                                namaUser,
-                                state.steps_info[0].type_recipe as string,
-                                ...ingredientNames
-                            ], (item) => item !== null),
-                            creator: null
-                        }
-                        const addNewRecipe = async () => {
-                            try {
-                                const response = await fetch(`/api/recipe`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({
-                                        recipeData: data,
-                                        recomData: newDataRecomm
-                                    }),
-                                });
-
-                                if (!response.ok) {
-                                    throw new Error('Server Error!'); 
-                                }
-
-                                const recipeData = await response.json();
-                                console.log(recipeData)
-                                dispatch(resetState())
-
-                            } catch (error) {
-                                console.error('Failed to save recipe:', error);
-                            }
-                        }
-                        // addNewRecipe()
-                        // pushNewDataRec(newDataRecomm)
-                        console.log(newDataRecomm)
-
-
-                        interface fetchIngredients {
-                            name: string,
-                            unit: string,
-                            new_ingredient: boolean
-                        }
-                        const ingredientsData: fetchIngredients[] = ingredientsWithNames.map(el => ({
-                            name: el.name,
-                            unit: 'list' in el.units && el.units.choice ? el.units.choice : '',
-                            new_ingredient: el.new_ingredient ?? false
-                        }))
-
-                        const processIngredients = async (ingredients: fetchIngredients[]) => {
-
-                            try {
-                                const response = await fetch('/api/ingredients', {
-                                    method: 'PATCH',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify(ingredients)
-                                });
-                               
-
-                                const result = await response.json();
-
-                                if (result.body && result.body.length > 0) {
-                                    await fetch('/api/ingredients', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                        },
-                                        body: JSON.stringify(result.body)
-                                    });
-    
-                                }
-
-                                addNewRecipe()
-                            } catch (error) {
-                                console.error('Failed to save ingredient:', error);
-                            }
-                        }
-
-                        processIngredients(ingredientsData);
-
-
-
-                    } else {
-                       
-                        const addNewRecipe = async () => {
-                            try {
-                                const response = await fetch(`/api/recipe`, {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({
-                                        recipeData: data,
-                                        recomData: null
-                                    }),
-                                });
-
-                                if (!response.ok) {
-                                    throw new Error('Server Error!'); 
-                                }
-
-                                const recipeData = await response.json();
-                                console.log(recipeData)
-                                dispatch(resetState())
-
-                            } catch (error) {
-                                console.error('Failed to save recipe:', error);
-                            }
-                        }
-                        addNewRecipe()
-                    }
-
-                    dispatch(resetStateRecipes())
+                const data: IFetchDataRecipe = {
+                    connection_id: userId,
+                    recipe_id: idRecipe,
+                    name: stepNameTime.name.value ,
+                    time: { hours: stepNameTime.time.hours, minutes: stepNameTime.time.minutes},
+                    media: mediaArray || [],
+                    recipe_type: stepTypeRecommendation.type_recipe,
+                    description: stepDescription.description,
+                    sorting: [stepTypeRecommendation.type_recipe.toLowerCase()],
+                    instruction: stepInstruction.instruction as string,
+                    ingredients: ingredientsCopy,
+                    favorite: false
                 }
+
+
+                if (stepTypeRecommendation.recommendation) {
+                    const ingredientNames = ingredientsCopy.map((el: IngredientForAutocomplite) => el.name);
+
+                    //media - 10
+                    //name - 1 
+                    //time - 1
+                    //type - 1
+                    //ingr - 1
+                    //descr - 100symb
+                    //instruct - 250symb
+                    const mediaF = mediaArray.length / 10
+                    const descrF = stepDescription.description.length < 100 ? stepDescription.description.length / 100 : 1
+                    const instF = stepInstruction.instruction.length < 250 ? stepInstruction.instruction.length / 250 : 1
+                    const nameF = stepNameTime.name.value !== '' ? 1 : 0
+                    const timeF = stepNameTime.time.hours !== '' && stepNameTime.time.minutes !== '' ? 1 : 0
+                    const typeF = stepTypeRecommendation.type_recipe !== '' ? 1 : 0
+                    const ingrF = ingredientsCopy.length >= 1 ? 1 : 0
+
+
+                    const newDataRecomm = {
+                        fully: parseFloat(((mediaF + descrF + instF + nameF + timeF + typeF + ingrF) / 7).toFixed(16)),
+                        likes: 0,
+                        views: 0,
+                        saves: 0,
+                        comments: 0,
+                        categories: _.filter([
+                            userName,
+                            stepTypeRecommendation.type_recipe,
+                            ...ingredientNames
+                        ], (item) => item !== null),
+                        creator: null
+                    }
+                    const addNewRecipe = async () => {
+                        try {
+                            const response = await fetch(`/api/recipe`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    recipeData: data,
+                                    recomData: newDataRecomm
+                                }),
+                            });
+
+                            if (!response.ok) {
+                                throw new Error('Server Error!'); 
+                            }
+
+                            const recipeData = await response.json();
+                            console.log(recipeData)
+                            dispatch(resetAllState())
+
+                        } catch (error) {
+                            console.error('Failed to save recipe:', error);
+                        }
+                    }
+                    console.log(newDataRecomm)
+
+
+                    interface fetchIngredients {
+                        name: string,
+                        unit: string,
+                        new_ingredient: boolean
+                    }
+                    const ingredientsData: fetchIngredients[] = ingredientsWithValues.map(el => ({
+                        name: el.name,
+                        unit: 'list' in el.units && el.units.choice ? el.units.choice : '',
+                        new_ingredient: el.new_ingredient ?? false
+                    }))
+
+                    const processIngredients = async (ingredients: fetchIngredients[]) => {
+
+                        try {
+                            const response = await fetch('/api/ingredients', {
+                                method: 'PATCH',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(ingredients)
+                            });
+                            
+
+                            const result = await response.json();
+
+                            if (result.body && result.body.length > 0) {
+                                await fetch('/api/ingredients', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify(result.body)
+                                });
+
+                            }
+
+                            addNewRecipe()
+                        } catch (error) {
+                            console.error('Failed to save ingredient:', error);
+                        }
+                    }
+
+                    processIngredients(ingredientsData);
+
+
+
+                } else {
+                    
+                    const addNewRecipe = async () => {
+                        try {
+                            const response = await fetch(`/api/recipe`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    recipeData: data,
+                                    recomData: null
+                                }),
+                            });
+
+                            if (!response.ok) {
+                                throw new Error('Server Error!'); 
+                            }
+
+                            const recipeData = await response.json();
+                            console.log(recipeData)
+                            dispatch(resetAllState())
+
+                        } catch (error) {
+                            console.error('Failed to save recipe:', error);
+                        }
+                    }
+                    addNewRecipe()
+                }
+
+                dispatch(resetStateRecipes())
+                
             })
             .catch(error => {
                 console.error('Error uploading files:', error);
             });
 
 
-    }
+    // }
 
 }

@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { resetAllState } from "./reset-action"
 
 
-interface StepTypeRecommend{
+export interface StepTypeRecommend{
     type_recipe:string,
     recommendation:boolean
 }
@@ -26,7 +27,10 @@ const stepTypeRecommend = createSlice({
         openRecommendation(state, action: PayloadAction<boolean>) {
             state.recommendation = !action.payload
         }
-    }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(resetAllState, () => initialState);
+    },
 
 })
 

@@ -16,9 +16,9 @@ export const NameInput = memo(() => {
 
 
     const handleName = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        dispatch(changeName(e.target.value))
+        dispatch(changeName(e.target.value.trim()))
 
-        if (!e.target.value || e.target.value.trim() === '') {
+        if (!e.target.value.trim() || e.target.value.trim() === '') {
             console.log(e.target.value)
             dispatch(errorName(true))
         } else {
