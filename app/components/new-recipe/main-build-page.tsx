@@ -56,7 +56,7 @@ export function MainBuildPage() {
             
             setErrorMsg(null);
         } catch (error) {
-            setErrorMsg('An error occurred while saving.');
+            setErrorMsg(`An error occurred while saving. ${error}`);
             console.error(error);
         } finally {
             setLoading(false);

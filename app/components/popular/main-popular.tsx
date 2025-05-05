@@ -40,8 +40,6 @@ export function MainPopular() {
     const [expanded, setExpanded] = useState(false);
     const commentRef = useRef<HTMLDivElement | null>(null);
     const pingGate = usePingGate()
-    
-
 
     
     useEffect(() => {
@@ -63,9 +61,11 @@ export function MainPopular() {
     }, [openComment]);
 
     useEffect(() => {
-        if (connection_id !== '' && popularData.pop_list.length === 0) {
-            dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
-        }
+        // pingGate(() => {
+            if (connection_id !== '' && popularData.pop_list.length === 0) {
+                dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
+            }
+        // });
     }, [connection_id, dispatch])
 
     useEffect(() => {
@@ -77,15 +77,7 @@ export function MainPopular() {
         }
     }, [popularData.pop_list]);
 
-    // Add an effect to update virtual slides when data is changed
-    useEffect(() => {
-        if (swiperRef.current && popularData.pop_list.length > 0) {
-            // Update virtual slides without resetting the position
-            swiperRef.current.virtual.update(true);
-        }
-    }, [popularData.pop_list]);
-
-    // Separate effect for loading new data when approaching the end of the list
+    
     useEffect(() => {
         if (activeVideo >= popularData.pop_list.length - 2) {
             handleNewVideo();
@@ -118,8 +110,6 @@ export function MainPopular() {
         }
     }
 
-   
-
     async function handleNewVideo() {
         pingGate(() => {
             if (connection_id !== '' && popularData.pop_list.length - activeVideo < 5) {
@@ -144,14 +134,15 @@ export function MainPopular() {
             cooldownRef.current = false;
         }, 1000);
     };
+
    
     console.log('main-popular')
     return (
         <>
             <Card
-                // onClick={() => {
-                //     if (openComment) setOpenComment(false);
-                // }}
+                onClick={() => {
+                    if (openComment) setOpenComment(false);
+                }}
                 sx={(theme) => mainCardContent(theme, openInfo)}
                 >
                 <Box sx={viewContentContainer} >

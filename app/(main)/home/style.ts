@@ -22,6 +22,7 @@ export const mainContainer = {
     },
     borderRadius: '20px',
     gap:'2%',
+    alignContent:'flex-start'
     // justifyContent:'space-between'
 }
 

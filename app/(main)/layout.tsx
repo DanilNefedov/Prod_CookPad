@@ -2,6 +2,7 @@ import { Container, Paper } from "@mui/material";
 import { NavigationSite } from "../components/navigation-site/navigation";
 import { ClientUser } from "../components/client-side-handler/client-user";
 import { theme } from "@/config/ThemeMUI/theme";
+import GlobalErrorProvider from "../components/client-side-handler/global-error";
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   const styledPaperHome = {
@@ -20,6 +21,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
 
   return (
     <>
+    <GlobalErrorProvider>
       <ClientUser></ClientUser>
       <NavigationSite></NavigationSite>
       <Paper sx={styledPaperHome}>
@@ -36,6 +38,8 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
           {children}
         </Container>
       </Paper>
+    </GlobalErrorProvider>
+      
 
     </>
   )

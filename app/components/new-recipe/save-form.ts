@@ -22,61 +22,62 @@ interface dataType {
     media_url: string,
 }
 
+async function uploadFile(data: dataType): Promise<string> {
+    const { id, idRecipe, media_id, media_url } = data;
 
-
-async function uploadFile(data: dataType) {
-    const { id, idRecipe, media_id, media_url } = data
-
-    const response = await fetch(media_url);
-    const blob = await response.blob();
-
-    const storageRef = ref(storage, `recipes/${id}/${idRecipe}/${media_id}`);
-
-    const uploadTask = uploadBytesResumable(storageRef, blob);
-
-    return new Promise((resolve, reject) => {
-        uploadTask.on('state_changed',
-            (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
-                switch (snapshot.state) {
-                    case 'paused':
-                        console.log('Upload is paused');
-                        break;
-                    case 'running':
-                        console.log('Upload is running');
-                        break;
+    try {
+        // Fetch the file
+        const response = await fetch(media_url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch media: ${response.statusText}`);
+        }
+        
+        const blob = await response.blob();
+        
+        // Set up Firebase storage reference
+        const storageRef = ref(storage, `recipes/${id}/${idRecipe}/${media_id}`);
+        const uploadTask = uploadBytesResumable(storageRef, blob);
+        
+        // Return a promise that handles both upload progress and the final URL
+        return new Promise((resolve, reject) => {
+            uploadTask.on(
+                'state_changed',
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    // console.log('Upload is ' + progress + '% done');
+                },
+                (error) => {
+                    console.error('Upload failed:', error);
+                    reject(new Error(`Upload failed: ${error.message || 'Unknown error'}`));
+                },
+                async () => {
+                    try {
+                        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                        // console.log('File available at', downloadURL);
+                        resolve(downloadURL);
+                    } catch (error) {
+                        console.error('Error getting download URL:', error);
+                        reject(new Error(`Failed to get download URL: ${error instanceof Error ? error.message : 'Unknown error'}`));
+                    }
                 }
-            },
-            (error) => {
-
-                switch (error.code) {
-                    case 'storage/unauthorized':
-                        break;
-                    case 'storage/canceled':
-                        break;
-                    case 'storage/unknown':
-                        break;
-                }
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log('File available at', downloadURL);
-                    resolve(downloadURL);
-                }).catch((error) => {
-                    console.error('Error getting download URL:', error);
-                    reject(error);
-                    return { error, message: error instanceof Error ? error.message : 'Error getting download URL' };
-                });
-            }
-        );
-    });
+            );
+            
+            // Add timeout for network issues
+            setTimeout(() => {
+                reject(new Error('Upload timed out. Please check your network connection.'));
+            }, 60000); // 60 second timeout
+        });
+    } catch (error) {
+        console.error('Error in uploadFile:', error);
+        throw new Error(`Media upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
 }
+
+
 type SaveFormResult = {
     error?: unknown;
     message?: string | null;
 } | null;
-
 
 export async function saveForm(
     stepTypeRecommendation: StepTypeRecommend, 
@@ -88,14 +89,13 @@ export async function saveForm(
     userId: string, 
     userName: string,
     dispatch: AppDispatch
-): Promise<SaveFormResult>{
+): Promise<SaveFormResult> {
     const idRecipe = uuidv4();
 
-    console.log(stepTypeRecommendation, stepNameTime, stepMedia, stepIngredients, stepDescription, stepInstruction);
+    // console.log('Form data:', { stepTypeRecommendation, stepNameTime, stepMedia, stepIngredients, stepDescription, stepInstruction });
 
     try {
-        
-        // Handle media uploads
+        // Handle media uploads with proper error handling
         const uploadPromises = stepMedia.media.map(file => {
             if (typeof file.media_url === 'string') {
                 const data = {
@@ -104,12 +104,29 @@ export async function saveForm(
                     media_id: file.media_id,
                     media_url: file.media_url,
                 };
-                return uploadFile(data);
+                
+                return uploadFile(data).catch(error => {
+                    console.error(`Error uploading file ${file.media_id}:`, error);
+                    // Re-throw with additional context
+                    throw new Error(`Failed to upload media: ${error.message}`);
+                });
             }
             return Promise.resolve(null);
         });
 
-        const downloadURLs = await Promise.all(uploadPromises);
+        let downloadURLs: (string | null)[] = [];
+
+        try {
+            downloadURLs = await Promise.all(uploadPromises);
+        } catch (uploadError) {
+            console.error("Error during media upload:", uploadError);
+            return { 
+                error: uploadError, 
+                message: uploadError instanceof Error 
+                    ? uploadError.message 
+                    : 'Failed to upload media. Please check your network connection.'
+            };
+        }
 
         // Process ingredients
         const ingredientsWithValues = stepIngredients.ingredients.filter(
@@ -124,8 +141,6 @@ export async function saveForm(
         const ingredientsCopy = ingredientsWithValues.map(ingredient =>
             _.omit(ingredient, ['new_ingredient'])
         );
-        
-        console.log(ingredientsCopy);
         
         // Format media array with download URLs
         const mediaArray = stepMedia.media.map((mediaObj, index) => {
@@ -200,16 +215,24 @@ export async function saveForm(
                     body: JSON.stringify(ingredientsData)
                 });
                 
+                if (!response.ok) {
+                    throw new Error(`Failed to update ingredients: ${response.statusText}`);
+                }
+                
                 const result = await response.json();
 
                 if (result.body && result.body.length > 0) {
-                    await fetch('/api/ingredients', {
+                    const newIngredientResponse = await fetch('/api/ingredients', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify(result.body)
                     });
+                    
+                    if (!newIngredientResponse.ok) {
+                        throw new Error(`Failed to create new ingredients: ${newIngredientResponse.statusText}`);
+                    }
                 }
 
                 // Add new recipe with recommendation
@@ -225,17 +248,21 @@ export async function saveForm(
                 });
 
                 if (!recipeResponse.ok) {
-                    throw new Error('Server Error!');
+                    throw new Error(`Failed to save recipe: ${recipeResponse.statusText}`);
                 }
 
                 const recipeData = await recipeResponse.json();
-                console.log(recipeData);
+                // console.log('Recipe saved successfully:', recipeData);
                 dispatch(resetAllState());
                 dispatch(resetStateRecipes());
                 
                 return null;
             } catch (error) {
-                return { error, message: error instanceof Error ? error.message : 'Error processing ingredients or saving recipe' };
+                console.error('Error in recommendation flow:', error);
+                return { 
+                    error, 
+                    message: error instanceof Error ? error.message : 'Error processing ingredients or saving recipe' 
+                };
             }
         } else {
             try {
@@ -252,20 +279,28 @@ export async function saveForm(
                 });
 
                 if (!response.ok) {
-                    throw new Error('Server Error!');
+                    throw new Error(`Failed to save recipe: ${response.statusText}`);
                 }
 
                 const recipeData = await response.json();
-                console.log(recipeData);
+                // console.log('Recipe saved successfully:', recipeData);
                 dispatch(resetAllState());
                 dispatch(resetStateRecipes());
                 
                 return null;
             } catch (error) {
-                return { error, message: error instanceof Error ? error.message : 'Error when creating a recipe' };
+                console.error('Error in non-recommendation flow:', error);
+                return { 
+                    error, 
+                    message: error instanceof Error ? error.message : 'Error when creating a recipe' 
+                };
             }
         }
     } catch (error) {
-        return { error, message: error instanceof Error ? error.message : 'Error when saving a form' };
+        console.error('Error in saveForm:', error);
+        return { 
+            error, 
+            message: error instanceof Error ? error.message : 'Error when saving a form' 
+        };
     }
 }
