@@ -20,7 +20,7 @@ import { theme } from "@/config/ThemeMUI/theme";
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-// import { usePingGate } from "@/app/hooks/ping";
+import { usePingGate } from "@/app/hooks/ping";
 
 
 
@@ -39,7 +39,7 @@ export function MainPopular() {
     const [openInfo, setOpenInfo] = useState<boolean>(false)
     const [expanded, setExpanded] = useState(false);
     const commentRef = useRef<HTMLDivElement | null>(null);
-    // const pingGate = usePingGate()
+    const pingGate = usePingGate()
     const hasFetchedRef = useRef(false);
 
     
@@ -62,12 +62,12 @@ export function MainPopular() {
     }, [openComment]);
 
     useEffect(() => {
-        // pingGate(() => {
+        pingGate(() => {
             if (connection_id !== '' && popularData.pop_list.length === 0) {
                 console.log('popularFetch first')
                 dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
             }
-        // });
+        });
     }, [connection_id, dispatch])
 
     useEffect(() => {
@@ -90,11 +90,12 @@ export function MainPopular() {
     useEffect(() => {
         if (
             activeVideo >= popularData.pop_list.length - 2 &&
-            !hasFetchedRef.current
+            !hasFetchedRef.current && 
+            popularData.pop_list.length - activeVideo < 5
         ) {
             hasFetchedRef.current = true;
             handleNewVideo();
-            console.log('handleNewVideo')
+            console.log('handleNewVideo call')
         }
         
         const current = popularData.pop_list[activeVideo];
@@ -127,16 +128,16 @@ export function MainPopular() {
     }
 
     async function handleNewVideo() {
-        // pingGate(() => {
+        pingGate(() => {
             if (connection_id !== '' && popularData.pop_list.length - activeVideo < 5) {
-                console.log('handleNewVideo')
+                console.log('handleNewVideo func')
                 dispatch(popularFetch({ 
                     connection_id, 
                     count: 1, 
                     getAllIds: popularData.pop_list.map(item => item.config_id) 
                 }))
             }
-        // });
+        });
     }
 
     const toggleComment = useCallback(() => {
