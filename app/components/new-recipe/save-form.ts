@@ -44,7 +44,7 @@ async function uploadFile(data: dataType): Promise<string> {
                 'state_changed',
                 (snapshot) => {
                     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    // console.log('Upload is ' + progress + '% done');
+                    console.log('Upload is ' + progress + '% done');
                 },
                 (error) => {
                     console.error('Upload failed:', error);
@@ -251,7 +251,8 @@ export async function saveForm(
                     throw new Error(`Failed to save recipe: ${recipeResponse.statusText}`);
                 }
 
-                const recipeData = await recipeResponse.json();
+                // const recipeData = await recipeResponse.json();
+                await recipeResponse.json();
                 // console.log('Recipe saved successfully:', recipeData);
                 dispatch(resetAllState());
                 dispatch(resetStateRecipes());
@@ -281,8 +282,8 @@ export async function saveForm(
                 if (!response.ok) {
                     throw new Error(`Failed to save recipe: ${response.statusText}`);
                 }
-
-                const recipeData = await response.json();
+                await response.json();
+                // const recipeData = await response.json();
                 // console.log('Recipe saved successfully:', recipeData);
                 dispatch(resetAllState());
                 dispatch(resetStateRecipes());
