@@ -61,11 +61,11 @@ export function MainPopular() {
     }, [openComment]);
 
     useEffect(() => {
-        // pingGate(() => {
+        pingGate(() => {
             if (connection_id !== '' && popularData.pop_list.length === 0) {
                 dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
             }
-        // });
+        });
     }, [connection_id, dispatch])
 
     useEffect(() => {

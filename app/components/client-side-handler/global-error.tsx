@@ -41,11 +41,11 @@ export default function GlobalErrorProvider({ children }: { children: ReactNode 
         <>
             {globalError && (
                 <Stack sx={{
-                    maxWidth:"250px", 
+                    maxWidth:"270px", 
                     width: '100%',
                     position:'absolute', 
                     bottom:'20px', 
-                    right:'20px', 
+                    right:'calc(50% - 135px)', 
                     zIndex:"99999",
                     
                 }} spacing={2}>
