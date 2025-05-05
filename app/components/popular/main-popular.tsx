@@ -40,6 +40,7 @@ export function MainPopular() {
     const [expanded, setExpanded] = useState(false);
     const commentRef = useRef<HTMLDivElement | null>(null);
     const pingGate = usePingGate()
+    const hasFetchedRef = useRef(false);
 
     
     useEffect(() => {
@@ -63,6 +64,7 @@ export function MainPopular() {
     useEffect(() => {
         pingGate(() => {
             if (connection_id !== '' && popularData.pop_list.length === 0) {
+                console.log('popularFetch first')
                 dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
             }
         });
@@ -72,20 +74,33 @@ export function MainPopular() {
         if (popularData.pop_list.length > 0) {
             const firstRecipe = popularData.pop_list[0];
             if (!viewedVideos.current.has(firstRecipe.config_id)) {
+                console.log('updateViews')
                 updateViews(firstRecipe.config_id);
             }
         }
     }, [popularData.pop_list]);
-
+    // useEffect(() => {
+    //     const firstRecipe = popularData.pop_list[0];
+    //     if (!viewedVideos.current.has(firstRecipe.config_id)) {
+    //         updateViews(firstRecipe.config_id);
+    //     }
+    // }, [popularData.pop_list]);
+    
     
     useEffect(() => {
-        if (activeVideo >= popularData.pop_list.length - 2) {
+        if (
+            activeVideo >= popularData.pop_list.length - 2 &&
+            !hasFetchedRef.current
+        ) {
+            hasFetchedRef.current = true;
             handleNewVideo();
+            console.log('handleNewVideo')
         }
         
         const current = popularData.pop_list[activeVideo];
         if (current && !viewedVideos.current.has(current.config_id)) {
             updateViews(current.config_id);
+            console.log('updateViews')
         }
     }, [activeVideo, popularData.pop_list.length]);
 
@@ -103,6 +118,7 @@ export function MainPopular() {
             });
 
             if (!response.ok) {
+                console.log('updateViews')
                 console.error('Failed to update views');
             }
         } catch (error) {
@@ -113,6 +129,7 @@ export function MainPopular() {
     async function handleNewVideo() {
         pingGate(() => {
             if (connection_id !== '' && popularData.pop_list.length - activeVideo < 5) {
+                console.log('handleNewVideo')
                 dispatch(popularFetch({ 
                     connection_id, 
                     count: 1, 
