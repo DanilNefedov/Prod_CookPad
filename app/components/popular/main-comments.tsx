@@ -52,10 +52,11 @@ export const MainComments = memo(({ config_id }: dataProps) => {
     const scrollRef = useRef<HTMLDivElement>(null);
 
 
-
     useEffect(() => {
-        if (config_id && connection_id && (commentsData.ids.length === 0 || commentsData.page === 0) && !isFetching) {
+        if (config_id && connection_id && (commentsData.ids.length === 0 && commentsData.page === 0) ) {
+            
             setIsFetching(true);
+
             dispatch(commVideoFetch({
                 config_id,
                 user_id: connection_id,
@@ -87,27 +88,30 @@ export const MainComments = memo(({ config_id }: dataProps) => {
 
     useEffect(() => {
         const el = scrollRef.current;
-        if (!el || Number.isNaN(commentsData.page) || commentsData.page === 0 || isFetching) return;
-
+        if (!el || Number.isNaN(commentsData.page) || commentsData.ids.length === 0 || commentsData.page === 0 || isFetching) return;
+        console.log('comments 2 ')
         let timeout: ReturnType<typeof setTimeout> | null = null;
         const scrollBuffer = 75;
 
         const checkNeedFetch = () => {
+            console.log('comments 2 ')
             if (!el || isFetching) return;
 
             const contentShort = el.scrollHeight <= el.clientHeight + scrollBuffer;
 
-            if (contentShort && !Number.isNaN(commentsData.page) && commentsData.page > 0) {
+            if (contentShort && !Number.isNaN(commentsData.page) && commentsData.page > 0 ) {
                 fetchMoreComments();
             }
         };
 
         const debouncedCheck = () => {
+            console.log('comments 2 ')
             if (timeout) clearTimeout(timeout);
             timeout = setTimeout(checkNeedFetch, 150);
         };
 
         const observer = new ResizeObserver(() => {
+            console.log('comments 2 ')
             debouncedCheck();
         });
 
