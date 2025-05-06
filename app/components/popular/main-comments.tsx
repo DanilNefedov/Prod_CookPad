@@ -53,6 +53,7 @@ export const MainComments = memo(({ config_id }: dataProps) => {
 
 
     useEffect(() => {
+        console.log(config_id , connection_id , commentsData.ids.length, commentsData.page )
         if (config_id && connection_id && (commentsData.ids.length === 0 && commentsData.page === 0) ) {
             
             setIsFetching(true);
@@ -67,7 +68,7 @@ export const MainComments = memo(({ config_id }: dataProps) => {
             });
             console.log('comments')
         }
-    }, [config_id, connection_id, commentsData.ids.length, commentsData.page, dispatch]);
+    }, [config_id, connection_id, dispatch]);
 
 
     const fetchMoreComments = useCallback(() => {
