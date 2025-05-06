@@ -309,7 +309,9 @@ const commentsPopularSlice = createSlice({
                 state.error = false;
                 
                 const { config_id, page, totalCommentsCount, formattedComments } = action.payload;
-                
+
+                console.log(action.payload)
+
                 if (!state.comments[config_id]) {
                   state.comments[config_id] = commentsAdapter.getInitialState({ page: 0 });
                 }
