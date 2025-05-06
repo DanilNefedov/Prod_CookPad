@@ -54,7 +54,7 @@ export const MainComments = memo(({ config_id }: dataProps) => {
 
 
     useEffect(() => {
-        if (config_id && connection_id && (commentsData.ids.length === 0 || commentsData.page === 0)) {
+        if (config_id && connection_id && (commentsData.ids.length === 0 || commentsData.page === 0) && !isFetching) {
             setIsFetching(true);
             dispatch(commVideoFetch({
                 config_id,
@@ -64,6 +64,7 @@ export const MainComments = memo(({ config_id }: dataProps) => {
             })).finally(() => {
                 setIsFetching(false);
             });
+            console.log('comments')
         }
     }, [config_id, connection_id, commentsData.ids.length, commentsData.page, dispatch]);
 
@@ -159,43 +160,6 @@ export const MainComments = memo(({ config_id }: dataProps) => {
 
 
     console.log(commentsData.page)
-
-    useEffect(() => {
-        const el = scrollRef.current;
-        if (!el || Number.isNaN(commentsData.page) || commentsData.page === 0 || isFetching) return;
-
-        let timeout: ReturnType<typeof setTimeout> | null = null;
-        const scrollBuffer = 75; 
-
-        const checkNeedFetch = () => {
-            if (!el || isFetching) return;
-
-            const contentShort = el.scrollHeight <= el.clientHeight + scrollBuffer;
-
-            if (contentShort && !Number.isNaN(commentsData.page) && commentsData.page > 0) {
-                fetchMoreComments();
-            }
-        };
-
-        const debouncedCheck = () => {
-            if (timeout) clearTimeout(timeout);
-            timeout = setTimeout(checkNeedFetch, 150);
-        };
-
-        const observer = new ResizeObserver(() => {
-            debouncedCheck();
-        });
-
-        observer.observe(el);
-
-        debouncedCheck();
-
-        return () => {
-            observer.disconnect();
-            if (timeout) clearTimeout(timeout);
-        };
-    }, [commentsData.page, commentsData.ids.length, fetchMoreComments, isFetching]);
-
 
 
     console.log('main-comments', commentsData)
