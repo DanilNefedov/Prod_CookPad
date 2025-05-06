@@ -2,7 +2,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { popularFetch, } from "@/state/slices/popular-slice";
-import { Box, Card,  CircularProgress,  Typography } from "@mui/material";
+import { Box, Card, CircularProgress, Typography } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { MediaSwiper } from "./media-swiper";
@@ -11,9 +11,11 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import './styles.css';
 import { InfoAboutContent } from "./info-about-content";
-import { btnOpenInfoMobile, containerActiveInfo, containerSwichBtns, descriptionRecipe, mainBtnsPopular, mainCardContent, 
-         mainContainerInfoComments, mainDescriptionRecipe, mainNameRecipe, mobileNameDescriptionContainer, nameRecipe, 
-         viewContentContainer } from "@/app/(main)/popular/style";
+import {
+    btnOpenInfoMobile, containerActiveInfo, containerSwichBtns, descriptionRecipe, mainBtnsPopular, mainCardContent,
+    mainContainerInfoComments, mainDescriptionRecipe, mainNameRecipe, mobileNameDescriptionContainer, nameRecipe,
+    viewContentContainer
+} from "@/app/(main)/popular/style";
 import { Mousewheel, Virtual } from 'swiper/modules'
 import type { Swiper as SwiperType } from 'swiper/types';
 import { theme } from "@/config/ThemeMUI/theme";
@@ -40,9 +42,10 @@ export function MainPopular() {
     const [expanded, setExpanded] = useState(false);
     const commentRef = useRef<HTMLDivElement | null>(null);
     const pingGate = usePingGate()
-    const hasFetchedRef = useRef(false);
+    const [hasFetched, setHasFetched] = useState(false);
+    const [isFetching, setIsFetching] = useState(false);
+    const initialFetchDone = useRef(false);
 
-    
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
@@ -61,18 +64,26 @@ export function MainPopular() {
         };
     }, [openComment]);
 
+
     useEffect(() => {
-        if (!connection_id || hasFetchedRef.current) return;
-    
-        hasFetchedRef.current = true; 
-    
+        if (!connection_id || hasFetched || initialFetchDone.current) return;
+
+        initialFetchDone.current = true;
+        setIsFetching(true);
+
         pingGate(() => {
             console.log('popularFetch first');
-            dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }));
+            dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
+                .finally(() => {
+                    setHasFetched(true);
+                    setIsFetching(false);
+                });
         });
-    }, [connection_id]);
-    
-    
+    }, [connection_id, hasFetched]);
+
+
+
+
 
     // useEffect(() => {
     //     pingGate(() => {
@@ -98,25 +109,28 @@ export function MainPopular() {
     //         updateViews(firstRecipe.config_id);
     //     }
     // }, [popularData.pop_list]);
-    
-    
+
+
     useEffect(() => {
+        const listLength = popularData.pop_list.length;
+
         if (
-            activeVideo >= popularData.pop_list.length - 2 &&
-            hasFetchedRef.current &&           
-            popularData.pop_list.length - activeVideo < 5
+            activeVideo >= listLength - 2 &&
+            hasFetched &&
+            !isFetching &&
+            listLength - activeVideo < 5
         ) {
-            // hasFetchedRef.current = true;
             handleNewVideo();
-            console.log('handleNewVideo call')
+            console.log('handleNewVideo call');
         }
-        
+
         const current = popularData.pop_list[activeVideo];
         if (current && !viewedVideos.current.has(current.config_id)) {
             updateViews(current.config_id);
-            console.log('updateViews')
+            console.log('updateViews (scroll)');
         }
-    }, [activeVideo, popularData.pop_list.length, hasFetchedRef.current]);
+    }, [activeVideo, popularData.pop_list.length, hasFetched, isFetching]);
+
 
     async function updateViews(config_id: string) {
         if (viewedVideos.current.has(config_id)) return
@@ -140,18 +154,25 @@ export function MainPopular() {
         }
     }
 
-    async function handleNewVideo() {
+    function handleNewVideo() {
+        if (isFetching) return;
+        setIsFetching(true);
+
+        console.log('handleNewVideo func');
         pingGate(() => {
-            if (connection_id !== '' && popularData.pop_list.length >= 5) {
-                console.log('handleNewVideo func')
-                dispatch(popularFetch({ 
-                    connection_id, 
-                    count: 1, 
-                    getAllIds: popularData.pop_list.map(item => item.config_id) 
+            if (connection_id && popularData.pop_list.length >= 5) {
+                dispatch(popularFetch({
+                    connection_id,
+                    count: 1,
+                    getAllIds: popularData.pop_list.map(item => item.config_id)
                 }))
+                    .finally(() => setIsFetching(false));
+            } else {
+                setIsFetching(false);
             }
         });
     }
+
 
     const toggleComment = useCallback(() => {
         setOpenComment(prev => !prev);
@@ -166,7 +187,7 @@ export function MainPopular() {
         }, 1000);
     };
 
-   
+
     console.log('main-popular', popularData)
     return (
         <>
@@ -175,7 +196,7 @@ export function MainPopular() {
                     if (openComment) setOpenComment(false);
                 }}
                 sx={(theme) => mainCardContent(theme, openInfo)}
-                >
+            >
                 <Box sx={viewContentContainer} >
 
 
@@ -190,7 +211,7 @@ export function MainPopular() {
                             onClick={() => setExpanded(prev => !prev)}
                             sx={(theme) => descriptionRecipe(theme, expanded)}
                         >
-                            {popularData.pop_list[activeVideo]?.description }
+                            {popularData.pop_list[activeVideo]?.description}
                         </Typography>
 
                     </Box>
@@ -221,31 +242,31 @@ export function MainPopular() {
                         onSlideChange={(swiper) => {
                             const newIndex = swiper.activeIndex;
                             if (newIndex === activeVideo) return;
-                            
+
                             setActiveVideo(newIndex);
-                            
+
                             if (openComment) setOpenComment(false);
-                            
+
                         }}
                         modules={[Virtual, Mousewheel]}
                         style={{ height: '100%', zIndex: 3 }}
                     >
                         {popularData.pop_list.map((item, index) => (
-                            popularData.status && index >= popularData.pop_list.length - 1 ? 
-                            <Box key={index} style={{ margin: '0 auto', width: '100%', height: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
-                                <CircularProgress color="secondary" size="35px" />
-                            </Box>
-                            :
-                            <SwiperSlide key={item.config_id} virtualIndex={index}> 
-                                <Box sx={{ width: '100%', height: '100%', borderRadius: '20px 20px 0 20px' }}>
-                                    <MediaSwiper configId={item.config_id} />
-                                    {/* activeVideo={activeVideo} */}
+                            popularData.status && index >= popularData.pop_list.length - 1 ?
+                                <Box key={index} style={{ margin: '0 auto', width: '100%', height: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
+                                    <CircularProgress color="secondary" size="35px" />
                                 </Box>
-                            </SwiperSlide>
+                                :
+                                <SwiperSlide key={item.config_id} virtualIndex={index}>
+                                    <Box sx={{ width: '100%', height: '100%', borderRadius: '20px 20px 0 20px' }}>
+                                        <MediaSwiper configId={item.config_id} />
+                                        {/* activeVideo={activeVideo} */}
+                                    </Box>
+                                </SwiperSlide>
                         ))}
                     </Swiper>
                     {/* }  */}
-                    
+
 
                     {
                         popularData.pop_list[activeVideo] &&
