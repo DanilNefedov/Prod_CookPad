@@ -7,7 +7,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 //maybe you shouldn't add the number of views to the redux.
 
 const initialState: popularInitData = {
-    status: true,
+    status: false,
     error: false,
     pop_list: [
 

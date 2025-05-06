@@ -62,13 +62,26 @@ export function MainPopular() {
     }, [openComment]);
 
     useEffect(() => {
+        if (!connection_id || hasFetchedRef.current) return;
+    
+        hasFetchedRef.current = true; 
+    
         pingGate(() => {
-            if (connection_id !== '' && popularData.pop_list.length === 0) {
-                console.log('popularFetch first')
-                dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
-            }
+            console.log('popularFetch first');
+            dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }));
         });
-    }, [connection_id, dispatch])
+    }, [connection_id]);
+    
+    
+
+    // useEffect(() => {
+    //     pingGate(() => {
+    //         if (connection_id !== '' && popularData.pop_list.length === 0 ) {
+    //             console.log('popularFetch first')
+    //             dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
+    //         }
+    //     });
+    // }, [connection_id, dispatch])
 
     useEffect(() => {
         if (popularData.pop_list.length > 0) {
@@ -90,10 +103,10 @@ export function MainPopular() {
     useEffect(() => {
         if (
             activeVideo >= popularData.pop_list.length - 2 &&
-            !hasFetchedRef.current && 
+            hasFetchedRef.current &&           
             popularData.pop_list.length - activeVideo < 5
         ) {
-            hasFetchedRef.current = true;
+            // hasFetchedRef.current = true;
             handleNewVideo();
             console.log('handleNewVideo call')
         }
@@ -103,7 +116,7 @@ export function MainPopular() {
             updateViews(current.config_id);
             console.log('updateViews')
         }
-    }, [activeVideo, popularData.pop_list.length]);
+    }, [activeVideo, popularData.pop_list.length, hasFetchedRef.current]);
 
     async function updateViews(config_id: string) {
         if (viewedVideos.current.has(config_id)) return
@@ -129,7 +142,7 @@ export function MainPopular() {
 
     async function handleNewVideo() {
         pingGate(() => {
-            if (connection_id !== '' && popularData.pop_list.length - activeVideo < 5) {
+            if (connection_id !== '' && popularData.pop_list.length >= 5) {
                 console.log('handleNewVideo func')
                 dispatch(popularFetch({ 
                     connection_id, 
@@ -154,7 +167,7 @@ export function MainPopular() {
     };
 
    
-    console.log('main-popular')
+    console.log('main-popular', popularData)
     return (
         <>
             <Card
