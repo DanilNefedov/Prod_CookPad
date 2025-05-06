@@ -325,7 +325,7 @@ const commentsPopularSlice = createSlice({
                     commentsAdapter.addMany(commentsState, formattedComments);
                   }
                 }
-                
+                console.log(totalCommentsCount <= commentsState.ids.length ? NaN : page)
                 commentsState.page = totalCommentsCount <= commentsState.ids.length ? NaN : page;
               })
 
