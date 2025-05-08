@@ -117,7 +117,6 @@ export const commVideoFetch = createAsyncThunk<ReturnCommDataT, {config_id: stri
 
             const dataList = await responseList.json()
 
-            console.log(dataList)
 
             return dataList
 
@@ -287,7 +286,13 @@ const commentsPopularSlice = createSlice({
     name: 'commentsPopular',
     initialState,
     reducers: {
-        
+        initCommentsState: (state, action: PayloadAction<string>) => {
+            const config_id = action.payload;
+            if (!state.comments[config_id]) {
+                state.comments[config_id] = commentsAdapter.getInitialState({ page: 0 });
+            }
+          }
+          
         
         // resetComments: (state) =>{
         //     state.comments = commentsAdapter.getInitialState({
@@ -310,12 +315,11 @@ const commentsPopularSlice = createSlice({
                 
                 const { config_id, page, totalCommentsCount, formattedComments } = action.payload;
 
-                // console.log(action.payload)
 
                 if (!state.comments[config_id]) {
                   state.comments[config_id] = commentsAdapter.getInitialState({ page: 0 });
                 }
-                
+
                 const commentsState = state.comments[config_id];
                 
                 if (formattedComments && formattedComments.length > 0) {
@@ -325,8 +329,9 @@ const commentsPopularSlice = createSlice({
                         commentsAdapter.addMany(commentsState, formattedComments);
                     }
                 }
-                console.log(page)
                 commentsState.page = totalCommentsCount <= commentsState.ids.length ? NaN : page;
+
+            
             })
 
 
@@ -517,7 +522,7 @@ const commentsPopularSlice = createSlice({
 })
 
 
-// export const { resetComments } = commentsPopularSlice.actions;
+export const { initCommentsState } = commentsPopularSlice.actions;
 
 
 export default commentsPopularSlice.reducer

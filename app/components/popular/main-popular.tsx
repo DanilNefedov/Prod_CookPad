@@ -23,6 +23,7 @@ import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrow
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { usePingGate } from "@/app/hooks/ping";
+import { initCommentsState } from "@/state/slices/comments-popular-slice";
 
 
 
@@ -45,6 +46,12 @@ export function MainPopular() {
     const [hasFetched, setHasFetched] = useState(false);
     const [isFetching, setIsFetching] = useState(false);
     const initialFetchDone = useRef(false);
+
+
+    useEffect(() => {
+        dispatch(initCommentsState(popularData.pop_list[activeVideo]?.config_id))
+    },[popularData.pop_list[activeVideo]?.config_id])
+
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -350,7 +357,7 @@ export function MainPopular() {
                 </Typography>
                 {openComment ?
 
-                    <MainComments config_id={popularData.pop_list[activeVideo]?.config_id} activeVideo={activeVideo}></MainComments>
+                    <MainComments config_id={popularData.pop_list[activeVideo]?.config_id} ></MainComments>
 
                     :
                     <></>

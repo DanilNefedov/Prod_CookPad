@@ -13,7 +13,6 @@ import { mainCommentContainer } from "@/app/(main)/popular/style";
 
 interface dataProps {
     config_id: string,
-    activeVideo: number
 }
 
 export interface LikeT {
@@ -26,17 +25,12 @@ export interface LikeT {
 export const MainComments = memo(({ config_id }: dataProps) => {
     const userData = useAppSelector(state => state.user);
     const connection_id = userData?.user?.connection_id;
+    const dispatch = useAppDispatch();
 
-    
-    
+
     const commentsData = useAppSelector(state => {
-        return state.comments.comments[config_id] ?? {
-            page: 0,
-            ids: [],
-            entities: {},
-        };
-    },
-    shallowEqual);
+        return state.comments.comments[config_id] 
+    });
 
     const contextComment = useAppSelector(
         state => ({
@@ -51,14 +45,16 @@ export const MainComments = memo(({ config_id }: dataProps) => {
     const [newReply, setNewReply] = useState<string[]>([]);
     const [isFetching, setIsFetching] = useState(false);
 
-    const dispatch = useAppDispatch();
+    
     const scrollRef = useRef<HTMLDivElement>(null);
     const firstFetch = useRef<boolean>(true)
 
+      
 
+    console.log(commentsData)
     useEffect(() => {
-        // console.log(config_id , connection_id , commentsData.ids.length, commentsData.page )
-        if (config_id && connection_id && firstFetch ) {
+        console.log(config_id && connection_id && firstFetch.current && (commentsData.page === 0 || commentsData.ids.length <= 0) )
+        if (config_id && connection_id && firstFetch.current && (commentsData.page === 0 || commentsData.ids.length <= 0)) {
             console.log('comments')
             setIsFetching(true);
             firstFetch.current = false
@@ -78,7 +74,7 @@ export const MainComments = memo(({ config_id }: dataProps) => {
 
 
     const fetchMoreComments = useCallback(() => {
-        if (isFetching || Number.isNaN(commentsData.page) || commentsData.page <= 0) return;
+        if (isFetching || Number.isNaN(commentsData.page) || commentsData.page <= 0 ) return;
         console.log('next')
         // setIsFetching(true);
         // dispatch(commVideoFetch({
