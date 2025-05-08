@@ -1,4 +1,4 @@
-import { CommListData, ReplyCommData } from "@/app/types/types";
+import { CommListData, ErrorStatus, ReplyCommData } from "@/app/types/types";
 import { createAsyncThunk, createEntityAdapter, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
 import { newCommCalc } from "./popular-slice";
 
@@ -326,7 +326,7 @@ const commentsPopularSlice = createSlice({
                     }
                 }
                 console.log(page)
-                commentsState.page = page;
+                commentsState.page = totalCommentsCount <= commentsState.ids.length ? NaN : page;
             })
 
 
