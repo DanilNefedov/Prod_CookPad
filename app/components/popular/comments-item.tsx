@@ -10,6 +10,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import numbro from "numbro";
 import { theme } from "@/config/ThemeMUI/theme";
 import { containerAvatarComment, containerCommentItem, containerSecondBlockComm, dataComm, hideBtn, likeComm, moreBtn, repliesOpen, replyComm, textComment } from "@/app/(main)/popular/style";
+import { usePingGate } from "@/app/hooks/ping";
 
 
 
@@ -35,6 +36,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
     const dispatch = useAppDispatch()
     const localLikeLoadingRef = useRef(false);
     const prevLengthRef = useRef<number>(repliesData?.ids?.length || 0)
+    const pingGate = usePingGate()
 
     useEffect(() => {
         const currentLength = repliesData?.ids?.length || 0
@@ -59,12 +61,14 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
                 const nextPage = repliesData && !Number.isNaN(repliesData.page) ? repliesData.page + 1 : 1;
                 setOpenReply(id_comment)
                 // openReplyCur = id_comment
-                dispatch(getReplies({
-                    id_comment,
-                    page: nextPage,
-                    id_author: connection_id,
-                    newReply
-                }));
+                pingGate(() => {
+                    dispatch(getReplies({
+                        id_comment,
+                        page: nextPage,
+                        id_author: connection_id,
+                        newReply
+                    }));
+                });
             }
         }
 
@@ -101,7 +105,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
         });
     };
 
-    console.log('comm-item', '222',)
+    console.log('comm-item',)
     return (
         <ListItem sx={{ mb: '10px', p: 0, display: 'block' }}>
             <Box sx={(theme) => containerCommentItem(theme, isActive)}>

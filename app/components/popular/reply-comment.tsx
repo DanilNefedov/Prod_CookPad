@@ -62,7 +62,7 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
         });
     };
 
-    console.log('replies',3333,)
+    console.log('replies',)
     return (
         <ListItem sx={(theme) => replyContainer(theme, isActive)}>
             <Box sx={{display:'flex', alignItems:'center', width:'100%', p:'0px'}}>

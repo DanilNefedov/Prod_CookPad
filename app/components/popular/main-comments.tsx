@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook"
-import { Box, CircularProgress, List, } from "@mui/material"
+import { Box, CircularProgress, List, Typography, } from "@mui/material"
 import { memo, useCallback, useEffect, useRef, useState } from "react"
 import { commVideoFetch, newCommPopular, newReplyComm } from "@/state/slices/comments-popular-slice";
 import { v4 as uuidv4 } from 'uuid';
@@ -8,11 +8,13 @@ import { InputComment } from "./input-comment";
 import { CommentsItem } from "./comments-item";
 import { shallowEqual } from "react-redux";
 import { mainCommentContainer } from "@/app/(main)/popular/style";
+import { usePingGate } from "@/app/hooks/ping";
 
 
 
 interface dataProps {
     config_id: string,
+    comments: number
 }
 
 export interface LikeT {
@@ -22,10 +24,12 @@ export interface LikeT {
     reply: boolean,
     id_branch: string
 }
-export const MainComments = memo(({ config_id }: dataProps) => {
+export const MainComments = memo(({ config_id, comments }: dataProps) => {
     const userData = useAppSelector(state => state.user);
     const connection_id = userData?.user?.connection_id;
     const dispatch = useAppDispatch();
+    const pingGate = usePingGate()
+    
 
 
     const commentsData = useAppSelector(state => {
@@ -52,15 +56,17 @@ export const MainComments = memo(({ config_id }: dataProps) => {
       
 
     useEffect(() => {
-        if (config_id && connection_id && firstFetch.current) {
+        if (config_id && connection_id && firstFetch.current && comments > 0) {
             // setIsFetching(true);
             firstFetch.current = false
-            dispatch(commVideoFetch({
-                config_id,
-                user_id: connection_id,
-                page: 1,
-                newComments: []
-            }))
+            pingGate(() => {
+                dispatch(commVideoFetch({
+                    config_id,
+                    user_id: connection_id,
+                    page: 1,
+                    newComments: []
+                }))
+            });
             // .finally(() => {
             //     setIsFetching(false); 
             // });
@@ -70,16 +76,17 @@ export const MainComments = memo(({ config_id }: dataProps) => {
 
 
     const fetchMoreComments = useCallback(() => {
-        console.log(firstFetch.current)
+        // console.log(firstFetch.current)
         if (firstFetch.current || Number.isNaN(commentsData.page) ) return;
-        console.log('next')
         // setIsFetching(true);
-        dispatch(commVideoFetch({
-            config_id,
-            user_id: connection_id || '',
-            page: commentsData.page + 1,
-            newComments
-        }))
+        pingGate(() => {
+            dispatch(commVideoFetch({
+                config_id,
+                user_id: connection_id || '',
+                page: commentsData.page + 1,
+                newComments
+            }))
+        });
         // .finally(() => {
         //     setIsFetching(false);
         // });
@@ -93,7 +100,6 @@ export const MainComments = memo(({ config_id }: dataProps) => {
         let timeout: ReturnType<typeof setTimeout> | null = null;
         const scrollBuffer = 75;
 
-        console.log('comments 2 ')
 
         const checkNeedFetch = () => {
             if (!el || firstFetch.current) return;
@@ -165,9 +171,10 @@ export const MainComments = memo(({ config_id }: dataProps) => {
     // console.log(commentsData.page)
 
 
-    console.log('main-comments', commentsData, scrollRef)
+    console.log('main-comments',)
     return (
         <Box sx={mainCommentContainer}>
+            <Typography sx={{textAlign:'center', p:'7px 0', fontSize:'14px', color:"text.disabled"}}>Total {comments}</Typography>
 
             <Box ref={scrollRef} sx={{
                 overflow: 'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0",
@@ -177,7 +184,7 @@ export const MainComments = memo(({ config_id }: dataProps) => {
                     style={{ overflow: 'initial' }}
                     dataLength={commentsData.ids.length}
                     next={fetchMoreComments}
-                    hasMore={!Number.isNaN(commentsData.page)}
+                    hasMore={!Number.isNaN(commentsData.page) && comments > 0}
                     loader={
                         <div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
                             <CircularProgress color="secondary" size="35px" />

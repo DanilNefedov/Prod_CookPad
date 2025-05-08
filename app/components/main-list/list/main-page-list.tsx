@@ -75,7 +75,7 @@ export function MainListPage() {
                 {listStatus && listStore.length === 0?
                     <TableRow>
                         <TableCell sx={{backgroundColor:'transparent', border:'0'}}>
-                            <UXLoading props={{color:'#1F2128'}}></UXLoading>
+                            <UXLoading props={{}}></UXLoading>{/* color:'#1F2128' */}
                         </TableCell>
                     </TableRow>
                     :

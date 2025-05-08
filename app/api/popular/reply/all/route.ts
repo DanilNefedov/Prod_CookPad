@@ -60,7 +60,7 @@ export async function POST(request: Request) {
                 yy: '%d y.',  
             },
         })
-        
+        console.log('formattedRepliesformattedRepliesformattedRepliesformattedReplies')
         const formattedComments = await Promise.all(
             comments.map(async (el) => {
                 const timeAgo = dayjs(el.createdAt).fromNow();

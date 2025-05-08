@@ -61,7 +61,7 @@ export function MainPopular() {
                 commentRef.current &&
                 !commentRef.current.contains(event.target as Node)
             ) {
-                console.log('1231231')
+                // console.log('1231231')
                 setOpenComment(false);
             }
         };
@@ -79,7 +79,7 @@ export function MainPopular() {
         setIsFetching(true);
 
         pingGate(() => {
-            console.log('popularFetch first');
+            // console.log('popularFetch first');
             dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
                 .finally(() => {
                     setHasFetched(true);
@@ -105,7 +105,7 @@ export function MainPopular() {
         if (popularData.pop_list.length > 0) {
             const firstRecipe = popularData.pop_list[0];
             if (!viewedVideos.current.has(firstRecipe.config_id)) {
-                console.log('updateViews')
+                // console.log('updateViews')
                 updateViews(firstRecipe.config_id);
             }
         }
@@ -128,13 +128,13 @@ export function MainPopular() {
             listLength - activeVideo < 5
         ) {
             handleNewVideo();
-            console.log('handleNewVideo call');
+            // console.log('handleNewVideo call');
         }
 
         const current = popularData.pop_list[activeVideo];
         if (current && !viewedVideos.current.has(current.config_id)) {
             updateViews(current.config_id);
-            console.log('updateViews (scroll)');
+            // console.log('updateViews (scroll)');
         }
     }, [activeVideo, popularData.pop_list.length, hasFetched, isFetching]);
 
@@ -153,7 +153,7 @@ export function MainPopular() {
             });
 
             if (!response.ok) {
-                console.log('updateViews')
+                // console.log('updateViews')
                 console.error('Failed to update views');
             }
         } catch (error) {
@@ -165,7 +165,7 @@ export function MainPopular() {
         if (isFetching) return;
         setIsFetching(true);
 
-        console.log('handleNewVideo func');
+        // console.log('handleNewVideo func');
         pingGate(() => {
             if (connection_id && popularData.pop_list.length >= 5) {
                 dispatch(popularFetch({
@@ -195,7 +195,7 @@ export function MainPopular() {
     };
 
 
-    console.log('main-popular', popularData)
+    console.log('main-popular')
     return (
         <>
             <Card
@@ -357,7 +357,7 @@ export function MainPopular() {
                 </Typography>
                 {openComment ?
 
-                    <MainComments config_id={popularData.pop_list[activeVideo]?.config_id} ></MainComments>
+                    <MainComments config_id={popularData.pop_list[activeVideo]?.config_id} comments={popularData.pop_list[activeVideo]?.comments} ></MainComments>
 
                     :
                     <></>

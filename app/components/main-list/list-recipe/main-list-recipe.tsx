@@ -39,10 +39,10 @@ export function MainListRecipe() {
 
     console.log('recipe', listRecipeStore)
     return (
-        <Box sx={{height:'100%', }}>
+        <Box sx={{height:'100%', position:'relative'}}>
             {
             listRecipeStatus && listRecipeStore.recipes.length === 0 ? 
-                <UXLoading props={{color:'#1F2128'}}></UXLoading>
+                <UXLoading props={{}}></UXLoading>//color:'#1F2128'
             :
             listRecipeStore?.recipes.map(el => (
                 <Accordion 
