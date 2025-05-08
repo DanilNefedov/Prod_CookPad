@@ -1,4 +1,4 @@
-import { CommListData, ErrorStatus, ReplyCommData } from "@/app/types/types";
+import { CommListData, ReplyCommData } from "@/app/types/types";
 import { createAsyncThunk, createEntityAdapter, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
 import { newCommCalc } from "./popular-slice";
 
