@@ -108,7 +108,7 @@ export async function POST(request: Request) {
         
         //     return acc;
         // }, {});
-        console.log('formattedCommentsformattedCommentsformattedCommentsformattedComments',formattedComments, nextPage)
+        console.log('formattedCommentsformattedCommentsformattedCommentsformattedComments',formattedComments)
       
         return NextResponse.json({formattedComments, page, totalCommentsCount, config_id});
         
