@@ -43,7 +43,7 @@ export const MainComments = memo(({ config_id }: dataProps) => {
 
     const [newComments, setNewComments] = useState<string[]>([]);
     const [newReply, setNewReply] = useState<string[]>([]);
-    const [isFetching, setIsFetching] = useState(false);
+    // const [isFetching, setIsFetching] = useState(false);
 
     
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -51,12 +51,9 @@ export const MainComments = memo(({ config_id }: dataProps) => {
 
       
 
-    console.log(commentsData)
     useEffect(() => {
-        console.log(config_id && connection_id && firstFetch.current && (commentsData.page === 0 || commentsData.ids.length <= 0) )
-        if (config_id && connection_id && firstFetch.current && (commentsData.page === 0 || commentsData.ids.length <= 0)) {
-            console.log('comments')
-            setIsFetching(true);
+        if (config_id && connection_id && firstFetch.current) {
+            // setIsFetching(true);
             firstFetch.current = false
             dispatch(commVideoFetch({
                 config_id,
@@ -65,8 +62,7 @@ export const MainComments = memo(({ config_id }: dataProps) => {
                 newComments: []
             }))
             // .finally(() => {
-            //     setIsFetching(false);
-                
+            //     setIsFetching(false); 
             // });
             
         }
@@ -74,59 +70,59 @@ export const MainComments = memo(({ config_id }: dataProps) => {
 
 
     const fetchMoreComments = useCallback(() => {
-        if (isFetching || Number.isNaN(commentsData.page) || commentsData.page <= 0 ) return;
+        console.log(firstFetch.current)
+        if (firstFetch.current || Number.isNaN(commentsData.page) ) return;
         console.log('next')
         // setIsFetching(true);
-        // dispatch(commVideoFetch({
-        //     config_id,
-        //     user_id: connection_id || '',
-        //     page: commentsData.page + 1,
-        //     newComments
-        // })).finally(() => {
+        dispatch(commVideoFetch({
+            config_id,
+            user_id: connection_id || '',
+            page: commentsData.page + 1,
+            newComments
+        }))
+        // .finally(() => {
         //     setIsFetching(false);
         // });
-    }, [commentsData.page, config_id, connection_id, newComments, dispatch, isFetching]);
+    }, [commentsData.page, config_id, connection_id, newComments, dispatch, firstFetch.current]);
 
 
 
-    // useEffect(() => {
-    //     const el = scrollRef.current;
-    //     if (!el || Number.isNaN(commentsData.page) || commentsData.ids.length === 0 || commentsData.page === 0 || isFetching) return;
-    //     console.log('comments 2 ')
-    //     let timeout: ReturnType<typeof setTimeout> | null = null;
-    //     const scrollBuffer = 75;
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el || Number.isNaN(commentsData.page) || firstFetch.current) return;
+        let timeout: ReturnType<typeof setTimeout> | null = null;
+        const scrollBuffer = 75;
 
-    //     const checkNeedFetch = () => {
-    //         console.log('comments 2 ')
-    //         if (!el || isFetching) return;
+        console.log('comments 2 ')
 
-    //         const contentShort = el.scrollHeight <= el.clientHeight + scrollBuffer;
+        const checkNeedFetch = () => {
+            if (!el || firstFetch.current) return;
 
-    //         if (contentShort && !Number.isNaN(commentsData.page) && commentsData.page > 0 ) {
-    //             fetchMoreComments();
-    //         }
-    //     };
+            const contentShort = el.scrollHeight <= el.clientHeight + scrollBuffer;
 
-    //     const debouncedCheck = () => {
-    //         console.log('comments 2 ')
-    //         if (timeout) clearTimeout(timeout);
-    //         timeout = setTimeout(checkNeedFetch, 150);
-    //     };
+            if (contentShort && !Number.isNaN(commentsData.page) && commentsData.page > 0 ) {
+                fetchMoreComments();
+            }
+        };
 
-    //     const observer = new ResizeObserver(() => {
-    //         console.log('comments 2 ')
-    //         debouncedCheck();
-    //     });
+        const debouncedCheck = () => {
+            if (timeout) clearTimeout(timeout);
+            timeout = setTimeout(checkNeedFetch, 150);
+        };
 
-    //     observer.observe(el);
+        const observer = new ResizeObserver(() => {
+            debouncedCheck();
+        });
 
-    //     debouncedCheck();
+        observer.observe(el);
 
-    //     return () => {
-    //         observer.disconnect();
-    //         if (timeout) clearTimeout(timeout);
-    //     };
-    // }, [commentsData.page, commentsData.ids.length, fetchMoreComments, isFetching]);
+        debouncedCheck();
+
+        return () => {
+            observer.disconnect();
+            if (timeout) clearTimeout(timeout);
+        };
+    }, [commentsData.page, commentsData.ids.length, fetchMoreComments, firstFetch.current]);
 
 
 
@@ -169,7 +165,7 @@ export const MainComments = memo(({ config_id }: dataProps) => {
     // console.log(commentsData.page)
 
 
-    console.log('main-comments', commentsData)
+    console.log('main-comments', commentsData, scrollRef)
     return (
         <Box sx={mainCommentContainer}>
 
