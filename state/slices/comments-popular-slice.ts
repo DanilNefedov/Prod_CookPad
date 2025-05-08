@@ -117,7 +117,7 @@ export const commVideoFetch = createAsyncThunk<ReturnCommDataT, {config_id: stri
 
             const dataList = await responseList.json()
 
-            // console.log(dataList)
+            console.log(dataList)
 
             return dataList
 
@@ -310,7 +310,7 @@ const commentsPopularSlice = createSlice({
                 
                 const { config_id, page, totalCommentsCount, formattedComments } = action.payload;
 
-                console.log(action.payload)
+                // console.log(action.payload)
 
                 if (!state.comments[config_id]) {
                   state.comments[config_id] = commentsAdapter.getInitialState({ page: 0 });
@@ -319,15 +319,15 @@ const commentsPopularSlice = createSlice({
                 const commentsState = state.comments[config_id];
                 
                 if (formattedComments && formattedComments.length > 0) {
-                  if (page === 1) {
-                    commentsAdapter.setAll(commentsState, formattedComments);
-                  } else {
-                    commentsAdapter.addMany(commentsState, formattedComments);
-                  }
+                    if (page === 1) {
+                        commentsAdapter.setAll(commentsState, formattedComments);
+                    } else {
+                        commentsAdapter.addMany(commentsState, formattedComments);
+                    }
                 }
-                console.log(totalCommentsCount <= commentsState.ids.length ? NaN : page)
-                commentsState.page = totalCommentsCount <= commentsState.ids.length ? NaN : page;
-              })
+                console.log(page)
+                commentsState.page = page;
+            })
 
 
             .addCase(newCommPopular.pending, (state) => {

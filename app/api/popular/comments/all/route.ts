@@ -52,6 +52,8 @@ export async function POST(request: Request) {
         const likedSet = new Set(likes.map((like) => like.id_comment));
 
         const totalCommentsCount = await CommentPopular.countDocuments({config_id});
+        const isLastPage = skip + comments.length >= totalCommentsCount;
+        const nextPage = isLastPage ? NaN : page + 1;
 
         dayjs.extend(relativeTime)
         dayjs.extend(updateLocale)
@@ -106,9 +108,9 @@ export async function POST(request: Request) {
         
         //     return acc;
         // }, {});
-        console.log('formattedCommentsformattedCommentsformattedCommentsformattedComments',formattedComments)
+        console.log('formattedCommentsformattedCommentsformattedCommentsformattedComments',formattedComments, nextPage)
       
-        return NextResponse.json({formattedComments, page, totalCommentsCount, config_id});
+        return NextResponse.json({formattedComments, page:nextPage, totalCommentsCount, config_id});
         
     } catch (error) {
         console.error('Error fetching comments:', error);

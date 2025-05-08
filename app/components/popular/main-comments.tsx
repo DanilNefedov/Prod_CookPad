@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { Box, CircularProgress, List, } from "@mui/material"
-import { memo, useCallback, useEffect, useRef, useState } from "react"
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { commVideoFetch, newCommPopular, newReplyComm } from "@/state/slices/comments-popular-slice";
 import { v4 as uuidv4 } from 'uuid';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -27,13 +27,16 @@ export const MainComments = memo(({ config_id }: dataProps) => {
     const userData = useAppSelector(state => state.user);
     const connection_id = userData?.user?.connection_id;
 
+    
+    
     const commentsData = useAppSelector(state => {
         return state.comments.comments[config_id] ?? {
             page: 0,
             ids: [],
             entities: {},
         };
-    });
+    },
+    shallowEqual);
 
     const contextComment = useAppSelector(
         state => ({
@@ -50,81 +53,84 @@ export const MainComments = memo(({ config_id }: dataProps) => {
 
     const dispatch = useAppDispatch();
     const scrollRef = useRef<HTMLDivElement>(null);
+    const firstFetch = useRef<boolean>(true)
 
 
     useEffect(() => {
-        console.log(config_id , connection_id , commentsData.ids.length, commentsData.page )
-        if (config_id && connection_id && (commentsData.ids.length === 0 && commentsData.page === 0) ) {
-            
+        // console.log(config_id , connection_id , commentsData.ids.length, commentsData.page )
+        if (config_id && connection_id && firstFetch ) {
+            console.log('comments')
             setIsFetching(true);
-
+            firstFetch.current = false
             dispatch(commVideoFetch({
                 config_id,
                 user_id: connection_id,
                 page: 1,
                 newComments: []
-            })).finally(() => {
-                setIsFetching(false);
-            });
-            console.log('comments')
+            }))
+            // .finally(() => {
+            //     setIsFetching(false);
+                
+            // });
+            
         }
     }, [config_id, connection_id, dispatch]);
 
 
     const fetchMoreComments = useCallback(() => {
         if (isFetching || Number.isNaN(commentsData.page) || commentsData.page <= 0) return;
-
-        setIsFetching(true);
-        dispatch(commVideoFetch({
-            config_id,
-            user_id: connection_id || '',
-            page: commentsData.page + 1,
-            newComments
-        })).finally(() => {
-            setIsFetching(false);
-        });
+        console.log('next')
+        // setIsFetching(true);
+        // dispatch(commVideoFetch({
+        //     config_id,
+        //     user_id: connection_id || '',
+        //     page: commentsData.page + 1,
+        //     newComments
+        // })).finally(() => {
+        //     setIsFetching(false);
+        // });
     }, [commentsData.page, config_id, connection_id, newComments, dispatch, isFetching]);
 
 
 
-    useEffect(() => {
-        const el = scrollRef.current;
-        if (!el || Number.isNaN(commentsData.page) || commentsData.ids.length === 0 || commentsData.page === 0 || isFetching) return;
-        console.log('comments 2 ')
-        let timeout: ReturnType<typeof setTimeout> | null = null;
-        const scrollBuffer = 75;
+    // useEffect(() => {
+    //     const el = scrollRef.current;
+    //     if (!el || Number.isNaN(commentsData.page) || commentsData.ids.length === 0 || commentsData.page === 0 || isFetching) return;
+    //     console.log('comments 2 ')
+    //     let timeout: ReturnType<typeof setTimeout> | null = null;
+    //     const scrollBuffer = 75;
 
-        const checkNeedFetch = () => {
-            console.log('comments 2 ')
-            if (!el || isFetching) return;
+    //     const checkNeedFetch = () => {
+    //         console.log('comments 2 ')
+    //         if (!el || isFetching) return;
 
-            const contentShort = el.scrollHeight <= el.clientHeight + scrollBuffer;
+    //         const contentShort = el.scrollHeight <= el.clientHeight + scrollBuffer;
 
-            if (contentShort && !Number.isNaN(commentsData.page) && commentsData.page > 0 ) {
-                fetchMoreComments();
-            }
-        };
+    //         if (contentShort && !Number.isNaN(commentsData.page) && commentsData.page > 0 ) {
+    //             fetchMoreComments();
+    //         }
+    //     };
 
-        const debouncedCheck = () => {
-            console.log('comments 2 ')
-            if (timeout) clearTimeout(timeout);
-            timeout = setTimeout(checkNeedFetch, 150);
-        };
+    //     const debouncedCheck = () => {
+    //         console.log('comments 2 ')
+    //         if (timeout) clearTimeout(timeout);
+    //         timeout = setTimeout(checkNeedFetch, 150);
+    //     };
 
-        const observer = new ResizeObserver(() => {
-            console.log('comments 2 ')
-            debouncedCheck();
-        });
+    //     const observer = new ResizeObserver(() => {
+    //         console.log('comments 2 ')
+    //         debouncedCheck();
+    //     });
 
-        observer.observe(el);
+    //     observer.observe(el);
 
-        debouncedCheck();
+    //     debouncedCheck();
 
-        return () => {
-            observer.disconnect();
-            if (timeout) clearTimeout(timeout);
-        };
-    }, [commentsData.page, commentsData.ids.length, fetchMoreComments, isFetching]);
+    //     return () => {
+    //         observer.disconnect();
+    //         if (timeout) clearTimeout(timeout);
+    //     };
+    // }, [commentsData.page, commentsData.ids.length, fetchMoreComments, isFetching]);
 
 
 
@@ -164,7 +170,7 @@ export const MainComments = memo(({ config_id }: dataProps) => {
 
 
 
-    console.log(commentsData.page)
+    // console.log(commentsData.page)
 
 
     console.log('main-comments', commentsData)
