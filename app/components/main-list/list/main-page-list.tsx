@@ -1,7 +1,7 @@
 'use client'
 import { useAppDispatch, useAppSelector } from '@/state/hook';
 import { fetchList, } from '@/state/slices/list-slice';
-import { Box, Table, TableBody, TableCell,TableRow, Typography,} from '@mui/material';
+import { Table, TableBody, TableCell,TableRow,} from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { theme } from '@/config/ThemeMUI/theme';
 import { MainTableHeader } from '../main-table-header';

@@ -24,7 +24,7 @@ export function EmptyInfo({ position = 'absolute', mobileText = 'initial', right
             }
         }}
         >
-            There's nothing here yet
+            There`s nothing here yet
         </Typography>
     )
 }
