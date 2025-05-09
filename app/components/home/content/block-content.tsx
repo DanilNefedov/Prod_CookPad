@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, } from "react";
+import { useEffect, useState, } from "react";
 import { useNavigationState } from "../context-navigation";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { fetchRecipes } from "@/state/slices/recipe-slice";
@@ -8,6 +8,7 @@ import { CardContentBlock } from "./card-content-block";
 import { Box, Button } from "@mui/material";
 import { styleLink } from "../header/header";
 import { theme } from "@/config/ThemeMUI/theme";
+import { UXLoading } from "../../ux-helpers/loading";
 
 
 export function BlockContent() {
@@ -16,19 +17,23 @@ export function BlockContent() {
   const page = useAppSelector(state => state.recipe.page);
   const id = useAppSelector(state => state.user?.user?.connection_id);
   const { nav } = useNavigationState()
+  const [status, setStatus] = useState<boolean>(true)
+  const [statusMore, setStatusMore] = useState<boolean>(false)
 
   
 
   useEffect(() => {
-    async function fetchData() {
-      const url = `api/recipe?connection_id=${id}&page=${page + 1}`;
-  
+    // async function fetchData() {
       if (id !== '' && recipes.length === 0) {
-        dispatch(fetchRecipes(url));
+        setStatus(true)
+        const url = `api/recipe?connection_id=${id}&page=${page + 1}`;
+        dispatch(fetchRecipes(url)).finally(() => {
+          setStatus(false)
+        });
       }
-    }
+    // }
   
-    fetchData();
+    // fetchData();
   }, [id, dispatch, page, recipes.length]); 
   
 
@@ -37,7 +42,10 @@ export function BlockContent() {
   console.log(recipes, filteredRecipes, nav)
   return (
     <>
-      {recipes.length > 0 ? (
+      {
+        status && recipes.length === 0 ?
+          <UXLoading></UXLoading>
+        :
         (nav === 'all' ? recipes : filteredRecipes).map(({ recipe_id, }) => (
           <CardContentBlock
             key={recipe_id}
@@ -46,14 +54,30 @@ export function BlockContent() {
             
           />
         ))
-      ) 
-      : (
-        <></>
-      )}
+        // recipes.length > 0 ? (
+        //   (nav === 'all' ? recipes : filteredRecipes).map(({ recipe_id, }) => (
+        //     <CardContentBlock
+        //       key={recipe_id}
+        //       props={{ recipe_id, id}}
+
+              
+        //     />
+        //   ))
+        // ) 
+        // : (
+        //   <></>
+        // )
+      }
 
 
       {
-        nav === 'all' ?
+        statusMore && nav === 'all' ?
+          <Box sx={{width:'100%'}}>
+            <UXLoading position="static"></UXLoading>
+          </Box>
+          
+        :
+        nav === 'all' && !status ?
           <Box sx={{ width: '100%', display: 'flex' }}>
             <Button variant="contained" color='darkButton'
               disabled={Number.isNaN(page)}
@@ -69,7 +93,10 @@ export function BlockContent() {
                }}
               onClick={() => {
                 console.log('22')
-                dispatch(fetchRecipes(`api/recipe?connection_id=${id}&page=${page + 1}`))
+                setStatusMore(true)
+                dispatch(fetchRecipes(`api/recipe?connection_id=${id}&page=${page + 1}`)).finally(() => {
+                  setStatusMore(false)
+                });
               }}
             >More</Button>
           </Box>

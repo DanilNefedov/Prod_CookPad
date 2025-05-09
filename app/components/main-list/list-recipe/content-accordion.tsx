@@ -23,7 +23,7 @@ export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
 
     
 
-
+    // const ingredients_list = []
 
     const sortedList = useMemo(() => {
         if (!sortBy) return ingredients_list;
@@ -45,6 +45,7 @@ export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
     }, [sortBy, sortOrder, ingredients_list]);
 
     if (!ingredients_list) return null; 
+
 
     return (
         <AccordionDetails sx={{ p: '0', overflow: 'auto', height: '100%', bgcolor: 'background.default', borderRadius: '10px' }}>
@@ -72,17 +73,25 @@ export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
                         {
                         status && ingredients_list.length === 0?
                             <TableRow>
-                                <TableCell sx={{backgroundColor:'transparent', border:'0'}}>
-                                    <UXLoading props={{}}></UXLoading>
+                                <TableCell 
+                                colSpan={999} 
+                                sx={{
+                                    backgroundColor:'transparent', 
+                                    border:'0', 
+                                    width:"100%",
+                                    
+                                }}>
+                                    <UXLoading position="static"></UXLoading>
                                 </TableCell>
                             </TableRow>
                             :
-                        sortedList && sortedList.map(el => (
-                            <MainTableBody key={el._id} props={{
-                                ingredient_id:el._id,
-                                recipe_id
-                            }}></MainTableBody>
-                        ))}
+                            sortedList && sortedList.map(el => (
+                                <MainTableBody key={el._id} props={{
+                                    ingredient_id:el._id,
+                                    recipe_id
+                                }}></MainTableBody>
+                            ))
+                        }
                     </TableBody>
 
 
@@ -93,7 +102,8 @@ export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
 
     )
 }, (prevProps, nextProps) => {
-    return prevProps.props.recipe_id === nextProps.props.recipe_id;
+    return prevProps.props.recipe_id === nextProps.props.recipe_id &&
+    prevProps.props.status === nextProps.props.status
 });
 
 

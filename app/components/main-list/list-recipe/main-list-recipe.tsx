@@ -3,10 +3,11 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { ingredientsListRecipe, preLoaderMain } from "@/state/slices/list-recipe-slice";
 import { Accordion, AccordionSummary, Box, Typography } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ContentAccordion } from "./content-accordion";
 import { UXLoading } from "../../ux-helpers/loading";
+import { EmptyInfo } from "../../ux-helpers/empty-info";
 
 
 
@@ -18,6 +19,7 @@ export function MainListRecipe() {
     const listRecipeStatus = useAppSelector(state => state.listRecipe.status)
     const userStore = useAppSelector(state => state.user)
     const connection_id = userStore.user.connection_id
+    const [status, setStatus] = useState<boolean>(false)
 
     useEffect(() => {
         if (connection_id !== '') {
@@ -31,92 +33,98 @@ export function MainListRecipe() {
         const findThisRecipe = listRecipeStore.recipes.find(el => el.recipe_id === recipe_id);
         if (findThisRecipe && findThisRecipe.ingredients_list?.length <= 0) {
             if (connection_id !== '') {
-                dispatch(ingredientsListRecipe({ connection_id, recipe_id }));
+                setStatus(true)
+                dispatch(ingredientsListRecipe({ connection_id, recipe_id })).finally(() => {
+                    setStatus(false)
+                });
             }
         }
     }
-
+ 
 
     console.log('recipe', listRecipeStore)
     return (
         <Box sx={{height:'100%', position:'relative'}}>
             {
             listRecipeStatus && listRecipeStore.recipes.length === 0 ? 
-                <UXLoading props={{}}></UXLoading>//color:'#1F2128'
+                <UXLoading ></UXLoading>//color:'#1F2128'
             :
-            listRecipeStore?.recipes.map(el => (
-                <Accordion 
-                    // square={false}  
-                    key={el.recipe_id} 
-                    sx={{ 
-                    backgroundColor: 'background.default', 
-                    height:'auto', 
-                    overflow:'none',
-                    mb: '5px',
-                    '&:first-of-type': { borderTopLeftRadius: '10px', borderTopRightRadius: '10px' },
-                    '&:last-of-type': { borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' },
-                    '&.Mui-expanded': {m: '5px 0 ',},
-                    '& .MuiButtonBase-root.MuiAccordionSummary-root':{p:'0'},
-                    p:'15px',
-                    '& .MuiAccordionSummary-content.Mui-expanded':{
-                        m:'0 0 20px 0'
-                    }
-                    
-                }}>
-                    <AccordionSummary
-                        onClick={() => getDataRecipe(el.recipe_id)}
-                        expandIcon={<ExpandMoreIcon sx={{ color: 'text.primary' }} />}
-                        aria-controls={`panel1-content${el.recipe_id}`}
-                        id={`panel1-header${el.recipe_id}`}
+                !listRecipeStatus && listRecipeStore.recipes.length === 0 ?
+                    <EmptyInfo></EmptyInfo>
+                :
+                listRecipeStore?.recipes.map(el => (
+                    <Accordion 
+                        // square={false}  
+                        key={el.recipe_id} 
                         sx={{ 
-                            '& .MuiAccordionSummary-content': { 
-                                alignItems: 'center',
-                                m:'0',
-                                maxWidth:'97%'
-                            },
-                        
-                        }}
-                    >
-
-                        {el.recipe_media.type === 'image' ?
-                            <Box
-                                component='img'
-                                alt={el.recipe_name}
-                                sx={{ height: '60px', width:'60px', objectFit: 'cover', borderRadius: '50%' }}
-                                src={el.recipe_media.url as string}
-                                loading="lazy"
-                            />
-                            :
-                            <Box
-                                component='video'
-                                sx={{ height: '60px', objectFit: "cover", width: '60px', borderRadius: '50%' }}
-                                autoPlay
-                                loop
-                                muted
-                                poster={el.recipe_media.url as string}
-                            >
-                                <source
-                                    src={el.recipe_media.url as string}
-                                    type="video/mp4"
-                                />
-                            </Box>
+                        backgroundColor: 'background.default', 
+                        height:'auto', 
+                        overflow:'none',
+                        mb: '5px',
+                        '&:first-of-type': { borderTopLeftRadius: '10px', borderTopRightRadius: '10px' },
+                        '&:last-of-type': { borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' },
+                        '&.Mui-expanded': {m: '5px 0 ',},
+                        '& .MuiButtonBase-root.MuiAccordionSummary-root':{p:'0'},
+                        p:'15px',
+                        '& .MuiAccordionSummary-content.Mui-expanded':{
+                            m:'0 0 20px 0'
                         }
+                        
+                    }}>
+                        <AccordionSummary
+                            onClick={() => getDataRecipe(el.recipe_id)}
+                            expandIcon={<ExpandMoreIcon sx={{ color: 'text.primary' }} />}
+                            aria-controls={`panel1-content${el.recipe_id}`}
+                            id={`panel1-header${el.recipe_id}`}
+                            sx={{ 
+                                '& .MuiAccordionSummary-content': { 
+                                    alignItems: 'center',
+                                    m:'0',
+                                    maxWidth:'97%'
+                                },
+                            
+                            }}
+                        >
 
-                        <Typography sx={{ 
-                            m: '0 auto', 
-                            fontSize: '18px', 
-                            maxWidth:"65%",
-                            overflow: 'hidden',
-                            whiteSpace: 'nowrap',
-                            textOverflow: 'ellipsis'
-                        }}>{el.recipe_name}</Typography>
+                            {el.recipe_media.type === 'image' ?
+                                <Box
+                                    component='img'
+                                    alt={el.recipe_name}
+                                    sx={{ height: '60px', width:'60px', objectFit: 'cover', borderRadius: '50%' }}
+                                    src={el.recipe_media.url as string}
+                                    loading="lazy"
+                                />
+                                :
+                                <Box
+                                    component='video'
+                                    sx={{ height: '60px', objectFit: "cover", width: '60px', borderRadius: '50%' }}
+                                    autoPlay
+                                    loop
+                                    muted
+                                    poster={el.recipe_media.url as string}
+                                >
+                                    <source
+                                        src={el.recipe_media.url as string}
+                                        type="video/mp4"
+                                    />
+                                </Box>
+                            }
+
+                            <Typography sx={{ 
+                                m: '0 auto', 
+                                fontSize: '18px', 
+                                maxWidth:"65%",
+                                overflow: 'hidden',
+                                whiteSpace: 'nowrap',
+                                textOverflow: 'ellipsis'
+                            }}>{el.recipe_name}</Typography>
 
 
-                    </AccordionSummary>
+                        </AccordionSummary>
 
-                    <ContentAccordion props={{ recipe_id: el.recipe_id, status:listRecipeStatus }}></ContentAccordion>
-                </Accordion>
-            ))}
+                        <ContentAccordion props={{ recipe_id: el.recipe_id, status:status }}></ContentAccordion>
+                    </Accordion>
+                ))}
 
         </Box>
     )

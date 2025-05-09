@@ -1,12 +1,13 @@
 'use client'
 import { useAppDispatch, useAppSelector } from '@/state/hook';
 import { fetchList, } from '@/state/slices/list-slice';
-import { Table, TableBody, TableCell,TableRow,} from '@mui/material';
+import { Box, Table, TableBody, TableCell,TableRow, Typography,} from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { theme } from '@/config/ThemeMUI/theme';
 import { MainTableHeader } from '../main-table-header';
 import { MainTableBody } from '../main-table-body';
 import { UXLoading } from '../../ux-helpers/loading';
+import { EmptyInfo } from '../../ux-helpers/empty-info';
 
 
 export function MainListPage() {
@@ -22,12 +23,12 @@ export function MainListPage() {
 
 
     useEffect(() => {
-        async function fetchData() {
-            if (id !== '') {
-                dispatch(fetchList(id));
-            }
+        // async function fetchData() {
+        if (id !== '') {
+            dispatch(fetchList(id));
         }
-        fetchData();
+        // }
+        // fetchData();
     }, [dispatch, id]);
 
 
@@ -72,20 +73,27 @@ export function MainListPage() {
 
 
             <TableBody sx={{ overflow: 'auto', borderTop: '2px solid rgba(255, 0, 0, 0.12)' }}>
-                {listStatus && listStore.length === 0?
+                {listStatus && listStore.length === 0 ?
                     <TableRow>
                         <TableCell sx={{backgroundColor:'transparent', border:'0'}}>
-                            <UXLoading props={{}}></UXLoading>{/* color:'#1F2128' */}
+                            <UXLoading ></UXLoading>{/* color:'#1F2128' */}
                         </TableCell>
                     </TableRow>
                     :
-                    sortedList.map((el) => (
-                        <MainTableBody key={el._id} props={{
-                            ingredient_id: el._id,
+                        !listStatus && listStore.length === 0 ?
+                        <TableRow>
+                            <TableCell sx={{backgroundColor:'transparent', border:'0'}}>
+                                <EmptyInfo></EmptyInfo>
+                            </TableCell>
+                        </TableRow>   
+                        :
+                        sortedList.map((el) => (
+                            <MainTableBody key={el._id} props={{
+                                ingredient_id: el._id,
 
-                        }}>
-                        </MainTableBody>
-                    ))
+                            }}>
+                            </MainTableBody>
+                        ))
 
                 }
 

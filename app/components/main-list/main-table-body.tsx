@@ -15,6 +15,7 @@ import './list/styles.css';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { usePathname } from "next/navigation"
+import { EmptyInfo } from "../ux-helpers/empty-info"
 
 
 
@@ -150,7 +151,11 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
                                 //    width:'100%'
                                 }}
                             >
-                                {thisIngredient.units.map((elem: UnitsList) => (
+                                {
+                                thisIngredient.units.length === 0 ?
+                                    <EmptyInfo></EmptyInfo>
+                                :
+                                thisIngredient.units.map((elem: UnitsList) => (
                                     <SwiperSlide key={elem._id} className="slide-list-unit">
                                         <Units ingredient_id={thisIngredient._id} unit_id={elem._id} recipe_id={recipe_id}/>
                                     </SwiperSlide>
@@ -197,6 +202,7 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
                                     overflow: 'hidden',
                                     transition: 'max-height 300ms ease',
                                     maxHeight: expandedId === thisIngredient._id ? '75px' : '0',
+                                    pb: thisIngredient.units.length === 0 ? '15px' : '0'
                                 }}>
                                     <Swiper
                                         navigation={{
@@ -212,7 +218,11 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
                                             // width:'100%'
                                         }}
                                     >
-                                        {thisIngredient.units.map((elem: UnitsList) => (
+                                        {
+                                        thisIngredient.units.length === 0 ?
+                                            <EmptyInfo mobileText={'13px'} right={'calc(50% - 70px)'}></EmptyInfo>
+                                        :
+                                        thisIngredient.units.map((elem: UnitsList) => (
                                             <SwiperSlide key={elem._id} className="slide-list-unit">
                                                 <Units ingredient_id={thisIngredient._id} unit_id={elem._id} recipe_id={recipe_id}/>
                                             </SwiperSlide>
