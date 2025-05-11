@@ -11,6 +11,7 @@ import numbro from "numbro";
 import { theme } from "@/config/ThemeMUI/theme";
 import { containerAvatarComment, containerCommentItem, containerSecondBlockComm, dataComm, hideBtn, likeComm, moreBtn, repliesOpen, replyComm, textComment } from "@/app/(main)/popular/style";
 import { usePingGate } from "@/app/hooks/ping";
+import { UXLoading } from "../ux-helpers/loading";
 
 
 
@@ -37,6 +38,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
     const localLikeLoadingRef = useRef(false);
     const prevLengthRef = useRef<number>(repliesData?.ids?.length || 0)
     const pingGate = usePingGate()
+    const [statusReply, setStatusReply] = useState<string>('')
 
     useEffect(() => {
         const currentLength = repliesData?.ids?.length || 0
@@ -54,8 +56,10 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
 
     function handleReplies({ id_comment, more }: { id_comment: string, more: boolean }) {
         if (connection_id !== '') {
+            setStatusReply(more ? 'more' : 'all')
             if (repliesData && repliesData.ids.length > 0 && !more) {
                 setOpenReply(id_comment)
+                setStatusReply('')
 
             } else {
                 const nextPage = repliesData && !Number.isNaN(repliesData.page) ? repliesData.page + 1 : 1;
@@ -67,7 +71,9 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
                         page: nextPage,
                         id_author: connection_id,
                         newReply
-                    }));
+                    })).finally(() => {
+                        setStatusReply('')
+                    });
                 });
             }
         }
@@ -116,7 +122,8 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
                             pr: '7px'
                         }
                     }}>
-                        <Avatar alt={commentsData.author_name} src={commentsData.author_avatar} sx={{
+                        <Avatar alt={commentsData.author_name} src={commentsData.author_avatar } 
+                        sx={{
                             [theme.breakpoints.down('md')]:{
                                 width:'30px', height:"30px"
                             }
@@ -187,25 +194,29 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
                 
             </Box>
             <List sx={{display:openReply === commentsData.id_comment ? 'block' : 'none'}}>
-                {openReply === commentsData.id_comment ? (repliesData?.ids ?? []).map(replyId => {
-                    const reply = repliesData?.entities[replyId];
-
-                    return (
-                        <ReplyComment
-                            key={reply.id_comment}
-
-                            id_comment_p={reply.id_comment}
-                            id_branch_p={id_comment}
-                            handleLike={handleLike}
-                            config_id={config_id}
-                        >
-                        </ReplyComment>
-                        
-
+                {openReply === commentsData.id_comment ? (
+                    statusReply === "all" ? (
+                        <UXLoading position="static"/>
+                    ) : (
+                        <>
+                            {(repliesData?.ids ?? []).map(replyId => {
+                                const reply = repliesData?.entities[replyId];
+                                return (
+                                    <ReplyComment
+                                        key={reply.id_comment}
+                                        id_comment_p={reply.id_comment}
+                                        id_branch_p={id_comment}
+                                        handleLike={handleLike}
+                                        config_id={config_id}
+                                    />
+                                );
+                            })}
+                            {statusReply === "more" && <UXLoading position="static"/>}
+                        </>
                     )
-                }) :
-                    <></>
-                }
+                ) : null}
+
+
             </List>
 
             {

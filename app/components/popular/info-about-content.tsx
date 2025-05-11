@@ -86,12 +86,11 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
         });
     };
 
-    console.log('info-content')
+    console.log('info-content') 
     return (
 
         <Box sx={statsRecipe}>
-
-            <Avatar alt="name" src={author.author_img} sx={{ [theme.breakpoints.down('md')]: { width: '35px', height: "35px" } }} />
+            <Avatar alt="name" src={author.author_img } sx={{ [theme.breakpoints.down('md')]: { width: '35px', height: "35px" } }} />
             <Typography sx={authorName}>{author.author_name}</Typography>
 
             <CardActions sx={containerBtnsStats}>

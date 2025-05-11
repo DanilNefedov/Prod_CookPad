@@ -7,15 +7,15 @@ import { Avatar, Box, Tooltip, Typography } from '@mui/material';
 
 
 export function AboutUser() {
-    const userStore = useAppSelector(state => state.user)
+    const userStore = useAppSelector(state => state.user.user)
 
    
 
     // console.log(userStore.user.img)
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center', width:'100%', justifyContent:'center', flexDirection:'column',}}>
-            <Tooltip title={userStore.user.name}>
-                <Avatar src={userStore.user.img} sx={{ 
+            <Tooltip title={userStore.name}>
+                <Avatar src={userStore.img } sx={{ 
                     width: 45, 
                     height: 45,
                     [theme.breakpoints.down("md")]: {
@@ -40,7 +40,7 @@ export function AboutUser() {
                 [theme.breakpoints.down("md")]: {
                     display:'none'
                 },
-            }}>{userStore.user.name}</Typography>
+            }}>{userStore.name}</Typography>
         </Box>
     )
 }

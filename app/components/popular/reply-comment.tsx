@@ -67,7 +67,7 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
         <ListItem sx={(theme) => replyContainer(theme, isActive)}>
             <Box sx={{display:'flex', alignItems:'center', width:'100%', p:'0px'}}>
                 <ListItemAvatar sx={{minWidth:"0", mr:"10px"}}>
-                    <Avatar alt={author_name} src={author_avatar} sx={avatarReply}/>
+                    <Avatar alt={author_name} src={author_avatar } sx={avatarReply}/>
                 </ListItemAvatar>
                 <ListItemText
                     sx={fullTextReply}

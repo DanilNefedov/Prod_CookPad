@@ -12,6 +12,7 @@ import { UXLoading } from "../../ux-helpers/loading";
 
 
 export function BlockContent() {
+  
   const dispatch = useAppDispatch();
   const recipes = useAppSelector(state => state.recipe.recipes);
   const page = useAppSelector(state => state.recipe.page);
@@ -20,7 +21,7 @@ export function BlockContent() {
   const [status, setStatus] = useState<boolean>(true)
   const [statusMore, setStatusMore] = useState<boolean>(false)
 
-  
+
 
   useEffect(() => {
     // async function fetchData() {
@@ -54,19 +55,7 @@ export function BlockContent() {
             
           />
         ))
-        // recipes.length > 0 ? (
-        //   (nav === 'all' ? recipes : filteredRecipes).map(({ recipe_id, }) => (
-        //     <CardContentBlock
-        //       key={recipe_id}
-        //       props={{ recipe_id, id}}
 
-              
-        //     />
-        //   ))
-        // ) 
-        // : (
-        //   <></>
-        // )
       }
 
 

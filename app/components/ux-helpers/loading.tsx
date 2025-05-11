@@ -1,3 +1,4 @@
+import { theme } from "@/config/ThemeMUI/theme";
 import { Box, CircularProgress } from "@mui/material";
 
 
@@ -25,8 +26,14 @@ export function UXLoading({color="secondary", position="absolute"}:DataProps) {
                 justifyContent:'center',
             }}
         >
-            <CircularProgress  size="35px" sx={{
-                color:color || 'secondary'
+            <CircularProgress sx={{
+                width: '35px !important',
+                height: '35px !important',
+                color: color || 'secondary',
+                [theme.breakpoints.down(750)]: {
+                    width: '28px !important',
+                    height: '28px !important'
+                }
             }}
             />
         </Box>
