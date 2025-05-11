@@ -3,7 +3,7 @@
 import { useAppSelector } from '@/state/hook';
 import { Tab, Tabs } from '@mui/material';
 import NextLink from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigationState } from '../context-navigation';
 
 // interface RenderedNavigationItem {
@@ -41,7 +41,6 @@ export default function TabsRenderer({ styleLink }: TabsRendererProps) {
 
   const tabKeys = ['all', ...uniqueTabs];
 
-  // Защитное значение nav, если оно не входит в табы
   const safeNav = useMemo(() => {
     return tabKeys.includes(nav) ? nav : 'all';
   }, [nav, tabKeys]);
