@@ -13,6 +13,7 @@ import { fetchHistoryCook, } from "@/state/slices/cook-history";
 
 
 export function HeaderCook() {
+    
     const cookHistoryStore = useAppSelector(state => state.cookHistory);
     const userStore = useAppSelector(state => state.user);
     const dispatch = useAppDispatch();
@@ -55,7 +56,6 @@ export function HeaderCook() {
 
         setIsDeleting(false);
     }, [cookHistoryStore.history_links, isDeleting, recipe_id, router]);
-
 
     return (
         (cookHistoryStore.history_links.map(el => (

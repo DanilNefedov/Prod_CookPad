@@ -5,7 +5,7 @@ import { Container, Paper } from "@mui/material"
 import { mainContainer, mainContent } from "./style"
 
 export default async function Main() {
-    
+    // throw new Error ('test error')
     return (
       <NavigationProvider>
         <Header></Header>

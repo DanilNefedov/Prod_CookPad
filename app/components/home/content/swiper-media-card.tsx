@@ -13,6 +13,7 @@ export function SwiperMediaCard ({ props }: { props: propsData }){
     const {el, name} = props
 
     // console.log(el, el.media_type)
+
     return(
         // <Box>
             // {

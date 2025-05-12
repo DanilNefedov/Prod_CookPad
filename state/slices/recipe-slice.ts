@@ -22,7 +22,7 @@ export const fetchRecipes = createAsyncThunk<{recipes:MainRecipeT[], page:number
             if (!response.ok) return rejectWithValue('Server Error!');
 
             const data = await response.json()
-
+            
             return data
         } catch (error) {
             console.error(error)

@@ -198,3 +198,51 @@ export async function GET(request: Request) {
 //   }
 // }
 
+
+
+
+
+// {
+//     "recipes": [
+//         {
+//             "recipe_id": undefined,
+//             "name": 34,
+//             "time": {
+//                 "hours": 4,
+//                 "minutes": 44
+//             },
+//             "media": [
+//                 {
+//                     "main": false,
+//                     "media_url": "https://firebasestorage.googleapis.com/v0/b/web-arch-file.appspot.com/o/recipes%2F101625596288293490906%2F27c764e9-e0af-4111-81c1-c7fa49b9c68e%2Fda5e55fc-d875-472c-8a16-9c446245e648?alt=media&token=326a4f1f-f5ca-4de8-965e-0f3c2e7533a8",
+//                     "media_id": "da5e55fc-d875-472c-8a16-9c446245e648",
+//                     "media_type": "image",
+//                     "_id": "681f4a38ce6c3465f38fcfa2"
+//                 },
+//                 {
+//                     "main": false,
+//                     "media_url": "https://firebasestorage.googleapis.com/v0/b/web-arch-file.appspot.com/o/recipes%2F101625596288293490906%2F27c764e9-e0af-4111-81c1-c7fa49b9c68e%2Fb92e0fbc-9316-4fd0-8d95-e3a590f36e14?alt=media&token=dff8d339-a1ac-48a2-a12c-9cf4c092e3ad",
+//                     "media_id": "b92e0fbc-9316-4fd0-8d95-e3a590f36e14",
+//                     "media_type": "image",
+//                     "_id": "681f4a38ce6c3465f38fcfa3"
+//                 },
+//                 {
+//                     "main": false,
+//                     "media_url": "https://firebasestorage.googleapis.com/v0/b/web-arch-file.appspot.com/o/recipes%2F101625596288293490906%2F27c764e9-e0af-4111-81c1-c7fa49b9c68e%2F4c0a5bcb-8c52-42ee-bdae-bcf04d32a973?alt=media&token=9ac279f0-117a-4d1f-aab4-35d06c63c6a9",
+//                     "media_id": "4c0a5bcb-8c52-42ee-bdae-bcf04d32a973",
+//                     "media_type": "video",
+//                     "_id": "681f4a38ce6c3465f38fcfa4"
+//                 }
+//             ],
+//             "recipe_type": "Salad",
+//             "description": "sdfsdfsdsdds",
+//             "sorting": [
+//                 "salad"
+//             ],
+//             "favorite": false
+//         },
+        
+//     ],
+//     "page": 1,
+//     "totalCount": 61
+// }
