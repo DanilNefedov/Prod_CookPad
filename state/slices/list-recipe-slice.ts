@@ -2,14 +2,49 @@ import { IListObj, MainListRecipe, NewUnitObj, ResUnitObj, returnDataRecipeList,
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
+type OperationKey =
+  | 'preLoaderMain'
+//   | 'loadMore'
+//   | 'deleteRecipe'
+//   | 'updateRecipe'
+//   | 'likeRecipe'
+//   | 'addComment'
+//   | 'deleteComment'
+//   | 'bookmarkRecipe'
+//   | 'fetchProfile'
+//   | 'updateProfile'
 
+type OperationStatus = {
+    loading: boolean
+    error: boolean
+}
 
-const initialState: MainListRecipe = {
+type OperationState = Record<OperationKey, OperationStatus>
+
+interface ListrecipeState extends MainListRecipe {
+    operations: OperationState
+}
+
+const defaultStatus: OperationStatus = { loading: false, error: false }
+
+const initialState: ListrecipeState = {
     status: true,
     error: false,
     connection_id: '',
     page:0,
-    recipes: []
+    recipes: [],
+    operations:{
+        preLoaderMain: defaultStatus,
+        // loadMore: defaultStatus,
+        // deleteRecipe: defaultStatus,
+        // updateRecipe: defaultStatus,
+        // likeRecipe: defaultStatus,
+        // addComment: defaultStatus,
+        // deleteComment: defaultStatus,
+        // bookmarkRecipe: defaultStatus,
+        // fetchProfile: defaultStatus,
+        // updateProfile: defaultStatus,
+    },
 }
 
 
@@ -308,12 +343,12 @@ const listRecipeSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(preLoaderMain.pending, (state) => {
-                state.status = true,
-                state.error = false
+                state.operations.preLoaderMain.error = false
+                state.operations.preLoaderMain.loading = true
             })
             .addCase(preLoaderMain.fulfilled, (state, action: PayloadAction<ReturnPreLoaderMain, string>) => {
-                state.error = false,
-                state.status = false
+                state.operations.preLoaderMain.error = false
+                state.operations.preLoaderMain.loading = false
                 // console.log(action.payload)
                 const payload = action.payload
                 state.connection_id = payload.connection_id
@@ -332,6 +367,11 @@ const listRecipeSlice = createSlice({
                     }
                 });
             })
+            .addCase(preLoaderMain.rejected, (state) => {
+                state.operations.preLoaderMain.error = true
+                state.operations.preLoaderMain.loading = false
+            })
+
 
 
             .addCase(ingredientsListRecipe.pending, (state) => {
@@ -353,7 +393,7 @@ const listRecipeSlice = createSlice({
                         if (existingRecipeIndex !== -1) {
                             const existingRecipe = state.recipes[existingRecipeIndex];
                             
-                            existingRecipe.ingredients_list.push(ingr);
+                            existingRecipe.ingredients_list.unshift(ingr);
                         }
                     });
                 }

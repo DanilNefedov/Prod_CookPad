@@ -191,6 +191,13 @@ export const menuListItems = {
     width:'100%',
     borderRadius:'10px',
     m:'7px auto',
+    minHeight:'0',
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover':{
+            backgroundColor:'background.paper'
+        },
+        
+    },
 
 }
 
@@ -210,7 +217,11 @@ export const btnListItem = {
     p:'4px 4px',
     width:'auto',
     minWidth:'auto',
-    ml:'auto'
+    ml:'auto',
+    [theme.breakpoints.down("md")]: {
+        width:'20px',
+        height:'20px'
+    }
 }
 
 
@@ -228,5 +239,13 @@ export const btnAddNew = {
         '&:hover':{
             backgroundColor:'primary.dark',
         }
+    },
+    [theme.breakpoints.down("md")]: {
+        width:'auto',
+        height:'auto',
+        p:'5px 15px',
+        borderRadius:'10px',
+        fontSize:'14px',
+        lineHeight:'20px'
     }
 }

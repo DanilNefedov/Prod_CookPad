@@ -207,6 +207,7 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
                 >
                     To List
                 </Button>
+                
                 <Menu
                     id="demo-positioned-menu"
                     aria-labelledby="demo-positioned-button"
@@ -228,22 +229,23 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
 
                     }}
                 >
-                    <MenuItem disabled={true} sx={{ opacity: "1 !important", display: 'block' }}>
-                        <Typography sx={{ textAlign: 'center' }}>Your List Units</Typography>
+                    <MenuItem disabled={true} sx={{ opacity: "1 !important", display: 'block', minHeight:'0' }}>
+                        <Typography sx={{ textAlign: 'center', [theme.breakpoints.down("md")]: {fontSize:'14px'} }}>Your List Units</Typography>
                     </MenuItem>
                     {units !== null ? units.map(elem => (
+                        
                         <MenuItem key={elem._id} sx={menuListItems}>
-                            <Typography sx={{ pr: '2px' }}>{elem.amount}</Typography>
-                            <Typography sx={{ pr: '5px' }}>{elem.choice}</Typography>
+                            <Typography sx={{ pr: '5px', [theme.breakpoints.down("md")]: {fontSize:'14px'} }}>{elem.amount}</Typography>
+                            <Typography sx={{ pr: '5px', [theme.breakpoints.down("md")]: {fontSize:'14px'} }}>{elem.choice}</Typography>
                             <Button onClick={() => {
                                 addOldUnit(elem)
-                            }} sx={btnListItem}><AddIcon></AddIcon></Button>
+                            }} sx={btnListItem}><AddIcon sx={{[theme.breakpoints.down("md")]: {width:'20px',height:'20px'}}}></AddIcon></Button>
                         </MenuItem>
                     )) :
-                        <MenuItem disabled={true} sx={{ display: 'block', textAlign: 'center' }}>Nothing</MenuItem>
+                        <MenuItem sx={{ display: 'block', textAlign: 'center', color:'text.primary', [theme.breakpoints.down("md")]: {fontSize:'14px'} }}>Nothing</MenuItem>
                     }
-                    <MenuItem disabled={true} sx={{ opacity: "1 !important", display: 'block', pt: '0' }}>
-                        <Typography sx={{ textAlign: 'center' }}>Or</Typography>
+                    <MenuItem disabled={true} sx={{ opacity: "1 !important", display: 'block', pt: '0', minHeight:"0" }}>
+                        <Typography sx={{ textAlign: 'center',[theme.breakpoints.down("md")]: {fontSize:'14px'} }}>Or</Typography>
                     </MenuItem>
 
                     <Button disabled={method !== '' ? false : true} onClick={() => addNewUnit(el)} sx={{ ...btnListItem, ...btnAddNew }}>Like a new</Button>

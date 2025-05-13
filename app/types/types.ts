@@ -434,6 +434,7 @@ export type MainListRecipe = ErrorStatus & {
     connection_id:string,
     page:number
     recipes:TempalteRecipeForList[]
+    
 }
 
 export type returnDataRecipeList = {
