@@ -1,10 +1,10 @@
-import { IListObj, MainListRecipe, NewUnitObj, ResUnitObj, returnDataRecipeList, TempalteRecipeForList } from "@/app/types/types";
+import { IListObj, MainListRecipe, NewUnitObj, ResUnitObj, TempalteRecipeForList } from "@/app/types/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 type OperationKey =
   | 'preLoaderMain'
-//   | 'loadMore'
+  | 'newListRecipe'
 //   | 'deleteRecipe'
 //   | 'updateRecipe'
 //   | 'likeRecipe'
@@ -35,7 +35,7 @@ const initialState: ListrecipeState = {
     recipes: [],
     operations:{
         preLoaderMain: defaultStatus,
-        // loadMore: defaultStatus,
+        newListRecipe: defaultStatus,
         // deleteRecipe: defaultStatus,
         // updateRecipe: defaultStatus,
         // likeRecipe: defaultStatus,
@@ -334,14 +334,41 @@ export const newUnitListRecipe = createAsyncThunk<RespNewUnitIngreedient, NewUni
         }
     }
 )
+type OperationsKey = keyof typeof initialState.operations;
 
 
 const listRecipeSlice = createSlice({
     name: 'list-recipe',
     initialState,
-    reducers: {},
+    reducers: {
+
+        closeErrorWindow(state, action: PayloadAction<OperationsKey>){
+            const key = action.payload
+
+            if (state.operations[key]) {
+                state.operations[key].error = false
+                state.operations[key].loading = false
+            }
+        }
+    },
     extraReducers: (builder) => {
         builder
+            .addCase(newListRecipe.pending, (state) => {
+                state.operations.newListRecipe.error = false
+                state.operations.newListRecipe.loading = true
+            })
+            .addCase(newListRecipe.fulfilled, (state) => {
+                state.operations.newListRecipe.error = false
+                state.operations.newListRecipe.loading = false
+            })
+            .addCase(newListRecipe.rejected, (state) => {
+                state.operations.newListRecipe.error = true
+                state.operations.newListRecipe.loading = false
+            })
+
+
+
+
             .addCase(preLoaderMain.pending, (state) => {
                 state.operations.preLoaderMain.error = false
                 state.operations.preLoaderMain.loading = true
@@ -357,7 +384,7 @@ const listRecipeSlice = createSlice({
 
                 payload.recipe.forEach((recipe) => {
                     if (!state.recipes.some(existingRecipe => existingRecipe.recipe_id === recipe.recipe_id)) {
-                        state.recipes.push({
+                        state.recipes.unshift({
                             recipe_id: recipe.recipe_id,
                             recipe_name: recipe.recipe_name,
                             recipe_media: recipe.recipe_media, 
@@ -537,6 +564,7 @@ const listRecipeSlice = createSlice({
     }
 })
 
+export const { closeErrorWindow } = listRecipeSlice.actions
 
 
 export default listRecipeSlice.reducer

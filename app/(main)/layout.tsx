@@ -34,6 +34,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
             pl:"10px",
             pr:'10px'
           },
+          position:'relative',
         }}>
           {children}
         </Container>
