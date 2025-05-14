@@ -334,6 +334,36 @@ export const newUnitListRecipe = createAsyncThunk<RespNewUnitIngreedient, NewUni
         }
     }
 )
+
+
+export const deleteListRecipe = createAsyncThunk<string, {connection_id:string, recipe_id:string}, { rejectValue: string }>(
+    'listRecipe/deleteListRecipe',
+    async function (data, { rejectWithValue }) {
+        try {
+            const response = await fetch('/api/list-recipe', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+    
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+            
+            const dataList = await response.json()
+            console.log(dataList)
+            return dataList;
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+)
+
+
+
 type OperationsKey = keyof typeof initialState.operations;
 
 
@@ -559,6 +589,21 @@ const listRecipeSlice = createSlice({
                 }
 
             })
+
+
+            .addCase(deleteListRecipe.pending, (state) => {
+                state.status = true,
+                state.error = false
+            })
+            .addCase(deleteListRecipe.fulfilled, (state, action: PayloadAction<string>) => {
+                const recipe_id = action.payload;
+
+                state.error = false;
+                state.status = false;
+
+                state.recipes = state.recipes.filter(recipe => recipe.recipe_id !== recipe_id);
+            })
+
 
             
     }

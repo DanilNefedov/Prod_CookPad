@@ -136,3 +136,34 @@ export async function GET(request: Request) {
     }
 
 }
+
+
+
+
+
+export async function DELETE(req: Request) {
+  try {
+    const { connection_id, recipe_id } = await req.json();
+
+    if (!connection_id || !recipe_id) {
+        return NextResponse.json({ message: 'Missing parameters' }, { status: 400 });
+    }
+
+    await connectDB();
+
+    const result = await ListRecipe.findOneAndDelete({
+        connection_id,
+        'recipe.recipe_id': recipe_id,
+    });
+
+    if (!result) {
+        return NextResponse.json({ message: 'Not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(recipe_id, { status: 200 });
+
+    } catch (error) {
+        console.error('Error deleting recipe:', error);
+        return NextResponse.json({ message: 'Server error' }, { status: 500 });
+    }
+}
