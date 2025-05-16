@@ -1,7 +1,7 @@
 'use client'
 
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { deleteListRecipe, ingredientsListRecipe, preLoaderMain } from "@/state/slices/list-recipe-slice";
+import { closeErrorWindow, deleteListRecipe, ingredientsListRecipe, preLoaderMain } from "@/state/slices/list-recipe-slice";
 import { Accordion, AccordionSummary, Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -10,6 +10,7 @@ import { UXLoading } from "../../ux-helpers/loading";
 import { EmptyInfo } from "../../ux-helpers/empty-info";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { theme } from "@/config/ThemeMUI/theme";
+import { StatusAlert } from "../../ux-helpers/status-alert";
 
 
 
@@ -17,13 +18,17 @@ import { theme } from "@/config/ThemeMUI/theme";
 export function MainListRecipe() {
     const dispatch = useAppDispatch()
     const listRecipeStore = useAppSelector(state => state.listRecipe)
-    const listRecipeStatus = useAppSelector(state => state.listRecipe.status)
+
+    const preLoaderMainStatus = useAppSelector(state => state.listRecipe.operations.preLoaderMain)
+    const ingredientsListRecipeStatus = useAppSelector(state => state.listRecipe.operations.ingredientsListRecipe)
 
     const userStore = useAppSelector(state => state.user)
     const connection_id = userStore.user.connection_id
-    const [status, setStatus] = useState<boolean>(false)
+    const [loadingRecipeIds, setLoadingRecipeIds] = useState<string[]>([]);
+
 
     const [expandedIds, setExpandedIds] = useState<string[]>([]);
+
 
     const handleToggle = (id: string) => {
         setExpandedIds(prev =>
@@ -39,16 +44,20 @@ export function MainListRecipe() {
 
 
     function getDataRecipe(recipe_id: string) {
-        const findThisRecipe = listRecipeStore.recipes.find(el => el.recipe_id === recipe_id);
-        if (findThisRecipe && findThisRecipe.ingredients_list?.length <= 0) {
-            if (connection_id !== '') {
-                setStatus(true)
-                dispatch(ingredientsListRecipe({ connection_id, recipe_id })).finally(() => {
-                    setStatus(false)
+    const findThisRecipe = listRecipeStore.recipes.find(el => el.recipe_id === recipe_id);
+
+    if (findThisRecipe && findThisRecipe.ingredients_list?.length <= 0) {
+        if (connection_id !== '') {
+            setLoadingRecipeIds(prev => [...prev, recipe_id]);
+
+            dispatch(ingredientsListRecipe({ connection_id, recipe_id }))
+                .finally(() => {
+                    setLoadingRecipeIds(prev => prev.filter(id => id !== recipe_id));
                 });
-            }
         }
     }
+}
+
 
     function handleDeleteRecipe(recipe_id:string){
         if (connection_id !== '') {
@@ -57,14 +66,24 @@ export function MainListRecipe() {
     }
 
 
-    console.log('recipe', listRecipeStore, expandedIds)
+    function closeError(){
+        if (preLoaderMainStatus.error) {
+            dispatch(closeErrorWindow('preLoaderMain'))
+        }
+    }
+
+
+    if(preLoaderMainStatus.error) return <StatusAlert error={preLoaderMainStatus.error} handleClose={closeError}></StatusAlert>
+    // if(preLoaderMainStatus.lo) return <StatusAlert error={preLoaderMainStatus.error} ></StatusAlert>
+
+    console.log('recipe', ingredientsListRecipeStatus, status)
     return (
         <Box sx={{ height: '100%', position: 'relative' }}>
             {
-                listRecipeStatus && listRecipeStore.recipes.length === 0 ?
+                !preLoaderMainStatus.error && preLoaderMainStatus.loading && listRecipeStore.recipes.length === 0 ?
                     <UXLoading ></UXLoading>//color:'#1F2128'
                     :
-                    !listRecipeStatus && listRecipeStore.recipes.length === 0 ?
+                    !preLoaderMainStatus.loading && listRecipeStore.recipes.length === 0 ?
                         <EmptyInfo></EmptyInfo>
                         :
                         listRecipeStore?.recipes.map(el => (
@@ -144,8 +163,12 @@ export function MainListRecipe() {
 
 
                                     </AccordionSummary>
+                                    
+                                    
+                                    <ContentAccordion props={{ recipe_id: el.recipe_id, status: loadingRecipeIds.includes(el.recipe_id) && el.ingredients_list.length === 0 }} />
+                                    
 
-                                    <ContentAccordion props={{ recipe_id: el.recipe_id, status: status }}></ContentAccordion>
+                                    
                                     
                                     {expandedIds.includes(el.recipe_id) ? 
                                         <Button 

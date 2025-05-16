@@ -1,18 +1,19 @@
 import { IListObj, MainListRecipe, NewUnitObj, ResUnitObj, TempalteRecipeForList } from "@/app/types/types";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice,  PayloadAction } from "@reduxjs/toolkit";
 
 
 type OperationKey =
   | 'preLoaderMain'
   | 'newListRecipe'
-//   | 'deleteRecipe'
-//   | 'updateRecipe'
-//   | 'likeRecipe'
-//   | 'addComment'
-//   | 'deleteComment'
-//   | 'bookmarkRecipe'
-//   | 'fetchProfile'
-//   | 'updateProfile'
+  | 'ingredientsListRecipe'
+  | 'shopIngrListRecipe'
+  | 'deleteIngrRecipeList'
+  | 'shopUnitListRecipe'
+  | 'newAmountListRecipe'
+  | 'newUnitListRecipe'
+  | 'deleteUnitListRecipe'
+  | 'deleteListRecipe'
+
 
 type OperationStatus = {
     loading: boolean
@@ -25,7 +26,8 @@ interface ListrecipeState extends MainListRecipe {
     operations: OperationState
 }
 
-const defaultStatus: OperationStatus = { loading: false, error: false }
+const defaultStatus: OperationStatus = { loading: true, error: false }
+const newListRecipeDefaultStatus: OperationStatus = { loading: false, error: false }
 
 const initialState: ListrecipeState = {
     status: true,
@@ -35,15 +37,15 @@ const initialState: ListrecipeState = {
     recipes: [],
     operations:{
         preLoaderMain: defaultStatus,
-        newListRecipe: defaultStatus,
-        // deleteRecipe: defaultStatus,
-        // updateRecipe: defaultStatus,
-        // likeRecipe: defaultStatus,
-        // addComment: defaultStatus,
-        // deleteComment: defaultStatus,
-        // bookmarkRecipe: defaultStatus,
-        // fetchProfile: defaultStatus,
-        // updateProfile: defaultStatus,
+        newListRecipe: newListRecipeDefaultStatus,
+        ingredientsListRecipe: defaultStatus,
+        shopIngrListRecipe:defaultStatus,
+        deleteIngrRecipeList:defaultStatus,
+        shopUnitListRecipe:defaultStatus,
+        newAmountListRecipe:defaultStatus,
+        newUnitListRecipe:defaultStatus,
+        deleteUnitListRecipe:defaultStatus,
+        deleteListRecipe:defaultStatus,
     },
 }
 
@@ -363,9 +365,31 @@ export const deleteListRecipe = createAsyncThunk<string, {connection_id:string, 
 )
 
 
-
 type OperationsKey = keyof typeof initialState.operations;
 
+
+
+const createReducerHandlers = <T extends keyof ListrecipeState['operations']>(operationName: T) => ({
+    pending: (state: ListrecipeState) => {
+        state.operations[operationName].error = false;
+        state.operations[operationName].loading = true;
+    },
+    rejected: (state: ListrecipeState) => {
+        state.operations[operationName].error = true;
+        state.operations[operationName].loading = false;
+    }
+});
+
+const newListRecipeHandlers = createReducerHandlers('newListRecipe');
+const preLoaderMainHandlers = createReducerHandlers('preLoaderMain');
+const ingredientsListRecipeHandlers = createReducerHandlers('ingredientsListRecipe');
+const shopIngrListRecipeHandlers = createReducerHandlers('shopIngrListRecipe');
+const deleteIngrRecipeListHandlers = createReducerHandlers('deleteIngrRecipeList');
+const shopUnitListRecipeHandlers = createReducerHandlers('shopUnitListRecipe');
+const newAmountListRecipeHandlers = createReducerHandlers('newAmountListRecipe');
+const newUnitListRecipeHandlers = createReducerHandlers('newUnitListRecipe');
+const deleteUnitListRecipeHandlers = createReducerHandlers('deleteUnitListRecipe');
+const deleteListRecipeHandlers = createReducerHandlers('deleteListRecipe');
 
 const listRecipeSlice = createSlice({
     name: 'list-recipe',
@@ -383,26 +407,16 @@ const listRecipeSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(newListRecipe.pending, (state) => {
-                state.operations.newListRecipe.error = false
-                state.operations.newListRecipe.loading = true
-            })
+            .addCase(newListRecipe.pending, newListRecipeHandlers.pending)
+            .addCase(newListRecipe.rejected, newListRecipeHandlers.rejected)
             .addCase(newListRecipe.fulfilled, (state) => {
                 state.operations.newListRecipe.error = false
                 state.operations.newListRecipe.loading = false
             })
-            .addCase(newListRecipe.rejected, (state) => {
-                state.operations.newListRecipe.error = true
-                state.operations.newListRecipe.loading = false
-            })
+           
 
-
-
-
-            .addCase(preLoaderMain.pending, (state) => {
-                state.operations.preLoaderMain.error = false
-                state.operations.preLoaderMain.loading = true
-            })
+            .addCase(preLoaderMain.pending, preLoaderMainHandlers.pending)
+            .addCase(preLoaderMain.rejected, preLoaderMainHandlers.rejected)
             .addCase(preLoaderMain.fulfilled, (state, action: PayloadAction<ReturnPreLoaderMain, string>) => {
                 state.operations.preLoaderMain.error = false
                 state.operations.preLoaderMain.loading = false
@@ -414,7 +428,7 @@ const listRecipeSlice = createSlice({
 
                 payload.recipe.forEach((recipe) => {
                     if (!state.recipes.some(existingRecipe => existingRecipe.recipe_id === recipe.recipe_id)) {
-                        state.recipes.unshift({
+                        state.recipes.push({
                             recipe_id: recipe.recipe_id,
                             recipe_name: recipe.recipe_name,
                             recipe_media: recipe.recipe_media, 
@@ -424,21 +438,13 @@ const listRecipeSlice = createSlice({
                     }
                 });
             })
-            .addCase(preLoaderMain.rejected, (state) => {
-                state.operations.preLoaderMain.error = true
-                state.operations.preLoaderMain.loading = false
-            })
+           
 
 
 
-            .addCase(ingredientsListRecipe.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(ingredientsListRecipe.pending, ingredientsListRecipeHandlers.pending)
+            .addCase(ingredientsListRecipe.rejected, ingredientsListRecipeHandlers.rejected)
             .addCase(ingredientsListRecipe.fulfilled, (state, action: PayloadAction<ReturnIngredientsListrecipe, string>) => {
-                state.error = false;
-                state.status = false;
-            
                 const payload = action.payload;
             
                 state.connection_id = payload.connection_id;
@@ -454,19 +460,22 @@ const listRecipeSlice = createSlice({
                         }
                     });
                 }
+                
+                state.operations.ingredientsListRecipe.error = false
+                state.operations.ingredientsListRecipe.loading = false
             })
 
 
 
 
-            .addCase(shopIngrListRecipe.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(shopIngrListRecipe.pending, shopIngrListRecipeHandlers.pending)
+            .addCase(shopIngrListRecipe.rejected, shopIngrListRecipeHandlers.rejected)
             .addCase(shopIngrListRecipe.fulfilled, (state, action: PayloadAction<ShopIngrListRecipeT, string>) => {
+                state.operations.shopIngrListRecipe.error = false
+                state.operations.shopIngrListRecipe.loading = false
+                
                 const { ingredient_id, shop_ingr, recipe_id } = action.payload;
-                state.error = false,
-                state.status = false
+            
 
                 const thisRecipe = state.recipes.find(el => el.recipe_id === recipe_id)
 
@@ -482,14 +491,14 @@ const listRecipeSlice = createSlice({
 
 
 
-            .addCase(deleteIngrRecipeList.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(deleteIngrRecipeList.pending, deleteIngrRecipeListHandlers.pending)
+            .addCase(deleteIngrRecipeList.rejected, deleteIngrRecipeListHandlers.rejected)
             .addCase(deleteIngrRecipeList.fulfilled, (state, action: PayloadAction<TempalteRecipeIngredient, string>) => {
+                state.operations.deleteIngrRecipeList.error = false
+                state.operations.deleteIngrRecipeList.loading = false
+                
                 const { recipe_id, ingredient_id } = action.payload;
-                state.error = false,
-                state.status = false
+                
 
                 const recipeIndex = state.recipes.findIndex(recipe => recipe.recipe_id === recipe_id);
 
@@ -502,14 +511,14 @@ const listRecipeSlice = createSlice({
 
 
 
-            .addCase(shopUnitListRecipe.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(shopUnitListRecipe.pending, shopUnitListRecipeHandlers.pending)
+            .addCase(shopUnitListRecipe.rejected, shopUnitListRecipeHandlers.rejected)
             .addCase(shopUnitListRecipe.fulfilled, (state, action: PayloadAction<ShopUnitIngredientT, string>) => {
+                state.operations.shopUnitListRecipe.error = false
+                state.operations.shopUnitListRecipe.loading = false
+                
                 const { ingredient_id, unit_id, shop_unit, recipe_id  } = action.payload;
-                state.error = false,
-                state.status = false
+               
 
                 const recipe = state.recipes.find(recipe => recipe.recipe_id === recipe_id);
                 if (recipe) {
@@ -526,14 +535,13 @@ const listRecipeSlice = createSlice({
 
 
 
-            .addCase(newAmountListRecipe.pending, (state) => {
-                state.status = true,
-                    state.error = false
-            })
+            .addCase(newAmountListRecipe.pending, newAmountListRecipeHandlers.pending)
+            .addCase(newAmountListRecipe.rejected, newAmountListRecipeHandlers.rejected)
             .addCase(newAmountListRecipe.fulfilled, (state, action: PayloadAction<ChangeAmountT, string>) => {
+                state.operations.newAmountListRecipe.error = false
+                state.operations.newAmountListRecipe.loading = false
+                
                 const { ingredient_id, unit_id, amount, recipe_id } = action.payload;
-                state.error = false,
-                state.status = false
 
                 const recipe = state.recipes.find(recipe => recipe.recipe_id === recipe_id);
                 if (recipe) {
@@ -549,14 +557,14 @@ const listRecipeSlice = createSlice({
             })
 
 
-            .addCase(newUnitListRecipe.pending, (state) => {
-                state.status = true,
-                    state.error = false
-            })
+            .addCase(newUnitListRecipe.pending, newUnitListRecipeHandlers.pending)
+            .addCase(newUnitListRecipe.rejected, newUnitListRecipeHandlers.rejected)
             .addCase(newUnitListRecipe.fulfilled, (state, action: PayloadAction<RespNewUnitIngreedient, string>) => {
+                state.operations.newUnitListRecipe.error = false
+                state.operations.newUnitListRecipe.loading = false
+                
                 const { ingredient_id, new_unit, recipe_id } = action.payload;
-                state.error = false,
-                state.status = false
+                
 
                 const thisRecipe = state.recipes.find(el => el.recipe_id === recipe_id)
                 if (thisRecipe) {
@@ -571,14 +579,14 @@ const listRecipeSlice = createSlice({
 
 
 
-            .addCase(deleteUnitListRecipe.pending, (state) => {
-                state.status = true,
-                    state.error = false
-            })
+            .addCase(deleteUnitListRecipe.pending, deleteUnitListRecipeHandlers.pending)
+            .addCase(deleteUnitListRecipe.rejected, deleteUnitListRecipeHandlers.rejected)
             .addCase(deleteUnitListRecipe.fulfilled, (state, action: PayloadAction<DeleteUnitIngredientT, string>) => {
+                state.operations.deleteUnitListRecipe.error = false
+                state.operations.deleteUnitListRecipe.loading = false
+                
                 const { ingredient_id, connection_id: id, unit_id, recipe_id } = action.payload;
-                state.error = false,
-                state.status = false
+                
 
                 const recipe = state.recipes.find(r => r.recipe_id === recipe_id);
                 if (recipe) {
@@ -591,21 +599,20 @@ const listRecipeSlice = createSlice({
             })
 
 
-            .addCase(deleteListRecipe.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(deleteListRecipe.pending, deleteListRecipeHandlers.pending)
+            .addCase(deleteListRecipe.rejected, deleteListRecipeHandlers.rejected)
             .addCase(deleteListRecipe.fulfilled, (state, action: PayloadAction<string>) => {
+                state.operations.deleteListRecipe.error = false
+                state.operations.deleteListRecipe.loading = false
+                
                 const recipe_id = action.payload;
 
-                state.error = false;
-                state.status = false;
 
                 state.recipes = state.recipes.filter(recipe => recipe.recipe_id !== recipe_id);
             })
 
 
-            
+           
     }
 })
 

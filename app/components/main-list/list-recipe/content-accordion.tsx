@@ -45,7 +45,7 @@ export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
     }, [sortBy, sortOrder, ingredients_list]);
 
     if (!ingredients_list) return null; 
-
+    console.log('0000')
 
     return (
         <AccordionDetails sx={{ p: '0', overflow: 'auto', height: '100%', bgcolor: 'background.default', borderRadius: '10px' }}>
