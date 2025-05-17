@@ -3,6 +3,7 @@ import { NavigationSite } from "../components/navigation-site/navigation";
 import { ClientUser } from "../components/client-side-handler/client-user";
 import { theme } from "@/config/ThemeMUI/theme";
 import GlobalErrorProvider from "../components/client-side-handler/global-error";
+import { AlertsProvider } from "../components/ux-helpers/alerts-provider";
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   const styledPaperHome = {
@@ -15,32 +16,35 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
       width: "calc(100% - 60px)",
     },
     [theme.breakpoints.down(500)]: {
-      width:"calc(100% - 45px)",
+      width: "calc(100% - 45px)",
     }
   }
 
   return (
     <>
-    <GlobalErrorProvider>
-      <ClientUser></ClientUser>
-      <NavigationSite></NavigationSite>
-      <Paper sx={styledPaperHome}>
-        <Container maxWidth={false} sx={{
-          height: '100dvh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          [theme.breakpoints.down("md")]: {
-            pl:"10px",
-            pr:'10px'
-          },
-          position:'relative',
-        }}>
-          {children}
-        </Container>
-      </Paper>
-    </GlobalErrorProvider>
-      
+      <GlobalErrorProvider>
+        <AlertsProvider>
+          <ClientUser></ClientUser>
+          <NavigationSite></NavigationSite>
+          <Paper sx={styledPaperHome}>
+            <Container maxWidth={false} sx={{
+              height: '100dvh',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              [theme.breakpoints.down("md")]: {
+                pl: "10px",
+                pr: '10px'
+              },
+              position: 'relative',
+            }}>
+              {children}
+            </Container>
+          </Paper>
+        </AlertsProvider>
+
+      </GlobalErrorProvider>
+
 
     </>
   )

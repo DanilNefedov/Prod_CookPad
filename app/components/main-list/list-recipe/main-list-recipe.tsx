@@ -1,7 +1,7 @@
 'use client'
 
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { closeErrorWindow, deleteListRecipe, ingredientsListRecipe, preLoaderMain } from "@/state/slices/list-recipe-slice";
+import { closeErrorWindow, deleteListRecipe, ingredientsListRecipe, OperationKey, preLoaderMain } from "@/state/slices/list-recipe-slice";
 import { Accordion, AccordionSummary, Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -10,7 +10,7 @@ import { UXLoading } from "../../ux-helpers/loading";
 import { EmptyInfo } from "../../ux-helpers/empty-info";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { theme } from "@/config/ThemeMUI/theme";
-import { StatusAlert } from "../../ux-helpers/status-alert";
+// import { ErrorAlert } from "../../ux-helpers/error-alert";
 
 
 
@@ -18,6 +18,7 @@ import { StatusAlert } from "../../ux-helpers/status-alert";
 export function MainListRecipe() {
     const dispatch = useAppDispatch()
     const listRecipeStore = useAppSelector(state => state.listRecipe)
+
 
     const preLoaderMainStatus = useAppSelector(state => state.listRecipe.operations.preLoaderMain)
     const ingredientsListRecipeStatus = useAppSelector(state => state.listRecipe.operations.ingredientsListRecipe)
@@ -38,45 +39,57 @@ export function MainListRecipe() {
     useEffect(() => {
         if (connection_id !== '') {
             dispatch(preLoaderMain({ connection_id, page: 1 }))
+            // dispatch(ingredientsListRecipe({connection_id, recipe_id:'1212'}))
         }
     }, [connection_id, dispatch])
 
 
 
     function getDataRecipe(recipe_id: string) {
-    const findThisRecipe = listRecipeStore.recipes.find(el => el.recipe_id === recipe_id);
+        const findThisRecipe = listRecipeStore.recipes.find(el => el.recipe_id === recipe_id);
 
-    if (findThisRecipe && findThisRecipe.ingredients_list?.length <= 0) {
-        if (connection_id !== '') {
-            setLoadingRecipeIds(prev => [...prev, recipe_id]);
+        if (findThisRecipe && findThisRecipe.ingredients_list?.length <= 0) {
+            if (connection_id !== '') {
+                setLoadingRecipeIds(prev => [...prev, recipe_id]);
 
-            dispatch(ingredientsListRecipe({ connection_id, recipe_id }))
-                .finally(() => {
-                    setLoadingRecipeIds(prev => prev.filter(id => id !== recipe_id));
-                });
+                dispatch(ingredientsListRecipe({ connection_id, recipe_id }))
+                    .finally(() => {
+                        setLoadingRecipeIds(prev => prev.filter(id => id !== recipe_id));
+                        
+                    });
+            }
         }
     }
-}
 
 
-    function handleDeleteRecipe(recipe_id:string){
+    function handleDeleteRecipe(recipe_id: string) {
         if (connection_id !== '') {
             dispatch(deleteListRecipe({ connection_id, recipe_id }))
         }
     }
 
 
-    function closeError(){
-        if (preLoaderMainStatus.error) {
-            dispatch(closeErrorWindow('preLoaderMain'))
+    function closeError(name: OperationKey) {
+        if (preLoaderMainStatus.error || ingredientsListRecipeStatus.error) {
+            dispatch(closeErrorWindow(name))
         }
     }
+    
+    // function closeError(){
+    //     if (ingredientsListRecipeStatus.error) {
+    //         dispatch(closeErrorWindow('ingredientsListRecipe'))
+    //     }
+    // }
+
+    // if(ingredientsListRecipeStatus.error) return <StatusAlert error={ingredientsListRecipeStatus.error} handleClose={closeError('ingredientsListRecipe')}></StatusAlert>
+
+    // if(preLoaderMainStatus.error) return <StatusAlert error={preLoaderMainStatus.error} handleClose={() => closeError('preLoaderMain')}></StatusAlert>
+    // if (preLoaderMainStatus.error) return <ErrorAlert></ErrorAlert>
+
+    
 
 
-    if(preLoaderMainStatus.error) return <StatusAlert error={preLoaderMainStatus.error} handleClose={closeError}></StatusAlert>
-    // if(preLoaderMainStatus.lo) return <StatusAlert error={preLoaderMainStatus.error} ></StatusAlert>
-
-    console.log('recipe', ingredientsListRecipeStatus, status)
+    console.log('recipe', preLoaderMainStatus)
     return (
         <Box sx={{ height: '100%', position: 'relative' }}>
             {
@@ -163,24 +176,29 @@ export function MainListRecipe() {
 
 
                                     </AccordionSummary>
-                                    
-                                    
-                                    <ContentAccordion props={{ recipe_id: el.recipe_id, status: loadingRecipeIds.includes(el.recipe_id) && el.ingredients_list.length === 0 }} />
-                                    
 
-                                    
-                                    
-                                    {expandedIds.includes(el.recipe_id) ? 
-                                        <Button 
+                                    {/* {
+                                        ingredientsListRecipeStatus.error ?
+                                            <StatusAlert error={ingredientsListRecipeStatus.error} handleClose={() => closeError('ingredientsListRecipe')}></StatusAlert>
+                                            : */}
+                                            <ContentAccordion props={{ recipe_id: el.recipe_id, status: loadingRecipeIds.includes(el.recipe_id) && el.ingredients_list.length === 0 }} />
+
+                                    {/* } */}
+
+
+
+
+                                    {expandedIds.includes(el.recipe_id) ?
+                                        <Button
                                             onClick={() => handleDeleteRecipe(el.recipe_id)}
-                                            sx={{position:'absolute', top:'5px', right:'5px', minWidth:"0", p:'0'}}
+                                            sx={{ position: 'absolute', top: '5px', right: '5px', minWidth: "0", p: '0' }}
                                         >
                                             <DeleteIcon sx={{
-                                                width:'22px', 
-                                                height:'22px', 
+                                                width: '22px',
+                                                height: '22px',
                                                 [theme.breakpoints.down('md')]: {
-                                                    width:'18px', 
-                                                    height:'18px', 
+                                                    width: '18px',
+                                                    height: '18px',
                                                 },
                                             }}></DeleteIcon>
                                         </Button>
@@ -189,7 +207,7 @@ export function MainListRecipe() {
                                     }
                                 </Accordion>
 
-                                
+
                             </Box>
 
                         ))

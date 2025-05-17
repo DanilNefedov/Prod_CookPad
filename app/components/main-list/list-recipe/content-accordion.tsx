@@ -1,4 +1,4 @@
-import { useAppSelector } from "@/state/hook"
+import {  useAppSelector } from "@/state/hook"
 import { AccordionDetails, Table, TableBody, TableCell, TableRow,  } from "@mui/material"
 import { theme } from "@/config/ThemeMUI/theme"
 import { MainTableHeader } from "../main-table-header"
@@ -46,7 +46,7 @@ export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
 
     if (!ingredients_list) return null; 
     console.log('0000')
-
+    
     return (
         <AccordionDetails sx={{ p: '0', overflow: 'auto', height: '100%', bgcolor: 'background.default', borderRadius: '10px' }}>
 
@@ -71,7 +71,7 @@ export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
 
                     <TableBody sx={{ overflow: 'auto', borderTop: '2px solid rgba(255, 0, 0, 0.12)' }}>
                         {
-                        status && ingredients_list.length === 0?
+                        status && ingredients_list.length === 0  ?
                             <TableRow>
                                 <TableCell 
                                 colSpan={999} 

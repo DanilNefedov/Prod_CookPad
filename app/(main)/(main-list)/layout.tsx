@@ -1,4 +1,5 @@
 import { HeaderList } from "@/app/components/main-list/header-list";
+import { AlertsProvider } from "@/app/components/ux-helpers/alerts-provider";
 import { AppBar, Box } from "@mui/material";
 
 
@@ -9,38 +10,41 @@ export default async function ListLayout({
 }: {
     children: React.ReactNode
 }) {
-   
+
     const links = [
         {
-            url:'/list',
-            name:'List'
+            url: '/list',
+            name: 'List'
         },
         {
-            url:'/list-recipe',
-            name:'Recipes'
+            url: '/list-recipe',
+            name: 'Recipes'
         }
     ]
 
     return (
-        <Box sx={{ height: 'inherit' }}>
-            <AppBar position="static" sx={{ 
-                backgroundColor: 'background.default', 
-                alignItems: 'center', 
-                m: '10px 0', 
-                justifyContent:'center',
-                flexDirection:'inherit',
-                borderRadius:'10px',
-                p:'10px 0',
-                gap:'20px',
-                boxShadow:'none',
-                
-            }}>
-                {links.map(el => (
-                    <HeaderList props={el} key={el.url}></HeaderList>
-                ))}
-                
-            </AppBar>
-            {children}
-        </Box>
+        // <AlertsProvider>
+            <Box sx={{ height: 'inherit' }}>
+                <AppBar position="static" sx={{
+                    backgroundColor: 'background.default',
+                    alignItems: 'center',
+                    m: '10px 0',
+                    justifyContent: 'center',
+                    flexDirection: 'inherit',
+                    borderRadius: '10px',
+                    p: '10px 0',
+                    gap: '20px',
+                    boxShadow: 'none',
+
+                }}>
+                    {links.map(el => (
+                        <HeaderList props={el} key={el.url}></HeaderList>
+                    ))}
+
+                </AppBar>
+                {children}
+            </Box>
+        // </AlertsProvider>
+
     )
 }

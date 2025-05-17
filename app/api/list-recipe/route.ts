@@ -17,6 +17,12 @@ export async function POST(request: Request) {
         const data = await request.json();
         const { connection_id, recipe_id } = data;
 
+        if (!connection_id || !recipe_id) {
+            return NextResponse.json(
+                { message: "The input parameters are invalid" },
+                { status: 400 }
+            )
+        }
 
         await connectDB();
 

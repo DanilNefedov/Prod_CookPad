@@ -2,7 +2,7 @@ import { IListObj, MainListRecipe, NewUnitObj, ResUnitObj, TempalteRecipeForList
 import { createAsyncThunk, createSlice,  PayloadAction } from "@reduxjs/toolkit";
 
 
-type OperationKey =
+export type OperationKey =
   | 'preLoaderMain'
   | 'newListRecipe'
   | 'ingredientsListRecipe'

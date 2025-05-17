@@ -18,7 +18,7 @@ export function StatusAlert(props:DataProps) {
 
     return (
         <Alert
-            onClose={handleClose}
+            // onClose={handleClose}
             sx={{
                 alignItems: 'center',
                 position: 'absolute',

@@ -22,8 +22,7 @@ import { setFavoriteRecipe } from '@/state/slices/recipe-slice';
 import { theme } from '@/config/ThemeMUI/theme';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { newListRecipe } from '@/state/slices/list-recipe-slice';
-import { ErrorBoundary } from '../../ux-helpers/error-boundary';
-import { StatusBar } from './status-bar';
+// import { StatusBar } from './status-bar';
 
 
 
@@ -84,9 +83,7 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
     //     }
     // }
 
-    if (!recipes || !recipes.recipe_id || typeof recipes.name !== 'string') {
-        throw new Error('Invalid recipe data');
-    }
+    
 
     
 
@@ -162,10 +159,7 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                     .sort((a, b) => Number(b.main) - Number(a.main))
                     .map(el => (
                         <SwiperSlide key={el.media_id} className="media-main-slide">
-                            <ErrorBoundary>
-                                <SwiperMediaCard props={{ el, name:recipes?.name }} />
-                            </ErrorBoundary>
-                            
+                            <SwiperMediaCard props={{ el, name:recipes?.name }} />
                         </SwiperSlide>
                     )
                     )}

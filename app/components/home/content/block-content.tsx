@@ -9,7 +9,7 @@ import { Box, Button } from "@mui/material";
 import { styleLink } from "../header/header";
 import { theme } from "@/config/ThemeMUI/theme";
 import { UXLoading } from "../../ux-helpers/loading";
-import { StatusBar } from "./status-bar";
+// import { StatusBar } from "./status-bar";
 
 
 export function BlockContent() {
@@ -44,7 +44,7 @@ export function BlockContent() {
   console.log(recipes, filteredRecipes, nav)
   return (
     <>
-      <StatusBar></StatusBar>
+      {/* <StatusBar></StatusBar> */}
       {
         status && recipes.length === 0 ?
           <UXLoading></UXLoading>
