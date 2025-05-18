@@ -23,7 +23,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
   return (
     <>
       <GlobalErrorProvider>
-        <AlertsProvider>
+        <AlertsProvider sliceKeys={['listRecipe']}>
           <ClientUser></ClientUser>
           <NavigationSite></NavigationSite>
           <Paper sx={styledPaperHome}>

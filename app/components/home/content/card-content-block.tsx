@@ -55,7 +55,6 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
         setAnchorEl(null);
     };
 
-    console.log('321312312')
     const handlerFavorite = (recipe_id: string, favorite: boolean | undefined): void => {
         if (recipe_id && id !== '' && favorite !== undefined) {
             const data = { connection_id: id, recipe_id, favorite }
