@@ -4,16 +4,38 @@ import { RootState } from "../store";
 
 
 
+export type CookHistoryOperationKey =
+  | 'fetchHistoryCook'
+  | 'newCookHistory'
+  | 'deleteCookHistory'
 
 
-const initialState:CookHistoryT = {
+
+type OperationStatus = {
+    loading: boolean
+    error: boolean
+}
+
+type OperationState = Record<CookHistoryOperationKey, OperationStatus>
+
+interface CookHistoryState extends CookHistoryT {
+    operations: OperationState
+}
+
+const defaultStatus: OperationStatus = { loading: true, error: false }
+
+
+const initialState:CookHistoryState = {
     status: false,
     error: false,
     connection_id: '',
     history_links:[
-
     ],
-    
+    operations:{
+        fetchHistoryCook:defaultStatus,
+        newCookHistory:defaultStatus,
+        deleteCookHistory:defaultStatus
+    }
 }
 
 
@@ -112,67 +134,83 @@ export const deleteCookHistory = createAsyncThunk<{connection_id:string, recipe_
 
 
 
+const createReducerHandlers = <T extends keyof CookHistoryState['operations']>(operationName: T) => ({
+    pending: (state: CookHistoryState) => {
+        state.operations[operationName].error = false;
+        state.operations[operationName].loading = true;
+    },
+    rejected: (state: CookHistoryState) => {
+        state.operations[operationName].error = true;
+        state.operations[operationName].loading = false;
+    }
+});
+
+const fetchHistoryCookHandlers = createReducerHandlers('fetchHistoryCook');
+const newCookHistoryHandlers = createReducerHandlers('newCookHistory');
+const deleteCookHistoryHandlers = createReducerHandlers('deleteCookHistory');
+
+
 
 const CookHistorySlice = createSlice({
     name: 'cook-history',
     initialState,
-    reducers: {},
+    reducers: {
+        closeAlertCookHistory(state, action: PayloadAction<CookHistoryOperationKey>){
+            const key = action.payload
+
+            if (state.operations[key]) {
+                state.operations[key].error = false
+                state.operations[key].loading = false
+            }
+        }
+    },
     extraReducers: (builder) => {
         builder
-        .addCase(fetchHistoryCook.pending, (state) => {
-            state.status = true,
-            state.error = false
-        })
-        .addCase(fetchHistoryCook.fulfilled, (state, action: PayloadAction<fetchCookHistoryT, string>) => {
-            state.status = false;
-            state.error = false;
+            .addCase(fetchHistoryCook.pending, fetchHistoryCookHandlers.pending)
+            .addCase(fetchHistoryCook.rejected, fetchHistoryCookHandlers.rejected)
+            .addCase(fetchHistoryCook.fulfilled, (state, action: PayloadAction<fetchCookHistoryT, string>) => {
+                state.operations.fetchHistoryCook.error = false
+                state.operations.fetchHistoryCook.loading = false
 
-            state.connection_id = action.payload.connection_id
-            action.payload.history_links.map(el => {
-                
-                const thisCook = state.history_links.find(elem => elem.recipe_id === el.recipe_id)
-                if(!thisCook){
+                state.connection_id = action.payload.connection_id
+                action.payload.history_links.map(el => {
+                    
+                    const thisCook = state.history_links.find(elem => elem.recipe_id === el.recipe_id)
+                    if(!thisCook){
 
-                    state.history_links.push(el)
-                }
+                        state.history_links.push(el)
+                    }
+                })
             })
-        })
 
 
 
+            .addCase(newCookHistory.pending, newCookHistoryHandlers.pending)
+            .addCase(newCookHistory.rejected, newCookHistoryHandlers.rejected)
+            .addCase(newCookHistory.fulfilled, (state, action: PayloadAction<newCookHistoryT, string>) => {
+                state.operations.newCookHistory.error = false
+                state.operations.newCookHistory.loading = false
+
+                const thisLink = state.history_links.find(el => el.recipe_id === action.payload.history_links.recipe_id)
+                // console.log(thisLink, action.payload.history_links)
+                if(!thisLink) state.history_links.push(action.payload.history_links)
+                
+            })
 
 
-        .addCase(newCookHistory.pending, (state) => {
-            state.status = true,
-            state.error = false
-        })
-        .addCase(newCookHistory.fulfilled, (state, action: PayloadAction<newCookHistoryT, string>) => {
-            state.status = false;
-            state.error = false;
 
-            const thisLink = state.history_links.find(el => el.recipe_id === action.payload.history_links.recipe_id)
-            // console.log(thisLink, action.payload.history_links)
-            if(!thisLink) state.history_links.push(action.payload.history_links)
+            .addCase(deleteCookHistory.pending, deleteCookHistoryHandlers.pending)
+            .addCase(deleteCookHistory.rejected, deleteCookHistoryHandlers.rejected)
+            .addCase(deleteCookHistory.fulfilled, (state, action: PayloadAction<{ connection_id: string, recipe_id: string }>) => {
+                state.operations.deleteCookHistory.error = false
+                state.operations.deleteCookHistory.loading = false
             
-        })
-
-
-
-
-        .addCase(deleteCookHistory.pending, (state) => {
-            state.status = true,
-            state.error = false
-        })
-        .addCase(deleteCookHistory.fulfilled, (state, action: PayloadAction<{ connection_id: string, recipe_id: string }>) => {
-            state.status = false;
-            state.error = false;
-        
-            state.history_links = state.history_links.filter(link => link.recipe_id !== action.payload.recipe_id);
-        });
-        
-           
+                state.history_links = state.history_links.filter(link => link.recipe_id !== action.payload.recipe_id);
+            });
     }
 })
+
+export const { closeAlertCookHistory } = CookHistorySlice.actions
 
 
 export default CookHistorySlice.reducer

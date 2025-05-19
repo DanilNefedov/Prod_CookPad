@@ -4,12 +4,38 @@ import { setFavoriteCook } from "./cook";
 
 
 
-const initialState: IRecipeSlice = {
+
+
+export type RecipeOperationKey =
+  | 'fetchRecipes'
+  | 'setFavoriteRecipe'
+  
+
+
+type OperationStatus = {
+    loading: boolean
+    error: boolean
+}
+
+type OperationState = Record<RecipeOperationKey, OperationStatus>
+
+interface ListrecipeState extends IRecipeSlice {
+    operations: OperationState
+}
+
+const defaultStatus: OperationStatus = { loading: true, error: false }
+
+
+const initialState: ListrecipeState = {
     status: false,
     error: false,
     page: 0,
     recipes: [
-    ]
+    ],
+    operations:{
+        fetchRecipes:defaultStatus,
+        setFavoriteRecipe:defaultStatus
+    }
 }
 
 
@@ -96,6 +122,20 @@ export const setFavoriteRecipe = createAsyncThunk<favoriteDataRecipeT, favoriteD
 //     }
 // )
 
+const createReducerHandlers = <T extends keyof ListrecipeState['operations']>(operationName: T) => ({
+    pending: (state: ListrecipeState) => {
+        state.operations[operationName].error = false;
+        state.operations[operationName].loading = true;
+    },
+    rejected: (state: ListrecipeState) => {
+        state.operations[operationName].error = true;
+        state.operations[operationName].loading = false;
+    }
+});
+
+
+const fetchRecipesHandlers = createReducerHandlers('fetchRecipes');
+const setFavoriteRecipeHandlers = createReducerHandlers('setFavoriteRecipe');
 
 
 const recipeSlice = createSlice({
@@ -105,18 +145,25 @@ const recipeSlice = createSlice({
         resetStateRecipes(state) {
             return initialState; 
         },
+
+        closeAlertRecipe(state, action: PayloadAction<RecipeOperationKey>){
+            const key = action.payload
+
+            if (state.operations[key]) {
+                state.operations[key].error = false
+                state.operations[key].loading = false
+            }
+        }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchRecipes.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(fetchRecipes.pending, fetchRecipesHandlers.pending)
+            .addCase(fetchRecipes.rejected, fetchRecipesHandlers.rejected)
             .addCase(fetchRecipes.fulfilled, (state, action: PayloadAction<{ recipes: MainRecipeT[], page: number, totalCount:number }, string>) => {
+                state.operations.fetchRecipes.error = false
+                state.operations.fetchRecipes.loading = false
+
                 if (!action.payload) return;
-            
-                state.status = false;
-                state.error = false;
             
                 const { recipes, page, totalCount } = action.payload;
             
@@ -134,16 +181,15 @@ const recipeSlice = createSlice({
                 
             })
             
-            .addCase(fetchRecipes.rejected, (state) => {
-                state.status = false;
-                state.error = true;
-            })
+           
 
 
-            
+            .addCase(setFavoriteRecipe.pending, setFavoriteRecipeHandlers.pending)
+            .addCase(setFavoriteRecipe.rejected, setFavoriteRecipeHandlers.rejected)
             .addCase(setFavoriteRecipe.fulfilled, (state, action: PayloadAction<favoriteDataRecipeT, string>) => {
-                state.status = false;
-                state.error = false;
+                state.operations.setFavoriteRecipe.error = false
+                state.operations.setFavoriteRecipe.loading = false
+                
                 const { recipe_id } = action.payload;
             
                 const recipeIndex = state.recipes.findIndex(el => el.recipe_id === recipe_id);
@@ -164,10 +210,7 @@ const recipeSlice = createSlice({
                     }
                 }
             })
-            .addCase(setFavoriteRecipe.rejected, (state) => {
-                state.status = false;
-                state.error = true;
-            })
+            
 
 
             // .addCase(deleteRecipe.fulfilled, (state, action: PayloadAction<{connection_id:string, recipe_id:string}, string>)=>{
@@ -185,6 +228,6 @@ const recipeSlice = createSlice({
            
     }
 })
-export const { resetStateRecipes } = recipeSlice.actions;
+export const { resetStateRecipes, closeAlertRecipe } = recipeSlice.actions;
 
 export default recipeSlice.reducer

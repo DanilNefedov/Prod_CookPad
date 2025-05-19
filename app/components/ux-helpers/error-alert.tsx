@@ -3,57 +3,57 @@
 import { useEffect, useRef } from 'react';
 import { useSnackbar, SnackbarKey } from 'notistack';
 import { Alert, Slide, SlideProps } from '@mui/material';
-import { closeErrorWindow, OperationKey } from '@/state/slices/list-recipe-slice';
 import { useAppDispatch, useAppSelector } from '@/state/hook';
-import { ERROR_MESSAGES_LIST_RECIPE, LOADING_MESSAGES_LIST_RECIPE, SUCCESS_MESSAGES_LIST_RECIPE } from './dictionaries';
 import { RootState } from '@/state/store';
 
 
 
-type OperationConfig = {
-    sliceSelector: (state: RootState) => Record<OperationKey, { error: boolean; loading: boolean }>;
-    successMessages: Record<string, string>;
-    errorMessages: Record<string, string>;
-    loadingMessages: Record<string, string>;
-    closeErrorAction: (key: OperationKey) => any;
+export type OperationConfig<K extends string = string> = {
+    sliceSelector: (state: RootState) => Record<K, { error: boolean; loading: boolean }>;
+    successMessages: Partial<Record<K, string>>;
+    errorMessages: Partial<Record<K, string>>;
+    loadingMessages: Partial<Record<K, string>>;
+    closeErrorAction: (key: string) => any;
 };
+
+
 
 
 const SlideTransition = (props: SlideProps) => <Slide {...props} direction="down" />;
 
 
-export function GlobalErrorNotifier({ operationConfigs }: { operationConfigs: OperationConfig[] }) {
+type AnyOperationConfig = OperationConfig<string>;
+
+type GlobalErrorNotifierProps = {
+  operationConfigs: AnyOperationConfig[];
+};
+
+export function GlobalErrorNotifier<K extends string = string>({ operationConfigs }: GlobalErrorNotifierProps) {
     const dispatch = useAppDispatch();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
     const duration = 3000;
 
-    const shownRef = useRef<Record<OperationKey, boolean>>({} as Record<OperationKey, boolean>);
-    const wasLoadingRef = useRef<Record<OperationKey, boolean>>({} as Record<OperationKey, boolean>);
-    const shownLoadingRef = useRef<Record<OperationKey, SnackbarKey | null>>({} as Record<OperationKey, SnackbarKey | null>);
+    const shownRef = useRef<Record<K, boolean>>({} as Record<K, boolean>);
+    const wasLoadingRef = useRef<Record<K, boolean>>({} as Record<K, boolean>);
+    const shownLoadingRef = useRef<Record<K, SnackbarKey | null>>({} as Record<K, SnackbarKey | null>);
 
     const operationsByConfig = operationConfigs.map((config) => ({
-        // key: config.key,
         operations: useAppSelector(config.sliceSelector),
+        config,
     }));
 
     useEffect(() => {
-        operationsByConfig.forEach(({ operations }) => {
-            (Object.entries(operations) as [OperationKey, { error: boolean; loading: boolean }][]).forEach(
+        operationsByConfig.forEach(({ operations, config }) => {
+            (Object.entries(operations) as [K, { error: boolean; loading: boolean }][]).forEach(
                 ([operationKey, status]) => {
                     const prevWasLoading = wasLoadingRef.current[operationKey] || false;
 
-                    // 1. Handle loading state
-                    if (status.loading && LOADING_MESSAGES_LIST_RECIPE[operationKey] && !shownLoadingRef.current[operationKey]) {
-                        const message = LOADING_MESSAGES_LIST_RECIPE[operationKey]!;
-
+                    // Loading
+                    if (status.loading && config.loadingMessages[operationKey] && !shownLoadingRef.current[operationKey]) {
+                        const message = config.loadingMessages[operationKey];
                         const key = enqueueSnackbar('', {
                             content: () => (
-                                <Alert severity="info" sx={{
-                                    bgcolor: '#0288D1',
-                                    color: '#fff',
-                                    '& .MuiSvgIcon-root': { fill: '#fff' },
-                                }}>
+                                <Alert severity="info" sx={{ bgcolor: '#0288D1', color: '#fff', '& .MuiSvgIcon-root': { fill: '#fff' } }}>
                                     {message}
                                 </Alert>
                             ),
@@ -66,26 +66,19 @@ export function GlobalErrorNotifier({ operationConfigs }: { operationConfigs: Op
                         wasLoadingRef.current[operationKey] = true;
                     }
 
-                    // 2. Handle success state
-                    if (
-                        prevWasLoading &&
-                        !status.loading &&
-                        !status.error &&
-                        !shownRef.current[operationKey] &&
-                        SUCCESS_MESSAGES_LIST_RECIPE[operationKey]
-                    ) {
+                    // Success
+                    if (prevWasLoading && !status.loading && !status.error && !shownRef.current[operationKey] && config.successMessages[operationKey]) {
                         const key = shownLoadingRef.current[operationKey];
                         if (key) closeSnackbar(key);
 
-                        const message = SUCCESS_MESSAGES_LIST_RECIPE[operationKey]!;
-
+                        const message = config.successMessages[operationKey];
                         enqueueSnackbar('', {
                             content: (snackbarKey) => (
-                                <Alert severity="success" onClose={() => closeSnackbar(snackbarKey)} sx={{
-                                    bgcolor: '#388E3C',
-                                    color: '#fff',
-                                    '& .MuiSvgIcon-root': { fill: '#fff' },
-                                }}>
+                                <Alert
+                                    severity="success"
+                                    onClose={() => closeSnackbar(snackbarKey)}
+                                    sx={{ bgcolor: '#388E3C', color: '#fff', '& .MuiSvgIcon-root': { fill: '#fff' } }}
+                                >
                                     {message}
                                 </Alert>
                             ),
@@ -103,23 +96,23 @@ export function GlobalErrorNotifier({ operationConfigs }: { operationConfigs: Op
                         }, duration + 500);
                     }
 
-                    // 3. Handle error state
+                    // Error
                     if (status.error && !shownRef.current[operationKey]) {
                         const key = shownLoadingRef.current[operationKey];
                         if (key) closeSnackbar(key);
 
-                        const message = ERROR_MESSAGES_LIST_RECIPE[operationKey] ?? 'Something went wrong.';
+                        const message = config.errorMessages[operationKey] ?? 'Something went wrong.';
 
                         enqueueSnackbar('', {
                             content: (snackbarKey) => (
-                                <Alert severity="error" onClose={() => {
-                                    closeSnackbar(snackbarKey);
-                                    dispatch(closeErrorWindow(operationKey));
-                                }} sx={{
-                                    bgcolor: '#d32f2f',
-                                    color: '#fff',
-                                    '& .MuiSvgIcon-root': { fill: '#fff' },
-                                }}>
+                                <Alert
+                                    severity="error"
+                                    onClose={() => {
+                                        closeSnackbar(snackbarKey);
+                                        dispatch(config.closeErrorAction(operationKey));
+                                    }}
+                                    sx={{ bgcolor: '#d32f2f', color: '#fff', '& .MuiSvgIcon-root': { fill: '#fff' } }}
+                                >
                                     {message}
                                 </Alert>
                             ),

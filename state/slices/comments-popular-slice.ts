@@ -4,6 +4,32 @@ import { newCommCalc } from "./popular-slice";
 
 
 
+
+export type CommentsOperationKey =
+  | 'commVideoFetch'
+  | 'newCommPopular'
+  | 'likedComment'
+  | 'newReplyComm'
+  | 'getReplies'
+
+
+
+type OperationStatus = {
+    loading: boolean
+    error: boolean
+}
+
+type OperationState = Record<CommentsOperationKey, OperationStatus>
+
+interface CommentStateI extends CommentState {
+    operations: OperationState
+}
+
+const defaultStatus: OperationStatus = { loading: true, error: false }
+
+
+
+
 const commentsAdapter = createEntityAdapter({
     selectId: (comment:CommListData) => comment.id_comment,
 });
@@ -32,64 +58,20 @@ export type CommentState = {
     };
 };
   
-const initialState: CommentState = {
+const initialState: CommentStateI = {
     status: false,
     error: false,
     comments: {},
-    // comments: commentsAdapter.getInitialState({
-    //     page: 1,
-    //     ids: [],
-    //     entities: {},
-    // }),
     replies: {},  
+    operations:{
+        commVideoFetch:defaultStatus,
+        newCommPopular:defaultStatus,
+        likedComment:defaultStatus,
+        newReplyComm:defaultStatus,
+        getReplies:defaultStatus
+    }
 };
 
-// {
-//     status: false,
-//     error: false,
-//     comments: {
-//       page: 1,
-//       ids: ['id1', 'id2'],
-//       entities: {
-//         'id1':{
-//             id_comment:'id1';
-//             name:"name"
-//         },
-//         'id2':{
-//             id_comment:'id2';
-//             name:"name"
-
-//         }
-//       }, 
-//     },
-//     replies: {
-//         'id1':{
-//             page:1,
-//             ids: ['id11', 'id22'],
-//             entities:{
-//                 'id11':{
-//                 id_comment:'id11';
-//                 name:"name"
-//                 },
-//                 'id22':{
-//                     id_comment:'id22';
-//                     name:"name"
-//                 }
-//             }
-//         },
-//         'id2':{
-//             page:1,
-//             ids: ['id11', 'id22'],
-//             entities:{
-//                 'id11':{
-//                     id_comment:'id11';
-//                     name:"name"
-//                 },
-//             }
-            
-//         }
-//     },  
-// }
 
 
 
@@ -282,6 +264,28 @@ export const getReplies = createAsyncThunk<returnDataT, {id_comment: string, pag
 )
 
 
+
+
+const createReducerHandlers = <T extends keyof CommentStateI['operations']>(operationName: T) => ({
+    pending: (state: CommentStateI) => {
+        state.operations[operationName].error = false;
+        state.operations[operationName].loading = true;
+    },
+    rejected: (state: CommentStateI) => {
+        state.operations[operationName].error = true;
+        state.operations[operationName].loading = false;
+    }
+});
+
+const commVideoFetchHandlers = createReducerHandlers('commVideoFetch');
+const newCommPopularHandlers = createReducerHandlers('newCommPopular');
+const likedCommentHandlers = createReducerHandlers('likedComment');
+const newReplyCommHandlers = createReducerHandlers('newReplyComm');
+const getRepliesHandlers = createReducerHandlers('getReplies');
+  
+
+
+
 const commentsPopularSlice = createSlice({
     name: 'commentsPopular',
     initialState,
@@ -291,7 +295,16 @@ const commentsPopularSlice = createSlice({
             if (!state.comments[config_id]) {
                 state.comments[config_id] = commentsAdapter.getInitialState({ page: 0 });
             }
-          }
+        },
+
+        closeAlertComments(state, action: PayloadAction<CommentsOperationKey>){
+            const key = action.payload
+
+            if (state.operations[key]) {
+                state.operations[key].error = false
+                state.operations[key].loading = false
+            }
+        }
           
         
         // resetComments: (state) =>{
@@ -305,13 +318,11 @@ const commentsPopularSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(commVideoFetch.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(commVideoFetch.pending, commVideoFetchHandlers.pending)
+            .addCase(commVideoFetch.rejected, commVideoFetchHandlers.rejected)
             .addCase(commVideoFetch.fulfilled, (state, action: PayloadAction<ReturnCommDataT>) => {
-                state.status = false;
-                state.error = false;
+                state.operations.commVideoFetch.error = false
+                state.operations.commVideoFetch.loading = false
                 
                 const { config_id, page, totalCommentsCount, formattedComments } = action.payload;
 
@@ -335,23 +346,14 @@ const commentsPopularSlice = createSlice({
             })
 
 
-            .addCase(newCommPopular.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(newCommPopular.pending, newCommPopularHandlers.pending)
+            .addCase(newCommPopular.rejected, newCommPopularHandlers.rejected)
             .addCase(newCommPopular.fulfilled, (state, action: PayloadAction<CommListDataReturn, string>) => {
+                state.operations.newCommPopular.error = false
+                state.operations.newCommPopular.loading = false
+
                 const { config_id, responseData } = action.payload;
-
-                state.error = false
-                state.status = false
-                // console.log(action.payload)
-                // commentsAdapter.addOne(state.comments, action.payload)
-
-                // state.comments.ids = [
-                //     action.payload.id_comment,
-                //     ...state.comments.ids.filter(id => id !== action.payload.id_comment)
-                // ];
-
+                
                 if (!state.comments[config_id]) {
                     state.comments[config_id] = {
                         page: 1,
@@ -370,26 +372,15 @@ const commentsPopularSlice = createSlice({
             })
 
 
-            .addCase(likedComment.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(likedComment.pending, likedCommentHandlers.pending)
+            .addCase(likedComment.rejected, likedCommentHandlers.rejected)
             .addCase(likedComment.fulfilled, (state, action: PayloadAction<LikedCommnetDataT, string>) => {
+                state.operations.likedComment.error = false
+                state.operations.likedComment.loading = false
+
                 const { id_comment, liked, reply, id_branch, config_id } = action.payload;
-                state.error = false,
-                state.status = false
 
                 if (!reply) {
-                    // const existingComment = state.comments.entities[id_comment];
-                    // if (!existingComment) return;
-            
-                    // commentsAdapter.updateOne(state.comments, {
-                    //     id: id_comment,
-                    //     changes: {
-                    //         liked,
-                    //         likes_count: liked ? existingComment.likes_count + 1 : existingComment.likes_count - 1,
-                    //     },
-                    // });
 
                     const commentBlock = state.comments[config_id];
                     if (!commentBlock) return;
@@ -424,15 +415,11 @@ const commentsPopularSlice = createSlice({
                 
             })
 
-            .addCase(newReplyComm.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(newReplyComm.pending, newReplyCommHandlers.pending)
+            .addCase(newReplyComm.rejected, newReplyCommHandlers.rejected)
             .addCase(newReplyComm.fulfilled, (state, action: PayloadAction<ReplyCommDataReturn, string>) => {
-                
-                
-                state.error = false;
-                state.status = false;
+                state.operations.newReplyComm.error = false
+                state.operations.newReplyComm.loading = false
 
                 const data = action.payload;
                 const reply = data.responseData
@@ -457,16 +444,6 @@ const commentsPopularSlice = createSlice({
                 ];
 
 
-                // const parentComment = state.comments.entities[id_comment];
-                // if (parentComment) {
-                //     commentsAdapter.updateOne(state.comments, {
-                //         id: id_comment,
-                //         changes: {
-                //             reply_count: parentComment.reply_count + 1
-                //         }
-                //     });
-                // }
-                
 
                 const commentBlock = state.comments[config_id];
                 if (!commentBlock) return;
@@ -481,18 +458,14 @@ const commentsPopularSlice = createSlice({
                     },
                 });
 
-                
-
             })
 
 
-            .addCase(getReplies.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(getReplies.pending, getRepliesHandlers.pending)
+            .addCase(getReplies.rejected, getRepliesHandlers.rejected)
             .addCase(getReplies.fulfilled, (state, action: PayloadAction<returnDataT, string>) => {
-                state.error = false;
-                state.status = false;
+                state.operations.getReplies.error = false
+                state.operations.getReplies.loading = false
             
                 const { id_comment, dataList, page, totalCommentsCount } = action.payload;
             
@@ -517,12 +490,12 @@ const commentsPopularSlice = createSlice({
                     }
                 }
             })
-
+ 
     }
 })
 
 
-export const { initCommentsState } = commentsPopularSlice.actions;
+export const { initCommentsState, closeAlertComments } = commentsPopularSlice.actions;
 
 
 export default commentsPopularSlice.reducer

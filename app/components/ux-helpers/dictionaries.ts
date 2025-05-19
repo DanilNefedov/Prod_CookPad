@@ -1,27 +1,20 @@
+import { CommentsOperationKey } from "@/state/slices/comments-popular-slice";
+import { CookOperationKey } from "@/state/slices/cook";
+import { CookHistoryOperationKey } from "@/state/slices/cook-history";
 import { OperationKey } from "@/state/slices/list-recipe-slice";
+import { PopularOperationKey } from "@/state/slices/popular-slice";
+import { RecipeOperationKey } from "@/state/slices/recipe-slice";
+import { UserOperationKey } from "@/state/slices/user-slice";
 
 
 //----------------------------------  list-recipe-slice ---------------------------------//
-
 export const SUCCESS_MESSAGES_LIST_RECIPE: Partial<Record<OperationKey, string>> = {
     newListRecipe: 'Recipe list created successfully!',
     deleteListRecipe: 'Recipe deleted.',
-    // shopIngrListRecipe: 'Ingredients added to shopping list.',
-    // deleteIngrRecipeList: 'Ingredient removed from the recipe list.',
-    // shopUnitListRecipe: 'Units added to the shopping list.',
-    // newAmountListRecipe: 'Ingredient amount updated successfully.',
-    // newUnitListRecipe: 'Unit updated successfully.',
-    // deleteUnitListRecipe: 'Unit removed successfully.',
 };
 
 export const LOADING_MESSAGES_LIST_RECIPE: Partial<Record<OperationKey, string>> = {
     newListRecipe: 'Creating recipe list...',
-    // shopIngrListRecipe: 'Adding ingredients to shopping list...',
-    // deleteIngrRecipeList: 'Removing ingredient from recipe...',
-    // shopUnitListRecipe: 'Adding units to shopping list...',
-    // newAmountListRecipe: 'Updating ingredient amount...',
-    // newUnitListRecipe: 'Updating unit...',
-    // deleteUnitListRecipe: 'Removing unit...', 
 };
     
 export const ERROR_MESSAGES_LIST_RECIPE: Partial<Record<OperationKey, string>> = {
@@ -36,5 +29,110 @@ export const ERROR_MESSAGES_LIST_RECIPE: Partial<Record<OperationKey, string>> =
     newUnitListRecipe: 'Failed to update unit.',
     deleteUnitListRecipe: 'Failed to remove unit.',
 };
-
 //----------------------------------  list-recipe-slice ---------------------------------//
+
+
+//----------------------------------  recipe ---------------------------------//
+export const SUCCESS_MESSAGES_RECIPE: Partial<Record<RecipeOperationKey, string>> = {
+
+};
+
+export const ERROR_MESSAGES_RECIPE: Partial<Record<RecipeOperationKey, string>> = {
+    fetchRecipes: 'Loading recipes failed.',
+    setFavoriteRecipe: 'Failed to update favorite.',
+}
+
+export const LOADING_MESSAGES_RECIPE: Partial<Record<RecipeOperationKey, string>> = {
+    
+}
+//----------------------------------  recipe ---------------------------------//
+
+
+//----------------------------------  user ---------------------------------//
+export const SUCCESS_MESSAGES_USER: Partial<Record<UserOperationKey, string>> = {
+    
+};
+
+export const ERROR_MESSAGES_USER: Partial<Record<UserOperationKey, string>> = {
+    fetchUser: 'Unable to load recipes.',
+    fetchClearUser: 'Unable to update favorite recipe.',
+}
+
+export const LOADING_MESSAGES_USER: Partial<Record<UserOperationKey, string>> = {
+    
+}
+//----------------------------------  user ---------------------------------//
+
+
+//----------------------------------  popular ---------------------------------//
+export const SUCCESS_MESSAGES_POPULAR: Partial<Record<PopularOperationKey, string>> = {
+    
+};
+
+export const ERROR_MESSAGES_POPULAR: Partial<Record<PopularOperationKey, string>> = {
+    popularFetch: 'Unable to load popular recipes.',
+    likePopContent: 'Unable to update favorite recipe.',
+    savePopContent: 'Unable to save recipe changes.'
+}
+
+export const LOADING_MESSAGES_POPULAR: Partial<Record<PopularOperationKey, string>> = {
+    
+}
+//----------------------------------  popular ---------------------------------//
+
+
+
+//----------------------------------  cook ---------------------------------//
+export const SUCCESS_MESSAGES_COOK: Partial<Record<CookOperationKey, string>> = {
+    
+};
+
+export const ERROR_MESSAGES_COOK: Partial<Record<CookOperationKey, string>> = {
+    fetchCook: 'Unable to load your recipes.',
+    deleteRecipe: 'Unable to delete the recipe.',
+}
+
+export const LOADING_MESSAGES_COOK: Partial<Record<CookOperationKey, string>> = {
+    
+}
+//----------------------------------  cook ---------------------------------//
+
+
+
+
+//----------------------------------  cook ---------------------------------//
+export const SUCCESS_MESSAGES_COOK_HISTORY: Partial<Record<CookHistoryOperationKey, string>> = {
+    
+};
+
+export const ERROR_MESSAGES_COOK_HISTORY: Partial<Record<CookHistoryOperationKey, string>> = {
+    fetchHistoryCook: 'Unable to load your cooking history.',
+    newCookHistory: 'Unable to add a recipe to cooking history.',
+    deleteCookHistory: 'Unable to remove the recipe from history.',
+}
+
+export const LOADING_MESSAGES_COOK_HISTORY: Partial<Record<CookHistoryOperationKey, string>> = {
+    
+}
+//----------------------------------  cook ---------------------------------//
+
+
+
+
+//----------------------------------  comments ---------------------------------//
+export const SUCCESS_MESSAGES_COMMENTS: Partial<Record<CommentsOperationKey, string>> = {
+    
+};
+
+export const ERROR_MESSAGES_COMMENTS: Partial<Record<CommentsOperationKey, string>> = {
+    commVideoFetch: 'Unable to load comments.',
+    newCommPopular: 'Unable to post your comment.',
+    likedComment: 'Unable to update your like on the comment.',
+    newReplyComm: 'Unable to reply to the comment.',
+    getReplies: 'Unable to load replies.',
+}
+
+export const LOADING_MESSAGES_COMMENTS: Partial<Record<CommentsOperationKey, string>> = {
+    
+}
+//----------------------------------  comments ---------------------------------//

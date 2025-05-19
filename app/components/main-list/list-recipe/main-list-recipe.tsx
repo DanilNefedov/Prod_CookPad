@@ -1,7 +1,7 @@
 'use client'
 
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { closeErrorWindow, deleteListRecipe, ingredientsListRecipe, OperationKey, preLoaderMain } from "@/state/slices/list-recipe-slice";
+import { closeAlertListRecipe, deleteListRecipe, ingredientsListRecipe, OperationKey, preLoaderMain } from "@/state/slices/list-recipe-slice";
 import { Accordion, AccordionSummary, Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -69,11 +69,7 @@ export function MainListRecipe() {
     }
 
 
-    function closeError(name: OperationKey) {
-        if (preLoaderMainStatus.error || ingredientsListRecipeStatus.error) {
-            dispatch(closeErrorWindow(name))
-        }
-    }
+
     
     // function closeError(){
     //     if (ingredientsListRecipeStatus.error) {

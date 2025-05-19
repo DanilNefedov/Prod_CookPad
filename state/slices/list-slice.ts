@@ -3,12 +3,62 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 
-const initialState: IListState = {
+
+
+
+
+export type listOperationKey =
+  | 'fetchList'
+  | 'newIngredientList'
+  | 'newUnitIngredientList'
+  | 'updateCookUnit'
+  | 'toggleShopIngrFetch'
+  | 'shopUnitUpdate'
+  | 'deleteIngredientFetch'
+  | 'deleteUnitIngrFetch'
+  | 'changeAmountFetch'
+  | 'addNewUnit'
+
+
+
+
+
+
+type OperationStatus = {
+    loading: boolean
+    error: boolean
+}
+
+type OperationState = Record<listOperationKey, OperationStatus>
+
+interface ListState extends IListState {
+    operations: OperationState
+}
+
+const defaultStatus: OperationStatus = { loading: true, error: false }
+
+
+
+
+
+const initialState: ListState = {
     status: true,
     error: false,
     connection_id: '',
     list_ingr: [
-    ]
+    ],
+    operations:{
+        fetchList:defaultStatus,
+        newIngredientList:defaultStatus,
+        newUnitIngredientList:defaultStatus,
+        updateCookUnit:defaultStatus,
+        toggleShopIngrFetch:defaultStatus,
+        shopUnitUpdate:defaultStatus,
+        deleteIngredientFetch:defaultStatus,
+        deleteUnitIngrFetch:defaultStatus,
+        changeAmountFetch:defaultStatus,
+        addNewUnit:defaultStatus,
+    }
 }
 
 
@@ -353,21 +403,52 @@ export const addNewUnit = createAsyncThunk<ResAddNewUnitT, AddNewUnitT, { reject
 
 
 
+const createReducerHandlers = <T extends keyof ListState['operations']>(operationName: T) => ({
+    pending: (state: ListState) => {
+        state.operations[operationName].error = false;
+        state.operations[operationName].loading = true;
+    },
+    rejected: (state: ListState) => {
+        state.operations[operationName].error = true;
+        state.operations[operationName].loading = false;
+    }
+});
+
+
+
+const fetchListHandlers = createReducerHandlers('fetchList');
+const newIngredientListHandlers = createReducerHandlers('newIngredientList');
+const newUnitIngredientListHandlers = createReducerHandlers('newUnitIngredientList');
+const updateCookUnitHandlers = createReducerHandlers('updateCookUnit');
+const toggleShopIngrFetchHandlers = createReducerHandlers('toggleShopIngrFetch');
+const shopUnitUpdateHandlers = createReducerHandlers('shopUnitUpdate');
+const deleteIngredientFetchHandlers = createReducerHandlers('deleteIngredientFetch');
+const deleteUnitIngrFetchHandlers = createReducerHandlers('deleteUnitIngrFetch');
+const changeAmountFetchHandlers = createReducerHandlers('changeAmountFetch');
+const addNewUnitHandlers = createReducerHandlers('addNewUnit');
 
 
 const listSlice = createSlice({
     name: 'list',
     initialState,
-    reducers: {},
+    reducers: {
+        closeAlertList(state, action: PayloadAction<listOperationKey>){
+            const key = action.payload
+
+            if (state.operations[key]) {
+                state.operations[key].error = false
+                state.operations[key].loading = false
+            }
+        }
+    },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchList.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(fetchList.pending, fetchListHandlers.pending)
+            .addCase(fetchList.rejected, fetchListHandlers.rejected)
             .addCase(fetchList.fulfilled, (state, action: PayloadAction<IRequestList, string>) => {
-                state.error = false,
-                state.status = false
+                state.operations.fetchList.error = false
+                state.operations.fetchList.loading = false
+                
                 const payload = action.payload
                 state.connection_id = payload.connection_id
 
@@ -382,11 +463,12 @@ const listSlice = createSlice({
             })
 
 
-           .addCase(newIngredientList.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(newIngredientList.pending, newIngredientListHandlers.pending)
+            .addCase(newIngredientList.rejected, newIngredientListHandlers.rejected)
             .addCase(newIngredientList.fulfilled, (state, action:PayloadAction<ResNewIngredientListT, string>) => {
+                state.operations.newIngredientList.error = false
+                state.operations.newIngredientList.loading = false
+
                 const data = action.payload;
 
                 const thisIngr = state.list_ingr.find(el => el._id === data._id)
@@ -398,26 +480,29 @@ const listSlice = createSlice({
             })
 
 
-            .addCase(newUnitIngredientList.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(newUnitIngredientList.pending, newUnitIngredientListHandlers.pending)
+            .addCase(newUnitIngredientList.rejected, newUnitIngredientListHandlers.rejected)
             .addCase(newUnitIngredientList.fulfilled, (state, action:PayloadAction<ResDataUnitUpdate, string>) => {
-                const {unit, _id} = action.payload;
-                const thisIngr = state.list_ingr.find(el => el._id === _id)
+                state.operations.newUnitIngredientList.error = false
+                state.operations.newUnitIngredientList.loading = false
 
+                const {unit, _id} = action.payload;
+                
+                const thisIngr = state.list_ingr.find(el => el._id === _id)
                 if(thisIngr){
                     thisIngr.units.push(unit)
                 }
             })
 
 
-            .addCase(updateCookUnit.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(updateCookUnit.pending, updateCookUnitHandlers.pending)
+            .addCase(updateCookUnit.rejected, updateCookUnitHandlers.rejected)
             .addCase(updateCookUnit.fulfilled, (state, action: PayloadAction<updateCookUnitI, string>) => {
+                state.operations.updateCookUnit.error = false
+                state.operations.updateCookUnit.loading = false
+
                 const { name, amount, _id } = action.payload;
+
                 const ingredient = state.list_ingr.find(ingr => ingr.name === name);
                 if (ingredient) {
                     const unit = ingredient.units.find(unit => unit._id === _id);
@@ -430,11 +515,12 @@ const listSlice = createSlice({
 
 
 
-            .addCase(toggleShopIngrFetch.pending, (state) => {
-                state.status = true,
-                    state.error = false
-            })
+            .addCase(toggleShopIngrFetch.pending, toggleShopIngrFetchHandlers.pending)
+            .addCase(toggleShopIngrFetch.rejected, toggleShopIngrFetchHandlers.rejected)
             .addCase(toggleShopIngrFetch.fulfilled, (state, action: PayloadAction<ShopIngredientT, string>) => {
+                state.operations.toggleShopIngrFetch.error = false
+                state.operations.toggleShopIngrFetch.loading = false
+
                 const ingredient = state.list_ingr.find(ingr => ingr._id === action.payload._id);
                 if (ingredient) {
                     ingredient.shop_ingr = !action.payload.shop_ingr;
@@ -443,11 +529,12 @@ const listSlice = createSlice({
             })
 
 
-            .addCase(shopUnitUpdate.pending, (state) => {
-                state.status = true,
-                    state.error = false
-            })
+            .addCase(shopUnitUpdate.pending, shopUnitUpdateHandlers.pending)
+            .addCase(shopUnitUpdate.rejected, shopUnitUpdateHandlers.rejected)
             .addCase(shopUnitUpdate.fulfilled, (state, action: PayloadAction<ShopUnitUpdateT, string>) => {
+                state.operations.shopUnitUpdate.error = false
+                state.operations.shopUnitUpdate.loading = false
+
                 const { ingredient_id, unit_id, shop_unit } = action.payload;
                 const ingredient = state.list_ingr.find(ingr => ingr._id === ingredient_id);
                 if (ingredient) {
@@ -460,11 +547,12 @@ const listSlice = createSlice({
 
 
 
-            .addCase(deleteIngredientFetch.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(deleteIngredientFetch.pending, deleteIngredientFetchHandlers.pending)
+            .addCase(deleteIngredientFetch.rejected, deleteIngredientFetchHandlers.rejected)
             .addCase(deleteIngredientFetch.fulfilled, (state, action: PayloadAction<DeleteIngredientT, string>) => {
+                state.operations.deleteIngredientFetch.error = false
+                state.operations.deleteIngredientFetch.loading = false
+
                 const { _id } = action.payload;
                 state.list_ingr = state.list_ingr.filter(
                     (item) => item._id !== _id
@@ -473,11 +561,12 @@ const listSlice = createSlice({
 
 
 
-            .addCase(deleteUnitIngrFetch.pending, (state) => {
-                state.status = true,
-                    state.error = false
-            })
+            .addCase(deleteUnitIngrFetch.pending, deleteUnitIngrFetchHandlers.pending)
+            .addCase(deleteUnitIngrFetch.rejected, deleteUnitIngrFetchHandlers.rejected)
             .addCase(deleteUnitIngrFetch.fulfilled, (state, action: PayloadAction<DeleteUnitIngredientT, string>) => {
+                state.operations.deleteUnitIngrFetch.error = false
+                state.operations.deleteUnitIngrFetch.loading = false
+
                 const { ingredient_id, unit_id } = action.payload;
                 const ingredient = state.list_ingr.find(ingr => ingr._id === ingredient_id);
                 if (ingredient) {
@@ -486,46 +575,37 @@ const listSlice = createSlice({
             })
 
 
-            .addCase(changeAmountFetch.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(changeAmountFetch.pending, changeAmountFetchHandlers.pending)
+            .addCase(changeAmountFetch.rejected, changeAmountFetchHandlers.rejected)
             .addCase(changeAmountFetch.fulfilled, (state, action: PayloadAction<ChangeAmountT, string>) => {
-                // const { ingredient_id, unit_id, amount } = action.payload;
-                // const ingredient = state.list_ingr.find(ingr => ingr._id === ingredient_id);
-                // if (ingredient) {
-                //     const unit = ingredient.units.find(unit => unit._id === unit_id);
-                //     if (unit) {
-                //         unit.amount = amount;
-                //     }
-                // }
+                state.operations.changeAmountFetch.error = false
+                state.operations.changeAmountFetch.loading = false
+                
                 const { ingredient_id, unit_id, amount } = action.payload;
         
-                // Находим ингредиент
                 const ingredientIndex = state.list_ingr.findIndex(
-                (ingredient) => ingredient._id === ingredient_id
+                    (ingredient) => ingredient._id === ingredient_id
                 );
                 
                 if (ingredientIndex !== -1) {
-                // Находим юнит в ингредиенте
-                const unitIndex = state.list_ingr[ingredientIndex].units.findIndex(
-                    (unit) => unit._id === unit_id
-                );
-                
-                if (unitIndex !== -1) {
-                    // Обновляем только нужный юнит
-                    state.list_ingr[ingredientIndex].units[unitIndex].amount = amount;
-                }
+                    const unitIndex = state.list_ingr[ingredientIndex].units.findIndex(
+                        (unit) => unit._id === unit_id
+                    );
+                    
+                    if (unitIndex !== -1) {
+                        state.list_ingr[ingredientIndex].units[unitIndex].amount = amount;
+                    }
                 }
             })
 
 
 
-            .addCase(addNewUnit.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(addNewUnit.pending, addNewUnitHandlers.pending)
+            .addCase(addNewUnit.rejected, addNewUnitHandlers.rejected)
             .addCase(addNewUnit.fulfilled, (state, action: PayloadAction<ResAddNewUnitT, string>) => {
+                state.operations.addNewUnit.error = false
+                state.operations.addNewUnit.loading = false
+
                 const { ingredient_id, new_unit } = action.payload;
                 const ingredient = state.list_ingr.find(ingr => ingr._id === ingredient_id);
                 if (ingredient) {
@@ -535,5 +615,8 @@ const listSlice = createSlice({
         }
 })
     
+
+export const { closeAlertList } = listSlice.actions
+
     
 export default listSlice.reducer

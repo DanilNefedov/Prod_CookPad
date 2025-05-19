@@ -365,10 +365,6 @@ export const deleteListRecipe = createAsyncThunk<string, {connection_id:string, 
 )
 
 
-type OperationsKey = keyof typeof initialState.operations;
-
-
-
 const createReducerHandlers = <T extends keyof ListrecipeState['operations']>(operationName: T) => ({
     pending: (state: ListrecipeState) => {
         state.operations[operationName].error = false;
@@ -391,12 +387,14 @@ const newUnitListRecipeHandlers = createReducerHandlers('newUnitListRecipe');
 const deleteUnitListRecipeHandlers = createReducerHandlers('deleteUnitListRecipe');
 const deleteListRecipeHandlers = createReducerHandlers('deleteListRecipe');
 
+
+
 const listRecipeSlice = createSlice({
     name: 'list-recipe',
     initialState,
     reducers: {
 
-        closeErrorWindow(state, action: PayloadAction<OperationsKey>){
+        closeAlertListRecipe(state, action: PayloadAction<OperationKey>){
             const key = action.payload
 
             if (state.operations[key]) {
@@ -445,8 +443,10 @@ const listRecipeSlice = createSlice({
             .addCase(ingredientsListRecipe.pending, ingredientsListRecipeHandlers.pending)
             .addCase(ingredientsListRecipe.rejected, ingredientsListRecipeHandlers.rejected)
             .addCase(ingredientsListRecipe.fulfilled, (state, action: PayloadAction<ReturnIngredientsListrecipe, string>) => {
+                state.operations.ingredientsListRecipe.error = false
+                state.operations.ingredientsListRecipe.loading = false
+
                 const payload = action.payload;
-            
                 state.connection_id = payload.connection_id;
             
                 if (payload.ingredients.length > 0) {
@@ -459,10 +459,7 @@ const listRecipeSlice = createSlice({
                             existingRecipe.ingredients_list.unshift(ingr);
                         }
                     });
-                }
-                
-                state.operations.ingredientsListRecipe.error = false
-                state.operations.ingredientsListRecipe.loading = false
+                } 
             })
 
 
@@ -475,8 +472,6 @@ const listRecipeSlice = createSlice({
                 state.operations.shopIngrListRecipe.loading = false
                 
                 const { ingredient_id, shop_ingr, recipe_id } = action.payload;
-            
-
                 const thisRecipe = state.recipes.find(el => el.recipe_id === recipe_id)
 
                 if (thisRecipe) {
@@ -498,8 +493,6 @@ const listRecipeSlice = createSlice({
                 state.operations.deleteIngrRecipeList.loading = false
                 
                 const { recipe_id, ingredient_id } = action.payload;
-                
-
                 const recipeIndex = state.recipes.findIndex(recipe => recipe.recipe_id === recipe_id);
 
                 if (recipeIndex !== -1) {
@@ -518,9 +511,8 @@ const listRecipeSlice = createSlice({
                 state.operations.shopUnitListRecipe.loading = false
                 
                 const { ingredient_id, unit_id, shop_unit, recipe_id  } = action.payload;
-               
-
                 const recipe = state.recipes.find(recipe => recipe.recipe_id === recipe_id);
+
                 if (recipe) {
                     const ingredient = recipe.ingredients_list.find(ingredient => ingredient._id === ingredient_id);
                     if (ingredient) {
@@ -542,8 +534,8 @@ const listRecipeSlice = createSlice({
                 state.operations.newAmountListRecipe.loading = false
                 
                 const { ingredient_id, unit_id, amount, recipe_id } = action.payload;
-
                 const recipe = state.recipes.find(recipe => recipe.recipe_id === recipe_id);
+
                 if (recipe) {
                     const ingredient = recipe.ingredients_list.find(ingredient => ingredient._id === ingredient_id);
                     if (ingredient) {
@@ -564,9 +556,8 @@ const listRecipeSlice = createSlice({
                 state.operations.newUnitListRecipe.loading = false
                 
                 const { ingredient_id, new_unit, recipe_id } = action.payload;
-                
-
                 const thisRecipe = state.recipes.find(el => el.recipe_id === recipe_id)
+
                 if (thisRecipe) {
                     thisRecipe.ingredients_list.map(el => {
                         if (el._id === ingredient_id) {
@@ -586,9 +577,8 @@ const listRecipeSlice = createSlice({
                 state.operations.deleteUnitListRecipe.loading = false
                 
                 const { ingredient_id, connection_id: id, unit_id, recipe_id } = action.payload;
-                
-
                 const recipe = state.recipes.find(r => r.recipe_id === recipe_id);
+
                 if (recipe) {
                     const ingredient = recipe.ingredients_list.find(el => el._id === ingredient_id);
                     if (ingredient) {
@@ -607,7 +597,6 @@ const listRecipeSlice = createSlice({
                 
                 const recipe_id = action.payload;
 
-
                 state.recipes = state.recipes.filter(recipe => recipe.recipe_id !== recipe_id);
             })
 
@@ -616,7 +605,7 @@ const listRecipeSlice = createSlice({
     }
 })
 
-export const { closeErrorWindow } = listRecipeSlice.actions
+export const { closeAlertListRecipe } = listRecipeSlice.actions
 
 
 export default listRecipeSlice.reducer

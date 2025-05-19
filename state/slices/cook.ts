@@ -19,33 +19,37 @@ import { merge } from 'lodash';
 //     }
 // }
 
+export type CookOperationKey =
+  | 'fetchCook'
+  | 'deleteRecipe'
 
-const initialState: CookSliceT = {
+
+
+type OperationStatus = {
+    loading: boolean
+    error: boolean
+}
+
+type OperationState = Record<CookOperationKey, OperationStatus>
+
+interface CookState extends CookSliceT {
+    operations: OperationState
+}
+
+const defaultStatus: OperationStatus = { loading: true, error: false }
+
+
+const initialState: CookState = {
     status: false,
     error: false,
     name_status: '',
     connection_id: '',
-    // name_links:[],
     recipes: [
-
-        // {
-        //     recipe_id:null, 
-        //     name:null, 
-        //     time:{hours:null, minutes:null}, 
-        //     media:null, 
-        //     recipe_type:null, 
-        //     instruction:null, 
-        //     sorting:['','',''], 
-        //     description:'',
-        //     favorite:false,
-        //     ingredients:[
-        //         {
-        //             ingredient_id:null, 
-        //             value:null
-        //         }
-        //     ]
-        // }
-    ]
+    ],
+    operations:{
+        fetchCook:defaultStatus,
+        deleteRecipe:defaultStatus
+    }
 }
 
 
@@ -131,6 +135,22 @@ export const deleteRecipe = createAsyncThunk<DataDelete, DataDelete, { rejectVal
 
 
 
+const createReducerHandlers = <T extends keyof CookState['operations']>(operationName: T) => ({
+    pending: (state: CookState) => {
+        state.operations[operationName].error = false;
+        state.operations[operationName].loading = true;
+    },
+    rejected: (state: CookState) => {
+        state.operations[operationName].error = true;
+        state.operations[operationName].loading = false;
+    }
+});
+
+const fetchCookHandlers = createReducerHandlers('fetchCook');
+const deleteRecipeHandlers = createReducerHandlers('deleteRecipe');
+
+  
+
 const cookSlice = createSlice({
     name: 'cook',
     initialState,
@@ -151,20 +171,27 @@ const cookSlice = createSlice({
             if (findRecipe) {
                 findRecipe.favorite = !payload.favorite
             }
+        },
+
+        closeAlertCook(state, action: PayloadAction<CookOperationKey>){
+            const key = action.payload
+
+            if (state.operations[key]) {
+                state.operations[key].error = false
+                state.operations[key].loading = false
+            }
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchCook.pending, (state) => {
-                state.status = true,
-                    state.error = false
-            })
+            .addCase(fetchCook.pending, fetchCookHandlers.pending)
+            .addCase(fetchCook.rejected, fetchCookHandlers.rejected)
             .addCase(fetchCook.fulfilled, (state, action: PayloadAction<fetchDataT, string>) => {
+                state.operations.fetchCook.error = false
+                state.operations.fetchCook.loading = false
+
                 if (action.payload) {
-                    state.status = false;
-                    state.error = false;
                     const payload = action.payload;
-            
                     state.connection_id = payload.connection_id;
                     
                     const existingRecipe = state.recipes.find(el => el.recipe_id === payload.recipe.recipe_id);
@@ -173,35 +200,21 @@ const cookSlice = createSlice({
                     }
                 }
             })
-            
-            .addCase(fetchCook.rejected, (state) => {
-                state.status = false;
-                state.error = true;
-            })
 
-            .addCase(deleteRecipe.pending, (state) => {
-                state.status = true,
-                    state.error = false
-            })
+
+
+            .addCase(deleteRecipe.pending, deleteRecipeHandlers.pending)
+            .addCase(deleteRecipe.rejected, deleteRecipeHandlers.rejected)
             .addCase(deleteRecipe.fulfilled, (state, action: PayloadAction<DataDelete, string>) => {
+                state.operations.deleteRecipe.error = false
+                state.operations.deleteRecipe.loading = false
                 // state.name_links = state.name_links.filter(link => link.recipe_id !== action.payload.recipe_id);
                 state.recipes = state.recipes.filter(link => link.recipe_id !== action.payload.recipe_id)
             })
-
-            .addCase(deleteRecipe.rejected, (state, action) => {
-                state.status = false;
-                state.error = true;
-            })
-
     }
 })
 
-export const {
-    setFavoriteCook
-} = cookSlice.actions
-
-
-
+export const { setFavoriteCook, closeAlertCook } = cookSlice.actions
 
 
 export default cookSlice.reducer

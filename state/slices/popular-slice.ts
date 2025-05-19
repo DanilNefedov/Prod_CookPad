@@ -4,34 +4,38 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 
+export type PopularOperationKey =
+  | 'popularFetch'
+  | 'likePopContent'
+  | 'savePopContent'
+  
+
+
+type OperationStatus = {
+    loading: boolean
+    error: boolean
+}
+
+type OperationState = Record<PopularOperationKey, OperationStatus>
+
+interface PopularState extends popularInitData {
+    operations: OperationState
+}
+
+const defaultStatus: OperationStatus = { loading: true, error: false }
+
 //maybe you shouldn't add the number of views to the redux.
 
-const initialState: popularInitData = {
+const initialState: PopularState = {
     status: false,
     error: false,
     pop_list: [
-
-    //    export type PopularAuthorInfoT = {
-    //        id_author:string,
-    //        author_name:string,
-    //        author_img:string,
-    //    }
-       
-    //    export type popListReturn = {
-    //        config_id:string,
-    //        id_recipe:string,
-    //        author_info:PopularAuthorInfoT
-    //        description:string,
-    //        recipe_name:string,
-    //        recipe_media:MediaObj[],
-    //        liked:boolean,
-    //        likes:number,
-    //        views:number,
-    //        saves:number,
-    //        saved:boolean,
-    //        comments:number,
-    //    }
-    ]
+    ],
+    operations:{
+        popularFetch:defaultStatus,
+        likePopContent:defaultStatus,
+        savePopContent:defaultStatus
+    }
 }
 
 
@@ -124,6 +128,24 @@ export const savePopContent = createAsyncThunk<{ config_id: string, saved: boole
 
 
 
+const createReducerHandlers = <T extends keyof PopularState['operations']>(operationName: T) => ({
+    pending: (state: PopularState) => {
+        state.operations[operationName].error = false;
+        state.operations[operationName].loading = true;
+    },
+    rejected: (state: PopularState) => {
+        state.operations[operationName].error = true;
+        state.operations[operationName].loading = false;
+    }
+});
+
+
+const popularFetchHandlers = createReducerHandlers('popularFetch');
+const likePopContentHandlers = createReducerHandlers('likePopContent');
+const savePopContentHandlers = createReducerHandlers('savePopContent');
+
+
+
 
 const popularSlice = createSlice({
     name: 'popular',
@@ -134,20 +156,25 @@ const popularSlice = createSlice({
             if(thisPop){
                 thisPop.comments += 1
             }
+        },
+        closeAlertPopular(state, action: PayloadAction<PopularOperationKey>){
+            const key = action.payload
+
+            if (state.operations[key]) {
+                state.operations[key].error = false
+                state.operations[key].loading = false
+            }
         }
     },
     extraReducers: (builder) => {
         builder
-            .addCase(popularFetch.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(popularFetch.pending, popularFetchHandlers.pending)
+            .addCase(popularFetch.rejected, popularFetchHandlers.rejected)
             .addCase(popularFetch.fulfilled, (state, action: PayloadAction<PopularListDataT[], string>) => {
-                state.error = false,
-                state.status = false,
+                state.operations.popularFetch.error = false
+                state.operations.popularFetch.loading = false
                     // console.log(action.payload)
                 action.payload.map(el => {
-
                     state.pop_list.push(el)
                 })
 
@@ -155,13 +182,11 @@ const popularSlice = createSlice({
 
 
             
-            .addCase(likePopContent.pending, (state) => {
-                state.status = true,
-                state.error = false
-            })
+            .addCase(likePopContent.pending, likePopContentHandlers.pending)
+            .addCase(likePopContent.rejected, likePopContentHandlers.rejected)
             .addCase(likePopContent.fulfilled, (state, action: PayloadAction<{ config_id: string, liked: boolean }, string>) => {
-                state.error = false
-                state.status = false
+                state.operations.likePopContent.error = false
+                state.operations.likePopContent.loading = false
                 // console.log(action.payload)
                 const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
                 if (thisPop) {
@@ -174,21 +199,17 @@ const popularSlice = createSlice({
 
 
 
-            .addCase(savePopContent.pending, (state) => {
-                state.status = true,
-                    state.error = false
-            })
+            .addCase(savePopContent.pending, savePopContentHandlers.pending)
+            .addCase(savePopContent.rejected, savePopContentHandlers.rejected)
             .addCase(savePopContent.fulfilled, (state, action: PayloadAction<{ config_id: string, saved: boolean }, string>) => {
-                state.error = false
-                state.status = false
+                state.operations.savePopContent.error = false
+                state.operations.savePopContent.loading = false
                 // console.log(action.payload)
                 const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
                 if (thisPop) {
                     thisPop.saved = !action.payload.saved
                     thisPop.saves = action.payload.saved ? thisPop.saves - 1 : thisPop.saves + 1
                 }
-
-
             })
         
     }
@@ -198,6 +219,6 @@ const popularSlice = createSlice({
 
 
 
-export const { newCommCalc } = popularSlice.actions;
+export const { newCommCalc, closeAlertPopular } = popularSlice.actions;
 
 export default popularSlice.reducer

@@ -3,7 +3,6 @@ import { NavigationSite } from "../components/navigation-site/navigation";
 import { ClientUser } from "../components/client-side-handler/client-user";
 import { theme } from "@/config/ThemeMUI/theme";
 import GlobalErrorProvider from "../components/client-side-handler/global-error";
-import { AlertsProvider } from "../components/ux-helpers/alerts-provider";
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   const styledPaperHome = {
@@ -23,7 +22,6 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
   return (
     <>
       <GlobalErrorProvider>
-        <AlertsProvider sliceKeys={['listRecipe']}>
           <ClientUser></ClientUser>
           <NavigationSite></NavigationSite>
           <Paper sx={styledPaperHome}>
@@ -41,7 +39,6 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
               {children}
             </Container>
           </Paper>
-        </AlertsProvider>
 
       </GlobalErrorProvider>
 
