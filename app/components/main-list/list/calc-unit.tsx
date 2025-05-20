@@ -214,7 +214,7 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
         if (id !== "" && pathName === "/list") {
             dispatch(changeAmountFetch({ ingredient_id, unit_id: elem._id, amount: numericValue }));
         }else if (id !== "" && pathName === "/list-recipe" && recipe_id){
-            dispatch(newAmountListRecipe({connection_id: id, ingredient_id: ingredient_id, unit_id: elem._id, amount: numericValue, recipe_id }))
+            dispatch(newAmountListRecipe({connection_id: id, ingredient_id: ingredient_id, unit_id: elem._id, amount: numericValue, _id:recipe_id }))
         }
 
     }, [currentValue, id, pathName, ingredient_id, elem._id, dispatch, amount, handleEqual, recipe_id, setAmount]);

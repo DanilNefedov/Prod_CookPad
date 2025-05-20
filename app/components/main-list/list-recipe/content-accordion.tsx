@@ -9,15 +9,15 @@ import { UXLoading } from "../../ux-helpers/loading"
 
 
 interface dataProps {
-    recipe_id: string,
+    _id: string,
     status:boolean
 }
 
 
 
 export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
-    const {recipe_id, status } = props   
-    const ingredients_list = useAppSelector(state => state.listRecipe.recipes.find(el => el.recipe_id === recipe_id)?.ingredients_list);
+    const {_id, status } = props   
+    const ingredients_list = useAppSelector(state => state.listRecipe.recipes.find(el => el._id === _id)?.ingredients_list);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
     const [sortBy, setSortBy] = useState<string | null>(null);
 
@@ -88,7 +88,7 @@ export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
                             sortedList && sortedList.map(el => (
                                 <MainTableBody key={el._id} props={{
                                     ingredient_id:el._id,
-                                    recipe_id
+                                    recipe_id:_id
                                 }}></MainTableBody>
                             ))
                         }
@@ -102,7 +102,7 @@ export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
 
     )
 }, (prevProps, nextProps) => {
-    return prevProps.props.recipe_id === nextProps.props.recipe_id &&
+    return prevProps.props._id === nextProps.props._id &&
     prevProps.props.status === nextProps.props.status
 });
 

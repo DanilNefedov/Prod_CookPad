@@ -445,6 +445,7 @@ export type returnDataRecipeList = {
 
 
 export type TempalteRecipeForList = {
+    _id:string
     recipe_id: string,
     recipe_name: string,
     // recipe_media:MediaObj[],

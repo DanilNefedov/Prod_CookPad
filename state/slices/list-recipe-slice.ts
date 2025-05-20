@@ -58,7 +58,7 @@ interface NewListRecipeT {
 interface TempalteRecipeIngredient {
     ingredient_id:string, 
     connection_id:string, 
-    recipe_id:string
+    _id:string
 }
 
 interface ReturnPreLoaderMain {
@@ -121,16 +121,16 @@ export const newListRecipe = createAsyncThunk<void, NewListRecipeT, { rejectValu
 
 interface ReturnIngredientsListrecipe {
     connection_id:string,
-    recipe_id:string,
+    _id:string,
     ingredients:IListObj[]
 }
 
 
-export const ingredientsListRecipe = createAsyncThunk<ReturnIngredientsListrecipe, { connection_id: string, recipe_id: string }, { rejectValue: string }>(
+export const ingredientsListRecipe = createAsyncThunk<ReturnIngredientsListrecipe, { connection_id: string, _id: string }, { rejectValue: string }>(
     'listRecipe/ingredientsListRecipe',
-    async function ({ connection_id, recipe_id }, { rejectWithValue }) {
+    async function ({ connection_id, _id }, { rejectWithValue }) {
         try {
-            const urlList = `/api/list-recipe/ingredients?connection_id=${connection_id}&recipe_id=${recipe_id}`
+            const urlList = `/api/list-recipe/ingredients?connection_id=${connection_id}&_id=${_id}`
             const responseList = await fetch(urlList);
 
             if (!responseList.ok) return rejectWithValue('Server Error!');
@@ -425,8 +425,9 @@ const listRecipeSlice = createSlice({
 
 
                 payload.recipe.forEach((recipe) => {
-                    if (!state.recipes.some(existingRecipe => existingRecipe.recipe_id === recipe.recipe_id)) {
+                    if (!state.recipes.some(existingRecipe => existingRecipe._id === recipe._id)) {
                         state.recipes.push({
+                            _id:recipe._id,
                             recipe_id: recipe.recipe_id,
                             recipe_name: recipe.recipe_name,
                             recipe_media: recipe.recipe_media, 
@@ -451,7 +452,7 @@ const listRecipeSlice = createSlice({
             
                 if (payload.ingredients.length > 0) {
                     payload.ingredients.forEach(ingr => {
-                        const existingRecipeIndex = state.recipes.findIndex(existingRecipe => existingRecipe.recipe_id === payload.recipe_id);
+                        const existingRecipeIndex = state.recipes.findIndex(existingRecipe => existingRecipe._id === payload._id);
             
                         if (existingRecipeIndex !== -1) {
                             const existingRecipe = state.recipes[existingRecipeIndex];
@@ -471,8 +472,8 @@ const listRecipeSlice = createSlice({
                 state.operations.shopIngrListRecipe.error = false
                 state.operations.shopIngrListRecipe.loading = false
                 
-                const { ingredient_id, shop_ingr, recipe_id } = action.payload;
-                const thisRecipe = state.recipes.find(el => el.recipe_id === recipe_id)
+                const { ingredient_id, shop_ingr, _id } = action.payload;
+                const thisRecipe = state.recipes.find(el => el._id === _id)
 
                 if (thisRecipe) {
                     thisRecipe.ingredients_list.map(el => {
@@ -492,8 +493,8 @@ const listRecipeSlice = createSlice({
                 state.operations.deleteIngrRecipeList.error = false
                 state.operations.deleteIngrRecipeList.loading = false
                 
-                const { recipe_id, ingredient_id } = action.payload;
-                const recipeIndex = state.recipes.findIndex(recipe => recipe.recipe_id === recipe_id);
+                const { _id, ingredient_id } = action.payload;
+                const recipeIndex = state.recipes.findIndex(recipe => recipe._id === _id);
 
                 if (recipeIndex !== -1) {
                     const ingredientsList = state.recipes[recipeIndex].ingredients_list.filter((ingredient: IListObj) => ingredient._id !== ingredient_id);
@@ -510,8 +511,8 @@ const listRecipeSlice = createSlice({
                 state.operations.shopUnitListRecipe.error = false
                 state.operations.shopUnitListRecipe.loading = false
                 
-                const { ingredient_id, unit_id, shop_unit, recipe_id  } = action.payload;
-                const recipe = state.recipes.find(recipe => recipe.recipe_id === recipe_id);
+                const { ingredient_id, unit_id, shop_unit, _id  } = action.payload;
+                const recipe = state.recipes.find(recipe => recipe._id === _id);
 
                 if (recipe) {
                     const ingredient = recipe.ingredients_list.find(ingredient => ingredient._id === ingredient_id);
@@ -533,8 +534,8 @@ const listRecipeSlice = createSlice({
                 state.operations.newAmountListRecipe.error = false
                 state.operations.newAmountListRecipe.loading = false
                 
-                const { ingredient_id, unit_id, amount, recipe_id } = action.payload;
-                const recipe = state.recipes.find(recipe => recipe.recipe_id === recipe_id);
+                const { ingredient_id, unit_id, amount, _id } = action.payload;
+                const recipe = state.recipes.find(recipe => recipe._id === _id);
 
                 if (recipe) {
                     const ingredient = recipe.ingredients_list.find(ingredient => ingredient._id === ingredient_id);
@@ -555,8 +556,8 @@ const listRecipeSlice = createSlice({
                 state.operations.newUnitListRecipe.error = false
                 state.operations.newUnitListRecipe.loading = false
                 
-                const { ingredient_id, new_unit, recipe_id } = action.payload;
-                const thisRecipe = state.recipes.find(el => el.recipe_id === recipe_id)
+                const { ingredient_id, new_unit, _id } = action.payload;
+                const thisRecipe = state.recipes.find(el => el._id === _id)
 
                 if (thisRecipe) {
                     thisRecipe.ingredients_list.map(el => {
@@ -576,8 +577,8 @@ const listRecipeSlice = createSlice({
                 state.operations.deleteUnitListRecipe.error = false
                 state.operations.deleteUnitListRecipe.loading = false
                 
-                const { ingredient_id, connection_id: id, unit_id, recipe_id } = action.payload;
-                const recipe = state.recipes.find(r => r.recipe_id === recipe_id);
+                const { ingredient_id, connection_id: id, unit_id, _id } = action.payload;
+                const recipe = state.recipes.find(r => r._id === _id);
 
                 if (recipe) {
                     const ingredient = recipe.ingredients_list.find(el => el._id === ingredient_id);
@@ -597,7 +598,7 @@ const listRecipeSlice = createSlice({
                 
                 const recipe_id = action.payload;
 
-                state.recipes = state.recipes.filter(recipe => recipe.recipe_id !== recipe_id);
+                state.recipes = state.recipes.filter(recipe => recipe._id !== recipe_id);
             })
 
 

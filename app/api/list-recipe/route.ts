@@ -34,7 +34,7 @@ export async function POST(request: Request) {
                 { status: 404 }
             );
         }
-
+ 
         const recipe_media = recipe.media.find((m: MediaObj) => m.main) || recipe.media[0];
 
         const transformedRecipe = {
@@ -111,7 +111,7 @@ export async function GET(request: Request) {
 
         const recipes = await ListRecipe.find({ connection_id },
             {   
-                _id:0,
+                _id:1,
                 connection_id: 1,
                 "recipe.recipe_id": 1,
                 "recipe.recipe_name": 1,
@@ -127,10 +127,14 @@ export async function GET(request: Request) {
 
         const formattedRecipes = {
             connection_id: connection_id,
-            recipe: _.cloneDeep(recipes.map(({ recipe }) => recipe)), 
+            // recipe: _.cloneDeep(recipes.map(({ recipe }) => recipe)), 
+            recipe: recipes.map(({ _id, recipe }) => ({
+                ...recipe,
+                _id
+            })),
             page
         };
-
+        console.log(recipes, formattedRecipes)
         return NextResponse.json(formattedRecipes, { status: 200 });
 
     }catch(error){
@@ -159,7 +163,7 @@ export async function DELETE(req: Request) {
 
     const result = await ListRecipe.findOneAndDelete({
         connection_id,
-        'recipe.recipe_id': recipe_id,
+        _id: recipe_id,
     });
 
     if (!result) {

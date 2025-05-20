@@ -23,7 +23,7 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
         let thisIngredient;
         if (recipe_id) {
             thisIngredient = state.listRecipe.recipes
-                .find(el => el.recipe_id === recipe_id)
+                .find(el => el._id === recipe_id)
                 ?.ingredients_list.find(ing => ing._id === ingredient_id);
         } else {
             thisIngredient = state.list.list_ingr.find(el => el._id === ingredient_id);
@@ -59,7 +59,7 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
             }
             else if(pathName === '/list-recipe' && recipe_id){
                 console.log({ingredient_id, connection_id: id, unit_id, recipe_id})
-                dispatch(deleteUnitListRecipe({ ingredient_id, connection_id: id, unit_id, recipe_id }))
+                dispatch(deleteUnitListRecipe({ ingredient_id, connection_id: id, unit_id, _id:recipe_id }))
             }
             
         }
@@ -74,7 +74,7 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
                 dispatch(changeAmountFetch({ ingredient_id: unitData.ingredientId, unit_id: _id, amount: numberAmount }));
             }else if(pathName === '/list-recipe' && recipe_id){
                 // console.log(numberAmount)
-                dispatch(newAmountListRecipe({connection_id: id, ingredient_id: unitData.ingredientId, unit_id: _id, amount: numberAmount, recipe_id }))
+                dispatch(newAmountListRecipe({connection_id: id, ingredient_id: unitData.ingredientId, unit_id: _id, amount: numberAmount, _id:recipe_id }))
             }   
         } 
         setEditAmount(null);
@@ -97,7 +97,7 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
                 dispatch(shopUnitUpdate({ ingredient_id: unitData.ingredientId, unit_id: _id, shop_unit }))
             }
             else if(pathName === '/list-recipe' && recipe_id){
-                dispatch(shopUnitListRecipe({ connection_id: id, ingredient_id: unitData.ingredientId, unit_id: _id, shop_unit, recipe_id}))
+                dispatch(shopUnitListRecipe({ connection_id: id, ingredient_id: unitData.ingredientId, unit_id: _id, shop_unit, _id:recipe_id}))
             }
             
         }

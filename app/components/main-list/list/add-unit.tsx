@@ -55,7 +55,7 @@ export function AddNewUnit({ props }: { props: PropsData }) {
                 setOpen(false)
                 setAmount('0')
                 setUnit('')
-                dispatch(newUnitListRecipe({connection_id: id,  ingredient_id, updated_unit:newUnit, recipe_id}))
+                dispatch(newUnitListRecipe({connection_id: id,  ingredient_id, updated_unit:newUnit, _id:recipe_id}))
             }
 
         }

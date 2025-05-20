@@ -21,7 +21,7 @@ export function MainListRecipe() {
 
 
     const preLoaderMainStatus = useAppSelector(state => state.listRecipe.operations.preLoaderMain)
-    const ingredientsListRecipeStatus = useAppSelector(state => state.listRecipe.operations.ingredientsListRecipe)
+    // const ingredientsListRecipeStatus = useAppSelector(state => state.listRecipe.operations.ingredientsListRecipe)
 
     const userStore = useAppSelector(state => state.user)
     const connection_id = userStore.user.connection_id
@@ -45,16 +45,16 @@ export function MainListRecipe() {
 
 
 
-    function getDataRecipe(recipe_id: string) {
-        const findThisRecipe = listRecipeStore.recipes.find(el => el.recipe_id === recipe_id);
+    function getDataRecipe(_id: string) {
+        const findThisRecipe = listRecipeStore.recipes.find(el => el._id === _id);
 
         if (findThisRecipe && findThisRecipe.ingredients_list?.length <= 0) {
             if (connection_id !== '') {
-                setLoadingRecipeIds(prev => [...prev, recipe_id]);
+                setLoadingRecipeIds(prev => [...prev, _id]);
 
-                dispatch(ingredientsListRecipe({ connection_id, recipe_id }))
+                dispatch(ingredientsListRecipe({ connection_id, _id }))
                     .finally(() => {
-                        setLoadingRecipeIds(prev => prev.filter(id => id !== recipe_id));
+                        setLoadingRecipeIds(prev => prev.filter(id => id !== _id));
                         
                     });
             }
@@ -85,7 +85,7 @@ export function MainListRecipe() {
     
 
 
-    console.log('recipe', preLoaderMainStatus)
+    console.log('recipe', listRecipeStore)
     return (
         <Box sx={{ height: '100%', position: 'relative' }}>
             {
@@ -97,10 +97,10 @@ export function MainListRecipe() {
                         :
                         listRecipeStore?.recipes.map(el => (
 
-                            <Box key={el.recipe_id} sx={{ display: 'flex', alignItems: 'center', mb: '5px', }}>
+                            <Box key={el._id} sx={{ display: 'flex', alignItems: 'center', mb: '5px', }}>
                                 <Accordion
-                                    expanded={expandedIds.includes(el.recipe_id)}
-                                    onChange={() => handleToggle(el.recipe_id)}
+                                    expanded={expandedIds.includes(el._id)}
+                                    onChange={() => handleToggle(el._id)}
                                     slotProps={{ heading: { component: 'div' } }}
                                     // square={false}  
 
@@ -123,10 +123,10 @@ export function MainListRecipe() {
                                     }}>
                                     <AccordionSummary
                                         component="div"
-                                        onClick={() => getDataRecipe(el.recipe_id)}
+                                        onClick={() => getDataRecipe(el._id)}
                                         expandIcon={<ExpandMoreIcon sx={{ color: 'text.primary' }} />}
-                                        aria-controls={`panel1-content${el.recipe_id}`}
-                                        id={`panel1-header${el.recipe_id}`}
+                                        aria-controls={`panel1-content${el._id}`}
+                                        id={`panel1-header${el._id}`}
                                         sx={{
                                             '& .MuiAccordionSummary-content': {
                                                 alignItems: 'center',
@@ -177,16 +177,16 @@ export function MainListRecipe() {
                                         ingredientsListRecipeStatus.error ?
                                             <StatusAlert error={ingredientsListRecipeStatus.error} handleClose={() => closeError('ingredientsListRecipe')}></StatusAlert>
                                             : */}
-                                            <ContentAccordion props={{ recipe_id: el.recipe_id, status: loadingRecipeIds.includes(el.recipe_id) && el.ingredients_list.length === 0 }} />
+                                            <ContentAccordion props={{ _id: el._id, status: loadingRecipeIds.includes(el._id) && el.ingredients_list.length === 0 }} />
 
                                     {/* } */}
 
 
 
 
-                                    {expandedIds.includes(el.recipe_id) ?
+                                    {expandedIds.includes(el._id) ?
                                         <Button
-                                            onClick={() => handleDeleteRecipe(el.recipe_id)}
+                                            onClick={() => handleDeleteRecipe(el._id)}
                                             sx={{ position: 'absolute', top: '5px', right: '5px', minWidth: "0", p: '0' }}
                                         >
                                             <DeleteIcon sx={{

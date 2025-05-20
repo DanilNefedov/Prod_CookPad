@@ -30,7 +30,7 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
     const thisIngredient = useAppSelector(state => {
         if (recipe_id) {
             return state.listRecipe.recipes
-                .find(el => el.recipe_id === recipe_id)
+                .find(el => el._id === recipe_id)
                 ?.ingredients_list.find(ing => ing._id === ingredient_id);
         }
     

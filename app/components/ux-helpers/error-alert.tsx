@@ -41,7 +41,7 @@ export function GlobalErrorNotifier<K extends string = string>({ operationConfig
         operations: useAppSelector(config.sliceSelector),
         config,
     }));
-
+    console.log('GlobalErrorNotifier')
     useEffect(() => {
         operationsByConfig.forEach(({ operations, config }) => {
             (Object.entries(operations) as [K, { error: boolean; loading: boolean }][]).forEach(
@@ -109,24 +109,24 @@ export function GlobalErrorNotifier<K extends string = string>({ operationConfig
                                     severity="error"
                                     onClose={() => {
                                         closeSnackbar(snackbarKey);
-                                        dispatch(config.closeErrorAction(operationKey));
+                                        // dispatch(config.closeErrorAction(operationKey));
+                                        // We do not use dispatch for now. Because it will turn off all flags, 
+                                        // which means that if all flags are false, it will throw the Success window
+                                        // BUT DON'T REMOVE THE FUNCTIONALITY OF THIS DISPATCH.
+                                        shownRef.current[operationKey] = false; 
                                     }}
                                     sx={{ bgcolor: '#d32f2f', color: '#fff', '& .MuiSvgIcon-root': { fill: '#fff' } }}
                                 >
                                     {message}
                                 </Alert>
                             ),
-                            autoHideDuration: duration,
+                            persist: true, 
                             anchorOrigin: { vertical: 'top', horizontal: 'center' },
                             TransitionComponent: SlideTransition,
                         });
 
                         shownRef.current[operationKey] = true;
                         shownLoadingRef.current[operationKey] = null;
-
-                        setTimeout(() => {
-                            shownRef.current[operationKey] = false;
-                        }, duration + 500);
                     }
                 }
             );

@@ -12,9 +12,9 @@ export async function GET(request: Request) {
     try{
         const { searchParams } = new URL(request.url);
         const connection_id = searchParams.get("connection_id");
-        const recipe_id = searchParams.get("recipe_id");
+        const _id = searchParams.get("_id");
 
-        if (!connection_id || !recipe_id) {
+        if (!connection_id || !_id) {
             return NextResponse.json(
                 { message: "The input parameters are invalid" },
                 { status: 400 }
@@ -27,7 +27,8 @@ export async function GET(request: Request) {
         const recipe = await ListRecipe.findOne(
             {
                 connection_id: connection_id,
-                'recipe.recipe_id': recipe_id
+                _id:_id
+                // 'recipe.recipe_id': recipe_id
             },
             { "recipe.ingredients_list": 1, _id: 0 }
         );
@@ -43,7 +44,7 @@ export async function GET(request: Request) {
         return NextResponse.json(
         {
             connection_id,
-            recipe_id, 
+            _id, 
             ingredients:recipe.recipe.ingredients_list
         }, { status: 200 });
 

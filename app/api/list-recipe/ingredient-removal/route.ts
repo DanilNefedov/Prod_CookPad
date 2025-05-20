@@ -10,9 +10,9 @@ import { NextResponse } from "next/server";
 export async function PATCH(request: Request) {
     try{
         const data = await request.json();
-        const { ingredient_id, connection_id, recipe_id } = data;
+        const { ingredient_id, connection_id, _id } = data;
 
-        if (!connection_id || !recipe_id || !ingredient_id) {
+        if (!connection_id || !_id || !ingredient_id) {
             return NextResponse.json(
                 { message: "The input parameters are invalid" },
                 { status: 400 }
@@ -24,7 +24,7 @@ export async function PATCH(request: Request) {
         const updatedDocument = await ListRecipe.findOneAndUpdate(
             {
                 connection_id,
-                "recipe.recipe_id": recipe_id,
+                _id: _id,
             },
             {
                 $pull: { "recipe.ingredients_list": { _id: ingredient_id } }
@@ -37,7 +37,7 @@ export async function PATCH(request: Request) {
         }
 
         return NextResponse.json({
-            ingredient_id, connection_id, recipe_id
+            ingredient_id, connection_id, _id
          });
 
 

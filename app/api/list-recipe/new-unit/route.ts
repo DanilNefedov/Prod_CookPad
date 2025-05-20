@@ -10,14 +10,14 @@ import { NextResponse } from "next/server";
 export async function PATCH(request: Request) {
     try{
         const data = await request.json();
-        const { connection_id,  ingredient_id, updated_unit, recipe_id } = data;
+        const { connection_id,  ingredient_id, updated_unit, _id } = data;
 
         await connectDB();
 
         const updatedRecipe = await ListRecipe.findOneAndUpdate(
             {
                 connection_id,
-                "recipe.recipe_id": recipe_id,
+                _id: _id,
                 "recipe.ingredients_list._id": ingredient_id
             },
             {
@@ -44,7 +44,7 @@ export async function PATCH(request: Request) {
             connection_id,
             new_unit,
             ingredient_id,
-            recipe_id
+            _id
         });
         
 

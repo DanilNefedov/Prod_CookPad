@@ -43,7 +43,7 @@ export function MainButtons({props}: {props:DataProps}) {
             if(pathName === '/list'){
                 dispatch(toggleShopIngrFetch({ _id, shop_ingr }))            
             }else if(pathName === '/list-recipe' && recipe_id){
-                dispatch(shopIngrListRecipe({ ingredient_id:el._id, connection_id:id, shop_ingr, recipe_id }))
+                dispatch(shopIngrListRecipe({ ingredient_id:el._id, connection_id:id, shop_ingr, _id:recipe_id }))
             }
         }
     }
@@ -53,7 +53,7 @@ export function MainButtons({props}: {props:DataProps}) {
             if(pathName === '/list'){
                 dispatch(deleteIngredientFetch({ _id }))
             }else if(pathName === '/list-recipe' && recipe_id){
-                dispatch(deleteIngrRecipeList({ ingredient_id:el._id, connection_id:id, recipe_id }))
+                dispatch(deleteIngrRecipeList({ ingredient_id:el._id, connection_id:id, _id:recipe_id }))
             }
             
         }

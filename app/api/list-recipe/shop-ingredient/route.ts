@@ -12,10 +12,10 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request) {
     try {
-        const { connection_id, ingredient_id, shop_ingr, recipe_id } = await request.json();
+        const { connection_id, ingredient_id, shop_ingr, _id } = await request.json();
 
 
-        if (!connection_id || !recipe_id || !ingredient_id || typeof shop_ingr !== "boolean") {
+        if (!connection_id || !_id || !ingredient_id || typeof shop_ingr !== "boolean") {
             return NextResponse.json({ error: "Missing or invalid parameters" }, { status: 400 });
         }
 
@@ -24,7 +24,7 @@ export async function PATCH(request: Request) {
         const updatedDocument = await ListRecipe.findOneAndUpdate(
             {
                 connection_id,
-                "recipe.recipe_id": recipe_id,
+                _id: _id,
                 "recipe.ingredients_list._id": ingredient_id,
             },
             {
@@ -51,7 +51,7 @@ export async function PATCH(request: Request) {
             connection_id,
             ingredient_id,
             shop_ingr: updatedIngredient.shop_ingr,
-            recipe_id
+            _id
         });
 
     } catch (error) {
