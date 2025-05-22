@@ -34,7 +34,6 @@ export function MainListPage() {
 
 
 
-
     const sortedList = useMemo(() => {
         if (!sortBy) return listStore;
 

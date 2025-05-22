@@ -1,8 +1,8 @@
 import { Container, Paper } from "@mui/material";
 import { NavigationSite } from "../components/navigation-site/navigation";
-import { ClientUser } from "../components/client-side-handler/client-user";
 import { theme } from "@/config/ThemeMUI/theme";
 import GlobalErrorProvider from "../components/client-side-handler/global-error";
+import { UserProvider } from "../components/user-alert/user-context";
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   const styledPaperHome = {
@@ -22,24 +22,25 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
   return (
     <>
       <GlobalErrorProvider>
-          <ClientUser></ClientUser>
-          <NavigationSite></NavigationSite>
-          <Paper sx={styledPaperHome}>
-            <Container maxWidth={false} sx={{
-              height: '100dvh',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              [theme.breakpoints.down("md")]: {
-                pl: "10px",
-                pr: '10px'
-              },
-              position: 'relative',
-            }}>
+        <NavigationSite></NavigationSite>
+        <Paper sx={styledPaperHome}>
+          <Container maxWidth={false} sx={{
+            height: '100dvh',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            [theme.breakpoints.down("md")]: {
+              pl: "10px",
+              pr: '10px'
+            },
+            position: 'relative',
+          }}>
+            <UserProvider>
               {children}
-            </Container>
-          </Paper>
+            </UserProvider>
+          </Container>
 
+        </Paper>
       </GlobalErrorProvider>
 
 

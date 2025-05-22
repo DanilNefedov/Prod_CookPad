@@ -13,9 +13,8 @@ export async function GET(request: Request) {
 
         if (!connection_id) {
             return NextResponse.json({
-                status: 400,
                 message: "The input data is incorrect",
-            });
+            }, { status: 400 })
         }
 
         await connectDB();

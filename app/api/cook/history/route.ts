@@ -50,6 +50,12 @@ export async function GET(request: Request) {
         const { searchParams } = new URL(request.url)
         const connection_id = searchParams.get('connection_id')
         const recipe_id = searchParams.get('recipe_id')
+
+        if (!connection_id || !recipe_id) {
+            return NextResponse.json({
+                message: "The input data is incorrect",
+            }, { status: 400 })
+        }
         
         const cook = await CookHistory.findOne({connection_id }).select('-_id connection_id history_links.recipe_id history_links.recipe_name')
 

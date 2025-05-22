@@ -21,7 +21,7 @@ export async function POST(request: Request) {
 
 
         if (!config_id || !user_id || !page) {
-            return NextResponse.json({ status: 400, message: 'Missing parameters' });
+            return NextResponse.json({ message: 'Missing parameters' }, { status: 400 });
         }
 
         const pageSize = 5;

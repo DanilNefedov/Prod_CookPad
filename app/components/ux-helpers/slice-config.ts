@@ -1,6 +1,8 @@
-import { ERROR_MESSAGES_COOK, ERROR_MESSAGES_LIST_RECIPE, ERROR_MESSAGES_POPULAR, ERROR_MESSAGES_RECIPE, ERROR_MESSAGES_USER, 
-        LOADING_MESSAGES_COOK, LOADING_MESSAGES_LIST_RECIPE, LOADING_MESSAGES_POPULAR, LOADING_MESSAGES_RECIPE, LOADING_MESSAGES_USER, 
-        SUCCESS_MESSAGES_COOK, SUCCESS_MESSAGES_LIST_RECIPE, SUCCESS_MESSAGES_POPULAR, SUCCESS_MESSAGES_RECIPE, SUCCESS_MESSAGES_USER } from "./dictionaries";
+import { ERROR_MESSAGES_COMMENTS, ERROR_MESSAGES_COOK, ERROR_MESSAGES_COOK_HISTORY, ERROR_MESSAGES_LIST, ERROR_MESSAGES_LIST_RECIPE, ERROR_MESSAGES_POPULAR, ERROR_MESSAGES_RECIPE, ERROR_MESSAGES_USER, 
+        LOADING_MESSAGES_COMMENTS, 
+        LOADING_MESSAGES_COOK, LOADING_MESSAGES_COOK_HISTORY, LOADING_MESSAGES_LIST, LOADING_MESSAGES_LIST_RECIPE, LOADING_MESSAGES_POPULAR, LOADING_MESSAGES_RECIPE, LOADING_MESSAGES_USER, 
+        SUCCESS_MESSAGES_COMMENTS, 
+        SUCCESS_MESSAGES_COOK, SUCCESS_MESSAGES_COOK_HISTORY, SUCCESS_MESSAGES_LIST, SUCCESS_MESSAGES_LIST_RECIPE, SUCCESS_MESSAGES_POPULAR, SUCCESS_MESSAGES_RECIPE, SUCCESS_MESSAGES_USER } from "./dictionaries";
 import { RootState } from "@/state/store";
 import { closeAlertListRecipe, OperationKey } from "@/state/slices/list-recipe-slice";
 import { OperationConfig } from "./error-alert";
@@ -10,6 +12,7 @@ import { closeAlertPopular, PopularOperationKey } from "@/state/slices/popular-s
 import { closeAlertCook, CookOperationKey } from "@/state/slices/cook";
 import { closeAlertCookHistory, CookHistoryOperationKey } from "@/state/slices/cook-history";
 import { closeAlertComments, CommentsOperationKey } from "@/state/slices/comments-popular-slice";
+import { closeAlertList, listOperationKey } from "@/state/slices/list-slice";
 
 
 
@@ -23,6 +26,14 @@ export const SLICE_CONFIGS = {
         closeErrorAction: closeAlertListRecipe,
     } as OperationConfig<OperationKey>, 
 
+    list:{
+        sliceSelector: (state: RootState) => state.list.operations,
+        successMessages: SUCCESS_MESSAGES_LIST,
+        errorMessages: ERROR_MESSAGES_LIST,
+        loadingMessages: LOADING_MESSAGES_LIST,
+        closeErrorAction: closeAlertList
+    } as OperationConfig<listOperationKey>, 
+
     recipe: {
         sliceSelector: (state: RootState) => state.recipe.operations,
         successMessages: SUCCESS_MESSAGES_RECIPE,
@@ -32,7 +43,7 @@ export const SLICE_CONFIGS = {
     } as OperationConfig<RecipeOperationKey>,
 
     user: {
-        sliceSelector: (state: RootState) => state.user.operations,
+        sliceSelector: (state: RootState) => state.user.operations, 
         successMessages: SUCCESS_MESSAGES_USER,
         errorMessages: ERROR_MESSAGES_USER,
         loadingMessages: LOADING_MESSAGES_USER,
@@ -57,17 +68,17 @@ export const SLICE_CONFIGS = {
 
     cookHistory: {
         sliceSelector: (state: RootState) => state.cookHistory.operations,
-        successMessages: SUCCESS_MESSAGES_COOK,
-        errorMessages: ERROR_MESSAGES_COOK,
-        loadingMessages: LOADING_MESSAGES_COOK,
+        successMessages: SUCCESS_MESSAGES_COOK_HISTORY,
+        errorMessages: ERROR_MESSAGES_COOK_HISTORY,
+        loadingMessages: LOADING_MESSAGES_COOK_HISTORY,
         closeErrorAction: closeAlertCookHistory,
     } as OperationConfig<CookHistoryOperationKey>,
 
     comments: {
         sliceSelector: (state: RootState) => state.comments.operations,
-        successMessages: SUCCESS_MESSAGES_COOK,
-        errorMessages: ERROR_MESSAGES_COOK,
-        loadingMessages: LOADING_MESSAGES_COOK,
+        successMessages: SUCCESS_MESSAGES_COMMENTS,
+        errorMessages: ERROR_MESSAGES_COMMENTS,
+        loadingMessages: LOADING_MESSAGES_COMMENTS,
         closeErrorAction: closeAlertComments,
     } as OperationConfig<CommentsOperationKey>,
 } as const;

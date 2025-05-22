@@ -10,6 +10,10 @@ export async function PATCH(request: Request) {
     try{
         const { name, connection_id, _id, amount } = await request.json();
 
+        if (!connection_id || !name || !amount || !_id ) {
+            return NextResponse.json({ error: 'Missing or invalid required parameters' }, { status: 400 });
+        }
+
         await connectDB();
 
         const updatedDoc = await ListIngredients.findOneAndUpdate(

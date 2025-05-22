@@ -8,6 +8,7 @@ export type PopularOperationKey =
   | 'popularFetch'
   | 'likePopContent'
   | 'savePopContent'
+  | 'updateViews'
   
 
 
@@ -34,7 +35,8 @@ const initialState: PopularState = {
     operations:{
         popularFetch:defaultStatus,
         likePopContent:defaultStatus,
-        savePopContent:defaultStatus
+        savePopContent:defaultStatus,
+        updateViews:defaultStatus
     }
 }
 
@@ -126,6 +128,35 @@ export const savePopContent = createAsyncThunk<{ config_id: string, saved: boole
     }
 )
 
+export const updateViews = createAsyncThunk<{ config_id: string }, { config_id: string }, { rejectValue: string }>(
+    'popular/updateViews',
+    async function (data, { rejectWithValue }) {
+        try {
+
+            const response = await fetch(`/api/popular`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ config_id:data.config_id }),
+            });
+
+            if (!response.ok) return rejectWithValue('Server Error!');
+
+            const returnData = await response.json()
+
+            console.log(returnData)
+
+            return returnData
+
+        } catch (error) {
+            console.log(error)
+            throw error
+        }
+    }
+)
+
+
 
 
 const createReducerHandlers = <T extends keyof PopularState['operations']>(operationName: T) => ({
@@ -143,8 +174,7 @@ const createReducerHandlers = <T extends keyof PopularState['operations']>(opera
 const popularFetchHandlers = createReducerHandlers('popularFetch');
 const likePopContentHandlers = createReducerHandlers('likePopContent');
 const savePopContentHandlers = createReducerHandlers('savePopContent');
-
-
+const updateViewsHandlers = createReducerHandlers('updateViews');
 
 
 const popularSlice = createSlice({
@@ -210,6 +240,14 @@ const popularSlice = createSlice({
                     thisPop.saved = !action.payload.saved
                     thisPop.saves = action.payload.saved ? thisPop.saves - 1 : thisPop.saves + 1
                 }
+            })
+
+
+            .addCase(updateViews.pending, updateViewsHandlers.pending)
+            .addCase(updateViews.rejected, updateViewsHandlers.rejected)
+            .addCase(updateViews.fulfilled, (state, action: PayloadAction<{ config_id: string }, string>) => {
+                state.operations.updateViews.error = false
+                state.operations.updateViews.loading = false
             })
         
     }

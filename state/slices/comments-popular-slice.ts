@@ -94,7 +94,7 @@ export const commVideoFetch = createAsyncThunk<ReturnCommDataT, {config_id: stri
                 },
                 body: JSON.stringify(data),
             });
-
+            console.log(responseList)
             if (!responseList.ok) return rejectWithValue('Server Error!');
 
             const dataList = await responseList.json()
@@ -244,6 +244,7 @@ export const getReplies = createAsyncThunk<returnDataT, {id_comment: string, pag
                 body: JSON.stringify(data),
             });
 
+            console.log(response)
             if (!response.ok) return rejectWithValue('Server Error!');
 
             const dataList = await response.json()

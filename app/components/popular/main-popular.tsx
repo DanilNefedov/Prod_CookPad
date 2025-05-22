@@ -1,7 +1,7 @@
 'use client'
 
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { popularFetch, } from "@/state/slices/popular-slice";
+import { popularFetch, updateViews, } from "@/state/slices/popular-slice";
 import { Box, Card, CircularProgress, Typography } from "@mui/material";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -33,6 +33,7 @@ export function MainPopular() {
     const dispatch = useAppDispatch()
     const popularData = useAppSelector(state => state.popular)
     const userData = useAppSelector(state => state.user)
+    const errorPopular = useAppSelector(state => state.popular.operations.popularFetch)
     const connection_id = userData?.user?.connection_id
     const [activeVideo, setActiveVideo] = useState<number>(0)
     const [openComment, setOpenComment] = useState<boolean>(false)
@@ -73,7 +74,7 @@ export function MainPopular() {
 
 
     useEffect(() => {
-        if (!connection_id || hasFetched || initialFetchDone.current) return;
+        if (!connection_id || hasFetched || initialFetchDone.current || !errorPopular) return;
 
         initialFetchDone.current = true;
         setIsFetching(true);
@@ -102,11 +103,11 @@ export function MainPopular() {
     // }, [connection_id, dispatch])
 
     useEffect(() => {
-        if (popularData.pop_list.length > 0) {
+        if (popularData.pop_list.length > 0 || !errorPopular) {
             const firstRecipe = popularData.pop_list[0];
             if (!viewedVideos.current.has(firstRecipe.config_id)) {
                 // console.log('updateViews')
-                updateViews(firstRecipe.config_id);
+                dispatch(updateViews({config_id:firstRecipe.config_id}));
             }
         }
     }, [popularData.pop_list]);
@@ -125,44 +126,25 @@ export function MainPopular() {
             activeVideo >= listLength - 2 &&
             hasFetched &&
             !isFetching &&
-            listLength - activeVideo < 5
+            listLength - activeVideo < 5 && 
+            !errorPopular
         ) {
             handleNewVideo();
             // console.log('handleNewVideo call');
         }
 
         const current = popularData.pop_list[activeVideo];
-        if (current && !viewedVideos.current.has(current.config_id)) {
-            updateViews(current.config_id);
+        if ((current && !viewedVideos.current.has(current.config_id)) || !errorPopular) {
+            viewedVideos.current.add(current.config_id);
+            dispatch(updateViews({config_id:current.config_id}));
             // console.log('updateViews (scroll)');
         }
     }, [activeVideo, popularData.pop_list.length, hasFetched, isFetching]);
 
 
-    async function updateViews(config_id: string) {
-        if (viewedVideos.current.has(config_id)) return
-        viewedVideos.current.add(config_id);
-
-        try {
-            const response = await fetch(`/api/popular`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ config_id }),
-            });
-
-            if (!response.ok) {
-                // console.log('updateViews')
-                console.error('Failed to update views');
-            }
-        } catch (error) {
-            console.error('Error in updating views:', error);
-        }
-    }
 
     function handleNewVideo() {
-        if (isFetching) return;
+        if (isFetching || !errorPopular) return;
         setIsFetching(true);
 
         // console.log('handleNewVideo func');
@@ -186,7 +168,7 @@ export function MainPopular() {
     }, []);
 
     const handleCooldown = (callback: () => void) => {
-        if (cooldownRef.current) return;
+        if (cooldownRef.current || !errorPopular) return;
         cooldownRef.current = true;
         callback();
         setTimeout(() => {
@@ -312,12 +294,12 @@ export function MainPopular() {
                                     sx={mainBtnsPopular}
                                     onClick={() => {
                                         handleCooldown(() => {
-                                            if (activeVideo + 1 < popularData.pop_list.length) {
+                                            if (activeVideo + 1 < popularData.pop_list.length || !errorPopular) {
                                                 const newIndex = activeVideo + 1;
                                                 swiperRef.current?.slideTo(newIndex);
                                                 setActiveVideo(newIndex);
                                                 handleNewVideo();
-                                                updateViews(popularData.pop_list[newIndex].config_id);
+                                                dispatch(updateViews({config_id:popularData.pop_list[newIndex].config_id}));
                                             }
 
                                             if (openComment) {

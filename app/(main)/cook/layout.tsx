@@ -2,13 +2,13 @@ import { HeaderCook } from "@/app/components/cook/header-cook";
 import { Box } from "@mui/material";
 import { headerCook, mainBoxCook, scrollBox } from "./[recipe_id]/styles";
 import { AdaptiveHeader } from "@/app/components/cook/adaptive-header";
-import { ErrorBoundary } from "@/app/components/ux-helpers/error-boundary";
+import { AlertsProvider } from "@/app/components/ux-helpers/alerts-provider";
 
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
 
     return (
-        <ErrorBoundary>
+        <AlertsProvider sliceKeys={['cookHistory', 'cook', 'recipe', 'list']}> 
             <Box sx={mainBoxCook}>
                 <Box sx={{ ...headerCook, display: { xs: "none", md: "block" } }}>
                     <Box sx={scrollBox}>
@@ -24,8 +24,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
                 </Box>
                 {children}
             </Box>
-
-        </ErrorBoundary>
+        </AlertsProvider>
 
 
 

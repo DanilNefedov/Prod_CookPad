@@ -108,12 +108,13 @@ export const fetchList = createAsyncThunk<IRequestList, string, { rejectValue: s
             const urlList = `/api/list?connection_id=${id}`
             const responseList = await fetch(urlList);
 
+            console.log(responseList)
+
             if (!responseList.ok) return rejectWithValue('Server Error!');
+
             const dataList = await responseList.json()
 
-
             return dataList.data
-            
 
         } catch (error) {
             console.log(error)
@@ -409,6 +410,7 @@ const createReducerHandlers = <T extends keyof ListState['operations']>(operatio
         state.operations[operationName].loading = true;
     },
     rejected: (state: ListState) => {
+        console.log('3')
         state.operations[operationName].error = true;
         state.operations[operationName].loading = false;
     }

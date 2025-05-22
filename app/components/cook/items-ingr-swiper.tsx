@@ -61,7 +61,7 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
 
             setMethod('PATCH')
             setUnits(dataList.units)
-            console.log('Данные получены:', dataList);
+            console.log(dataList);
 
         } else if (dataList.unit_found === false) {
             setMethod('PATCH')

@@ -2,6 +2,7 @@ import { CommentsOperationKey } from "@/state/slices/comments-popular-slice";
 import { CookOperationKey } from "@/state/slices/cook";
 import { CookHistoryOperationKey } from "@/state/slices/cook-history";
 import { OperationKey } from "@/state/slices/list-recipe-slice";
+import { listOperationKey } from "@/state/slices/list-slice";
 import { PopularOperationKey } from "@/state/slices/popular-slice";
 import { RecipeOperationKey } from "@/state/slices/recipe-slice";
 import { UserOperationKey } from "@/state/slices/user-slice";
@@ -30,6 +31,32 @@ export const ERROR_MESSAGES_LIST_RECIPE: Partial<Record<OperationKey, string>> =
     deleteUnitListRecipe: 'Failed to remove unit.',
 };
 //----------------------------------  list-recipe-slice ---------------------------------//
+
+
+
+//----------------------------------  list ---------------------------------//
+export const SUCCESS_MESSAGES_LIST: Partial<Record<listOperationKey, string>> = {
+    
+};
+
+export const LOADING_MESSAGES_LIST: Partial<Record<listOperationKey, string>> = {
+   
+};
+    
+export const ERROR_MESSAGES_LIST: Partial<Record<listOperationKey, string>> = {
+    fetchList: 'Failed to load ingredient list.',
+    newIngredientList: 'Failed to load ingredient list.',
+    newUnitIngredientList:'Failed to load ingredient list.',
+    updateCookUnit: 'Failed to update cooking unit.',
+    toggleShopIngrFetch: 'Failed to update ingredient shopping status.',
+    shopUnitUpdate: 'Failed to update shopping unit.',
+    deleteIngredientFetch: 'Failed to remove ingredient.',
+    deleteUnitIngrFetch: 'Failed to remove unit from ingredient.',
+    changeAmountFetch: 'Failed to update ingredient amount.',
+    addNewUnit: 'Failed to add new unit.',
+};
+//----------------------------------  list ---------------------------------//
+
 
 
 //----------------------------------  recipe ---------------------------------//
@@ -72,7 +99,8 @@ export const SUCCESS_MESSAGES_POPULAR: Partial<Record<PopularOperationKey, strin
 export const ERROR_MESSAGES_POPULAR: Partial<Record<PopularOperationKey, string>> = {
     popularFetch: 'Unable to load popular recipes.',
     likePopContent: 'Unable to update favorite recipe.',
-    savePopContent: 'Unable to save recipe changes.'
+    savePopContent: 'Unable to save recipe changes.',
+    updateViews:'Unable to update view recipe.'
 }
 
 export const LOADING_MESSAGES_POPULAR: Partial<Record<PopularOperationKey, string>> = {

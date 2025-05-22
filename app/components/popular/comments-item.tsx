@@ -40,6 +40,9 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps
     const pingGate = usePingGate()
     const [statusReply, setStatusReply] = useState<string>('')
 
+    const status = useAppSelector(state => state.comments.operations.getReplies)
+
+    console.log(status)
     useEffect(() => {
         const currentLength = repliesData?.ids?.length || 0
         const prevLength = prevLengthRef.current

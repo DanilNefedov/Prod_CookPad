@@ -24,7 +24,7 @@ export async function POST(request: Request) {
         const data = await request.json();
         console.log('datadatadatadatadatadatadatadatadatadatadatadatadatadatadatadata',data)
         if (!data || !data.config_id || !data.id_author) {
-            return NextResponse.json({ status: 400, message: 'Missing required fields' });
+            return NextResponse.json({ error: "Missing config_id" }, { status: 400 });
         }
 
         const comment = await new CommentPopular(data).save({ session });

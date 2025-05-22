@@ -21,7 +21,9 @@ export async function POST(request: Request) {
         const dataReq = await request.json();
         const { data, config_id } = dataReq;
 
-        
+        if(!data || !config_id){
+            return NextResponse.json({ error: "Missing config_id" }, { status: 400 });
+        }
         const comment = new ReplyComment(data);
         const res = await comment.save({ session }); 
 
@@ -38,7 +40,9 @@ export async function POST(request: Request) {
 
 
         if (!updatedPopular) {
-            throw new Error('Popular document not found');
+            return NextResponse.json({
+                message: "Popular config document not found",
+            }, { status: 404 });
         }
 
         const updatedParentComm = await CommentPopular.findOneAndUpdate(
@@ -50,7 +54,9 @@ export async function POST(request: Request) {
         console.log(res,comment, updatedPopular, config_id, updatedParentComm)
 
         if (!updatedParentComm) {
-            throw new Error('Parent comment not found');
+            return NextResponse.json({
+                message: "Parent comment not found",
+            }, { status: 404 });
         }
 
         dayjs.extend(relativeTime)

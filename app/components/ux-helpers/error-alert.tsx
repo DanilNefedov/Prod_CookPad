@@ -47,7 +47,7 @@ export function GlobalErrorNotifier<K extends string = string>({ operationConfig
             (Object.entries(operations) as [K, { error: boolean; loading: boolean }][]).forEach(
                 ([operationKey, status]) => {
                     const prevWasLoading = wasLoadingRef.current[operationKey] || false;
-
+                    
                     // Loading
                     if (status.loading && config.loadingMessages[operationKey] && !shownLoadingRef.current[operationKey]) {
                         const message = config.loadingMessages[operationKey];
@@ -95,14 +95,14 @@ export function GlobalErrorNotifier<K extends string = string>({ operationConfig
                             shownRef.current[operationKey] = false;
                         }, duration + 500);
                     }
-
+                    console.log(status.error, !shownRef.current[operationKey])
                     // Error
                     if (status.error && !shownRef.current[operationKey]) {
                         const key = shownLoadingRef.current[operationKey];
+                        
                         if (key) closeSnackbar(key);
 
                         const message = config.errorMessages[operationKey] ?? 'Something went wrong.';
-
                         enqueueSnackbar('', {
                             content: (snackbarKey) => (
                                 <Alert
@@ -110,8 +110,8 @@ export function GlobalErrorNotifier<K extends string = string>({ operationConfig
                                     onClose={() => {
                                         closeSnackbar(snackbarKey);
                                         // dispatch(config.closeErrorAction(operationKey));
-                                        // We do not use dispatch for now. Because it will turn off all flags, 
-                                        // which means that if all flags are false, it will throw the Success window
+                                        //  Don't use this dispatch yet. Because it will disable all flags, 
+                                        //  which means that if all flags are false, it will throw the Success window
                                         // BUT DON'T REMOVE THE FUNCTIONALITY OF THIS DISPATCH.
                                         shownRef.current[operationKey] = false; 
                                     }}

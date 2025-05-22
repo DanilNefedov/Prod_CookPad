@@ -12,6 +12,12 @@ export async function PATCH(request: Request) {
     try{
         const { ingredient_id, new_unit } = await request.json();
 
+        if (!ingredient_id || !new_unit) {
+            return NextResponse.json({
+                message: "The input data is incorrect",
+            }, { status: 400 })
+        }
+
         await connectDB();
 
         const updatedIngredient = await ListIngredients.findOneAndUpdate(

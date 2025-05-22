@@ -18,13 +18,13 @@ interface DataProps {
     elem: UnitsList;
     id: string;
     ingredient_id: string;
-    amount:string
+    amount: string
     setAmount: (newValue: string) => void
     recipe_id?: string;
 }
 
 
-export const CalcUnit = memo(({ props }: { props: DataProps }) => {    
+export const CalcUnit = memo(({ props }: { props: DataProps }) => {
     const { elem, id, ingredient_id, amount, setAmount, recipe_id } = props
     const [currentValue, setCurrentValue] = useState<string>(amount);
     const [isParenthesisOpen, setIsParenthesisOpen] = useState<number>(0);
@@ -44,8 +44,8 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
     useEffect(() => {
         setCurrentValue(amount);
     }, [amount]);
-    
-    
+
+
 
     // const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     //     setAnchorEl(event.currentTarget);
@@ -71,8 +71,9 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
         ["7", "8", "9", "*"],
         ["4", "5", "6", "-"],
         ["1", "2", "3", "+"],
-        ["%", "0", ".", "="],
+        ["0", ".", "="], 
     ], []);
+    //["%","0", ".", "="],
 
     const math = create(all, {
         number: 'BigNumber',
@@ -191,7 +192,7 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
 
     // function updateAmountCalc() {
     const updateAmountCalc = useCallback(() => {
-        if (currentValue === amount.toString()) return 
+        if (currentValue === amount.toString()) return
 
         const resEqual = handleEqual(currentValue);
         if (resEqual === null) return;
@@ -213,8 +214,8 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
 
         if (id !== "" && pathName === "/list") {
             dispatch(changeAmountFetch({ ingredient_id, unit_id: elem._id, amount: numericValue }));
-        }else if (id !== "" && pathName === "/list-recipe" && recipe_id){
-            dispatch(newAmountListRecipe({connection_id: id, ingredient_id: ingredient_id, unit_id: elem._id, amount: numericValue, _id:recipe_id }))
+        } else if (id !== "" && pathName === "/list-recipe" && recipe_id) {
+            dispatch(newAmountListRecipe({ connection_id: id, ingredient_id: ingredient_id, unit_id: elem._id, amount: numericValue, _id: recipe_id }))
         }
 
     }, [currentValue, id, pathName, ingredient_id, elem._id, dispatch, amount, handleEqual, recipe_id, setAmount]);
@@ -240,26 +241,29 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
                 open={Boolean(open)}
                 onClose={handleClose}
                 MenuListProps={{
-                'aria-labelledby': 'demo-positioned-button',
+                    'aria-labelledby': 'demo-positioned-button',
                 }}
-            
-                sx={{...menuCalc,
+
+                sx={{
+                    ...menuCalc,
                 }}
 
             >
-                <Box component={MenuItem} sx={{ p: "0",  [theme.breakpoints.down(600)]: {
-                    minHeight:'auto'
-                } }}>
+                <Box component={MenuItem} sx={{
+                    p: "0", [theme.breakpoints.down(600)]: {
+                        minHeight: 'auto'
+                    }
+                }}>
                     {mathError !== '' ?
-                        <Alert severity="error" sx={{ 
-                            pb: '0', 
-                            alignItems: "center", 
+                        <Alert severity="error" sx={{
+                            pb: '0',
+                            alignItems: "center",
                             '& .MuiAlert-icon, & .MuiAlert-message': { p: '0', color: 'primary.main' },
                             [theme.breakpoints.down('md')]: {
-                                fontSize:"14px",
-                                
+                                fontSize: "14px",
+
                             },
-                           
+
                         }}>
                             {mathError}
                         </Alert>
@@ -289,49 +293,58 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
                         />
                         <CheckIcon
                             onClick={() => updateAmountCalc()}
-                            sx={{ 
-                                p:"4px",
-                                backgroundColor:'primary.dark',
-                                borderRadius:"50%",
-                                position: 'absolute', 
-                                right: '20px', 
-                                width:'30px',
-                                height:'30px',
-                                bottom: 'calc(50% - 15px)', 
-                                color: 'text.primary', 
+                            sx={{
+                                p: "4px",
+                                backgroundColor: 'primary.dark',
+                                borderRadius: "50%",
+                                position: 'absolute',
+                                right: '20px',
+                                width: '30px',
+                                height: '30px',
+                                bottom: 'calc(50% - 15px)',
+                                color: 'text.primary',
                                 cursor: 'pointer',
                                 [theme.breakpoints.down('md')]: {
-                                    width:'25px',
-                                    height:'25px',
+                                    width: '25px',
+                                    height: '25px',
                                     bottom: 'calc(50% - 12px)',
-                                    p:'4px'
+                                    p: '4px'
                                 }
-                             }}
+                            }}
                         />
                     </Box>
 
                     <Box sx={{ ...containerCalcBtns, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 1 }}>
-                        <Button variant="contained" onClick={cleanArea} sx={{ backgroundColor: 'primary.dark', [theme.breakpoints.down('md')]: {
-                            minWidth:'50px'
-                        } }}>
-                            <BackspaceIcon sx={{ width: "16px",  [theme.breakpoints.down('md')]: {mr:'2px'}}} />
+                        <Button variant="contained" onClick={cleanArea} sx={{
+                            backgroundColor: 'primary.dark', [theme.breakpoints.down('md')]: {
+                                minWidth: '50px'
+                            }
+                        }}>
+                            <BackspaceIcon sx={{ width: "16px", [theme.breakpoints.down('md')]: { mr: '2px' } }} />
                         </Button>
 
-                        {btnValues.flat().map((btn, i) => (
-                            <Button
-                                key={i}
-                                sx={{ backgroundColor: 'primary.dark',
-                                    [theme.breakpoints.down('md')]: {
-                                        minWidth:'50px',
-                                        fontSize:'14px'
-                                    }
-                                }}
-                                variant="contained"
-                                onClick={() => handlCalc(btn)}
-                            >
-                                {btn}
-                            </Button>
-                        ))}
+                        {btnValues.flat().map((btn, i) => {
+                            return (
+                                <Button
+                                    key={i}
+                                    sx={{
+                                        width: i === 17 ? '128px' : '64px',
+                                        backgroundColor: 'primary.dark',
+                                        [theme.breakpoints.down('md')]: {
+                                            width: i === 17 ? '100px' : '50px',
+                                            minWidth: i === 17 ? '100px' : '50px',
+                                            // minWidth:'50px',
+                                            fontSize: '14px'
+                                        }
+                                    }}
+                                    variant="contained"
+                                    onClick={() => handlCalc(btn)}
+                                >
+                                    {btn}
+                                </Button>
+                            )
+
+                        })}
                     </Box>
                 </Box>
 
@@ -344,10 +357,10 @@ export const CalcUnit = memo(({ props }: { props: DataProps }) => {
     const prev = prevProps.props;
     const next = nextProps.props;
 
-    const isRecipeIdEqual = 
+    const isRecipeIdEqual =
         ('recipe_id' in prev && 'recipe_id' in next)
-        ? prev.recipe_id === next.recipe_id
-        : true;
+            ? prev.recipe_id === next.recipe_id
+            : true;
 
     return (
         prev.id === next.id &&

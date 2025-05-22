@@ -23,7 +23,9 @@ export async function POST(request: Request) {
         const { id_comment, page, id_author, newReply } = await request.json();
 
         if (!id_comment || !id_author) {
-            throw new Error('Missing required query parameters');
+            return NextResponse.json({
+                message: "The input data is incorrect",
+            }, { status: 400 })
         }
 
         const pageSize = 4;
