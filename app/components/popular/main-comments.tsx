@@ -76,7 +76,6 @@ export const MainComments = memo(({ config_id, comments }: dataProps) => {
 
 
     const fetchMoreComments = useCallback(() => {
-        // console.log(firstFetch.current)
         if (firstFetch.current || Number.isNaN(commentsData.page) ) return;
         // setIsFetching(true);
         pingGate(() => {
@@ -184,7 +183,8 @@ export const MainComments = memo(({ config_id, comments }: dataProps) => {
                     style={{ overflow: 'initial' }}
                     dataLength={commentsData.ids.length}
                     next={fetchMoreComments}
-                    hasMore={!Number.isNaN(commentsData.page) && comments > 0}
+                    hasMore={!Number.isNaN(commentsData.page) &&
+                            commentsData.ids.length < comments}
                     loader={
                         <div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
                             <CircularProgress color="secondary" size="35px" />

@@ -10,7 +10,7 @@
 }
 
 
-.swiper-button-disabled svg{
+.swiper-popular .swiper-button-disabled svg{
     color:#353842;
     cursor: auto;
 }

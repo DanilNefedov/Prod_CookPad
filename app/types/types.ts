@@ -417,6 +417,7 @@ export interface IListObj{
 export interface IListState{
     status: boolean,
     error: boolean,
+    page_list: number | null,
     connection_id: string,
     list_ingr: IListObj[]
 }
@@ -432,7 +433,7 @@ export interface IRequestList {
 
 export type MainListRecipe = ErrorStatus & {
     connection_id:string,
-    page:number
+    page:number | null
     recipes:TempalteRecipeForList[]
     
 }

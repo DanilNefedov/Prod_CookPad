@@ -36,11 +36,16 @@ export const ERROR_MESSAGES_LIST_RECIPE: Partial<Record<OperationKey, string>> =
 
 //----------------------------------  list ---------------------------------//
 export const SUCCESS_MESSAGES_LIST: Partial<Record<listOperationKey, string>> = {
-    
+    newIngredientList: 'New ingredient added successfully.',
+    newUnitIngredientList: 'New unit added successfully.',
+    updateCookUnit: 'Cooking unit updated successfully.',
 };
 
 export const LOADING_MESSAGES_LIST: Partial<Record<listOperationKey, string>> = {
-   
+    newIngredientList: 'Adding new ingredient...',
+    newUnitIngredientList: 'Adding new unit...',
+    updateCookUnit: 'Updating cooking unit...',
+
 };
     
 export const ERROR_MESSAGES_LIST: Partial<Record<listOperationKey, string>> = {

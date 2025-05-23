@@ -57,7 +57,7 @@ export function MainPopular() {
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
-                window.innerWidth <= 769 &&
+                window.innerWidth <= 768 &&
                 openComment &&
                 commentRef.current &&
                 !commentRef.current.contains(event.target as Node)
@@ -127,7 +127,7 @@ export function MainPopular() {
             hasFetched &&
             !isFetching &&
             listLength - activeVideo < 5 && 
-            !errorPopular
+            !errorPopular.error
         ) {
             handleNewVideo();
             // console.log('handleNewVideo call');
@@ -144,10 +144,10 @@ export function MainPopular() {
 
 
     function handleNewVideo() {
-        if (isFetching || !errorPopular) return;
+        if (isFetching || errorPopular.error) return;
         setIsFetching(true);
 
-        // console.log('handleNewVideo func');
+        console.log('handleNewVideo func');
         pingGate(() => {
             if (connection_id && popularData.pop_list.length >= 5) {
                 dispatch(popularFetch({
@@ -163,12 +163,24 @@ export function MainPopular() {
     }
 
 
+    
     const toggleComment = useCallback(() => {
-        setOpenComment(prev => !prev);
-    }, []);
+        const width = window.innerWidth;
+
+        if (width <= 1030 && width > 768) {
+            setOpenComment(prev => {
+                const newState = !prev;
+                setOpenInfo(newState ? true : openInfo);
+                return newState;
+            });
+        } else {
+            setOpenComment(prev => !prev);
+        }
+    }, [openInfo]);
+
 
     const handleCooldown = (callback: () => void) => {
-        if (cooldownRef.current || !errorPopular) return;
+        if (cooldownRef.current || errorPopular.error) return;
         cooldownRef.current = true;
         callback();
         setTimeout(() => {
@@ -177,7 +189,7 @@ export function MainPopular() {
     };
 
 
-    console.log('main-popular')
+    console.log('main-popular', commentRef)
     return (
         <>
             <Card
@@ -294,11 +306,13 @@ export function MainPopular() {
                                     sx={mainBtnsPopular}
                                     onClick={() => {
                                         handleCooldown(() => {
-                                            if (activeVideo + 1 < popularData.pop_list.length || !errorPopular) {
+                                            
+                                            if (activeVideo + 1 < popularData.pop_list.length || !errorPopular.error) {
                                                 const newIndex = activeVideo + 1;
                                                 swiperRef.current?.slideTo(newIndex);
                                                 setActiveVideo(newIndex);
                                                 handleNewVideo();
+                                                console.log(popularData.pop_list)
                                                 dispatch(updateViews({config_id:popularData.pop_list[newIndex].config_id}));
                                             }
 
@@ -323,8 +337,8 @@ export function MainPopular() {
                     onClick={() => setOpenInfo(!openInfo)}
                     sx={btnOpenInfoMobile}>
                     <KeyboardArrowLeftIcon sx={{
-                        width: "45px",
-                        height: "45px",
+                        width: "35px",
+                        height: "35px",
                         transition: 'transform 0.3s ease-in-out',
                         transform: openInfo ? 'rotate(180deg)' : 'rotate(0deg)'
                     }}

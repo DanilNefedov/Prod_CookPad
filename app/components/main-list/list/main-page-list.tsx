@@ -1,18 +1,21 @@
 'use client'
 import { useAppDispatch, useAppSelector } from '@/state/hook';
 import { fetchList, } from '@/state/slices/list-slice';
-import { Table, TableBody, TableCell,TableRow,} from '@mui/material';
+import { Button, Table, TableBody, TableCell, TableRow, } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { theme } from '@/config/ThemeMUI/theme';
 import { MainTableHeader } from '../main-table-header';
 import { MainTableBody } from '../main-table-body';
 import { UXLoading } from '../../ux-helpers/loading';
 import { EmptyInfo } from '../../ux-helpers/empty-info';
+import { styleLink } from '../../home/header/header';
 
 
 export function MainListPage() {
     const dispatch = useAppDispatch()
     const listStore = useAppSelector(state => state.list.list_ingr);
+    const pageList = useAppSelector(state => state.list.page_list)
+    const statusfetch = useAppSelector(state => state.list.operations.fetchList.loading)
     const listStatus = useAppSelector(state => state.list.status)
     const userStore = useAppSelector(state => state.user)
     const id = userStore?.user?.connection_id
@@ -23,13 +26,10 @@ export function MainListPage() {
 
 
     useEffect(() => {
-        // async function fetchData() {
-        if (id !== '') {
-            dispatch(fetchList(id));
+        if (id !== '' && pageList === 1 && pageList !== null) {
+            dispatch(fetchList({ id, page_list:pageList }));
         }
-        // }
-        // fetchData();
-    }, [dispatch, id]);
+    }, [dispatch, id, pageList]);
 
 
 
@@ -52,58 +52,106 @@ export function MainListPage() {
     }, [sortBy, sortOrder, listStore]);
 
 
+    function handleMore () {
+        if (id !== '' && pageList !== null) {
+            dispatch(fetchList({ id, page_list:pageList }));
+        }
+    }
 
+    console.log(pageList)
     return (
-        <Table sx={{
-            minWidth: '0', '& .MuiTableCell-root': {
-                p: '7px 14px', [theme.breakpoints.down(1050)]: { p: '9px 7px' },
-                [theme.breakpoints.down(400)]: { p: '8px 3px' }
-            },
+        <>
+            <Table sx={{
+                mb:'7px',
+                minWidth: '0', '& .MuiTableCell-root': {
+                    p: '7px 14px', [theme.breakpoints.down(1050)]: { p: '9px 7px' },
+                    [theme.breakpoints.down(400)]: { p: '8px 3px' }
+                },
 
-        }} stickyHeader aria-label="sticky table">
+            }} stickyHeader aria-label="sticky table">
 
-            <MainTableHeader props={{
-                sortOrder,
-                setSortOrder,
-                sortBy,
-                setSortBy
-            }}></MainTableHeader>
+                <MainTableHeader props={{
+                    sortOrder,
+                    setSortOrder,
+                    sortBy,
+                    setSortBy
+                }}></MainTableHeader>
 
 
 
-            <TableBody sx={{ overflow: 'auto', borderTop: '2px solid rgba(255, 0, 0, 0.12)' }}>
-                {listStatus && listStore.length === 0 ?
-                    <TableRow>
-                        <TableCell sx={{backgroundColor:'transparent', border:'0'}}>
-                            <UXLoading ></UXLoading>{/* color:'#1F2128' */}
-                        </TableCell>
-                    </TableRow>
-                    :
-                        !listStatus && listStore.length === 0 ?
+                <TableBody sx={{ overflow: 'auto', borderTop: '2px solid rgba(255, 0, 0, 0.12)' }}>
+                    {listStatus && listStore.length === 0 ?
                         <TableRow>
-                            <TableCell sx={{backgroundColor:'transparent', border:'0'}}>
-                                <EmptyInfo></EmptyInfo>
+                            <TableCell sx={{ backgroundColor: 'transparent', border: '0' }}>
+                                <UXLoading ></UXLoading>{/* color:'#1F2128' */}
                             </TableCell>
-                        </TableRow>   
+                        </TableRow>
                         :
-                        sortedList.map((el) => (
-                            <MainTableBody key={el._id} props={{
-                                ingredient_id: el._id,
+                        !listStatus && listStore.length === 0 ?
+                            <TableRow>
+                                <TableCell sx={{ backgroundColor: 'transparent', border: '0' }}>
+                                    <EmptyInfo></EmptyInfo>
+                                </TableCell>
+                            </TableRow>
+                            :
+                            <>
+                                {sortedList.map((el) => (
+                                    <MainTableBody key={el._id} props={{
+                                        ingredient_id: el._id,
 
-                            }}>
-                            </MainTableBody>
-                        ))
+                                    }}>
+                                    </MainTableBody>
+                                ))}
+                            </>
 
-                }
 
-            </TableBody>
+                    }
+
+                </TableBody>
+
+
+
+            </Table>
+
+            {
+                listStatus && listStore.length === 0 ? 
+                <></>
+                :
+                statusfetch ? 
+                    <UXLoading position={'static'}></UXLoading>
+                    :
+                    <Button
+                        disabled={pageList === null ? true : false}
+                        sx={{
+                            ...styleLink, 
+                            backgroundColor:"primary.dark",
+                            display:'flex',
+                            alignItems:'center',
+                            width: '150px', 
+                            height: '32.5px', 
+                            m: '20px auto',
+                            color:'white',
+                            '@media (hover: hover) and (pointer: fine)': {
+                                "&:hover":{
+                                    backgroundColor:"primary.main",
+                                },
+                            },
+                            [theme.breakpoints.down("md")]: {
+                                mt: '7px',
+                                mb: '7px',
+                                width: '90px'
+                            },
+                            [theme.breakpoints.down(500)]: {
+                                height: '28px'
+                            }
+                        }}
+                        onClick={() => handleMore()}
+                    >More</Button>
+            }
             
-
-
-        </Table>
-
-
-
+               
+            
+        </>
 
     )
 }

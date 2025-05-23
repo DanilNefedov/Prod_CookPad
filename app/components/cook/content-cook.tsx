@@ -66,6 +66,10 @@ export function ContentCook() {
             }}>
                 <Box sx={{
                     display: 'flex', height: 'auto', justifyContent: 'center', gap: '10px',
+                    '& .swiper':{
+                        marginLeft: 0,
+                        marginRight: 0,
+                    },
                     [theme.breakpoints.down(700)]: {
                         display: 'block',
                         gap: '0'

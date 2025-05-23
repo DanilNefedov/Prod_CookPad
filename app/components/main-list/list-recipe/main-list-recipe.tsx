@@ -10,6 +10,7 @@ import { UXLoading } from "../../ux-helpers/loading";
 import { EmptyInfo } from "../../ux-helpers/empty-info";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { theme } from "@/config/ThemeMUI/theme";
+import { styleLink } from "../../home/header/header";
 // import { ErrorAlert } from "../../ux-helpers/error-alert";
 
 
@@ -18,6 +19,9 @@ import { theme } from "@/config/ThemeMUI/theme";
 export function MainListRecipe() {
     const dispatch = useAppDispatch()
     const listRecipeStore = useAppSelector(state => state.listRecipe)
+
+    const pageListRecipe = useAppSelector(state => state.listRecipe.page)
+    const statusListRecipe = useAppSelector(state => state.listRecipe.operations.preLoaderMain.loading)
 
 
     const preLoaderMainStatus = useAppSelector(state => state.listRecipe.operations.preLoaderMain)
@@ -37,11 +41,11 @@ export function MainListRecipe() {
         );
     };
     useEffect(() => {
-        if (connection_id !== '') {
-            dispatch(preLoaderMain({ connection_id, page: 1 }))
+        if (connection_id !== '' && pageListRecipe === 1 && pageListRecipe !== null) {
+            dispatch(preLoaderMain({ connection_id, page:pageListRecipe }))
             // dispatch(ingredientsListRecipe({connection_id, recipe_id:'1212'}))
         }
-    }, [connection_id, dispatch])
+    }, [connection_id, dispatch, pageListRecipe])
 
 
 
@@ -82,7 +86,11 @@ export function MainListRecipe() {
     // if(preLoaderMainStatus.error) return <StatusAlert error={preLoaderMainStatus.error} handleClose={() => closeError('preLoaderMain')}></StatusAlert>
     // if (preLoaderMainStatus.error) return <ErrorAlert></ErrorAlert>
 
-    
+    function handleMore() {
+        if (connection_id !== '' && pageListRecipe !== null) {
+            dispatch(preLoaderMain({ connection_id, page:pageListRecipe }))
+        }
+    }
 
 
     console.log('recipe', listRecipeStore)
@@ -113,7 +121,7 @@ export function MainListRecipe() {
                                         '&:first-of-type': { borderTopLeftRadius: '10px', borderTopRightRadius: '10px' },
                                         '&:last-of-type': { borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' },
                                         '&.Mui-expanded': { m: '5px 0 ', },
-                                        '& .MuiButtonBase-root.MuiAccordionSummary-root': { p: '0' },
+                                        '& .MuiButtonBase-root.MuiAccordionSummary-root': { p: '0', justifyContent:'space-between' },
                                         p: '15px',
                                         '& .MuiAccordionSummary-content.Mui-expanded': {
                                             m: '0 0 20px 0'
@@ -209,7 +217,41 @@ export function MainListRecipe() {
                         ))
             }
 
-
+            {
+                statusListRecipe && listRecipeStore.recipes.length === 0 && !preLoaderMainStatus.error ? 
+                <></>
+                :
+                statusListRecipe ? 
+                    <UXLoading position={'static'}></UXLoading>
+                    :
+                    <Button
+                        disabled={pageListRecipe === null ? true : false}
+                        sx={{
+                            ...styleLink, 
+                            backgroundColor:"primary.dark",
+                            display:'flex',
+                            alignItems:'center',
+                            width: '150px', 
+                            height: '32.5px', 
+                            m: '20px auto',
+                            color:'white',
+                            '@media (hover: hover) and (pointer: fine)': {
+                                "&:hover":{
+                                    backgroundColor:"primary.main",
+                                },
+                            },
+                            [theme.breakpoints.down("md")]: {
+                                mt: '7px',
+                                mb: '7px',
+                                width: '90px'
+                            },
+                            [theme.breakpoints.down(500)]: {
+                                height: '28px'
+                            }
+                        }}
+                        onClick={() => handleMore()}
+                    >More</Button>
+            }
 
         </Box>
     )

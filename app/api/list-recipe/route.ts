@@ -105,25 +105,29 @@ export async function GET(request: Request) {
             )
         }
 
-        const pageSize = 12;
+        const pageSize = 15;
         const skip = (page - 1) * pageSize;
 
-
-        const recipes = await ListRecipe.find({ connection_id },
-            {   
-                _id:1,
+        const [recipes, totalCount] = await Promise.all([
+            ListRecipe.find({ connection_id }, {
+                _id: 1,
                 connection_id: 1,
                 "recipe.recipe_id": 1,
                 "recipe.recipe_name": 1,
                 "recipe.recipe_shop": 1,
                 "recipe.recipe_media.url": 1,
                 "recipe.recipe_media.type": 1,
-            }
-        )
-        .sort({ createdAt: -1 }) 
-        .skip(skip)
-        .limit(pageSize)
-        .lean();
+            })
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(pageSize)
+                .lean(),
+
+            ListRecipe.countDocuments({ connection_id })
+        ]);
+
+        const hasMore = skip + recipes.length < totalCount;
+        const nextPage = hasMore ? page + 1 : null;
 
         const formattedRecipes = {
             connection_id: connection_id,
@@ -132,7 +136,7 @@ export async function GET(request: Request) {
                 ...recipe,
                 _id
             })),
-            page
+            page:nextPage
         };
         console.log(recipes, formattedRecipes)
         return NextResponse.json(formattedRecipes, { status: 200 });

@@ -66,30 +66,36 @@ export const mobileNameDescriptionContainer = (theme: Theme, expanded: boolean):
 
 
 
-
 export const mainBtnsPopular = {
-    backgroundColor: 'rgba(12,13,16, 0.5)', 
-    borderRadius:'50%', 
-    width:'45px',
-    height:'45px', 
-    display:'flex', 
-    alignItems:'center', 
-    justifyContent:'center',
-    border:'1px solid #777777',
-    cursor:'pointer',
-    transition:'0.15s',
+    backgroundColor: 'rgba(12,13,16, 0.5)',
+    borderRadius: '50%',
+    width: '45px',
+    height: '45px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: '1px solid #777777',
+    cursor: 'pointer',
+    transition: 'transform 0.15s',
+    transformOrigin: 'center center',
+
     '@media (hover: hover) and (pointer: fine)': {
-        "&:hover":{
-            transform: "scale(1.1)"
+        '&:hover': {
+            transform: 'scale(1.1)',
         },
     },
-    [theme.breakpoints.down('md')]: {
-        width:'35px',
-        height:'35px', 
-    }
-   
-}
 
+    [theme.breakpoints.down('md')]: {
+        width: '35px',
+        height: '35px',
+    },
+
+    '& svg': {
+        width: '60%', 
+        height: '60%',
+        transition: 'transform 0.15s',
+    },
+};
 
 
 export const nameRecipe = {

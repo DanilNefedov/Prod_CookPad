@@ -19,7 +19,7 @@ export function BlockContent() {
   const page = useAppSelector(state => state.recipe.page);
   const id = useAppSelector(state => state.user?.user?.connection_id);
   const { nav } = useNavigationState()
-  const [status, setStatus] = useState<boolean>(true)
+  const [status, setStatus] = useState<boolean>(recipes.length === 0 ? true : false)
   const [statusMore, setStatusMore] = useState<boolean>(false)
 
 
@@ -41,7 +41,7 @@ export function BlockContent() {
 
   const filteredRecipes = recipes.filter(recipe => recipe.sorting.includes(nav.toLowerCase()));
   
-  console.log(recipes, filteredRecipes, nav)
+  console.log(statusMore, nav, status)
   return (
     <>
       {/* <StatusBar></StatusBar> */}
@@ -62,10 +62,11 @@ export function BlockContent() {
 
 
       {
+        
         statusMore && nav === 'all' ?
-          <Box sx={{width:'100%'}}>
-            <UXLoading position="static"></UXLoading>
-          </Box>
+        <Box sx={{width:'100%'}}>
+          <UXLoading position="static"></UXLoading>
+        </Box>
           
         :
         nav === 'all' && !status ?
@@ -93,6 +94,8 @@ export function BlockContent() {
           </Box>
           :
           <></>
+        
+        
       }
     </>
 

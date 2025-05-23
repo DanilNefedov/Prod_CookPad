@@ -56,8 +56,8 @@
     margin-left: 0;
     margin-right: 0;
     width: 100%;
-    margin-right: 0;
-    margin-left: 0;
+    /* margin-right: 0; */
+    /* margin-left: 0; */
 }
 .swiper-cook-media-main .swiper-wrapper{
     align-items: center;
@@ -65,16 +65,16 @@
 }
 
 
-.btn-next-cook-media, .btn-prev-cook-media{
+.swiper-cook-media-main .btn-next-cook-media, .swiper-cook-media-main .btn-prev-cook-media{
     position: absolute;
     z-index: 100;
     top:calc(50% - 12px);
 }
-.btn-prev-cook-media{
+.swiper-cook-media-main .btn-prev-cook-media{
     left: 0px;
 }
 
-.btn-next-cook-media{
+.swiper-cook-media-main .btn-next-cook-media{
     right: 0px;
 }
 

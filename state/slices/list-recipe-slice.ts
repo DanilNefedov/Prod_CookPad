@@ -33,7 +33,7 @@ const initialState: ListrecipeState = {
     status: true,
     error: false,
     connection_id: '',
-    page:0,
+    page:1,
     recipes: [],
     operations:{
         preLoaderMain: defaultStatus,
@@ -63,7 +63,7 @@ interface TempalteRecipeIngredient {
 
 interface ReturnPreLoaderMain {
     connection_id:string,
-    page:number
+    page:number | null
     recipe:TempalteRecipeForList[]
 }
 
@@ -421,7 +421,7 @@ const listRecipeSlice = createSlice({
                 // console.log(action.payload)
                 const payload = action.payload
                 state.connection_id = payload.connection_id
-                state.page = payload.page
+                
 
 
                 payload.recipe.forEach((recipe) => {
@@ -436,6 +436,9 @@ const listRecipeSlice = createSlice({
                         });
                     }
                 });
+                
+                
+                state.page = payload.page
             })
            
 

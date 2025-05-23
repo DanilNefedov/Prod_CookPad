@@ -36,7 +36,7 @@ interface ListState extends IListState {
 }
 
 const defaultStatus: OperationStatus = { loading: true, error: false }
-
+const loadingStatus: OperationStatus = { loading: false, error: false }
 
 
 
@@ -45,13 +45,14 @@ const initialState: ListState = {
     status: true,
     error: false,
     connection_id: '',
+    page_list: 1,
     list_ingr: [
     ],
     operations:{
         fetchList:defaultStatus,
-        newIngredientList:defaultStatus,
-        newUnitIngredientList:defaultStatus,
-        updateCookUnit:defaultStatus,
+        newIngredientList:loadingStatus,
+        newUnitIngredientList:loadingStatus,
+        updateCookUnit:loadingStatus,
         toggleShopIngrFetch:defaultStatus,
         shopUnitUpdate:defaultStatus,
         deleteIngredientFetch:defaultStatus,
@@ -101,19 +102,24 @@ interface updateCookUnitI {
     amount: number,
 }
 
-export const fetchList = createAsyncThunk<IRequestList, string, { rejectValue: string }>(
+
+interface RerturnFetchData extends IRequestList {
+    page_list:number | null
+}
+
+export const fetchList = createAsyncThunk<RerturnFetchData, {id:string, page_list:number}, { rejectValue: string }>(
     'list/fetchList',
-    async function (id, { rejectWithValue }) {
+    async function (data, { rejectWithValue }) {
         try {
-            const urlList = `/api/list?connection_id=${id}`
+            const urlList = `/api/list?connection_id=${data.id}&page_list=${data.page_list}`
             const responseList = await fetch(urlList);
 
-            console.log(responseList)
+            
 
             if (!responseList.ok) return rejectWithValue('Server Error!');
 
             const dataList = await responseList.json()
-
+            console.log(dataList)
             return dataList.data
 
         } catch (error) {
@@ -447,7 +453,7 @@ const listSlice = createSlice({
         builder
             .addCase(fetchList.pending, fetchListHandlers.pending)
             .addCase(fetchList.rejected, fetchListHandlers.rejected)
-            .addCase(fetchList.fulfilled, (state, action: PayloadAction<IRequestList, string>) => {
+            .addCase(fetchList.fulfilled, (state, action: PayloadAction<RerturnFetchData, string>) => {
                 state.operations.fetchList.error = false
                 state.operations.fetchList.loading = false
                 
@@ -461,6 +467,8 @@ const listSlice = createSlice({
                         state.list_ingr.push(el)
                     }
                 })
+
+                state.page_list = payload.page_list
 
             })
 
