@@ -28,15 +28,19 @@ type GlobalStatusNotifierProps = {
   operationConfigs: AnyOperationConfig[];
 };
 
+function useOperationsByConfig<K extends string = string>(operationConfigs: AnyOperationConfig[]) {
+    return operationConfigs.map((config) => {
+        const operations = useAppSelector(config.sliceSelector);
+        return { operations, config };
+    });
+}
+
 export function GlobalStatusNotifier<K extends string = string>({ operationConfigs }: GlobalStatusNotifierProps) {
     const dispatch = useAppDispatch();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-    const allOperations = operationConfigs.map(config => useAppSelector(config.sliceSelector));
-    const operationsByConfig = operationConfigs.map((config, index) => ({
-        operations: allOperations[index],
-        config
-    }));
+    const operationsByConfig = useOperationsByConfig(operationConfigs);
+
     
     const duration = 3000;
 
