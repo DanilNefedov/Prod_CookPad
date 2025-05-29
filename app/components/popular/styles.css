@@ -1,0 +1,80 @@
+
+.swiper-popular{
+    max-width: 100%;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    position: static;
+    height: 100%;
+    /* margin: 0 10px; */
+}
+
+
+.swiper-popular .swiper-button-disabled svg{
+    color:#353842;
+    cursor: auto;
+}
+.custom-prev-popular, .custom-next-popular{
+    position: absolute;
+    height: 24px;
+    width: 24px;
+    top:calc(50% - 12px);
+    cursor: pointer;
+}
+
+.swiper-popular .swiper-pagination {
+    position: absolute;
+    bottom: 20px;
+    z-index: 1000;
+    display: flex;
+    right: auto;
+    align-items: center;
+    justify-content: center;
+    right: calc(50% - 50px);
+}
+
+.swiper-popular .swiper-pagination-bullet{
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    display: inline-block;
+    margin: 0 3px;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.swiper-popular .swiper-pagination-bullet-active{
+    transform: scale(1.3);
+}
+
+.custom-prev-popular {
+    left: 0px; 
+}
+
+.custom-next-popular {
+    right: -5px; 
+}
+
+
+
+
+.slide-popular {
+    /* margin-right: 0 !important; */
+    border-radius: 20px 20px 0 20px;
+}
+
+.swiper-virtual .swiper-slide{
+    width: 100%;
+    height: 100%;
+}
+
+@media screen and (max-width:769.95px) {
+    .slide-popular {
+        border-radius: 20px 20px 20 20px;
+    }
+
+    .swiper-popular .swiper-pagination{
+        bottom: 70px;
+    }
+}

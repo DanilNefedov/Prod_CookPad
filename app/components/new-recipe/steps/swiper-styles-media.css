@@ -1,0 +1,29 @@
+
+.swiper-step-media-main {
+    width: clamp(200px, min(calc(80vw - 70px), calc((100vh - 25%) * 9 / 18)), 700px);
+    aspect-ratio: 9 / 16;
+    margin: 0 auto;
+}
+
+.btn-next-step-media, .btn-prev-step-media{
+    position: absolute;
+    z-index: 100;
+    top:calc(50% - 12px);
+}
+.btn-prev-step-media{
+    left: 0px;
+}
+
+.btn-next-step-media{
+    right: 0px;
+}
+
+.swiper-step-media-main .swiper-slide{
+    height: auto;
+}
+
+.step-media-main-slide-video, .step-media-main-slide{
+    max-width: 100%;
+    background-color: #000;
+    
+}

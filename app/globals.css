@@ -1,0 +1,169 @@
+:root{
+    --main-bg-black:#161B21;
+    --desactive-text:#586A84;
+    --active-text:#EEF0F4;
+    --btn-desactive:#3B4758;
+    --btn-active:#0077E4;
+    --light-gray:#BAC4D1;
+
+
+    --bg-second: #1D232C;
+    --shadow-bg: 0px 4px 20px 0px rgba(7, 6, 18, 0.10);
+}
+
+
+* {
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+*,
+*:before,
+*:after {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+:focus,
+:active {
+    outline: none;
+}
+
+a:focus,
+a:active {
+    outline: none;
+}
+
+nav,
+footer,
+header,
+aside {
+    display: block;
+}
+
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    background-color: var(--main-bg-black);
+    color:var(--desactive-text);
+    font-weight: 500;
+    font-size: 16px;
+    letter-spacing: 0.8px;
+    overflow: hidden;
+}
+
+
+input::-ms-clear {
+    display: none;
+}
+input{
+    outline: none!important;
+}
+
+button {
+    cursor: pointer;
+    font-family:inherit;
+    font-weight: inherit;
+    font-size: inherit;
+}
+
+button::-moz-focus-inner {
+    padding: 0;
+    border: 0;
+    font-family:inherit;
+    font-weight: inherit;
+    font-size: inherit;
+}
+
+a,
+a:visited {
+   
+    /* color:inherit; */
+    /* -webkit-text-decoration: none;  */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+ul li {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: inherit;
+}
+
+.wrapper {
+    overflow: hidden;
+    display: flex;
+    height: 100vh;
+    /* padding: 20px; */
+}
+
+
+/* .main-section-container{
+    flex-grow: 1;
+}
+
+ul .active-nav a{
+    color: var(--active-text);
+    background-color: var(--btn-active);
+}
+
+ul .active-nav{
+    border-color: var(--active-text);
+}
+
+.btn{
+    background-color: var(--btn-desactive);
+    border-radius: 6px;
+    padding: 10px 15px;
+    display: block;
+    text-align: center;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.btn:hover{
+    background-color: var(--btn-active);
+    color: var(--active-text);
+}
+
+
+.elem{
+    margin-right: 10px;
+}
+.elem a{
+    display: block;
+    transition: 0.3s;
+    cursor: pointer;
+    padding: 14px 16px;
+    border-radius: 6px;
+}
+.elem a:hover{
+    color:var(--active-text);
+}
+
+main{
+    height: calc(100vh - 146px);
+    margin-bottom: 20px;
+    border-radius: 12px;
+    background: var(--bg-second);
+    box-shadow: var(--shadow-bg);
+    padding: 20px 24px;
+
+} */

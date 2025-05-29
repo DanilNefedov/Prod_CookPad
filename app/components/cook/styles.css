@@ -1,0 +1,120 @@
+
+.swiper-cook > .swiper-wrapper{
+    margin: 10px auto;
+    flex-direction: inherit;
+    justify-content: var(--swiper-justify);
+    
+}
+.cook-slide{
+    background-color: #353842;
+    margin: var(--swiper-margin) !important; /*can be misstake*/
+    border-radius: 10px;
+    max-width: 350px;
+}
+
+.btn-prev-cook, .btn-next-cook{
+    position: absolute;
+    height: 35px;
+    width: 35px;
+    top:calc(50% - 22px);
+    cursor: pointer;
+}
+
+.btn-next-cook{
+    right: -17px; 
+}
+
+.btn-prev-cook{
+    left: -17px; 
+}
+
+.swiper-cook .swiper-button-disabled svg{
+    color:#353842;
+    cursor: auto;
+}
+
+
+
+
+.cook-media-main-slide-video, .cook-media-main-slide{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* height: 80vh; */
+    /* margin: 0 40px; */
+}
+/* .cook-media-main-slide{
+    max-height: 700px;
+    
+} */
+.swiper-cook-media-main{
+    background-color:#1F2128 ;
+    position: relative;
+    height: 100%;
+    border-radius: 10px;
+    max-width: 464px;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    /* margin-right: 0; */
+    /* margin-left: 0; */
+}
+.swiper-cook-media-main .swiper-wrapper{
+    align-items: center;
+    /* margin: 0 20px; */
+}
+
+
+.swiper-cook-media-main .btn-next-cook-media, .swiper-cook-media-main .btn-prev-cook-media{
+    position: absolute;
+    z-index: 100;
+    top:calc(50% - 12px);
+}
+.swiper-cook-media-main .btn-prev-cook-media{
+    left: 0px;
+}
+
+.swiper-cook-media-main .btn-next-cook-media{
+    right: 0px;
+}
+
+.swiper-cook-media-main .swiper-button-disabled svg{
+    /* color:#1F2128; */
+    opacity: .5;
+    cursor: auto;
+}
+.swiper-cook .swiper-slide{
+    margin:0;
+}
+
+
+
+
+
+@media screen and (max-width:899px) {
+    .btn-prev-cook, .btn-next-cook{
+        height: 30px;
+        width: 30px;
+        /* top:calc(50% - 15px); */
+    }
+    .btn-next-cook{
+        right: -10px; 
+    }
+    
+    .btn-prev-cook{
+        left: -10px; 
+    }
+    
+}
+
+
+/* @media screen and (max-width:450px) {
+    .swiper-cook > .swiper-wrapper{
+
+        justify-content: initial;
+        
+    }
+}
+ */
+
+
