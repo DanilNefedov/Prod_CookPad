@@ -103,7 +103,7 @@ export const commVideoFetch = createAsyncThunk<ReturnCommDataT, {config_id: stri
 
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -138,7 +138,7 @@ export const newCommPopular = createAsyncThunk<CommListDataReturn, CommListData,
 
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -176,7 +176,7 @@ export const likedComment = createAsyncThunk<LikedCommnetDataT, LikedCommnetData
 
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -208,7 +208,7 @@ export const newReplyComm = createAsyncThunk<ReplyCommDataReturn, {data:ReplyCom
 
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -254,7 +254,7 @@ export const getReplies = createAsyncThunk<returnDataT, {id_comment: string, pag
 
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )

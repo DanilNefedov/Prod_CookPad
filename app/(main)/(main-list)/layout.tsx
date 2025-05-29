@@ -1,5 +1,4 @@
 import { HeaderList } from "@/app/components/main-list/header-list";
-import { AlertsProvider } from "@/app/components/ux-helpers/alerts-provider";
 import { AppBar, Box } from "@mui/material";
 
 

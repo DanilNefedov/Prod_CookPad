@@ -10,7 +10,7 @@ import { SLICE_CONFIGS, SliceKey } from './slice-config';
 
 export function AlertsProvider({ children, sliceKeys, }: { children: React.ReactNode; sliceKeys: SliceKey[] }) {
   const configs = sliceKeys.map((key) => SLICE_CONFIGS[key]);
-  console.log('22')
+
   return (
     <SnackbarProvider
       maxSnack={2}

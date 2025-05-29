@@ -163,7 +163,7 @@ export async function PATCH(req: Request) {
     for (const ingredient of data) {
 
       if (!ingredient.new_ingredient) {
-        const updatedDoc = await Ingredients.findOneAndUpdate(
+        await Ingredients.findOneAndUpdate(
           { name: new RegExp(`^${ingredient.name.trim()}$`, 'i') },
           {
             $inc: { count: 1 },

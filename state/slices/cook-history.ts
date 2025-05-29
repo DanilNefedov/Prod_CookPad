@@ -67,7 +67,7 @@ export const fetchHistoryCook = createAsyncThunk<fetchCookHistoryT, {connection_
 
         }catch(error){
             console.error(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -103,7 +103,7 @@ export const newCookHistory = createAsyncThunk<newCookHistoryT, newCookHistoryT,
 
         }catch(error){
             console.error(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -114,7 +114,9 @@ export const deleteCookHistory = createAsyncThunk<{connection_id:string, recipe_
         try {
             const response = await fetch(`/api/cook/history/${recipe_id}`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json' 
+                },
                 body: JSON.stringify({ connection_id, recipe_id }),
             });
 

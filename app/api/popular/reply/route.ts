@@ -96,6 +96,7 @@ export async function POST(request: Request) {
         
         return NextResponse.json({responseData, config_id});
     } catch (error) {
+        console.log(error)
         await session.abortTransaction(); 
         return NextResponse.json(
             { message: 'Internal Server Error' },

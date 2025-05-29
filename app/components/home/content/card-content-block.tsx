@@ -17,12 +17,17 @@ import './swiper-media.css';
 import { Navigation } from 'swiper/modules';
 import { memo, useState } from "react";
 import { useAppDispatch, useAppSelector } from '@/state/hook';
-import { SwiperMediaCard } from './swiper-media-card';
 import { setFavoriteRecipe } from '@/state/slices/recipe-slice';
 import { theme } from '@/config/ThemeMUI/theme';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { newListRecipe } from '@/state/slices/list-recipe-slice';
+import dynamic from 'next/dynamic';
 
+
+const SwiperMediaCard = dynamic(() => import('./swiper-media-card'), {
+    ssr: false, 
+    loading: () => <div style={{ height: 200 }}>loading...</div>,
+});
 
 
 
@@ -30,6 +35,9 @@ interface propsData {
     recipe_id:string,
     id:string
 }
+
+
+
 
 export const CardContentBlock = memo(({ props }: { props: propsData }) => {
     const { recipe_id, id} = props
@@ -180,12 +188,7 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                     }}></ArrowLeftIcon>
                 </Box>
             </Swiper>
-            {/* <CardMedia
-                component='img'
-                alt={name as string}
-                sx={mainCardImg}
-                src={media as string}
-            /> */}
+            
 
 
             <CardContent sx={{ ...contentPostionAbsolute, bottom: '0' }}>

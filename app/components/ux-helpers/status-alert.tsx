@@ -13,7 +13,7 @@ export type OperationConfig<K extends string = string> = {
     successMessages: Partial<Record<K, string>>;
     errorMessages: Partial<Record<K, string>>;
     loadingMessages: Partial<Record<K, string>>;
-    closeErrorAction: (key: string) => any;
+    closeErrorAction: (key: string) => void;
 };
 
 
@@ -31,16 +31,19 @@ type GlobalStatusNotifierProps = {
 export function GlobalStatusNotifier<K extends string = string>({ operationConfigs }: GlobalStatusNotifierProps) {
     const dispatch = useAppDispatch();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+
+    const operationsByConfig = operationConfigs.map((config) => ({
+        operations: useAppSelector(config.sliceSelector),
+        config,
+    }));
+    
     const duration = 3000;
 
     const shownRef = useRef<Record<K, boolean>>({} as Record<K, boolean>);
     const wasLoadingRef = useRef<Record<K, boolean>>({} as Record<K, boolean>);
     const shownLoadingRef = useRef<Record<K, SnackbarKey | null>>({} as Record<K, SnackbarKey | null>);
 
-    const operationsByConfig = operationConfigs.map((config) => ({
-        operations: useAppSelector(config.sliceSelector),
-        config,
-    }));
+    
 
     useEffect(() => {
         operationsByConfig.forEach(({ operations, config }) => {

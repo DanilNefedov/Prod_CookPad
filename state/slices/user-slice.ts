@@ -78,16 +78,18 @@ export const fetchUser = createAsyncThunk<collectionUser, string, { rejectValue:
             }
 
             const data = await response.json();
-            console.log(data)
+
             return data;
 
         } catch (error) {
             console.error(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 );
 
+
+// move it to a regular reduser
 export const fetchClearUser = createAsyncThunk<[], {rejectValue: string}>(
     'userSlice/fetchClearUser',
     async function (_, {rejectWithValue}){
@@ -97,19 +99,10 @@ export const fetchClearUser = createAsyncThunk<[], {rejectValue: string}>(
             return data
         }catch(error){
             console.error(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
-
-// interface dataConfigUser {
-//     like: boolean,
-//     comment: number,
-//     save_recipe: boolean,
-//     id_video: string,
-//     id_user: string
-// }
-
 
 
 

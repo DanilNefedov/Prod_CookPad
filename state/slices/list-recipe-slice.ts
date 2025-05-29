@@ -82,7 +82,7 @@ export const preLoaderMain = createAsyncThunk<ReturnPreLoaderMain, {connection_i
 
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -114,7 +114,7 @@ export const newListRecipe = createAsyncThunk<void, NewListRecipeT, { rejectValu
 
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -142,7 +142,7 @@ export const ingredientsListRecipe = createAsyncThunk<ReturnIngredientsListrecip
 
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -173,7 +173,7 @@ export const shopIngrListRecipe = createAsyncThunk<ShopIngrListRecipeT, ShopIngr
             return dataList;
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -201,7 +201,7 @@ export const deleteIngrRecipeList = createAsyncThunk<TempalteRecipeIngredient, T
             return dataList;
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -234,7 +234,7 @@ export const shopUnitListRecipe = createAsyncThunk<ShopUnitIngredientT, ShopUnit
             return dataList;
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -266,7 +266,7 @@ export const deleteUnitListRecipe = createAsyncThunk<DeleteUnitIngredientT, Dele
             return dataList;
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -299,7 +299,7 @@ export const newAmountListRecipe = createAsyncThunk<ChangeAmountT, ChangeAmountT
             return dataList;
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -332,7 +332,7 @@ export const newUnitListRecipe = createAsyncThunk<RespNewUnitIngreedient, NewUni
             return dataList;
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -355,11 +355,11 @@ export const deleteListRecipe = createAsyncThunk<string, {connection_id:string, 
             }
             
             const dataList = await response.json()
-            console.log(dataList)
+
             return dataList;
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )

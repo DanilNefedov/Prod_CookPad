@@ -9,7 +9,7 @@ interface propsData {
     name:string
 }
 
-export function SwiperMediaCard ({ props }: { props: propsData }){
+export default function SwiperMediaCard ({ props }: { props: propsData }){
     const {el, name} = props
 
 

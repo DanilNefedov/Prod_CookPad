@@ -96,7 +96,7 @@ export const fetchCook = createAsyncThunk<fetchDataT, { id: string, recipe_id: s
 
         } catch (error) {
             console.error(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -128,7 +128,7 @@ export const deleteRecipe = createAsyncThunk<DataDelete, DataDelete, { rejectVal
 
         } catch (error) {
             console.error(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )

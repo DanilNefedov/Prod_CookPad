@@ -1,8 +1,7 @@
 import connectDB from "@/app/lib/mongoose";
 import ListIngredients from "@/app/models/list";
+import { cloneDeep, omit } from "lodash";
 import { NextResponse } from "next/server";
-import _ from "lodash";
-
 
 
 
@@ -82,8 +81,8 @@ export async function POST(request: Request) {
         // }
 
 
-        // const filteredData = _.omit(_.cloneDeep(newIngredient.toObject()), ["connection_id", "updatedAt", "createdAt", "__v"]);
-        const { connection_id, updatedAt, createdAt, __v, ...filteredData } = newIngredient.toObject();
+        const filteredData = omit(cloneDeep(newIngredient.toObject()), ["connection_id", "updatedAt", "createdAt", "__v"]);
+        // const { connection_id, updatedAt, createdAt, __v, ...filteredData } = newIngredient.toObject();
 
 
         return NextResponse.json(filteredData, { status: 201 });

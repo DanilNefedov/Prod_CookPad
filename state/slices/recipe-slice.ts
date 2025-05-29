@@ -54,7 +54,7 @@ export const fetchRecipes = createAsyncThunk<{recipes:MainRecipeT[], page:number
             return dataList
         } catch (error) {
             console.error(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -91,7 +91,7 @@ export const setFavoriteRecipe = createAsyncThunk<favoriteDataRecipeT, favoriteD
 
         }catch(error){
             console.error(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )

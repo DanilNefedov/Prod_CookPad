@@ -45,11 +45,8 @@ export function BlockContent() {
           <CardContentBlock
             key={recipe_id}
             props={{ recipe_id, id}}
-
-            
           />
         ))
-
       }
 
 
@@ -58,8 +55,7 @@ export function BlockContent() {
         statusMore && nav === 'all' ?
         <Box sx={{width:'100%'}}>
           <UXLoading position="static"></UXLoading>
-        </Box>
-          
+        </Box>  
         :
         nav === 'all' && !status ?
           <Box sx={{ width: '100%', display: 'flex' }}>
@@ -86,11 +82,8 @@ export function BlockContent() {
           </Box>
           :
           <></>
-        
-        
       }
     </>
-
   );
 };
 

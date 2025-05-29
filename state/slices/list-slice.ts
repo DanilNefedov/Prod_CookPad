@@ -122,10 +122,12 @@ export const fetchList = createAsyncThunk<RerturnFetchData, {id:string, page_lis
 
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
+
+
 export const newIngredientList = createAsyncThunk<ResNewIngredientListT, NewIngredientListT, { rejectValue: string }>(
     'list/newIngredientList',
     async function (reqData, { rejectWithValue }) {
@@ -146,18 +148,15 @@ export const newIngredientList = createAsyncThunk<ResNewIngredientListT, NewIngr
             const data = await response.json()
 
             return data;
-
         } catch (error) {
             console.log(error);
-            throw error;
+            return rejectWithValue('Request failed!');
         }
     }
 );
 
 
 
-
-// export const newUnitCookPage = createAsyncThunk<returnNewUnit | returnNewIngredient, newUnitCookPageI, { rejectValue: string }>(
 export const newUnitIngredientList = createAsyncThunk<ResDataUnitUpdate, ReqDataUpdateUnit, { rejectValue: string }>(
     'list/newUnitIngredientList',
     async function (reqData, { rejectWithValue }) {
@@ -179,7 +178,7 @@ export const newUnitIngredientList = createAsyncThunk<ResDataUnitUpdate, ReqData
 
         } catch (error) {
             console.log(error);
-            throw error;
+            return rejectWithValue('Request failed!');
         }
     }
 );
@@ -206,7 +205,7 @@ export const updateCookUnit = createAsyncThunk<updateCookUnitI, updateCookUnitI,
 
         } catch (error) {
             console.log(error);
-            throw error;
+            return rejectWithValue('Request failed!');
         }
     }
 );
@@ -235,7 +234,7 @@ export const toggleShopIngrFetch = createAsyncThunk<ShopIngredientT, ShopIngredi
             return data;
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 );
@@ -266,7 +265,7 @@ export const shopUnitUpdate = createAsyncThunk<ShopUnitUpdateT, ShopUnitUpdateT,
     
         } catch (error) {
             console.log(error);
-            throw error;
+            return rejectWithValue('Request failed!');
         }
     }
 );
@@ -295,7 +294,7 @@ export const deleteIngredientFetch = createAsyncThunk<DeleteIngredientT, DeleteI
     
         } catch (error) {
             console.log(error);
-            throw error;
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -327,7 +326,7 @@ export const deleteUnitIngrFetch = createAsyncThunk<DeleteUnitIngredientT, Delet
     
         } catch (error) {
             console.log(error);
-            throw error;
+            return rejectWithValue('Request failed!');
         }
     }
 );
@@ -357,12 +356,12 @@ export const changeAmountFetch = createAsyncThunk<ChangeAmountT, ChangeAmountT, 
             }
     
             const listData = await response.json()
-            console.log(listData)
+
             return listData;
     
         } catch (error) {
             console.log(error);
-            throw error;
+            return rejectWithValue('Request failed!');
         }
     }
 );
@@ -396,12 +395,12 @@ export const addNewUnit = createAsyncThunk<ResAddNewUnitT, AddNewUnitT, { reject
                 return rejectWithValue('Server Error!');
             }
             const respData = await response.json()
-            // console.log(respData)
+
             return respData;
     
         } catch (error) {
             console.log(error);
-            throw error;
+            return rejectWithValue('Request failed!');
         }
     }
 );
@@ -414,7 +413,6 @@ const createReducerHandlers = <T extends keyof ListState['operations']>(operatio
         state.operations[operationName].loading = true;
     },
     rejected: (state: ListState) => {
-        console.log('3')
         state.operations[operationName].error = true;
         state.operations[operationName].loading = false;
     }

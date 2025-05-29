@@ -25,7 +25,7 @@ interface PopularState extends popularInitData {
 
 const defaultStatus: OperationStatus = { loading: true, error: false }
 
-//maybe you shouldn't add the number of views to the redux.
+//maybe shouldn't add the number of views to the redux.
 
 const initialState: PopularState = {
     status: false,
@@ -64,7 +64,7 @@ export const popularFetch = createAsyncThunk<PopularListDataT[], { connection_id
 
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -92,7 +92,7 @@ export const likePopContent = createAsyncThunk<{ config_id: string, liked: boole
 
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -116,13 +116,11 @@ export const savePopContent = createAsyncThunk<{ config_id: string, saved: boole
 
             const returnData = await response.json()
 
-            console.log(returnData)
-
             return returnData
 
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
@@ -148,7 +146,7 @@ export const updateViews = createAsyncThunk<{ config_id: string }, { config_id: 
 
         } catch (error) {
             console.log(error)
-            throw error
+            return rejectWithValue('Request failed!');
         }
     }
 )
