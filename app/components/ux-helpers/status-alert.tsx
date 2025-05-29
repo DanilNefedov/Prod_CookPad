@@ -32,10 +32,11 @@ export function GlobalStatusNotifier<K extends string = string>({ operationConfi
     const dispatch = useAppDispatch();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-    const operationsByConfig = operationConfigs.map((config) => {
-        const operations = useAppSelector(config.sliceSelector);
-        return { operations, config };
-    });
+    const allOperations = operationConfigs.map(config => useAppSelector(config.sliceSelector));
+    const operationsByConfig = operationConfigs.map((config, index) => ({
+        operations: allOperations[index],
+        config
+    }));
     
     const duration = 3000;
 
