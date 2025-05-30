@@ -48,7 +48,6 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
     const isMobile = useMediaQuery("(max-width:500px)");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openAdaptive = Boolean(anchorEl);
-    const [activeIndex, setActiveIndex] = useState<number>(0);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -141,7 +140,6 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                     nextEl: '.btn-next-media',
 
                 }}
-                onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
                 spaceBetween={1}
             // lazy={true}
             >
@@ -150,7 +148,7 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
                     .sort((a, b) => Number(b.main) - Number(a.main))
                     .map((el, index) => (
                         <SwiperSlide key={el.media_id} className="media-main-slide" virtualIndex={index}>
-                            <SwiperMediaCard props={{ el, name:recipes?.name, activeIndex, index }} />
+                            <SwiperMediaCard props={{ el, name:recipes?.name }} />
                         </SwiperSlide>
                     )
                     )}

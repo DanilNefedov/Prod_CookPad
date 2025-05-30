@@ -1,5 +1,6 @@
 import { MediaObj } from "@/app/types/types";
 import { CardMedia } from "@mui/material";
+import { useEffect, useRef, useState } from "react";
 
 
 
@@ -7,19 +8,43 @@ import { CardMedia } from "@mui/material";
 interface propsData {
     el: MediaObj,
     name: string,
-    activeIndex: number,
-    index:number
+    
 }
 
 export default function SwiperMediaCard({ props }: { props: propsData }) {
-    const { el, name, activeIndex, index } = props;
+    const { el, name, } = props;
+    const ref = useRef<HTMLDivElement | null>(null);
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+        entries => {
+            entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                setIsVisible(true);
+                observer.disconnect();
+            }
+            });
+        },
+        {
+            rootMargin: '100px',
+        }
+        );
+
+        if (ref.current) {
+        observer.observe(ref.current);
+        }
+
+        return () => observer.disconnect();
+    }, []);
 
 
 
     return (
 
 
-        el.media_type === 'image' ? (
+        <div ref={ref} style={{ width: '100%', height: '100%' }}>
+        {el.media_type === 'image' ? (
             <CardMedia
                 component="img"
                 alt={name}
@@ -27,20 +52,27 @@ export default function SwiperMediaCard({ props }: { props: propsData }) {
                 src={el.media_url as string}
                 loading="lazy"
             />
-        ) : (
+        ) : isVisible ? (
             <CardMedia
-                component="video"
-                sx={{ height: '100%', objectFit: "cover", width: '100%' }}
+                component='video'
+                sx={{height: '100%', objectFit: "cover",  width: '100%',}}
                 autoPlay
                 loop
                 muted
                 poster={el.media_url as string}
+                
             >
-                {(Math.abs(activeIndex - index) <= 1) && (
-                   <source src={el.media_url as string} type="video/mp4" />
-                )}
+                <source src={el.media_url as string} type="video/mp4" />
             </CardMedia>
-        )
+        ) : (
+            <CardMedia
+                component="img"
+                alt={name}
+                sx={{ height: '100%', objectFit: 'cover' }}
+                src={el.media_url as string} 
+            />
+        )}
+        </div>
     
 
     )
