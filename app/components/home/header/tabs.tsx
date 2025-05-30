@@ -19,33 +19,39 @@ export default function TabsRenderer({ styleLink }: TabsRendererProps) {
 
   const { handlerNavigation, nav } = useNavigationState();
 
-  const uniqueTabs: string[] = [];
+  // const uniqueTabs: string[] = [];
 
-  const tabObjects = renderedNavigation
-    .flatMap((el) =>
-      el.sorting
-        .filter((sortingItem) => sortingItem && !uniqueTabs.includes(sortingItem.toLowerCase()))
-        .map((sortingItem) => {
-          uniqueTabs.push(sortingItem.toLowerCase());
-          return {
-            key: sortingItem.toLowerCase(),
-            label: capitalizeFirstLetter(sortingItem),
-          };
-        })
-    )
-    .sort((a, b) => a.label.localeCompare(b.label));
+  const tabObjects = useMemo(() => {
+    const uniqueTabsSet = new Set<string>();
+    const objects = renderedNavigation
+      .flatMap((el) =>
+        el.sorting
+          .filter((item) => item && !uniqueTabsSet.has(item.toLowerCase()))
+          .map((item) => {
+            const lower = item.toLowerCase();
+            uniqueTabsSet.add(lower);
+            return {
+              key: lower,
+              label: capitalizeFirstLetter(item),
+            };
+          })
+      )
+      .sort((a, b) => a.label.localeCompare(b.label));
 
-  const tabKeys = ['all', ...uniqueTabs];
+    return objects;
+  }, [renderedNavigation]);
+
+  const tabKeys = useMemo(() => ['all', ...tabObjects.map(obj => obj.key)], [tabObjects]);
 
   const safeNav = useMemo(() => {
     return tabKeys.includes(nav) ? nav : 'all';
-  }, [nav, tabKeys]);
+  }, [nav, tabKeys])
 
   useEffect(() => {
     if (!tabKeys.includes(nav)) {
       handlerNavigation('all');
     }
-  }, [nav, tabKeys.join(','), handlerNavigation]);
+  }, [tabKeys, nav, handlerNavigation]);
 
 
 

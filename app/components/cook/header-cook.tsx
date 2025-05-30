@@ -36,7 +36,7 @@ export function HeaderCook() {
         if (!isDeleting) return; 
 
         const updatedLinks = cookHistoryStore.history_links;
-        console.log(cookHistoryStore.history_links, cookHistoryStore)
+
         if (updatedLinks.length === 0) {
             console.log(updatedLinks)
             router.push('/home'); 
