@@ -14,7 +14,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import './swiper-media.css';
-import { Navigation } from 'swiper/modules';
+import { Navigation, Virtual } from 'swiper/modules';
 import { memo, useState } from "react";
 import { useAppDispatch, useAppSelector } from '@/state/hook';
 import { setFavoriteRecipe } from '@/state/slices/recipe-slice';
@@ -131,13 +131,16 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
 
 
             <Swiper
-                modules={[Navigation]}
+                modules={[Navigation, Virtual ]}
+                virtual
+                slidesPerView={1}
                 className="swiper-media-main"
                 navigation={{
                     prevEl: '.btn-prev-media',
                     nextEl: '.btn-next-media',
 
                 }}
+            
                 spaceBetween={1}
             // lazy={true}
             >

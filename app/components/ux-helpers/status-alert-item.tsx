@@ -107,10 +107,10 @@ export function GlobalStatusNotifierItem({ config }: Props) {
                             severity="error"
                             onClose={() => {
                                 closeSnackbar(snackbarKey);
-                                // dispatch(config.closeErrorAction(operationKey));
+                                //  dispatch(config.closeErrorAction(operationKey));
                                 //  Don't use this dispatch yet. Because it will disable all flags, 
                                 //  which means that if all flags are false, it will throw the Success window
-                                // BUT DON'T REMOVE THE FUNCTIONALITY OF THIS DISPATCH.
+                                //  BUT DON'T REMOVE THE FUNCTIONALITY OF THIS DISPATCH.
                                 shownRef.current[operationKey] = false;
                             }}
                             sx={{
