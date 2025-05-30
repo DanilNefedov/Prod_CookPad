@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useSnackbar, SnackbarKey } from 'notistack';
 import { Alert, Slide, SlideProps } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/state/hook';
@@ -28,18 +28,26 @@ type GlobalStatusNotifierProps = {
   operationConfigs: AnyOperationConfig[];
 };
 
-function useOperationsByConfig<K extends string = string>(operationConfigs: AnyOperationConfig[]) {
-    return operationConfigs.map((config) => {
-        const operations = useAppSelector(config.sliceSelector);
-        return { operations, config };
-    });
-}
+
 
 export function GlobalStatusNotifier<K extends string = string>({ operationConfigs }: GlobalStatusNotifierProps) {
     const dispatch = useAppDispatch();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-    const operationsByConfig = useOperationsByConfig(operationConfigs);
+
+    const operationsByConfig = useMemo(() => {
+        return operationConfigs.map((config) => {
+            return {
+                config,
+                selector: config.sliceSelector,
+            };
+        });
+    }, [operationConfigs]);
+
+    const operationsResults = operationsByConfig.map(({ selector, config }) => {
+        const operations = useAppSelector(selector); 
+        return { operations, config };
+    });
 
     
     const duration = 3000;
@@ -51,7 +59,7 @@ export function GlobalStatusNotifier<K extends string = string>({ operationConfi
     
 
     useEffect(() => {
-        operationsByConfig.forEach(({ operations, config }) => {
+        operationsResults .forEach(({ operations, config }) => {
             (Object.entries(operations) as [K, { error: boolean; loading: boolean }][]).forEach(
                 ([operationKey, status]) => {
                     const prevWasLoading = wasLoadingRef.current[operationKey] || false;
