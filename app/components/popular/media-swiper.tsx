@@ -1,7 +1,7 @@
 import { MediaObj } from "@/app/types/types";
 import { Box, CardMedia, CircularProgress } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from 'swiper/modules';
+import { Pagination, Virtual } from 'swiper/modules';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -20,6 +20,8 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
     
     //Add a unique timestamp to URLs to bypass browser cache when downloading media
     const [mediaUrls, setMediaUrls] = useState<Record<string, string>>({});
+    const [activeIndex, setActiveIndex] = useState(0);
+
 
     const media = useAppSelector(
         state => {
@@ -46,6 +48,7 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
 
         <Swiper
             direction="horizontal"
+            virtual
             pagination={
                 media.length > 1
                     ? {
@@ -55,17 +58,19 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
                     : false
             }
             className="swiper-popular"
-            slidesPerView={'auto'}
-            modules={media.length > 1 ? [Pagination] : []}
+            onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+            // slidesPerView={'auto'}
+            modules={media.length > 1 ? [Pagination, Virtual] : [Virtual]}
             spaceBetween={2}
+            slidesPerView={1}
             style={{
-                zIndex: 5, position: 'relative',
-
+                zIndex: 5, 
+                position: 'relative',
             }}
         >
-            {media.map((elem: MediaObj) => (
+            {media.map((elem:MediaObj, index) => (
 
-                <SwiperSlide key={elem.media_id} className="slide-popular">
+                <SwiperSlide key={elem.media_id} className="slide-popular" virtualIndex={index}>
                     <Box sx={{ ...containerSlideMediaSwiper, position: 'relative' }}>
                         {(!loaded[elem.media_id]) && (
                             <Box
@@ -107,10 +112,12 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
                                 poster={mediaUrls[elem.media_id]}
                                 onCanPlayThrough={() => setLoaded(prev => ({ ...prev, [elem.media_id]: true }))}
                             >
-                                <source
-                                    src={mediaUrls[elem.media_id]}
-                                    type="video/mp4"
-                                />
+                                {(Math.abs(activeIndex - index) <= 1) && (
+                                    <source
+                                        src={mediaUrls[elem.media_id]}
+                                        type="video/mp4"
+                                    />
+                                )}
                             </CardMedia>
                         )}
                     </Box>
