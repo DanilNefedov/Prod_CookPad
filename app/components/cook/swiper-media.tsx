@@ -2,7 +2,6 @@ import { imgRecipeContainer } from "@/app/(main)/cook/[recipe_id]/styles";
 import { MediaObj } from "@/app/types/types";
 import { Box, CardMedia, Skeleton } from "@mui/material";
 import { memo, useEffect, useRef, useState } from "react";
-import { UXLoading } from "../ux-helpers/loading";
 
 
 
