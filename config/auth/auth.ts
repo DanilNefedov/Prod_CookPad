@@ -32,7 +32,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (account) {
         // await connectDB();
         // const existingUser = await User.findOne({ connection_id: account.providerAccountId });
-        const url = `https://web-archive-nine.vercel.app/api/user?connection_id=${account.providerAccountId}`
+        const url = `https://prod-cook-pad.vercel.app/api/user?connection_id=${account.providerAccountId}`
         // const url = `http://localhost:3000/api/user?connection_id=${account.providerAccountId}`
         const existingUser = await getCall(url)
         // `http://localhost:3000/api/user?connection_id=${account.providerAccountId}`
@@ -49,7 +49,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           
           try {
             const response = await postCall({
-              url: 'https://web-archive-nine.vercel.app/api/user',
+              url: 'https://prod-cook-pad.vercel.app/api/user',
               // url: 'http://localhost:3000/api/user',
               data: dataUser,
             });
@@ -61,7 +61,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
           try {
             const response = await postCall({
-              url: 'https://web-archive-nine.vercel.app/api/cook/history',
+              url: 'https://prod-cook-pad.vercel.app/api/cook/history',
               // url: 'http://localhost:3000/api/cook/history',
               data: {
                 connection_id:account.providerAccountId,
