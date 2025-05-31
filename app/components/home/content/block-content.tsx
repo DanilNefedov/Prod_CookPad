@@ -9,6 +9,7 @@ import { Box, Button } from "@mui/material";
 import { styleLink } from "../header/header";
 import { theme } from "@/config/ThemeMUI/theme";
 import { UXLoading } from "../../ux-helpers/loading";
+import { EmptyInfo } from "../../ux-helpers/empty-info";
 
 
 export function BlockContent() {
@@ -34,6 +35,8 @@ export function BlockContent() {
   
 
   const filteredRecipes = recipes.filter(recipe => recipe.sorting.includes(nav.toLowerCase()));
+
+  if(!status && recipes.length === 0) return <EmptyInfo ></EmptyInfo>
 
   return (
     <>

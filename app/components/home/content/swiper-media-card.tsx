@@ -1,5 +1,5 @@
 import { MediaObj } from "@/app/types/types";
-import { CardMedia } from "@mui/material";
+import { CardMedia, Skeleton } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
 
@@ -44,34 +44,30 @@ export default function SwiperMediaCard({ props }: { props: propsData }) {
 
 
         <div ref={ref} style={{ width: '100%', height: '100%' }}>
-        {el.media_type === 'image' ? (
-            <CardMedia
-                component="img"
-                alt={name}
-                sx={{ height: '100%', objectFit: 'cover' }}
-                src={el.media_url as string}
-                loading="lazy"
-            />
-        ) : isVisible ? (
-            <CardMedia
-                component='video'
-                sx={{height: '100%', objectFit: "cover",  width: '100%',}}
-                autoPlay
-                loop
-                muted
-                poster={el.media_url as string}
-                
-            >
-                <source src={el.media_url as string} type="video/mp4" />
-            </CardMedia>
-        ) : (
-            <CardMedia
-                component="img"
-                alt={name}
-                sx={{ height: '100%', objectFit: 'cover' }}
-                src={el.media_url as string} 
-            />
-        )}
+            {el.media_type === 'image' ? (
+                <CardMedia
+                    component="img"
+                    alt={name}
+                    sx={{ height: '100%', objectFit: 'cover' }}
+                    src={el.media_url as string}
+                    loading="lazy"
+                />
+            ) : !isVisible ? (
+                <CardMedia
+                    component='video'
+                    sx={{height: '100%', objectFit: "cover",  width: '100%',}}
+                    autoPlay
+                    loop
+                    muted
+                    poster={el.media_url as string}
+                    
+                >
+                    <source src={el.media_url as string} type="video/mp4" />
+                </CardMedia>
+            ) : (
+                <Skeleton variant="rectangular" sx={{objectFit: "cover", width:'100%', height:'100%'}}/>
+
+            )}
         </div>
     
 

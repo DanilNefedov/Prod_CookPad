@@ -82,6 +82,8 @@ export const imgRecipeContainer = {
     // m:'15px 0 20px 15px',
     // maxHeight:"700px",
     // maxWidth:"750px"
+    width:'100%',
+    height:'100%',
     alignItems:'center',
     justifyContent:'center',
     display:'flex',

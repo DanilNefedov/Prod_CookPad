@@ -47,7 +47,6 @@ export const popularFetch = createAsyncThunk<PopularListDataT[], { connection_id
     'popular/popularFetch',
     async function (data, { rejectWithValue }) {
         try {
-            console.log(data)
             const response = await fetch('/api/popular', {
                 method: 'POST',
                 headers: {
@@ -59,7 +58,6 @@ export const popularFetch = createAsyncThunk<PopularListDataT[], { connection_id
             if (!response.ok) return rejectWithValue('Server Error!');
 
             const dataList = await response.json()
-
             return dataList
 
         } catch (error) {

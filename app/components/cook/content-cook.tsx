@@ -12,18 +12,22 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/grid';
 import './styles.css';
-import { Navigation } from "swiper/modules";
+import { Navigation, Virtual } from "swiper/modules";
 // Import Swiper styles
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import { SwiperMediaCook } from "./swiper-media";
+// import { SwiperMediaCook } from "./swiper-media";
 import { useEffect } from "react";
 import { fetchCook } from "@/state/slices/cook-slice";
 import { usePathname } from "next/navigation";
 import { theme } from "@/config/ThemeMUI/theme";
 import { IngredientSwiper } from "./ingredient-swiper";
+import dynamic from "next/dynamic";
 
 
+const SwiperMediaCook = dynamic(() => import('./swiper-media'), {
+    ssr: false,
+});
 
 
 export function ContentCook() {
@@ -78,15 +82,17 @@ export function ContentCook() {
 
 
                     <Swiper
-                        modules={[Navigation]}
+                        modules={[Navigation, Virtual]}
+                        virtual
+                        slidesPerView={1}
                         className="swiper-cook-media-main"
                         navigation={{
                             prevEl: '.btn-prev-cook-media',
                             nextEl: '.btn-next-cook-media',
                         }}
                     >
-                        {findCook?.media.map(el => (
-                            <SwiperSlide key={el.media_id} className={el.media_type === 'image' ? 'cook-media-main-slide' : 'cook-media-main-slide-video'} >
+                        {findCook?.media.map((el, index) => (
+                            <SwiperSlide virtualIndex={index} key={el.media_id} className={el.media_type === 'image' ? 'cook-media-main-slide' : 'cook-media-main-slide-video'} >
                                 <SwiperMediaCook props={{ el }}></SwiperMediaCook>
                             </SwiperSlide>
 
