@@ -36,9 +36,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const url = `https://prod-cook-pad.vercel.app/api/user?connection_id=${account.providerAccountId}`
         // const url = `http://localhost:3000/api/user?connection_id=${account.providerAccountId}`
         const existingUser = await getCall(url)
+        const { user } = await existingUser.json();
+
         console.log('existingUserexistingUserexistingUserexistingUser', existingUser)
         // `http://localhost:3000/api/user?connection_id=${account.providerAccountId}`
-        if (!existingUser) {
+        if (!user) {
           const isGoogle = account.provider === 'google';
           const dataUser = {
             name: isGoogle ? profile?.name : profile?.username,
