@@ -29,6 +29,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ account, profile }) {
+      console.log({account, profile})
       if (account) {
         // await connectDB();
         // const existingUser = await User.findOne({ connection_id: account.providerAccountId });
