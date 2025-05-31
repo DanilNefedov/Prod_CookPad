@@ -78,8 +78,8 @@ export const fetchUser = createAsyncThunk<collectionUser, string, { rejectValue:
             }
 
             const data = await response.json();
-
-            return data;
+            console.log(data)
+            return data.user;
 
         } catch (error) {
             console.error(error)
