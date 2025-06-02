@@ -3,7 +3,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { deleteCookHistory } from "@/state/slices/cook-history";
 import { deleteHeaderCook } from "@/app/(main)/cook/[recipe_id]/styles";
-import { Dispatch, memo, SetStateAction, } from "react";
+import { Dispatch, SetStateAction, } from "react";
 
 
 interface PropsData { 
