@@ -1,13 +1,10 @@
 import connectDB from "@/app/lib/mongoose";
-import Recipe from "@/app/models/recipe";
 import User from "@/app/models/user";
 import { popularList } from "@/app/types/types";
 import { add, bignumber, divide,  mean, multiply, round, sum } from "mathjs";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import _ from 'lodash';
-import LikesPopular from "@/app/models/likes-popular";
-import SavesPopular from "@/app/models/saves-popular";
 import RecipePopularConfig from "@/app/models/popular-config";
 
 
@@ -118,6 +115,55 @@ function orderByUsersImpact(top20Elements: Top20ElementsT[], count: number): Rec
 
 }
 
+
+
+export async function POST(request: Request) {
+    try{
+        const { connection_id, count, getAllIds } = await request.json();
+
+
+        if (!connection_id || !count) {
+            return NextResponse.json(
+                { message: 'Invalid request data' },
+                { status: 400 }
+            );
+        }
+
+        await connectDB();
+
+        const userData = await User.findOne({ connection_id })
+            .select('-_id -__v -createdAt -updatedAt')
+
+        if (!userData?.popular_config) {
+            return NextResponse.json({ message: 'User data not found' }, { status: 404 });
+        }
+
+        const formattedGetAllIds = getAllIds !== null ? getAllIds.map((id:string) => new mongoose.Types.ObjectId(id)) : [];
+
+        const list = await RecipePopularConfig.aggregate([
+            ...(formattedGetAllIds.length > 0 ? [{ $match: { _id: { $nin: formattedGetAllIds } } }] : []),
+            { $sample: { size: 200 } }
+        ])
+
+        const sortedByCateries = getSortingByCategory(list, userData.popular_config);
+        const fullSorted = orderByUsersImpact(sortedByCateries, +count);
+        
+        // const creatorIds = fullSorted.map(el => el.creator.toString());
+        // const configIds = fullSorted.map(el => el._id.toString());
+
+
+        return NextResponse.json(fullSorted);
+
+    }catch(error){
+        console.error(error);
+        return NextResponse.json(
+            { message: 'Internal Server Error' },
+            { status: 500 }
+        );
+    }
+}
+
+
 // if startSession() is placed in try session may be undefined 
 // in finally if the error occurred before startTransaction(), 
 // and then calling session.endSession() will throw an error.
@@ -130,156 +176,156 @@ function orderByUsersImpact(top20Elements: Top20ElementsT[], count: number): Rec
 // and startTransaction() already IN. 
 
 
-export async function POST(request: Request) {
-    const session = await mongoose.startSession();
+// export async function POST(request: Request) {
+//     const session = await mongoose.startSession();
     
-    try {
-        await connectDB();
-        session.startTransaction();
+//     try {
+//         await connectDB();
+//         session.startTransaction();
 
-        const { connection_id, count, getAllIds } = await request.json();
-
-
-        if (!connection_id || !count) {
-            session.startTransaction();
-            return NextResponse.json(
-                { message: 'Invalid request data' },
-                { status: 400 }
-            );
-        }
-
-        const userData = await User.findOne({ connection_id })
-            .select('-_id -__v -createdAt -updatedAt')
-            .session(session);
-
-        if (!userData?.popular_config) {
-            session.startTransaction();
-            return NextResponse.json({ message: 'User data not found' }, { status: 404 });
-        }
-        // const list = await RecipePopularConfig.aggregate([{ $sample: { size: 200 } }]).session(session);
-        const formattedGetAllIds = getAllIds !== null ? getAllIds.map((id:string) => new mongoose.Types.ObjectId(id)) : [];
-
-        const list = await RecipePopularConfig.aggregate([
-            ...(formattedGetAllIds.length > 0 ? [{ $match: { _id: { $nin: formattedGetAllIds } } }] : []),
-            { $sample: { size: 200 } }
-        ]).session(session);
+//         const { connection_id, count, getAllIds } = await request.json();
 
 
-        const sortedByCateries = getSortingByCategory(list, userData.popular_config);
-        const fullSorted = orderByUsersImpact(sortedByCateries, +count);
+//         if (!connection_id || !count) {
+//             session.startTransaction();
+//             return NextResponse.json(
+//                 { message: 'Invalid request data' },
+//                 { status: 400 }
+//             );
+//         }
+
+//         const userData = await User.findOne({ connection_id })
+//             .select('-_id -__v -createdAt -updatedAt')
+//             .session(session);
+
+//         if (!userData?.popular_config) {
+//             session.startTransaction();
+//             return NextResponse.json({ message: 'User data not found' }, { status: 404 });
+//         }
+//         // const list = await RecipePopularConfig.aggregate([{ $sample: { size: 200 } }]).session(session);
+//         const formattedGetAllIds = getAllIds !== null ? getAllIds.map((id:string) => new mongoose.Types.ObjectId(id)) : [];
+
+//         const list = await RecipePopularConfig.aggregate([
+//             ...(formattedGetAllIds.length > 0 ? [{ $match: { _id: { $nin: formattedGetAllIds } } }] : []),
+//             { $sample: { size: 200 } }
+//         ]).session(session);
+
+
+//         const sortedByCateries = getSortingByCategory(list, userData.popular_config);
+//         const fullSorted = orderByUsersImpact(sortedByCateries, +count);
         
-        const creatorIds = fullSorted.map(el => el.creator.toString());
-        const configIds = fullSorted.map(el => el._id.toString());
+//         const creatorIds = fullSorted.map(el => el.creator.toString());
+//         const configIds = fullSorted.map(el => el._id.toString());
         
-        const recipes = await Recipe.find({ _id: { $in: creatorIds } }).session(session);
+//         const recipes = await Recipe.find({ _id: { $in: creatorIds } }).session(session);
         
-        const connectionIds = recipes.map(recipe => recipe.connection_id).filter(Boolean);
+//         const connectionIds = recipes.map(recipe => recipe.connection_id).filter(Boolean);
         
-        const [authors, userLikes, userSaves] = await Promise.all([
-            User.find({ connection_id: { $in: connectionIds } }).session(session),
-            LikesPopular.aggregate([
-                {
-                    $search: {
-                        index: 'liked-popular',
-                        compound: {
-                            must: [
-                                { text: { query: configIds.join('|'), path: 'config_id' } },
-                                { text: { query: connection_id, path: 'user_id' } }
-                            ]
-                        }
-                    }
-                },
-                {
-                    $match: { is_deleted: { $ne: true } } 
-                }
-            ]),
+//         const [authors, userLikes, userSaves] = await Promise.all([
+//             User.find({ connection_id: { $in: connectionIds } }).session(session),
+//             LikesPopular.aggregate([
+//                 {
+//                     $search: {
+//                         index: 'liked-popular',
+//                         compound: {
+//                             must: [
+//                                 { text: { query: configIds.join('|'), path: 'config_id' } },
+//                                 { text: { query: connection_id, path: 'user_id' } }
+//                             ]
+//                         }
+//                     }
+//                 },
+//                 {
+//                     $match: { is_deleted: { $ne: true } } 
+//                 }
+//             ]),
             
-            SavesPopular.aggregate([
-                { 
-                    $search: { 
-                        index: 'saved-popular', 
-                        compound: { 
-                            must: [
-                                { text: { query: configIds.join('|'), path: 'config_id' } },
-                                { text: { query: connection_id, path: 'user_id' } },
-                            ] 
-                        } 
-                    } 
-                },
-                {
-                    $match: { is_deleted: { $ne: true } } 
-                }
-            ])
-        ]);
+//             SavesPopular.aggregate([
+//                 { 
+//                     $search: { 
+//                         index: 'saved-popular', 
+//                         compound: { 
+//                             must: [
+//                                 { text: { query: configIds.join('|'), path: 'config_id' } },
+//                                 { text: { query: connection_id, path: 'user_id' } },
+//                             ] 
+//                         } 
+//                     } 
+//                 },
+//                 {
+//                     $match: { is_deleted: { $ne: true } } 
+//                 }
+//             ])
+//         ]);
         
-        const recipeMap = recipes.reduce((map, recipe) => {
-            map[recipe._id.toString()] = recipe;
-            return map;
-        }, {});
+//         const recipeMap = recipes.reduce((map, recipe) => {
+//             map[recipe._id.toString()] = recipe;
+//             return map;
+//         }, {});
         
-        const authorMap = authors.reduce((map, author) => {
-            map[author.connection_id] = author;
-            return map;
-        }, {});
+//         const authorMap = authors.reduce((map, author) => {
+//             map[author.connection_id] = author;
+//             return map;
+//         }, {});
         
-        const likedMap = userLikes.reduce((map, like) => {
-            map[like.config_id] = true;
-            return map;
-        }, {});
+//         const likedMap = userLikes.reduce((map, like) => {
+//             map[like.config_id] = true;
+//             return map;
+//         }, {});
         
-        const savedMap = userSaves.reduce((map, save) => {
-            map[save.config_id] = true;
-            return map;
-        }, {});
+//         const savedMap = userSaves.reduce((map, save) => {
+//             map[save.config_id] = true;
+//             return map;
+//         }, {});
         
-        const finalData = fullSorted.map(el => {
-            const configId = el._id.toString();
-            const recipeData = recipeMap[el.creator.toString()];
+//         const finalData = fullSorted.map(el => {
+//             const configId = el._id.toString();
+//             const recipeData = recipeMap[el.creator.toString()];
             
-            if (!recipeData) {
-                return null;
-            }
+//             if (!recipeData) {
+//                 return null;
+//             }
             
-            const authorData = authorMap[recipeData.connection_id];
+//             const authorData = authorMap[recipeData.connection_id];
             
-            if (!authorData) {
-                return null;
-            }
+//             if (!authorData) {
+//                 return null;
+//             }
             
-            return {
-                config_id: configId,
-                author_info: {
-                    id_author: authorData.connection_id,
-                    author_name: authorData.name,
-                    author_img: authorData.img,
-                },
-                id_recipe: recipeData.recipe_id,
-                description: recipeData.description,
-                recipe_name: recipeData.name,
-                recipe_media: _.cloneDeep(recipeData.media),
-                liked: !!likedMap[configId],
-                likes: el.likes,
-                views: el.views,
-                saves: el.saves,
-                saved: !!savedMap[configId],
-                comments: el.comments,
-            };
-        }).filter(item => item !== null);
+//             return {
+//                 config_id: configId,
+//                 author_info: {
+//                     id_author: authorData.connection_id,
+//                     author_name: authorData.name,
+//                     author_img: authorData.img,
+//                 },
+//                 id_recipe: recipeData.recipe_id,
+//                 description: recipeData.description,
+//                 recipe_name: recipeData.name,
+//                 recipe_media: _.cloneDeep(recipeData.media),
+//                 liked: !!likedMap[configId],
+//                 likes: el.likes,
+//                 views: el.views,
+//                 saves: el.saves,
+//                 saved: !!savedMap[configId],
+//                 comments: el.comments,
+//             };
+//         }).filter(item => item !== null);
 
-        await session.commitTransaction(); 
+//         await session.commitTransaction(); 
 
-        return NextResponse.json(finalData);
-    } catch (error) {
-        console.error(error);
-        await session.abortTransaction(); 
-        return NextResponse.json(
-            { message: 'Internal Server Error' },
-            { status: 500 }
-        );
-    } finally {
-        session.endSession(); 
-    }
-}
+//         return NextResponse.json(finalData);
+//     } catch (error) {
+//         console.error(error);
+//         await session.abortTransaction(); 
+//         return NextResponse.json(
+//             { message: 'Internal Server Error' },
+//             { status: 500 }
+//         );
+//     } finally {
+//         session.endSession(); 
+//     }
+// }
 
 
 

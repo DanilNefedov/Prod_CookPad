@@ -16,7 +16,7 @@ export const blockList = {
 
 
 export const mainIngrList = {
-    maxHeight: '75px',
+    // maxHeight: '75px',
     backgroundColor: 'background.default',
     borderRadius: '15px',
     // m: '15px 0 ',

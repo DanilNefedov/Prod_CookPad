@@ -35,9 +35,6 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
     const open = Boolean(anchorEl);
     
 
-
-
-
     const handleClick = async (event: MouseEvent<HTMLElement>) => {
         const choice = el.units.choice
 

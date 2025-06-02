@@ -13,8 +13,8 @@ interface PropsData {
 }
 
 
-export const DeleteButton = memo(({ recipe_id, isDeleting, setIsDeleting }: PropsData) => {
-
+// export const DeleteButton = memo(({ recipe_id, isDeleting, setIsDeleting }: PropsData) => {
+export function DeleteButton ({ recipe_id, isDeleting, setIsDeleting }: PropsData){
     const connectionId = useAppSelector(state => state.user.user.connection_id);
     const dispatch = useAppDispatch();
     
@@ -35,11 +35,8 @@ export const DeleteButton = memo(({ recipe_id, isDeleting, setIsDeleting }: Prop
             <ClearIcon sx={{ color: '#8E94A4', width:"100%", height:'100%' }} />
         </Button>
     );
-},(prevProps, nextProps) => {
-    return prevProps.recipe_id === nextProps.recipe_id && 
-    prevProps.isDeleting === nextProps.isDeleting
-})
+}
 
 
 
-DeleteButton.displayName = "DeleteButton"
+// DeleteButton.displayName = "DeleteButton"

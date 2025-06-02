@@ -57,7 +57,19 @@ export const popularFetch = createAsyncThunk<PopularListDataT[], { connection_id
 
             if (!response.ok) return rejectWithValue('Server Error!');
 
-            const dataList = await response.json()
+            const dataCoef = await response.json()
+
+            const responseData = await fetch('/api/popular/compilation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({fullSorted:dataCoef, connection_id:data.connection_id})
+            })
+
+            if (!responseData.ok) return rejectWithValue('Server Error!');
+            
+            const dataList = await responseData.json()
             return dataList
 
         } catch (error) {

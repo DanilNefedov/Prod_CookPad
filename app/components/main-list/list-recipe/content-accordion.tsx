@@ -3,8 +3,14 @@ import { AccordionDetails, Table, TableBody, TableCell, TableRow,  } from "@mui/
 import { theme } from "@/config/ThemeMUI/theme"
 import { MainTableHeader } from "../main-table-header"
 import { memo, useMemo, useState } from "react"
-import { MainTableBody } from "../main-table-body"
 import { UXLoading } from "../../ux-helpers/loading"
+import dynamic from "next/dynamic"
+
+const MainTableBody = dynamic(() => import('../main-table-body'), {
+    ssr: false, 
+});
+
+
 
 
 

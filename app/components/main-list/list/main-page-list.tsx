@@ -5,7 +5,7 @@ import { Button, Table, TableBody, TableCell, TableRow, } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { theme } from '@/config/ThemeMUI/theme';
 import { MainTableHeader } from '../main-table-header';
-import { MainTableBody } from '../main-table-body';
+import MainTableBody from '../main-table-body';
 import { UXLoading } from '../../ux-helpers/loading';
 import { EmptyInfo } from '../../ux-helpers/empty-info';
 import { styleLink } from '../../home/header/header';
@@ -63,8 +63,8 @@ export function MainListPage() {
             <Table sx={{
                 mb:'7px',
                 minWidth: '0', '& .MuiTableCell-root': {
-                    p: '7px 14px', [theme.breakpoints.down(1050)]: { p: '9px 7px' },
-                    [theme.breakpoints.down(400)]: { p: '8px 3px' }
+                    p: '7px 14px', [theme.breakpoints.down(1050)]: { p: '12px 7px' },
+                    [theme.breakpoints.down(400)]: { p: '12px 3px' }
                 },
 
             }} stickyHeader aria-label="sticky table">

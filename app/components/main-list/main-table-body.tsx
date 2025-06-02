@@ -3,7 +3,6 @@ import { Fragment, memo, useState } from "react"
 import { MainButtons } from "./main-buttons"
 import { imgIngrList, mainIngrList, nameIngredient } from "@/app/(main)/(main-list)/style"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { Units } from "./units"
 import { UnitsList } from "@/app/types/types"
 import { theme } from "@/config/ThemeMUI/theme"
 import { useAppSelector } from "@/state/hook"
@@ -16,6 +15,14 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { usePathname } from "next/navigation"
 import { EmptyInfo } from "../ux-helpers/empty-info"
+import dynamic from "next/dynamic"
+
+const Units = dynamic(() => import('./units'), {
+    ssr: false, 
+});
+
+
+
 
 
 
@@ -24,7 +31,7 @@ interface DataProps {
     recipe_id?: string
 }
 
-export const MainTableBody = memo(({ props }: { props: DataProps }) => {
+const MainTableBody = memo(({ props }: { props: DataProps }) => {
     const { ingredient_id, recipe_id } = props;
 
     const thisIngredient = useAppSelector(state => {
@@ -121,7 +128,8 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
                         </TableCell>
 
                         :
-                        <TableCell sx={{
+                        <TableCell 
+                        sx={{
                             position: 'relative', '& .slide-list-unit': { width: 'auto' }, '& .swiper-list-unit': {
                                 position: 'static',
                                 m: '0',
@@ -129,7 +137,8 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
                                 mr: '7px'
                             },
                             maxWidth:"0px", /*     DO NOT CHANGE!     */
-                            width: '100%'
+                            width: '100%',
+                            
                         }}>
                             <Swiper
                                 navigation={{
@@ -142,6 +151,7 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
                                 modules={[Navigation]}
                                 spaceBetween={10}
                                 style={{ 
+                                  
                                 //    width:'100%'
                                 }}
                             >
@@ -150,7 +160,7 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
                                     <EmptyInfo></EmptyInfo>
                                 :
                                 thisIngredient.units.map((elem: UnitsList) => (
-                                    <SwiperSlide key={elem._id} className="slide-list-unit">
+                                    <SwiperSlide key={elem._id} className="slide-list-unit" style={{ width: 'auto', maxWidth: '100%' }}>
                                         <Units ingredient_id={thisIngredient._id} unit_id={elem._id} recipe_id={recipe_id}/>
                                     </SwiperSlide>
 
@@ -205,9 +215,9 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
 
                                         }}
                                         className="swiper-list-unit adaptive-list-unit-swiper"
-                                        slidesPerView={'auto'}
-                                        modules={[Navigation]}
+                                        modules={[ Navigation]}
                                         spaceBetween={10}
+                                        slidesPerView={'auto'}
                                         style={{ 
                                             // width:'100%'
                                         }}
@@ -255,3 +265,6 @@ export const MainTableBody = memo(({ props }: { props: DataProps }) => {
 
 
 MainTableBody.displayName = "MainTableBody"
+
+
+export default MainTableBody

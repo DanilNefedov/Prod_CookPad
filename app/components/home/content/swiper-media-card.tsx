@@ -52,7 +52,7 @@ export default function SwiperMediaCard({ props }: { props: propsData }) {
                     src={el.media_url as string}
                     loading="lazy"
                 />
-            ) : !isVisible ? (
+            ) : isVisible ? (
                 <CardMedia
                     component='video'
                     sx={{height: '100%', objectFit: "cover",  width: '100%',}}

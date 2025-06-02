@@ -12,9 +12,11 @@ import { fetchHistoryCook, } from "@/state/slices/cook-history";
 
 
 
+// export const HeaderCook = memo(() => {
+
 export function HeaderCook() {
     
-    const cookHistoryStore = useAppSelector(state => state.cookHistory);
+    const cookHistoryStore = useAppSelector(state => state.cookHistory.history_links);
     const userStore = useAppSelector(state => state.user);
     const dispatch = useAppDispatch();
     const router = useRouter();
@@ -35,10 +37,9 @@ export function HeaderCook() {
     useEffect(() => {
         if (!isDeleting) return; 
 
-        const updatedLinks = cookHistoryStore.history_links;
+        const updatedLinks = cookHistoryStore;
 
         if (updatedLinks.length === 0) {
-            console.log(updatedLinks)
             router.push('/home'); 
         } else if (!updatedLinks.some(el => el.recipe_id === recipe_id)) {
             const currentIndex = updatedLinks.findIndex(el => el.recipe_id === recipe_id);
@@ -56,11 +57,12 @@ export function HeaderCook() {
         }
 
         setIsDeleting(false);
-    }, [cookHistoryStore.history_links, recipe_id, router, cookHistoryStore.history_links.length]);
+    }, [cookHistoryStore, recipe_id, router, cookHistoryStore.length]);
 
+    console.log('HeaderCook')
     
     return (
-        (cookHistoryStore.history_links.map(el => (
+        (cookHistoryStore.map(el => (
             <Box key={el.recipe_id} sx={{ display: 'flex', alignItems: 'center' }}>
                 <Button
                     component={Link}
@@ -87,4 +89,4 @@ export function HeaderCook() {
 }
 
 
-
+// HeaderCook.displayName = 'HeaderCook'

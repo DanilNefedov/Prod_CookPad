@@ -18,7 +18,7 @@ import { UnitsList } from "@/app/types/types"
 
 
 
-export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_id: string, unit_id: string, recipe_id?: string }) => {
+const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_id: string, unit_id: string, recipe_id?: string }) => {
     const unitData = useAppSelector(state => {
         let thisIngredient;
         if (recipe_id) {
@@ -164,3 +164,6 @@ export const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_i
 
 
 Units.displayName = "Units"
+
+
+export default Units
