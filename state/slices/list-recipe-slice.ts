@@ -27,7 +27,7 @@ interface ListrecipeState extends MainListRecipe {
 }
 
 const defaultStatus: OperationStatus = { loading: true, error: false }
-const newListRecipeDefaultStatus: OperationStatus = { loading: false, error: false }
+const loadingStatus: OperationStatus = { loading: false, error: false }
 
 const initialState: ListrecipeState = {
     status: true,
@@ -37,11 +37,11 @@ const initialState: ListrecipeState = {
     recipes: [],
     operations:{
         preLoaderMain: defaultStatus,
-        newListRecipe: newListRecipeDefaultStatus,
+        newListRecipe: loadingStatus,
         ingredientsListRecipe: defaultStatus,
-        shopIngrListRecipe:defaultStatus,
+        shopIngrListRecipe:loadingStatus,
         deleteIngrRecipeList:defaultStatus,
-        shopUnitListRecipe:defaultStatus,
+        shopUnitListRecipe:loadingStatus,
         newAmountListRecipe:defaultStatus,
         newUnitListRecipe:defaultStatus,
         deleteUnitListRecipe:defaultStatus,

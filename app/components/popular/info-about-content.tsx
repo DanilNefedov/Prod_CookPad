@@ -30,12 +30,16 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
 
     const pingGate = usePingGate()
     const popularStatus = useAppSelector(state => state.popular.status)
+    const saveStatus = useAppSelector(state => state.popular.operations.savePopContent.loading)
+    const likeStatus = useAppSelector(state => state.popular.operations.likePopContent.loading)
     const userData = useAppSelector(state => state.user)
     const connection_id = userData?.user?.connection_id
     const dispatch = useAppDispatch()
 
 
     function handleLike() {
+        if(likeStatus) return
+
         pingGate(() => {
             if (connection_id !== '' && !popularStatus) {
                 dispatch(likePopContent({
@@ -51,6 +55,8 @@ export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
 
 
     async function handleSave() {
+        if(saveStatus) return
+
         pingGate(() => {
             if (connection_id !== '' && !popularStatus) {
                 dispatch(savePopContent({

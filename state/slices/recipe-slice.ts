@@ -24,6 +24,7 @@ interface ListrecipeState extends IRecipeSlice {
 }
 
 const defaultStatus: OperationStatus = { loading: true, error: false }
+const loadingStatus: OperationStatus = { loading: false, error: false }
 
 
 const initialState: ListrecipeState = {
@@ -34,7 +35,7 @@ const initialState: ListrecipeState = {
     ],
     operations:{
         fetchRecipes:defaultStatus,
-        setFavoriteRecipe:defaultStatus
+        setFavoriteRecipe:loadingStatus
     }
 }
 

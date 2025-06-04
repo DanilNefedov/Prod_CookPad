@@ -35,6 +35,8 @@ export function ContentCook() {
     const dispatch = useAppDispatch()
     const cookStore = useAppSelector(state => state.cook)
     const userStore = useAppSelector(state => state.user)
+    const favoriteStatus = useAppSelector(state => state.recipe.operations.setFavoriteRecipe.loading)
+    
     const pathName = usePathname()
 
     const segments = pathName.split("/");
@@ -53,6 +55,8 @@ export function ContentCook() {
 
 
     const handlerFavorite = ({ recipe_id }: { recipe_id: string | undefined }): void => {
+        if(favoriteStatus) return
+
         if (recipe_id !== '' && recipe_id) {
             if (findCook && id !== '') {
                 const data = { connection_id: id, recipe_id, favorite: findCook?.favorite }

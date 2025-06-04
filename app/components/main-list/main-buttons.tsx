@@ -28,20 +28,27 @@ export function MainButtons({props}: {props:DataProps}) {
     const pathName = usePathname()
     const isSmallScreen = useMediaQuery("(max-width:800px)");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const shopStatus = useAppSelector(state => {
+        if(recipe_id) return state.listRecipe.operations.shopIngrListRecipe.loading
+        return state.list.operations.toggleShopIngrFetch.loading
+    })
+
     const open = Boolean(anchorEl);
 
 
     const handleClick = (event: MouseEvent<HTMLElement>) => {
-      setAnchorEl(event.currentTarget);
+        setAnchorEl(event.currentTarget);
     };
 
 
     const handleClose = () => {
-      setAnchorEl(null);
+        setAnchorEl(null);
     };
 
 
     function toggleShopIngr(_id: string, shop_ingr: boolean) {
+        if(shopStatus) return
+
         if (id !== '') {
             if(pathName === '/list'){
                 dispatch(toggleShopIngrFetch({ _id, shop_ingr }))            

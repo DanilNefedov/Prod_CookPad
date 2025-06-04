@@ -1,9 +1,7 @@
 import connectDB from "@/app/lib/mongoose";
 import LikesPopular from "@/app/models/likes-popular";
 import RecipePopularConfig from "@/app/models/popular-config";
-import User from "@/app/models/user";
 import { NextResponse } from "next/server";
-import { categoryUser } from "../functions";
 import mongoose from "mongoose";
 
 
@@ -20,28 +18,19 @@ import mongoose from "mongoose";
 // and startTransaction() already IN. 
 
 
+
 export async function PUT(request: Request) {
-    const session = await mongoose.startSession(); 
+    const session = await mongoose.startSession();
 
     try {
-        await connectDB(); 
-        session.startTransaction(); 
+        await connectDB();
+        session.startTransaction();
 
-        const data = await request.json();
-        const { config_id, liked, user_id } = data;
+        const { config_id, liked, user_id } = await request.json();
 
         if (!config_id || !user_id || typeof liked !== 'boolean') {
             await session.abortTransaction();
-            return NextResponse.json(
-                { message: 'Invalid request data' },
-                { status: 400 }
-            );
-        }
-
-        const popularData = await RecipePopularConfig.findById(config_id).session(session);
-        if (!popularData) {
-            await session.abortTransaction();
-            return NextResponse.json({ message: 'Popular content not found' }, { status: 404 });
+            return NextResponse.json({ message: 'Invalid request data' }, { status: 400 });
         }
 
         const update = { $inc: { likes: liked ? -1 : 1 } };
@@ -93,39 +82,131 @@ export async function PUT(request: Request) {
             }
         }
 
-        const user = await User.findOne({ connection_id: user_id }).session(session);
-        if (!user) {
-            await session.abortTransaction();
-            return NextResponse.json({ message: 'User not found' }, { status: 404 });
-        }
-
-        const updatedConfig = categoryUser(user.popular_config, liked, 2, popularData.categories);
-        if (updatedConfig.length > 0) {
-            const updateUserResult = await User.updateOne(
-                { connection_id: user_id },
-                { $set: { popular_config: updatedConfig } },
-                { session }
-            );
-
-            if (updateUserResult.modifiedCount === 0) {
-                await session.abortTransaction();
-                return NextResponse.json({ message: 'Failed to update user' }, { status: 500 });
-            }
-        }
-
-        await session.commitTransaction(); 
-        return NextResponse.json({ config_id, liked:!liked });
+        await session.commitTransaction();
+        return NextResponse.json({ config_id, liked: !liked });
 
     } catch (error) {
         console.error(error);
         await session.abortTransaction();
-        return NextResponse.json(
-            { message: 'Internal Server Error' },
-            { status: 500 }
-        );
-
+        return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
     } finally {
-        session.endSession(); 
+        session.endSession();
     }
 }
+
+
+
+
+
+
+
+
+// export async function PUT(request: Request) {
+//     const session = await mongoose.startSession(); 
+
+//     try {
+//         await connectDB(); 
+//         session.startTransaction(); 
+
+//         const data = await request.json();
+//         const { config_id, liked, user_id } = data;
+
+//         if (!config_id || !user_id || typeof liked !== 'boolean') {
+//             await session.abortTransaction();
+//             return NextResponse.json(
+//                 { message: 'Invalid request data' },
+//                 { status: 400 }
+//             );
+//         }
+
+//         const popularData = await RecipePopularConfig.findById(config_id).session(session);
+//         if (!popularData) {
+//             await session.abortTransaction();
+//             return NextResponse.json({ message: 'Popular content not found' }, { status: 404 });
+//         }
+
+//         const update = { $inc: { likes: liked ? -1 : 1 } };
+//         const updateResult = await RecipePopularConfig.updateOne({ _id: config_id }, update, { session });
+
+//         if (updateResult.modifiedCount === 0) {
+//             await session.abortTransaction();
+//             return NextResponse.json({ message: 'Failed to update likes' }, { status: 500 });
+//         }
+
+//         const like_doc = await LikesPopular.findOne({ config_id, user_id }).session(session);
+
+//         if (!like_doc) {
+//             const newLike = await new LikesPopular({ user_id, config_id }).save({ session });
+
+//             if (!newLike) {
+//                 await session.abortTransaction();
+//                 return NextResponse.json(
+//                     { message: 'Failed to create like document' },
+//                     { status: 500 }
+//                 );
+//             }
+
+//         } else if (liked && !like_doc.is_deleted) {
+
+//             like_doc.is_deleted = true;
+//             like_doc.deletedAt = new Date();
+//             const saved = await like_doc.save({ session });
+
+//             if (!saved) {
+//                 await session.abortTransaction();
+//                 return NextResponse.json(
+//                     { message: 'Failed to soft delete like document' },
+//                     { status: 500 }
+//                 );
+//             }
+//         } else if (!liked && like_doc.is_deleted) {
+            
+//             like_doc.is_deleted = false;
+//             like_doc.deletedAt = undefined;
+//             const saved = await like_doc.save({ session });
+
+//             if (!saved) {
+//                 await session.abortTransaction();
+//                 return NextResponse.json(
+//                     { message: 'Failed to restore like document' },
+//                     { status: 500 }
+//                 );
+//             }
+//         }
+
+//         const user = await User.findOne({ connection_id: user_id }).session(session);
+//         if (!user) {
+//             await session.abortTransaction();
+//             return NextResponse.json({ message: 'User not found' }, { status: 404 });
+//         }
+
+//         const updatedConfig = categoryUser(user.popular_config, liked, 2, popularData.categories);
+//         if (updatedConfig.length > 0) {
+//             const updateUserResult = await User.updateOne(
+//                 { connection_id: user_id },
+//                 { $set: { popular_config: updatedConfig } },
+//                 { session }
+//             );
+
+//             if (updateUserResult.modifiedCount === 0) {
+//                 await session.abortTransaction();
+//                 return NextResponse.json({ message: 'Failed to update user' }, { status: 500 });
+//             }
+//         }
+
+//         await session.commitTransaction(); 
+//         return NextResponse.json({ config_id, liked:!liked });
+
+//     } catch (error) {
+//         console.error(error);
+//         await session.abortTransaction();
+//         return NextResponse.json(
+//             { message: 'Internal Server Error' },
+//             { status: 500 }
+//         );
+
+//     } finally {
+//         session.endSession(); 
+//     }
+// }
 

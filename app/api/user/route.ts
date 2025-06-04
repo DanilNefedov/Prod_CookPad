@@ -37,15 +37,16 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const connection_id = searchParams.get('connection_id');
 
+    console.log(connection_id)
     if (!connection_id) {
       return NextResponse.json(
         { message: 'Invalid request data' }, 
         { status: 400 }
       );
     }
-
+    
     const user = await User.findOne({ connection_id }).select('-_id -__v -createdAt -updatedAt');
-
+    console.log(user)
     return NextResponse.json({ user: user || null }, { status: 200 });
 
   } catch (error) {

@@ -11,12 +11,12 @@ import { ThemeProvider } from '@mui/material/styles';
 
 
 
-interface Iprops{
-    options:{key:string},
-    children:React.ReactNode
+interface Iprops {
+  options: { key: string },
+  children: React.ReactNode
 }
 
-export default function ThemeRegistry(props:Iprops) {
+export default function ThemeRegistry(props: Iprops) {
   const { options, children } = props;
 
 

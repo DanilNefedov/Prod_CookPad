@@ -21,6 +21,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const session = useSession();
     const connection_id = session?.data?.user?.connection_id;
 
+    console.log(connection_id)
     useEffect(() => {
         if (connection_id) {
             dispatch(fetchUser(connection_id));

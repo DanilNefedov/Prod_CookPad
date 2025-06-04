@@ -12,8 +12,6 @@ import _ from 'lodash';
 
 export async function POST(request: Request) {
     try {
-        await connectDB();
-
         const { connection_id, fullSorted } = await request.json();
 
         if (!connection_id || !Array.isArray(fullSorted)) {
@@ -22,6 +20,8 @@ export async function POST(request: Request) {
 
         const configIds = fullSorted.map(el => el._id);
         const creatorIds = fullSorted.map(el => el.creator);
+
+        await connectDB();
 
         const recipes = await Recipe.find({ _id: { $in: creatorIds } });
         const connectionIds = recipes.map(recipe => recipe.connection_id).filter(Boolean);

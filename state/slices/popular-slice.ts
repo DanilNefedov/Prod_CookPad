@@ -24,6 +24,8 @@ interface PopularState extends popularInitData {
 }
 
 const defaultStatus: OperationStatus = { loading: true, error: false }
+const loadingStatus: OperationStatus = { loading: false, error: false }
+
 
 //maybe shouldn't add the number of views to the redux.
 
@@ -34,8 +36,8 @@ const initialState: PopularState = {
     ],
     operations:{
         popularFetch:defaultStatus,
-        likePopContent:defaultStatus,
-        savePopContent:defaultStatus,
+        likePopContent:loadingStatus,
+        savePopContent:loadingStatus,
         updateViews:defaultStatus
     }
 }
@@ -85,7 +87,7 @@ export const likePopContent = createAsyncThunk<{ config_id: string, liked: boole
     'popular/likePopContent',
     async function (data, { rejectWithValue }) {
         try {
-            console.log(data)
+
             const response = await fetch('/api/popular/like', {
                 method: 'PUT',
                 headers: {
@@ -95,6 +97,14 @@ export const likePopContent = createAsyncThunk<{ config_id: string, liked: boole
             });
 
             if (!response.ok) return rejectWithValue('Server Error!');
+
+            const userConfigRes = await fetch('/api/popular/like/config', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (!userConfigRes.ok) return rejectWithValue('Server Error!');
 
             const returnData = await response.json()
 
@@ -123,6 +133,14 @@ export const savePopContent = createAsyncThunk<{ config_id: string, saved: boole
             });
 
             if (!response.ok) return rejectWithValue('Server Error!');
+
+            const userConfigRes = await fetch('/api/popular/save/config', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+
+            if (!userConfigRes.ok) return rejectWithValue('Server Error!');
 
             const returnData = await response.json()
 
@@ -239,11 +257,11 @@ const popularSlice = createSlice({
             .addCase(savePopContent.fulfilled, (state, action: PayloadAction<{ config_id: string, saved: boolean }, string>) => {
                 state.operations.savePopContent.error = false
                 state.operations.savePopContent.loading = false
-                // console.log(action.payload)
+                console.log(action.payload)
                 const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
                 if (thisPop) {
-                    thisPop.saved = !action.payload.saved
-                    thisPop.saves = action.payload.saved ? thisPop.saves - 1 : thisPop.saves + 1
+                    thisPop.saved = action.payload.saved
+                    thisPop.saves = action.payload.saved ? thisPop.saves + 1 : thisPop.saves - 1
                 }
             })
 

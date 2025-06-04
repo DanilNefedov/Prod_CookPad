@@ -42,7 +42,9 @@ interface propsData {
 export const CardContentBlock = memo(({ props }: { props: propsData }) => {
     const { recipe_id, id} = props
     const recipes = useAppSelector(state => state.recipe.recipes.find(el => el.recipe_id === recipe_id));
-    
+    const favoriteStatus = useAppSelector(state => state.recipe.operations.setFavoriteRecipe.loading)
+    const listStatus = useAppSelector(state => state.listRecipe.operations.newListRecipe.loading)
+
     const dispatch = useAppDispatch()
 
     const isMobile = useMediaQuery("(max-width:500px)");
@@ -60,6 +62,8 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
     };
 
     const handlerFavorite = (recipe_id: string, favorite: boolean | undefined): void => {
+        if(favoriteStatus) return
+
         if (recipe_id && id !== '' && favorite !== undefined) {
             const data = { connection_id: id, recipe_id, favorite }
             dispatch(setFavoriteRecipe(data))
@@ -67,6 +71,8 @@ export const CardContentBlock = memo(({ props }: { props: propsData }) => {
     }
    
     function addToList() {
+        if(listStatus) return
+
         if (id !== '' && recipe_id) {
             dispatch(newListRecipe({ connection_id: id, recipe_id: recipe_id }))
         }

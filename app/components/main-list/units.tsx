@@ -44,6 +44,13 @@ const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_id: stri
     const thisUnit = unitData?.unitInfo;
     const [amount, setAmount] = useState<string>(thisUnit ? thisUnit.amount.toString() : '0');
 
+    const shopStatus = useAppSelector(state => {
+        if(recipe_id) return state.listRecipe.operations.shopUnitListRecipe.loading
+        return state.list.operations.shopUnitUpdate.loading
+    })
+
+
+
    
 
 
@@ -85,6 +92,8 @@ const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_id: stri
 
 
     function toggleShopUnit(_id: string | undefined, shop_unit: boolean | undefined) {
+        if(shopStatus) return
+
         if (id !== '' && unitData && shop_unit !== undefined && _id) {
             if(pathName === '/list'){
                 dispatch(shopUnitUpdate({ ingredient_id: unitData.ingredientId, unit_id: _id, shop_unit }))
