@@ -41,6 +41,7 @@ const UserSchema = new Schema(
       required: true
     },
     img: String,
+    password:String,
     connection_id: {
       type: String,
       required: true

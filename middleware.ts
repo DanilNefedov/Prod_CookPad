@@ -31,11 +31,9 @@ export async function middleware(req: NextRequest) {
   const session = await auth(); 
   const { pathname } = req.nextUrl;
 
-  if (pathname === "/") {
-    return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
-  }
+  const publicPaths = ["/login", "/register"];
 
-  if (!session?.user && pathname !== "/login") {
+  if (!session?.user && !publicPaths.includes(pathname)) {
     return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
   }
 
@@ -45,6 +43,7 @@ export async function middleware(req: NextRequest) {
 
   return NextResponse.next();
 }
+
 export const config = {
   matcher: [
     "/((?!api|_next/static|_next/image|favicon.ico|manifest.json).*)"

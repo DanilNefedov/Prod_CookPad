@@ -18,14 +18,20 @@ export const useUserContext = () => useContext(UserContext);
 export function UserProvider({ children }: { children: React.ReactNode }) {
     const error = useAppSelector((state) => state.user.operations.fetchUser.error);
     const dispatch = useAppDispatch();
-    const session = useSession();
-    const connection_id = session?.data?.user?.connection_id;
+    const { data: session, update } = useSession();
+    const connection_id = session?.user?.connection_id;
 
-    console.log(connection_id)
+    console.log(session?.user, connection_id)
     useEffect(() => {
-        if (connection_id) {
-            dispatch(fetchUser(connection_id));
-        }
+        const fetchAndUpdate = async () => {
+            await update();
+
+            if (connection_id) {
+                dispatch(fetchUser(connection_id));
+            }
+        };
+
+        fetchAndUpdate();
     }, [dispatch, connection_id]);
 
     if (error) {

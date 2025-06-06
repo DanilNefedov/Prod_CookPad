@@ -7,29 +7,71 @@ import { NextResponse } from "next/server";
 
 
 
+
+
 export async function GET(request: Request) {
     try {
-        await connectDB();
-        
         const { searchParams } = new URL(request.url);
         const email = searchParams.get('email');
         const provider = searchParams.get('provider');
 
-        console.log(email, provider)
         if (!email || !provider || provider !== 'credentials') {
             return NextResponse.json(
                 { message: 'Invalid request data' }, 
                 { status: 400 }
             );
         }
+        
+        await connectDB();
 
         const user = await User.findOne({
             email,
             provider: 'credentials',
-        }).select('-_id -__v -createdAt -updatedAt');
+        }).select('-__v -createdAt -updatedAt');
 
-        
+
         return NextResponse.json({ user: user || null }, { status: 200 });
+
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json(
+            { error: "An internal error occurred" },
+            { status: 500 }
+        );
+    }
+}
+
+
+
+
+
+
+
+export async function POST(req: Request) {
+    try {
+        const data = await req.json();
+        
+        if (!data.email || !data.provider || data.provider !== 'credentials' || !data.password) {
+            return NextResponse.json(
+                { message: 'Invalid request data' }, 
+                { status: 400 }
+            );
+        } 
+        
+        await connectDB();
+
+        const existingUser = await User.findOne({ email: data.email, provider: data.provider });
+
+        if (existingUser) {
+            return NextResponse.json(
+                { message: 'User with this email already exists' },
+                { status: 409 }
+            );
+        }
+
+        const newUser = await User.create(data)
+
+        return NextResponse.json(newUser, { status: 200 });
 
     } catch (error) {
         console.error(error);

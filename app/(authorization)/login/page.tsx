@@ -1,27 +1,30 @@
 import { signIn } from "@/config/auth/auth"
 import { Button, Container, TextField, Typography } from "@mui/material"
+import Link from "next/link";
 
 
 export default function SignIn() {
   return (
 
-    <Container component="main" maxWidth="xs"
-      sx={{
-        backgroundColor: 'background.paper',
-        borderRadius: '20px',
-        height: '500px',
-        margin: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
+    // <Container component="main" maxWidth="xs"
+    //   sx={{
+    //     backgroundColor: 'background.paper',
+    //     borderRadius: '20px',
+    //     height: '500px',
+    //     margin: 'auto',
+    //     display: 'flex',
+    //     flexDirection: 'column',
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //   }}
+    // >
+    <>
       <form
         style={{ width: '100%' }}
         action={async (formData: FormData) => {
           "use server";
           const provider = formData.get("provider") as string;
+
           await signIn(provider, { redirectTo: "/home" });
         }}
       >
@@ -117,8 +120,13 @@ export default function SignIn() {
         >
           Sign in
         </Button>
-      </form>
 
-    </Container>
+
+        <Link href={'/register'}>Create a new Account</Link>
+      </form>
+    </>
+
+
+    // </Container>
   )
 } 

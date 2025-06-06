@@ -5,7 +5,7 @@ import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { getCall, postCall } from "./calls";
 import { v4 as uuidv4 } from 'uuid';
-import { hash } from "bcryptjs";
+import { compare, hash } from "bcryptjs";
 
 
 
@@ -41,86 +41,52 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           placeholder: "*****",
         },
       },
-      async authorize(credentials: Record<string, unknown> | undefined) {
-        if (!credentials) return null;
+      async authorize(credentials) {
+        const email = credentials.email as string;
+        const password = credentials.password as string;
 
-        const email = credentials.email as string | undefined;
-        const password = credentials.password as string | undefined;
+        if (!credentials?.email || !credentials?.password) return null;
 
-        if (!email || !password) return null;
-        
-        console.log(credentials)
         const url = `http://localhost:3000/api/user/credentials?email=${email}&provider=credentials`;
-        const existingUser = await getCall(url)
-        const { user } = await existingUser.json();
 
-        if(user === null) {
-          const hashedPassword = await hash(password, 10);
+        const existingUserRes = await getCall(url);
+        const userDb = await existingUserRes.json();
 
-          const newUserData = {
-            name: email.split('@')[0],
-            email,
-            password: hashedPassword,
-            provider: 'credentials',
-            connection_id: uuidv4(),
-            popular_config: [],
-            img: "",
-          };
+        const user = userDb?.user;
 
-        
-          const createUserRes = await postCall({
-            url: 'http://localhost:3000/api/user',
-            // url: '`https://prod-cook-pad.vercel.app/api/user',
-            data: newUserData,
-          });
-          
-
-          if (!createUserRes.ok) {
-            console.error('Error when creating a user');
-            return null;
-          }
-
-          const createdUser = await createUserRes.json();
-
-          return {
-            id: createdUser._id,
-            name: createdUser.name,
-            img:createdUser.img,
-            email: createdUser.email,
-            provider:createdUser.provider,
-            connection_id: createdUser.connection_id,
-            popular_config:createdUser.popular_config
-          };
+        if (!user) {
+          console.log("Invalid credentials");
+          return null;
         }
-        // const res = await fetch(`${process.env.NEXTAUTH_URL}/api/user/find?email=${email}`);
-        // const userData = await res.json();
-        
 
-        // const user = userData?.user;
-        // if (!user) return null;
+        const isValid = await compare(password, user.password);
 
-        // const isValid = await compare(password, user.password);
-        // if (!isValid) return null;
-
-        return {
-          id: user._id,
+        if (!isValid) {
+          console.log("Invalid password");
+          return null;
+        }
+        console.log(user)
+        const finalUser = {
+          id: user.connection_id, 
           name: user.name,
-          img:user.img,
           email: user.email,
-          provider:user.provider,
           connection_id: user.connection_id,
-          popular_config:user.popular_config
+          provider: user.provider,
+          image: user.img || null,
         };
-      },
+
+        return finalUser;
+      }
     }),
     
   ],
   callbacks: {
-    async signIn({ account, profile }) {
-      // console.log({account, profile})
-      if (account) {
-
-        if(account.provider === 'credentials') return true
+    async signIn({ account, profile, credentials }) {
+      console.log({account, profile, credentials}) 
+      if (account?.provider === 'credentials') {
+        return true;
+      }
+      if (account && (account.provider === 'google' || account.provider === 'discord')) {
         // await connectDB();
         // const existingUser = await User.findOne({ connection_id: account.providerAccountId });
         const url = `https://prod-cook-pad.vercel.app/api/user?connection_id=${account.providerAccountId}`
@@ -172,46 +138,43 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return true;
     },
-    // session: async ({ session, token }) => {
-    //   if (session?.user) {
-    //     session.user.connection_id = token.connection_id;
-    //   }
-    //   return session;
-    // },
     
     session: async ({ session, token }) => {
-      console.log({ session, token })
+      console.log('sessionsessionsessionsessionsession', { session, token })
+
       if (session?.user) {
-        session.user.name = token.name ?? null;
-        session.user.email = token.email ?? null;
-        session.user.image = token.picture ?? null;
-        session.user.connection_id = token.connection_id ?? null;
+        session.user.id = token.id;
+        session.user.connection_id = token.connection_id;
+        session.user.name = token.name;
+        session.user.email = token.email;
       }
       return session;
     },
 
+    
+    jwt: async ({ token, user, account }) => {
+      if (user) {
+        token.id = user.id;
+        token.connection_id = user.connection_id;
+        token.name = user.name;
+        token.email = user.email;
+      }
+
+      if (account) {
+        token.connection_id = account.providerAccountId;
+      }
+
+      return token;
+    },
 
     // jwt: async ({  token, account }) => {
+    //   // console.log('jwtjwtjwtjwtjwtjwtjwtjwtjwt', {  token, account })
     //   if (account) {
     //     token.connection_id = account.providerAccountId;
     //   }
     //   return token;
     // },
-    jwt: async ({ token, account, user }) => {
-      console.log({ token, account, user })
-      if (user) {
-        token.connection_id = user.connection_id;
-        token.name = user.name;
-        token.email = user.email;
-        token.picture = user.image; 
-      } else if (account?.providerAccountId) {
-        token.connection_id = account.providerAccountId;
-      } else if (!token.connection_id) {
-        token.connection_id = null;
-      }
-
-      return token;
-    },
+    
 
 
     authorized(params) {

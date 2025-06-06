@@ -30,6 +30,12 @@ export async function POST(req: Request) {
   }
 }
 
+
+
+
+
+
+
 export async function GET(request: Request) {
   try {
     await connectDB();
@@ -45,7 +51,7 @@ export async function GET(request: Request) {
       );
     }
     
-    const user = await User.findOne({ connection_id }).select('-_id -__v -createdAt -updatedAt');
+    const user = await User.findOne({ connection_id }).select('-password -_id -__v -createdAt -updatedAt');
     console.log(user)
     return NextResponse.json({ user: user || null }, { status: 200 });
 
