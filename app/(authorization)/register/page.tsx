@@ -1,31 +1,33 @@
 'use client'
 
 
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
 import Link from "next/link";
-import { useActionState } from "react";
-import { hash } from "bcryptjs";
-import { v4 as uuidv4 } from 'uuid';
-import { signIn } from "@/config/auth/auth";
+import { useActionState, useState } from "react";
 import { handleRegister } from "./function";
-import { useFormState } from "react-dom";
-
+import { regiterIntup } from "../style";
+import '../style.css';
+import { VisuallyHiddenInput } from "@/app/(main)/new-recipe/style";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 
 
 
 export default function Register() {
   const [state, formAction] = useActionState(handleRegister, { error: null })
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 
+
+  console.log(state)
   return (
     <form
       style={{ width: '100%', marginTop: '20px' }}
       action={formAction}
     >
       
-      {state.error && (
+      {state.error?.server && (
         <Box sx={{ color: 'red', textAlign: 'center', mb: 2 }}>
-          {state.error}
+          Whoa, something's wrong. Check the data or the connection.
         </Box>
       )}
       <Typography
@@ -37,33 +39,98 @@ export default function Register() {
 
       <TextField
         margin="normal"
-        required
+        error={state.error?.name}
+        // required
         fullWidth
-        label="Email Address"
-        name="email"
-        type="email"
+        label="Your name"
+        autoComplete="off"
+        name="name"
+        type="text"
+        slotProps={{
+          inputLabel: {
+            shrink: true,
+          },
+        }}
+        sx={regiterIntup}
       />
       <TextField
         margin="normal"
-        required
+        // required
+        fullWidth
+        label="Email Address"
+        autoComplete="off"
+        error={state.error?.email}
+        name="email"
+        type="email"
+        slotProps={{
+          inputLabel: {
+            shrink: true,
+          },
+        }}
+        sx={regiterIntup}
+      />
+      <TextField
+        margin="normal"
+        autoComplete="new-password"
+        // required
         fullWidth
         name="password"
+        error={state.error?.password}
         label="Password"
         type="password"
+        slotProps={{
+          inputLabel: {
+            shrink: true,
+          },
+        }}
+        sx={regiterIntup}
       />
+
+      <Box sx={{display:'flex', alignItems:'center', justifyContent:'center', mt:'10px'}}>
+        <Avatar
+          alt="User avatar"
+          src={avatarPreview !== null ? avatarPreview : ''} 
+          sx={{ width: 45, height: 45, mr: 2 }}
+        />
+        
+
+        <Button
+          color="darkButton"
+          component="label"
+          role={undefined}
+          variant="contained"
+          tabIndex={-1}
+          startIcon={<CloudUploadIcon />}
+          
+        >
+          Upload avatar
+          <VisuallyHiddenInput
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                const url = URL.createObjectURL(file);
+                setAvatarPreview(url);
+              }
+            }}
+            name="image"
+            type="file"
+          />
+        </Button>
+      </Box>
+      
 
       <Button
         type="submit"
         fullWidth
         variant="contained"
-        color="primary"
+        color="darkButton"
         sx={{ mt: 2, fontWeight: 600, borderRadius: "10px" }}
       >
         Register
       </Button>
 
 
-      <Link href={'/login'}>Back to Login</Link>
+      <Link className="link-register" href={'/login'}>Back to the Login</Link>
     </form>
   )
 }

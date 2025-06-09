@@ -51,6 +51,7 @@ export async function POST(req: Request) {
     try {
         const data = await req.json();
         
+        console.log(data)
         if (!data.email || !data.provider || data.provider !== 'credentials' || !data.password) {
             return NextResponse.json(
                 { message: 'Invalid request data' }, 

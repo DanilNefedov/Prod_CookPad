@@ -1,9 +1,23 @@
 import { signIn } from "@/config/auth/auth"
-import { Button, Container, TextField, Typography } from "@mui/material"
+import { Box, Button, TextField, Typography } from "@mui/material"
 import Link from "next/link";
+import '../style.css';
+import { regiterIntup } from "../style";
+
+
+
+
+
+
+
 
 
 export default function SignIn() {
+ 
+
+
+
+
   return (
 
     // <Container component="main" maxWidth="xs"
@@ -35,36 +49,40 @@ export default function SignIn() {
           Sign in with
         </Typography>
 
-        <Button
-          type="submit"
-          variant="contained"
-          fullWidth
-          name="provider"
-          value="google"
-          color="darkButton"
-          sx={{ fontWeight: "700", borderRadius: "10px", width: "100%" }}
-        >
-          Google
-        </Button>
 
-        <Typography
+        <Box sx={{display:'flex', gap:'15px'}}>
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            name="provider"
+            value="google"
+            color="darkButton"
+            sx={{ fontWeight: "700", borderRadius: "10px", width: "100%" }}
+          >
+            Google
+          </Button>
+
+          {/* <Typography
           sx={{ textAlign: "center", fontWeight: "600", padding: "15px 0", fontSize: "1.3rem" }}
           color="text.primary"
         >
           or
-        </Typography>
+        </Typography> */}
 
-        <Button
-          type="submit"
-          variant="contained"
-          fullWidth
-          name="provider"
-          value="discord"
-          color="darkButton"
-          sx={{ fontWeight: "700", borderRadius: "10px", width: "100%", }}
-        >
-          Discord
-        </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            fullWidth
+            name="provider"
+            value="discord"
+            color="darkButton"
+            sx={{ fontWeight: "700", borderRadius: "10px", width: "100%", }}
+          >
+            Discord
+          </Button>
+        </Box>
+        
 
 
 
@@ -96,33 +114,47 @@ export default function SignIn() {
 
         <TextField
           margin="normal"
-          required
+          // required
           fullWidth
           label="Email Address"
+          autoComplete="off"
           name="email"
           type="email"
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+          }}
+          sx={regiterIntup}
         />
         <TextField
           margin="normal"
-          required
+          autoComplete="new-password"
+          // required
           fullWidth
           name="password"
           label="Password"
           type="password"
+          slotProps={{
+            inputLabel: {
+              shrink: true,
+            },
+          }}
+          sx={regiterIntup}
         />
 
         <Button
           type="submit"
           fullWidth
           variant="contained"
-          color="primary"
+          color="darkButton"
           sx={{ mt: 2, fontWeight: 600, borderRadius: "10px" }}
         >
           Sign in
         </Button>
 
 
-        <Link href={'/register'}>Create a new Account</Link>
+        <Link className="link-register" href={'/register'}>Create a new Account</Link>
       </form>
     </>
 

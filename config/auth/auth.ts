@@ -32,13 +32,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       credentials: {
         email: {
           type: "email",
-          label: "Email",
-          placeholder: "johndoe@gmail.com",
+          // label: "Email",
+          // placeholder: "johndoe@gmail.com",
         },
         password: {
           type: "password",
-          label: "Password",
-          placeholder: "*****",
+          // label: "Password",
+          // placeholder: "*****",
         },
       },
       async authorize(credentials) {

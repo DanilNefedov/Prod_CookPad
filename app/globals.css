@@ -80,9 +80,6 @@ button::-moz-focus-inner {
 
 a,
 a:visited {
-   
-    /* color:inherit; */
-    /* -webkit-text-decoration: none;  */
     text-decoration: none;
 }
 
@@ -111,59 +108,5 @@ h6 {
     overflow: hidden;
     display: flex;
     height: 100vh;
-    /* padding: 20px; */
 }
 
-
-/* .main-section-container{
-    flex-grow: 1;
-}
-
-ul .active-nav a{
-    color: var(--active-text);
-    background-color: var(--btn-active);
-}
-
-ul .active-nav{
-    border-color: var(--active-text);
-}
-
-.btn{
-    background-color: var(--btn-desactive);
-    border-radius: 6px;
-    padding: 10px 15px;
-    display: block;
-    text-align: center;
-    transition: 0.3s;
-    cursor: pointer;
-}
-
-.btn:hover{
-    background-color: var(--btn-active);
-    color: var(--active-text);
-}
-
-
-.elem{
-    margin-right: 10px;
-}
-.elem a{
-    display: block;
-    transition: 0.3s;
-    cursor: pointer;
-    padding: 14px 16px;
-    border-radius: 6px;
-}
-.elem a:hover{
-    color:var(--active-text);
-}
-
-main{
-    height: calc(100vh - 146px);
-    margin-bottom: 20px;
-    border-radius: 12px;
-    background: var(--bg-second);
-    box-shadow: var(--shadow-bg);
-    padding: 20px 24px;
-
-} */

@@ -1,14 +1,16 @@
 'use client'
 
-import { Box } from "@mui/material";
+import { ErrorPageContent } from "@/app/components/ux-helpers/error";
 
 
 
+interface DataProps {
+    reset: () => void;
+}
 
-
-export default function ErrorPage() {
+export default function ErrorPage({ reset }: DataProps) {
 
     return (
-        <Box>Error</Box>
+        <ErrorPageContent reset={reset}></ErrorPageContent>
     );
 }
