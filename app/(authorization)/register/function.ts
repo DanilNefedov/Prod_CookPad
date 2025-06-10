@@ -1,8 +1,5 @@
 "use server"
 
-import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
-import { hash } from "bcryptjs";
 import { v4 as uuidv4 } from 'uuid';
 import { signIn } from "@/config/auth/auth"
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
@@ -28,7 +25,7 @@ interface DataType {
     image: File
 }
 
-async function uploadFile(data: DataType): Promise<string> {
+export async function uploadFile(data: DataType): Promise<string> {
     const { connection_id, image } = data;
 
     try {
@@ -73,7 +70,8 @@ async function uploadFile(data: DataType): Promise<string> {
 
 
 
-export async function handleRegister(prevState: State, formData: FormData): Promise<State> {
+export async function handleRegister(formData: FormData): Promise<State>{
+    "use server"
     try {
         const email = formData.get("email") as string
         const password = formData.get("password") as string
@@ -133,14 +131,33 @@ export async function handleRegister(prevState: State, formData: FormData): Prom
             return { error: { post: true } };
         }
 
-        await signIn("credentials", {
-            email,
-            password,
-            redirect: false,
-        })
+        // await signIn("credentials", {
+        //     email,
+        //     password,
+        //     redirectTo: "/home",
+        // });
+
 
         return { error: null };
     } catch (e) {
+        console.log(e)
         return { error: { server: true } };
     }
+}
+
+
+export async function registerAndSignIn(prevState: State, formData: FormData): Promise<State> {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  const result = await handleRegister(formData);  
+  if (result.error) return result;
+
+  await signIn("credentials", {
+    email,
+    password,
+    redirectTo: "/home",
+  });
+
+  return { error: null };
 }

@@ -1,6 +1,7 @@
 import connectDB from "@/app/lib/mongoose";
 import User from "@/app/models/user";
 import { NextResponse } from "next/server";
+import { hash } from "bcryptjs";
 
 
 
@@ -59,6 +60,7 @@ export async function POST(req: Request) {
             );
         } 
         
+        
         await connectDB();
 
         const existingUser = await User.findOne({ email: data.email, provider: data.provider });
@@ -70,7 +72,19 @@ export async function POST(req: Request) {
             );
         }
 
-        const newUser = await User.create(data)
+        const hashedPassword = await hash(data.password, 10);
+
+        const pushNewUser = {
+            name:data.name,
+            email:data.email,
+            password:hashedPassword,
+            provider: data.provider,
+            connection_id:data.connection_id,
+            popular_config: data.popular_config,
+            img: data.img,
+        }
+
+        const newUser = await User.create(pushNewUser)
 
         return NextResponse.json(newUser, { status: 200 });
 
