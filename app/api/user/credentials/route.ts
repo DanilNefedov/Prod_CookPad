@@ -52,7 +52,6 @@ export async function POST(req: Request) {
     try {
         const data = await req.json();
         
-        console.log(data)
         if (!data.email || !data.provider || data.provider !== 'credentials' || !data.password) {
             return NextResponse.json(
                 { message: 'Invalid request data' }, 
@@ -85,7 +84,6 @@ export async function POST(req: Request) {
         }
 
         const newUser = await User.create(pushNewUser)
-
         return NextResponse.json(newUser, { status: 200 });
 
     } catch (error) {

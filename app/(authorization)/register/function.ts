@@ -29,6 +29,8 @@ export async function uploadFile(data: DataType): Promise<string> {
     const { connection_id, image } = data;
 
     try {
+       
+
         const blob = image;
         
         const storageRef = ref(storage, `avatar/${connection_id}/${connection_id}`);//folder -> folder -> file
@@ -82,6 +84,9 @@ export async function handleRegister(formData: FormData): Promise<State>{
         const connection_id = uuidv4()
         let resImage 
 
+        
+
+
         if (image instanceof File && image.size > 0) {
             try {
                 const avatar = await uploadFile({ image, connection_id });
@@ -91,6 +96,10 @@ export async function handleRegister(formData: FormData): Promise<State>{
                 errors.avatar = true;
             }
         }        
+
+        if(!email || !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email)){
+            errors.email = true
+        }
 
         if (!password || !/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{4,8}$/.test(password)) {
             errors.password = true;
@@ -122,7 +131,6 @@ export async function handleRegister(formData: FormData): Promise<State>{
             body: JSON.stringify(newUserData),
         })
 
-        console.log(res)
         if (res.status === 409) {
             return { error: { email: true } };
         }
@@ -130,14 +138,6 @@ export async function handleRegister(formData: FormData): Promise<State>{
         if (!res.ok) {
             return { error: { post: true } };
         }
-
-        // await signIn("credentials", {
-        //     email,
-        //     password,
-        //     redirectTo: "/home",
-        // });
-
-
         return { error: null };
     } catch (e) {
         console.log(e)

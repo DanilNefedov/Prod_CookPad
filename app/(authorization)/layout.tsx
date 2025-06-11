@@ -9,7 +9,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
       sx={{
         backgroundColor: 'background.paper',
         borderRadius: '20px',
-        height: '500px',
+        height: '600px',
         margin: 'auto',
         display: 'flex',
         flexDirection: 'column',

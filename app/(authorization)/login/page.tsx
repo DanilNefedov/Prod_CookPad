@@ -1,9 +1,7 @@
 import { signIn } from "@/config/auth/auth"
-import { Box, Button, TextField, Typography } from "@mui/material"
-import Link from "next/link";
+import { Box, Button, Typography } from "@mui/material"
 import '../style.css';
-import { regiterIntup } from "../style";
-
+import { SignInForm } from "./sign-in";
 
 
 
@@ -19,19 +17,6 @@ export default function SignIn() {
 
 
   return (
-
-    // <Container component="main" maxWidth="xs"
-    //   sx={{
-    //     backgroundColor: 'background.paper',
-    //     borderRadius: '20px',
-    //     height: '500px',
-    //     margin: 'auto',
-    //     display: 'flex',
-    //     flexDirection: 'column',
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //   }}
-    // >
     <>
       <form
         style={{ width: '100%' }}
@@ -57,41 +42,32 @@ export default function SignIn() {
             fullWidth
             name="provider"
             value="google"
-            color="darkButton"
-            sx={{ fontWeight: "700", borderRadius: "10px", width: "100%" }}
+            color="grayButton"
+            sx={{ fontWeight: "700", borderRadius: "10px", width: "100%", }}
           >
+            
             Google
           </Button>
-
-          {/* <Typography
-          sx={{ textAlign: "center", fontWeight: "600", padding: "15px 0", fontSize: "1.3rem" }}
-          color="text.primary"
-        >
-          or
-        </Typography> */}
-
+  
           <Button
             type="submit"
             variant="contained"
             fullWidth
             name="provider"
             value="discord"
-            color="darkButton"
+            color="grayButton"
             sx={{ fontWeight: "700", borderRadius: "10px", width: "100%", }}
           >
             Discord
           </Button>
         </Box>
-        
-
-
-
+      
       </form>
 
 
 
-
-      <form
+      <SignInForm></SignInForm>
+      {/* <form
         style={{ width: '100%', marginTop: '20px' }}
         action={async (formData: FormData) => {
           "use server";
@@ -155,7 +131,7 @@ export default function SignIn() {
 
 
         <Link className="link-register" href={'/register'}>Create a new Account</Link>
-      </form>
+      </form> */}
     </>
 
 

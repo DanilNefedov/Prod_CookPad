@@ -7,6 +7,9 @@ declare module '@mui/material/Button' {
     darkButton: true;
   }
   interface ButtonPropsColorOverrides {
+    grayButton: true;
+  }
+  interface ButtonPropsColorOverrides {
     blackRedBtn: true;
   }
 
@@ -28,7 +31,9 @@ declare module '@mui/material/styles' {
 
 
   
-
+  interface PaletteOptions{
+    grayButton?:PaletteOptions['primary']
+  }
   interface PaletteOptions{
     darkButton?:PaletteOptions['primary']
   }
@@ -97,6 +102,12 @@ export const theme = createTheme({
     blackRedBtn:{
       main:'#1F2128',
       dark: "#FF7269",
+    },
+    grayButton:{
+      main: '#696d78',
+      light: "#ffc2b3",
+      contrastText: '#FFFFFF',
+      dark:'#FF7269',
     }
   },
  

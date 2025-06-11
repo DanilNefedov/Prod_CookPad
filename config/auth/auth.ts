@@ -1,11 +1,10 @@
 export const runtime = "nodejs";
-import NextAuth from "next-auth";
+import NextAuth, { AuthError } from "next-auth";
 import Discord from "next-auth/providers/discord";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { getCall, postCall } from "./calls";
-import { v4 as uuidv4 } from 'uuid';
-import { compare, hash } from "bcryptjs";
+import { compare } from "bcryptjs";
 
 
 
@@ -13,6 +12,7 @@ export interface RequestData <T>{
   url: string;
   data: T;
 }
+
 
  
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -60,19 +60,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         const isValid = await compare(password, user.password);
-
+        console.log(email, password, isValid)
         if (!isValid) {
           console.log("Invalid password");
           return null;
         }
-        console.log(user)
         const finalUser = {
           id: user.connection_id, 
           name: user.name,
           email: user.email,
           connection_id: user.connection_id,
           provider: user.provider,
-          image: user.img || null,
+          image: user.img || '',
         };
 
         return finalUser;
@@ -82,7 +81,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   callbacks: {
     async signIn({ account, profile, credentials }) {
-      console.log({account, profile, credentials}) 
       if (account?.provider === 'credentials') {
         return true;
       }
@@ -140,7 +138,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     
     session: async ({ session, token }) => {
-      console.log('sessionsessionsessionsessionsession', { session, token })
 
       if (session?.user) {
         session.user.id = token.id;
