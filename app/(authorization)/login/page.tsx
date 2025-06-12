@@ -12,10 +12,6 @@ import { SignInForm } from "./sign-in";
 
 export default function SignIn() {
  
-
-
-
-
   return (
     <>
       <form
@@ -42,7 +38,7 @@ export default function SignIn() {
             fullWidth
             name="provider"
             value="google"
-            color="grayButton"
+            color="darkButton"
             sx={{ fontWeight: "700", borderRadius: "10px", width: "100%", }}
           >
             
@@ -55,7 +51,7 @@ export default function SignIn() {
             fullWidth
             name="provider"
             value="discord"
-            color="grayButton"
+            color="darkButton"
             sx={{ fontWeight: "700", borderRadius: "10px", width: "100%", }}
           >
             Discord
@@ -67,74 +63,7 @@ export default function SignIn() {
 
 
       <SignInForm></SignInForm>
-      {/* <form
-        style={{ width: '100%', marginTop: '20px' }}
-        action={async (formData: FormData) => {
-          "use server";
-          const email = formData.get("email") as string;
-          const password = formData.get("password") as string;
-
-          await signIn("credentials", {
-            email,
-            password,
-            redirectTo: "/home",
-          });
-        }}
-      >
-        <Typography
-          sx={{ textAlign: "center", fontWeight: "600", padding: "15px 0", fontSize: "1.2rem" }}
-          color="text.primary"
-        >
-          Or sign in with email
-        </Typography>
-
-        <TextField
-          margin="normal"
-          // required
-          fullWidth
-          label="Email Address"
-          autoComplete="off"
-          name="email"
-          type="email"
-          slotProps={{
-            inputLabel: {
-              shrink: true,
-            },
-          }}
-          sx={regiterIntup}
-        />
-        <TextField
-          margin="normal"
-          autoComplete="new-password"
-          // required
-          fullWidth
-          name="password"
-          label="Password"
-          type="password"
-          slotProps={{
-            inputLabel: {
-              shrink: true,
-            },
-          }}
-          sx={regiterIntup}
-        />
-
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="darkButton"
-          sx={{ mt: 2, fontWeight: 600, borderRadius: "10px" }}
-        >
-          Sign in
-        </Button>
-
-
-        <Link className="link-register" href={'/register'}>Create a new Account</Link>
-      </form> */}
+     
     </>
-
-
-    // </Container>
   )
 } 

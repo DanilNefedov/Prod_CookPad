@@ -1,5 +1,5 @@
 'use client'
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from './slices/user-slice'
 import recipeSlice from './slices/recipe-slice'
 import cookHistorySlice from './slices/cook-history'
@@ -18,29 +18,42 @@ import descriptionSlice from './slices/stepper/description'
 import instructionSlice from './slices/stepper/instruction'
 
 
+export const RESET_APP = 'RESET_APP';
+
+const appReducer = combineReducers({
+    user:userReducer,
+    recipe:recipeSlice,
+    cookHistory:cookHistorySlice,
+    cook:cookSlice,
+    list:listSlice,
+    listRecipe:listRecipeSlice,
+    popular:popularSlice,
+    comments:commentsPopular,
+    commentContext:commentContext,
+
+
+    statusSlice:statusSlice,
+    stepTypeRecommend:stepTypeRecommend,
+    nameTimeSlice:nameTimeSlice,
+    mediaSlice:mediaSlice,
+    ingredientsSlice:ingredientsSlice,
+    descriptionSlice:descriptionSlice,
+    instructionSlice:instructionSlice,
+});
+
+const rootReducer = (state: ReturnType<typeof appReducer> | undefined, action: any) => {
+    if (action.type === RESET_APP) {
+        return appReducer(undefined, { type: '@@INIT' });
+    }
+    return appReducer(state, action);
+};
 
 export const store = configureStore({
-    reducer:{
-        user:userReducer,
-        recipe:recipeSlice,
-        cookHistory:cookHistorySlice,
-        cook:cookSlice,
-        list:listSlice,
-        listRecipe:listRecipeSlice,
-        popular:popularSlice,
-        comments:commentsPopular,
-        commentContext:commentContext,
+    reducer: rootReducer,
+});
 
 
-        statusSlice:statusSlice,
-        stepTypeRecommend:stepTypeRecommend,
-        nameTimeSlice:nameTimeSlice,
-        mediaSlice:mediaSlice,
-        ingredientsSlice:ingredientsSlice,
-        descriptionSlice:descriptionSlice,
-        instructionSlice:instructionSlice,
-    }
-})
+
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch

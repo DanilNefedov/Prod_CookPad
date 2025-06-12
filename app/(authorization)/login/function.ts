@@ -2,36 +2,34 @@
 
 import { signIn } from "@/config/auth/auth";
 
-type State = {
-    error:boolean;
-    email:string 
+
+export type State = {
+    error: boolean;
+    email: string;
+    success?: boolean;
 };
 
 
-
 export async function signInCall(prevState: State, formData: FormData): Promise<State> {
+    'use server'
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    try{
+    try {
         const res = await signIn("credentials", {
             email,
             password,
-            redirectTo: "/home",
+            redirect: false,
         });
 
-
-        if (res === null) {
-            return { error: true, email } 
+        if (!res || res.error) {
+            return { error: true, email, success: false };
         }
 
-        return { error: false, email:'' };
-    }catch(e) {
-        console.log(e)
-        return { error: true, email };
+        return { error: false, email: '', success: true };
+    } catch (e) {
+        console.log(e);
+        return { error: true, email, success: false };
     }
-    
-
-    // return { error: false };
 }
 

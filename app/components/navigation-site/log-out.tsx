@@ -1,9 +1,16 @@
+'use client'
+
 import { Button } from '@mui/material'
-import { signOut } from '@/config/auth/auth'
 import LogoutIcon from '@mui/icons-material/Logout';
 import { theme } from '@/config/ThemeMUI/theme';
+import { useRouter } from 'next/navigation';
+import { useAppDispatch } from '@/state/hook';
+import { RESET_APP } from '@/state/store';
+import { signOut } from 'next-auth/react';
 
 export function LogOut() {
+    const dispatch = useAppDispatch()
+    const router = useRouter()
 
     const styleLink = {
         lineHeight: 'inherit',
@@ -28,24 +35,50 @@ export function LogOut() {
         },
     }
 
+
+
+    const handleLogout = async () => {
+        await signOut({ redirect: false })
+        dispatch({ type: RESET_APP })
+        router.push('/login')
+    }
+
     return (
-        <form
-            action={async () => {
-                "use server"
-                await signOut({ redirectTo: '/login' })
-            }}
+
+
+        <Button
+            variant="contained" 
+            color='secondary' 
+            type="submit"
+            sx={styleLink}
+            onClick={handleLogout}
         >
-            <Button 
-                variant="contained" 
-                color='secondary' 
-                type="submit"
-                sx={styleLink}
-            >
-                <LogoutIcon sx={{mr:'5px',  [theme.breakpoints.down("md")]: {
+            <LogoutIcon sx={{
+                mr:'5px',  
+                [theme.breakpoints.down("md")]: {
                     mr:'0'
-                },}}></LogoutIcon>
-                <span>Sign Out</span> 
-            </Button>
-        </form>
+                },
+            }}></LogoutIcon>
+            <span>Sign Out</span> 
+        </Button>
+
+        // <form
+        //     action={async () => {
+        //         "use server"
+        //         await signOut({ redirectTo: '/login' })
+        //     }}
+        // >
+            // <Button 
+            //     variant="contained" 
+            //     color='secondary' 
+            //     type="submit"
+            //     sx={styleLink}
+            // >
+            //     <LogoutIcon sx={{mr:'5px',  [theme.breakpoints.down("md")]: {
+            //         mr:'0'
+            //     },}}></LogoutIcon>
+            //     <span>Sign Out</span> 
+            // </Button>
+        // </form>
     )
 }

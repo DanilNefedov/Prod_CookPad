@@ -37,9 +37,14 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
   }
 
-  if (session?.user && pathname === "/login" || session?.user && pathname === "/register") {
+
+  if (session?.user && (pathname === "/login" || pathname === "/register")) {
     return NextResponse.redirect(new URL("/home", req.nextUrl.origin));
   }
+
+  // if (session?.user && pathname === "/login" || session?.user && pathname === "/register") {
+  //   return NextResponse.redirect(new URL("/home", req.nextUrl.origin));
+  // }
 
   return NextResponse.next();
 }

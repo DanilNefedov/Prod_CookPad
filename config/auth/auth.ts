@@ -54,6 +54,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const user = userDb?.user;
 
+        if (!user || !user.password) {
+          return null;
+        }
+
+
         if (!user) {
           console.log("Invalid credentials");
           return null;
@@ -160,7 +165,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (account) {
         token.connection_id = account.providerAccountId;
       }
-
       return token;
     },
 
