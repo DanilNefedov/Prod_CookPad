@@ -54,7 +54,7 @@ export default function Register() {
 
         {state.error && (
           <Box sx={{ color: '#FF7269', textAlign: 'center' }}>
-            {(state.error.server || state.error.post) && <>Whoa, something's wrong.<br />Check the data or the connection.</>}
+            {(state.error.server || state.error.post) && <>Whoa, something`s wrong.<br />Check the data or the connection.</>}
             {state.error.name && <>Enter the correct name.<br /></>}
             {(state.error.avatar || sizeAvatar) && <>Check your avatar or connection.<br /></>}
             {state.error.email && <>Email already used or invalid input.<br /></>}

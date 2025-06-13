@@ -11,13 +11,17 @@ export async function PATCH(request: Request) {
     try{
         const data = await request.json();
         const { connection_id,  ingredient_id, updated_unit, _id } = data;
+
         
-        if (!ingredient_id || !ingredient_id || !_id || typeof updated_unit !== "boolean") {
+        
+        if (!ingredient_id || connection_id || !_id ) {
             return NextResponse.json(
                 { message: 'Invalid request data' }, 
                 { status: 400 }
             );
         }
+
+        console.log(data)
 
         await connectDB();
 
