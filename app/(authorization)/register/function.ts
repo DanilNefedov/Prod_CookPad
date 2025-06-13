@@ -147,17 +147,18 @@ export async function handleRegister(formData: FormData): Promise<State>{
 
 
 export async function registerAndSignIn(prevState: State, formData: FormData): Promise<State> {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+    'use server'
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
 
-  const result = await handleRegister(formData);  
-  if (result.error) return result;
+    const result = await handleRegister(formData);  
+    if (result.error) return result;
 
-  await signIn("credentials", {
-    email,
-    password,
-    redirectTo: "/home",
-  });
+    await signIn("credentials", {
+        email,
+        password,
+        redirectTo: "/home",
+    });
 
-  return { error: null };
+    return { error: null };
 }
