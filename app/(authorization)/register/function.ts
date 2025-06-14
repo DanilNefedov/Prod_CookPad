@@ -36,7 +36,7 @@ export async function uploadFile(data: DataType): Promise<string> {
         return new Promise((resolve, reject) => {
             uploadTask.on(
                 'state_changed',
-                (snapshot) => {
+                () => { //snapshot
                     // const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                     // console.log('Upload is ' + progress + '% done');
                 },

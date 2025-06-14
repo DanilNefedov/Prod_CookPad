@@ -78,6 +78,7 @@ export default function Register() {
       try {
         imageUrl = await uploadFile({ connection_id, image: image });
       } catch (e) {
+        console.log(e)
         errors.image = true;
       }
     }
