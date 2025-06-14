@@ -48,6 +48,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!credentials?.email || !credentials?.password) return null;
 
         const url = `${process.env.APP_MAIN_URL}/api/user/credentials?email=${email}&provider=credentials`;
+        console.log('urlurlurlurlurlurlurlurl',url)
 
         const existingUserRes = await getCall(url);
         const userDb = await existingUserRes.json();
