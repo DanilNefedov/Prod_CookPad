@@ -10,26 +10,8 @@ import { startTransition, useActionState, useState } from "react";
 import { VisuallyHiddenInput } from "@/app/(main)/new-recipe/style";
 import { UXLoading } from "@/app/components/ux-helpers/loading";
 import { v4 as uuidv4 } from 'uuid';
+import { regiterIntup } from "../style";
 
-
-
-export const regiterIntup = {
-  '& .MuiFormLabel-root': {
-    color: 'white'
-  },
-  '& .MuiInputBase-input': {
-    p: '10px 14px'
-  },
-  '& .MuiInputBase-root': {
-    backgroundColor: "#696d78",
-  },
-  '& .MuiOutlinedInput-notchedOutline': {
-    border: '1px solid #b3b9c3'
-  },
-  '& .MuiInputLabel-root.Mui-focused': {
-    color: 'white',
-  },
-}
 
 interface StateData {
   email:boolean
