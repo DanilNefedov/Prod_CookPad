@@ -48,7 +48,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!credentials?.email || !credentials?.password) return null;
 
         const url = `${process.env.APP_MAIN_URL}/api/user/credentials?email=${email}&provider=credentials`;
-        console.log('urlurlurlurlurlurlurlurl',url)
 
         const existingUserRes = await getCall(url);
         const userDb = await existingUserRes.json();
@@ -59,18 +58,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-
         if (!user) {
           console.log("Invalid credentials");
           return null;
         }
-
+        
         const isValid = await compare(password, user.password);
-        console.log(email, password, isValid)
+
         if (!isValid) {
           console.log("Invalid password");
           return null;
         }
+
         const finalUser = {
           id: user.connection_id, 
           name: user.name,
