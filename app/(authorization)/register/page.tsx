@@ -3,12 +3,15 @@
 
 import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
 import Link from "next/link";
-import { registerAndSignIn } from "./function";
+import { registerAndSignIn, uploadFile } from "./function";
 import '../style.css';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { useActionState, useState } from "react";
+import { startTransition, useActionState, useState } from "react";
 import { VisuallyHiddenInput } from "@/app/(main)/new-recipe/style";
 import { UXLoading } from "@/app/components/ux-helpers/loading";
+import { v4 as uuidv4 } from 'uuid';
+
+
 
 export const regiterIntup = {
   '& .MuiFormLabel-root': {
@@ -28,11 +31,78 @@ export const regiterIntup = {
   },
 }
 
+interface StateData {
+  email:boolean
+  password:boolean
+  name:boolean
+  image:boolean
+}
+
 
 export default function Register() {
   const [state, formAction, isPending] = useActionState(registerAndSignIn, { error: null })
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [sizeAvatar, setSizeAvatar] = useState<boolean>(false)
+  const [stateData, setStateData] = useState<StateData>({
+    email:false,
+    password:false,
+    name:false,
+    image:false,
+  })
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email")?.toString().trim() as string;
+    const password = formData.get("password")?.toString().trim() as string;
+    const name = formData.get("name")?.toString().trim() as string;
+    const image = formData.get('image') as File | null
+    const connection_id = uuidv4()
+
+    const errors: StateData = {
+      email: !email || !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email),
+      password: !password || !/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{4,8}$/.test(password),
+      name: !name || !/^[A-Za-z0-9 ]{1,15}$/.test(name),
+      image: false, 
+    };
+
+    const hasError = Object.values(errors).some(Boolean);
+    if (hasError) {
+      setStateData(errors);
+      return;
+    }
+
+    let imageUrl: string = '';
+    if (image instanceof File && image.size > 0) {
+      try {
+        imageUrl = await uploadFile({ connection_id, image: image });
+      } catch (e) {
+        errors.image = true;
+      }
+    }
+
+
+    if (errors.image) {
+      setStateData(prev => ({ ...prev, ...errors }));
+      return;
+    }
+
+    const serverFormData = {
+      email,
+      password,
+      name,
+      image:imageUrl, 
+      connection_id
+    };
+
+    startTransition(() => {
+      formAction(serverFormData);
+    });
+    // await formAction(serverFormData);
+
+  }
+
 
   console.log(sizeAvatar, state)
   return (
@@ -48,19 +118,22 @@ export default function Register() {
 
 
       <form
-        style={{ width: '100%', }}
-        action={formAction}
+        style={{ width: '100%' }}
+        onSubmit={handleSubmit}
       >
 
-        {state.error && (
+
+        {/* {state.error && ( */}
           <Box sx={{ color: '#FF7269', textAlign: 'center' }}>
-            {(state.error.server || state.error.post) && <>Whoa, something`s wrong.<br />Check the data or the connection.</>}
-            {state.error.name && <>Enter the correct name.<br /></>}
-            {(state.error.avatar || sizeAvatar) && <>Check your avatar or connection.<br /></>}
-            {state.error.email && <>Email already used or invalid input.<br /></>}
-            {state.error.password && <>Enter the password correctly.<br /></>}
+            {(state.error?.server || state.error?.post) && <>Whoa, something`s wrong.<br />Check the data or the connection.</>}
+            {stateData.name && <>Enter the correct name.<br /></>}
+            {stateData.image && <>Check your avatar or connection.<br /></>}
+            {sizeAvatar && <>Your avatar is not supported.<br /></>}
+            {/* {avatarError && <>Check your avatar or connection.<br /></>} */}
+            {state.error?.email && <>Email already used or invalid input.<br /></>}
+            {stateData.password && <>Enter the password correctly.<br /></>}
           </Box>
-        )}
+        {/* )} */}
 
 
         <Typography
@@ -72,7 +145,7 @@ export default function Register() {
 
         <TextField
           margin="normal"
-          error={state.error?.name}
+          error={stateData.name}
           // required
           fullWidth
           label="Your name"
@@ -111,7 +184,7 @@ export default function Register() {
           // required
           fullWidth
           name="password"
-          error={state.error?.password}
+          error={stateData.password}
           label="Password"
           type="password"
           slotProps={{
@@ -151,21 +224,19 @@ export default function Register() {
               accept=".jpg,.png,.svg"
               onChange={(e) => {
                 const file = e.target.files?.[0];
-
                 if (!file) return;
 
-                const maxSize = 1 * 1024 * 1024; // 1MB
-
-                if (file.size > maxSize) {
-                  setSizeAvatar(true)
-                  e.target.value = '';
-                  return;
+                if (file.size > 1024 * 1024) {
+                  setSizeAvatar(true);
+                  // e.target.value = '';
+                  // return;
+                }else{
+                  setSizeAvatar(false);
+                  // setAvatarFile(file);
+                  setAvatarPreview(URL.createObjectURL(file));
                 }
 
-                setSizeAvatar(false)
-                const url = URL.createObjectURL(file);
-                setAvatarPreview(url);
-
+                
               }}
               name="image"
               type="file"

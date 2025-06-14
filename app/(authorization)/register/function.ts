@@ -1,21 +1,16 @@
 "use server"
 
-import { v4 as uuidv4 } from 'uuid';
 import { signIn } from "@/config/auth/auth"
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/firebase";
 
 
-
 type State = {
     error: {
-        name?: true;
-        email?: true;
-        post?:true;
-        password?: true;
-        avatar?: true;
-        server?: true;
-    } | null;
+        server?: boolean;
+        email?: boolean;
+        post?: boolean;
+    } | null
 };
 
 
@@ -51,6 +46,7 @@ export async function uploadFile(data: DataType): Promise<string> {
                 },
                 async () => {
                     try {
+                        // reject(new Error(`Failed to get download URL:'Unknown error'}`));
                         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
                         resolve(downloadURL);
                     } catch (error) {
@@ -70,48 +66,18 @@ export async function uploadFile(data: DataType): Promise<string> {
     }
 }
 
+interface ServerFormData {
+    email:string,
+    password:string,
+    name:string,
+    image: string, 
+    connection_id:string
+};
 
-
-export async function handleRegister(formData: FormData): Promise<State>{
+export async function handleRegister(formData: ServerFormData): Promise<State>{
     "use server"
     try {
-        const email = formData.get("email") as string
-        const password = formData.get("password") as string
-        const name = formData.get('name') as string
-        const image = formData.get('image') as File | null
-        const errors: State["error"] = {};
-
-        const connection_id = uuidv4()
-        let resImage 
-
-        
-
-
-        if (image instanceof File && image.size > 0) {
-            try {
-                const avatar = await uploadFile({ image, connection_id });
-                resImage = avatar
-            } catch (uploadError) {
-                console.error("Upload error:", uploadError);
-                errors.avatar = true;
-            }
-        }        
-
-        if(!email || !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email)){
-            errors.email = true
-        }
-
-        if (!password || !/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{4,8}$/.test(password)) {
-            errors.password = true;
-        }
-
-        if (!name || !/^[A-Za-z0-9 ]{1,15}$/.test(name.trim())) {
-            errors.name = true;
-        }
-
-        if (Object.keys(errors).length > 0) {
-            return { error: errors };
-        }
+        const { email, image, name, password, connection_id} = formData
 
         const newUserData = {
             name,
@@ -120,7 +86,7 @@ export async function handleRegister(formData: FormData): Promise<State>{
             provider: 'credentials',
             connection_id,
             popular_config: [],
-            img: resImage,
+            img: image,
         }
 
         const res = await fetch("http://localhost:3000/api/user/credentials", {
@@ -138,7 +104,8 @@ export async function handleRegister(formData: FormData): Promise<State>{
         if (!res.ok) {
             return { error: { post: true } };
         }
-        return { error: null };
+
+        return { error:null };
     } catch (e) {
         console.log(e)
         return { error: { server: true } };
@@ -146,10 +113,11 @@ export async function handleRegister(formData: FormData): Promise<State>{
 }
 
 
-export async function registerAndSignIn(prevState: State, formData: FormData): Promise<State> {
+export async function registerAndSignIn(prevState: State, formData: ServerFormData): Promise<State> {
     'use server'
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+    // const email = formData.get("email") as string;
+    // const password = formData.get("password") as string;
+    const { email, password } = formData
 
     const result = await handleRegister(formData);  
     if (result.error) return result;
