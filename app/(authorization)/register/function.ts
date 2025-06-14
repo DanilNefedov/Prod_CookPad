@@ -88,7 +88,7 @@ export async function handleRegister(formData: ServerFormData): Promise<State>{
             img: image,
         }
 
-        const res = await fetch("http://localhost:3000/api/user/credentials", {
+        const res = await fetch(`${process.env.APP_MAIN_URL}/api/user/credentials`, {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json" 

@@ -47,7 +47,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (!credentials?.email || !credentials?.password) return null;
 
-        const url = `http://localhost:3000/api/user/credentials?email=${email}&provider=credentials`;
+        const url = `${process.env.APP_MAIN_URL}/api/user/credentials?email=${email}&provider=credentials`;
 
         const existingUserRes = await getCall(url);
         const userDb = await existingUserRes.json();
@@ -92,13 +92,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (account && (account.provider === 'google' || account.provider === 'discord')) {
         // await connectDB();
         // const existingUser = await User.findOne({ connection_id: account.providerAccountId });
-        const url = `https://prod-cook-pad.vercel.app/api/user?connection_id=${account.providerAccountId}`
-        // const url = `http://localhost:3000/api/user?connection_id=${account.providerAccountId}`
+        const url = `${process.env.APP_MAIN_URL}/api/user?connection_id=${account.providerAccountId}`
         const existingUser = await getCall(url)
         const { user } = await existingUser.json();
 
-        // console.log('existingUserexistingUserexistingUserexistingUser', existingUser)
-        // `http://localhost:3000/api/user?connection_id=${account.providerAccountId}`
         if (!user) {
           const isGoogle = account.provider === 'google';
           const dataUser = {
@@ -112,8 +109,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           
           try {
             const response = await postCall({
-              url: 'https://prod-cook-pad.vercel.app/api/user',
-              // url: 'http://localhost:3000/api/user',
+              url: `${process.env.APP_MAIN_URL}/api/user`,
               data: dataUser,
             });
             const responseData = await response.json();
@@ -124,8 +120,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
           try {
             const response = await postCall({
-              url: 'https://prod-cook-pad.vercel.app/api/cook/history',
-              // url: 'http://localhost:3000/api/cook/history',
+              url: `${process.env.APP_MAIN_URL}/api/cook/history`,
               data: {
                 connection_id:account.providerAccountId,
                 history_links:[]
