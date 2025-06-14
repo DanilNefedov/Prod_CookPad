@@ -104,8 +104,14 @@ h6 {
     font-size: inherit;
 }
 
-.wrapper {
+.over{
+    overflow: auto;
+}
+.non-over{
     overflow: hidden;
+}
+.wrapper {
+    
     display: flex;
     height: 100vh;
 }

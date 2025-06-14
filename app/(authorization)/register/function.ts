@@ -37,8 +37,8 @@ export async function uploadFile(data: DataType): Promise<string> {
             uploadTask.on(
                 'state_changed',
                 (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log('Upload is ' + progress + '% done');
+                    // const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    // console.log('Upload is ' + progress + '% done');
                 },
                 (error) => {
                     console.error('Upload failed:', error);
@@ -46,7 +46,6 @@ export async function uploadFile(data: DataType): Promise<string> {
                 },
                 async () => {
                     try {
-                        // reject(new Error(`Failed to get download URL:'Unknown error'}`));
                         const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
                         resolve(downloadURL);
                     } catch (error) {
@@ -115,13 +114,12 @@ export async function handleRegister(formData: ServerFormData): Promise<State>{
 
 export async function registerAndSignIn(prevState: State, formData: ServerFormData): Promise<State> {
     'use server'
-    // const email = formData.get("email") as string;
-    // const password = formData.get("password") as string;
     const { email, password } = formData
 
     const result = await handleRegister(formData);  
     if (result.error) return result;
 
+    console.log({ result, email, password })
     await signIn("credentials", {
         email,
         password,

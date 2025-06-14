@@ -104,7 +104,6 @@ export default function Register() {
   }
 
 
-  console.log(sizeAvatar, state)
   return (
 
     <>
@@ -200,7 +199,13 @@ export default function Register() {
         />
 
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '10px', position: 'relative', mb: '23px' }} >
-          <Typography variant="body1" sx={{ position: 'absolute', bottom: '-23px', left: 'calc(50% - 79px)', fontSize: '12px', color: sizeAvatar ? '#FF7269' : '#c2c6cf' }}>{'*JPG, PNG, SVG — max 1 MB'}</Typography>
+          <Typography variant="body1" sx={{ 
+            position: 'absolute', 
+            bottom: '-23px', 
+            left: 'calc(50% - 79px)', 
+            fontSize: '12px', 
+            color: sizeAvatar || stateData.image ? '#FF7269' : '#c2c6cf' }}
+          >{'*JPG, PNG, SVG — max 1 MB'}</Typography>
 
           <Avatar
             alt="User avatar"
