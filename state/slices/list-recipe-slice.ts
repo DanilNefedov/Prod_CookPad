@@ -110,7 +110,8 @@ export const newListRecipe = createAsyncThunk<void, NewListRecipeT, { rejectValu
             
             const dataList = await response.json()
 
-            // console.log(dataList)
+            // return dataList
+            console.log(dataList)
 
         } catch (error) {
             console.log(error)
@@ -407,9 +408,11 @@ const listRecipeSlice = createSlice({
         builder
             .addCase(newListRecipe.pending, newListRecipeHandlers.pending)
             .addCase(newListRecipe.rejected, newListRecipeHandlers.rejected)
-            .addCase(newListRecipe.fulfilled, (state) => {
+            .addCase(newListRecipe.fulfilled, (state, ) => {
                 state.operations.newListRecipe.error = false
                 state.operations.newListRecipe.loading = false
+
+                console.log()
             })
            
 
@@ -418,7 +421,7 @@ const listRecipeSlice = createSlice({
             .addCase(preLoaderMain.fulfilled, (state, action: PayloadAction<ReturnPreLoaderMain, string>) => {
                 state.operations.preLoaderMain.error = false
                 state.operations.preLoaderMain.loading = false
-                // console.log(action.payload)
+                console.log(action.payload)
                 const payload = action.payload
                 state.connection_id = payload.connection_id
                 

@@ -189,39 +189,39 @@ export function MainListRecipe() {
             }
 
             {
-                statusListRecipe && listRecipeStore.recipes.length === 0 && !preLoaderMainStatus.error ? 
-                <></>
+                !statusListRecipe && listRecipeStore.recipes.length > 0 ? 
+                <Button
+                    disabled={pageListRecipe === null ? true : false}
+                    sx={{
+                        ...styleLink, 
+                        backgroundColor:"primary.dark",
+                        display:'flex',
+                        alignItems:'center',
+                        width: '150px', 
+                        height: '32.5px', 
+                        m: '20px auto',
+                        color:'white',
+                        '@media (hover: hover) and (pointer: fine)': {
+                            "&:hover":{
+                                backgroundColor:"primary.main",
+                            },
+                        },
+                        [theme.breakpoints.down("md")]: {
+                            mt: '7px',
+                            mb: '7px',
+                            width: '90px'
+                        },
+                        [theme.breakpoints.down(500)]: {
+                            height: '28px'
+                        }
+                    }}
+                    onClick={() => handleMore()}
+                >More</Button>
                 :
-                statusListRecipe ? 
-                    <UXLoading position={'static'}></UXLoading>
-                    :
-                    <Button
-                        disabled={pageListRecipe === null ? true : false}
-                        sx={{
-                            ...styleLink, 
-                            backgroundColor:"primary.dark",
-                            display:'flex',
-                            alignItems:'center',
-                            width: '150px', 
-                            height: '32.5px', 
-                            m: '20px auto',
-                            color:'white',
-                            '@media (hover: hover) and (pointer: fine)': {
-                                "&:hover":{
-                                    backgroundColor:"primary.main",
-                                },
-                            },
-                            [theme.breakpoints.down("md")]: {
-                                mt: '7px',
-                                mb: '7px',
-                                width: '90px'
-                            },
-                            [theme.breakpoints.down(500)]: {
-                                height: '28px'
-                            }
-                        }}
-                        onClick={() => handleMore()}
-                    >More</Button>
+                statusListRecipe && listRecipeStore.recipes.length > 0 ?
+                <UXLoading position={'static'}></UXLoading>
+                :
+                <></>
             }
 
         </Box>

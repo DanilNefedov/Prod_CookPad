@@ -16,7 +16,7 @@ export function MainListPage() {
     const listStore = useAppSelector(state => state.list.list_ingr);
     const pageList = useAppSelector(state => state.list.page_list)
     const statusfetch = useAppSelector(state => state.list.operations.fetchList.loading)
-    const listStatus = useAppSelector(state => state.list.status)
+    // const listStatus = useAppSelector(state => state.list.status)
     const userStore = useAppSelector(state => state.user)
     const id = userStore?.user?.connection_id
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
@@ -58,8 +58,11 @@ export function MainListPage() {
         }
     }
 
+
     return (
         <>
+
+
             <Table sx={{
                 mb:'7px',
                 minWidth: '0', '& .MuiTableCell-root': {
@@ -83,14 +86,14 @@ export function MainListPage() {
 
 
                 <TableBody sx={{ overflow: 'auto', borderTop: '2px solid rgba(255, 0, 0, 0.12)' }}>
-                    {listStatus && listStore.length === 0 ?
+                    {statusfetch && listStore.length === 0 ?
                         <TableRow>
                             <TableCell sx={{ backgroundColor: 'transparent', border: '0' }}>
                                 <UXLoading ></UXLoading>{/* color:'#1F2128' */}
                             </TableCell>
                         </TableRow>
                         :
-                        !listStatus && listStore.length === 0 ?
+                        !statusfetch && listStore.length === 0 ?
                             <TableRow>
                                 <TableCell sx={{ backgroundColor: 'transparent', border: '0' }}>
                                     <EmptyInfo></EmptyInfo>
@@ -113,39 +116,40 @@ export function MainListPage() {
             </Table>
 
             {
-                listStatus && listStore.length === 0 ? 
-                <></>
+                !statusfetch && listStore.length > 0 ? 
+                <Button
+                    disabled={pageList === null ? true : false}
+                    sx={{
+                        ...styleLink, 
+                        backgroundColor:"primary.dark",
+                        display:'flex',
+                        alignItems:'center',
+                        width: '150px', 
+                        height: '32.5px', 
+                        m: '20px auto',
+                        color:'white',
+                        '@media (hover: hover) and (pointer: fine)': {
+                            "&:hover":{
+                                backgroundColor:"primary.main",
+                            },
+                        },
+                        [theme.breakpoints.down("md")]: {
+                            mt: '7px',
+                            mb: '7px',
+                            width: '90px'
+                        },
+                        [theme.breakpoints.down(500)]: {
+                            height: '28px'
+                        }
+                    }}
+                    onClick={() => handleMore()}
+                >More</Button>
                 :
-                statusfetch ? 
-                    <UXLoading position={'static'}></UXLoading>
-                    :
-                    <Button
-                        disabled={pageList === null ? true : false}
-                        sx={{
-                            ...styleLink, 
-                            backgroundColor:"primary.dark",
-                            display:'flex',
-                            alignItems:'center',
-                            width: '150px', 
-                            height: '32.5px', 
-                            m: '20px auto',
-                            color:'white',
-                            '@media (hover: hover) and (pointer: fine)': {
-                                "&:hover":{
-                                    backgroundColor:"primary.main",
-                                },
-                            },
-                            [theme.breakpoints.down("md")]: {
-                                mt: '7px',
-                                mb: '7px',
-                                width: '90px'
-                            },
-                            [theme.breakpoints.down(500)]: {
-                                height: '28px'
-                            }
-                        }}
-                        onClick={() => handleMore()}
-                    >More</Button>
+                statusfetch && listStore.length > 0 ?
+                <UXLoading position={'static'}></UXLoading>
+                :
+                <></>
+                
             }
             
         </>

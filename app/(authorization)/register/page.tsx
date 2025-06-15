@@ -22,7 +22,8 @@ interface StateData {
 
 
 export default function Register() {
-  const [state, formAction, isPending] = useActionState(registerAndSignIn, { error: null })
+  const [state, formAction] = useActionState(registerAndSignIn, { error: null })
+  const [isLoading, setIsLoading] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [sizeAvatar, setSizeAvatar] = useState<boolean>(false)
   const [stateData, setStateData] = useState<StateData>({
@@ -34,6 +35,7 @@ export default function Register() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setIsLoading(true)
 
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email")?.toString().trim() as string;
@@ -52,6 +54,7 @@ export default function Register() {
     const hasError = Object.values(errors).some(Boolean);
     if (hasError) {
       setStateData(errors);
+      setIsLoading(false);
       return;
     }
 
@@ -68,6 +71,7 @@ export default function Register() {
 
     if (errors.image) {
       setStateData(prev => ({ ...prev, ...errors }));
+      setIsLoading(false);
       return;
     }
 
@@ -81,17 +85,18 @@ export default function Register() {
 
     startTransition(() => {
       formAction(serverFormData);
+      setIsLoading(false);
     });
     // await formAction(serverFormData);
 
   }
 
-
+  console.log(isLoading)
   return (
 
     <>
       {
-        isPending ?
+        isLoading ?
           <Box sx={{ position: 'absolute', top: '0', bottom: '0', width: '100%', height: '100%', zIndex: '9999', bgcolor: 'rgba(0, 0, 0, 0.5)' }}>
             <UXLoading></UXLoading>
           </Box>

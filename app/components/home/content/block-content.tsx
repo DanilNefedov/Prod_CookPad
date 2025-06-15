@@ -52,13 +52,20 @@ export function BlockContent() {
           <EmptyInfo></EmptyInfo> 
           <Button component={Link} href="/new-recipe"
              
-            sx={{
+            sx={[styleLink, {
               bgcolor:'background.default',
               position: 'absolute',
               top: '65%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-            }}
+              transition:"0.3s",
+              '@media (hover: hover) and (pointer: fine)': {
+                  '&:hover': {
+                    backgroundColor: 'primary.main',
+                    color:'text.primary'
+                  },
+              },
+            }]}
           >
             Create a new
           </Button>
