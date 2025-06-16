@@ -61,19 +61,18 @@ export async function POST(request: Request) {
 
         await newListRecipe.save();
 
-        console.log(newListRecipe)
 
-        // {
-        //     _id:recipe._id,
-        //     recipe_id: recipe.recipe_id,
-        //     recipe_name: recipe.recipe_name,
-        //     recipe_media: recipe.recipe_media, 
-        //     recipe_shop: recipe.recipe_shop,
-        //     ingredients_list: [] 
-        // }
+        const returnData = {
+            _id:newListRecipe._id,
+            recipe_id: newListRecipe.recipe.recipe_id,
+            recipe_name: newListRecipe.recipe.recipe_name,
+            recipe_media: newListRecipe.recipe.recipe_media, 
+            recipe_shop: newListRecipe.recipe.recipe_shop,
+            ingredients_list: [] 
+        }
 
         return NextResponse.json(
-            {data: newListRecipe},
+            {data: returnData},
             { status: 201 }
         );
 

@@ -91,7 +91,7 @@ export const preLoaderMain = createAsyncThunk<ReturnPreLoaderMain, {connection_i
 
 
 
-export const newListRecipe = createAsyncThunk<void, NewListRecipeT, { rejectValue: string }>(
+export const newListRecipe = createAsyncThunk<TempalteRecipeForList, NewListRecipeT, { rejectValue: string }>(
     'listRecipe/newListRecipe',
     async function (data, { rejectWithValue }) {
         try {
@@ -110,8 +110,7 @@ export const newListRecipe = createAsyncThunk<void, NewListRecipeT, { rejectValu
             
             const dataList = await response.json()
 
-            // return dataList
-            console.log(dataList)
+            return dataList.data
 
         } catch (error) {
             console.log(error)
@@ -408,11 +407,18 @@ const listRecipeSlice = createSlice({
         builder
             .addCase(newListRecipe.pending, newListRecipeHandlers.pending)
             .addCase(newListRecipe.rejected, newListRecipeHandlers.rejected)
-            .addCase(newListRecipe.fulfilled, (state, ) => {
+            .addCase(newListRecipe.fulfilled, (state, action: PayloadAction<TempalteRecipeForList, string>) => {
                 state.operations.newListRecipe.error = false
                 state.operations.newListRecipe.loading = false
 
-                console.log()
+                const payload = action.payload
+                
+                const alreadyExists = state.recipes.some(recipe => recipe._id === payload._id);
+
+                if (!alreadyExists) {
+                    state.recipes.push(payload);
+                }
+
             })
            
 
