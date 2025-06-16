@@ -3,7 +3,7 @@ import "./globals.css";
 import { Roboto } from 'next/font/google'
 import { ProviderStore } from "@/state/provider-store";
 import { ProviderAuth } from "@/config/auth/provider-auth";
-import { headers } from "next/headers";
+import WrapperLayout from "./wrapper-layout";
 
 
 const IBM = Roboto({
@@ -44,26 +44,17 @@ export const metadata = {
 
 
 export default async function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
-  const headersList = await headers();
-  const fullUrl = headersList.get('x-url') || headersList.get('referer')
-
-  let pathname = '';
-  if (fullUrl) {
-    const url = new URL(fullUrl);
-    pathname = url.pathname; 
-  }
-
+  
   return (
     <html lang="en">
       <body suppressHydrationWarning={true} className={IBM.className}>
         <ThemeRegistry options={{ key: 'mui' }}>
           <ProviderStore>
             <ProviderAuth>
-              <div className={pathname === '/register' || pathname === '/login' ? 'wrapper over' :  'wrapper non-over'}>
+              <WrapperLayout>
                 {children}
-              </div>
+              </WrapperLayout>
             </ProviderAuth>
-
           </ProviderStore>
         </ThemeRegistry>
       </body>

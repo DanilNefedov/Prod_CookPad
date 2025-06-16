@@ -29,6 +29,7 @@ export function LogOut() {
             ml:'0px',
             p:'5px',
             borderRadius:'0 20px 20px 0',
+            width:'40px',
             '& span':{
                 display:'none'
             }
