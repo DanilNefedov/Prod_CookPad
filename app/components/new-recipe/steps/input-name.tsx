@@ -40,7 +40,7 @@ export const NameInput = memo(() => {
             value={nameTimeState}
             type="text"
             onKeyDown={(e) => {
-                if (['-', '+', 'e'].includes(e.key)) {
+                if (['-', '+'].includes(e.key)) {
                     e.preventDefault();
                 }
             }}

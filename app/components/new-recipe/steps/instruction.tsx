@@ -25,7 +25,7 @@ export function Instruction() {
     function handleInstruction(e: ChangeEvent<HTMLInputElement>) {
         const newValue = e.target.value;
 
-        if (newValue.length <= 150) {
+        if (newValue.length <= 300) {
             dispatch(setInstruction(e.target.value))
             dispatch(updateError({ step: numbStep, error: false }));
 
