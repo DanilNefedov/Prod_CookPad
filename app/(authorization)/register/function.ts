@@ -88,7 +88,7 @@ export async function handleRegister(formData: ServerFormData): Promise<State>{
             img: image,
         }
 
-        const res = await fetch(`${process.env.APP_MAIN_URL}/api/user/credentials`, {
+        const responseUser = await fetch(`${process.env.APP_MAIN_URL}/api/user/credentials`, {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json" 
@@ -96,14 +96,30 @@ export async function handleRegister(formData: ServerFormData): Promise<State>{
             body: JSON.stringify(newUserData),
         })
 
-        if (res.status === 409) {
+        if (responseUser.status === 409) {
             return { error: { email: true } };
         }
 
-        if (!res.ok) {
+        if (!responseUser.ok) {
             return { error: { post: true } };
         }
 
+        const responseHistory = await fetch(`${process.env.APP_MAIN_URL}/api/cook/history`, {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json" 
+            },
+            body: JSON.stringify({
+                connection_id:connection_id,
+                history_links:[]
+            }),
+        })
+
+        if (!responseHistory.ok) {
+            console.log('history error')
+            return { error: { server: true } };
+        }
+       
         return { error:null };
     } catch (e) {
         console.log(e)

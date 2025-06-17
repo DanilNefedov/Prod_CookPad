@@ -58,6 +58,7 @@ export function MainListPage() {
         }
     }
 
+    console.log(listStore)
 
     return (
         <>

@@ -67,7 +67,7 @@ const MainTableBody = memo(({ props }: { props: DataProps }) => {
             }}>
                 <TableCell onClick={() => { if (isMobile) handleToggle(thisIngredient._id) }} sx={{ width: '73px', [theme.breakpoints.down(1050)]: { width: '30px' }, }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Box component={'img'} src={thisIngredient.media !== '' ? thisIngredient.media : 'images/load-ingr.svg'} alt={thisIngredient.name} sx={imgIngrList}></Box>
+                        <Box component={'img'} src={thisIngredient.media !== '' ? thisIngredient.media : '/images/load-ingr.svg'} alt={thisIngredient.name} sx={imgIngrList}></Box>
                     </Box>
                 </TableCell>
                 <TableCell onClick={() => { if (isMobile) handleToggle(thisIngredient._id) }} sx={{
