@@ -476,12 +476,9 @@ const listSlice = createSlice({
                 state.operations.newIngredientList.loading = false
 
                 const data = action.payload;
-
                 const thisIngr = state.list_ingr.find(el => el._id === data._id)
-                if(state.list_ingr.length > 0 && !thisIngr){
+                if(state.list_ingr && !thisIngr){
                     state.list_ingr.push(data)
-                    
-
                 }
             })
 
