@@ -11,6 +11,7 @@ import { VisuallyHiddenInput } from "@/app/(main)/new-recipe/style";
 import { UXLoading } from "@/app/components/ux-helpers/loading";
 import { v4 as uuidv4 } from 'uuid';
 import { regiterIntup } from "../style";
+import { ModalInfo } from "../modal-info";
 
 
 interface StateData {
@@ -109,7 +110,7 @@ export default function Register() {
         onSubmit={handleSubmit}
       >
 
-
+        
         {/* {state.error && ( */}
           <Box sx={{ color: '#FF7269', textAlign: 'center' }}>
             {(state.error?.server || state.error?.post) && <>Whoa, something`s wrong.<br />Check the data or the connection.</>}
@@ -123,12 +124,17 @@ export default function Register() {
         {/* )} */}
 
 
-        <Typography
-          sx={{ textAlign: "center", fontWeight: "600", padding: "15px 0", fontSize: "1.2rem" }}
-          color="text.primary"
-        >
-          Register with email
-        </Typography>
+        <Box sx={{display:'flex', alignItems:'center', gap:'20px', justifyContent:'center'}}>
+          <Typography
+            sx={{ textAlign: "center", fontWeight: "600", padding: "15px 0", fontSize: "1.2rem" }}
+            color="text.primary"
+          >
+            Register with your email
+          </Typography>
+          <ModalInfo></ModalInfo>
+
+        </Box>
+        
 
         <TextField
           margin="normal"

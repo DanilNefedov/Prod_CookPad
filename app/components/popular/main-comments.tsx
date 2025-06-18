@@ -26,6 +26,12 @@ export interface LikeT {
 }
 export const MainComments = memo(({ config_id, comments }: dataProps) => {
     const userData = useAppSelector(state => state.user);
+    const replyLength = useAppSelector(state =>
+        Object.values(state.comments.replies).reduce((sum, replyData) => {
+            return sum + replyData.ids.length;
+        }, 0)
+    );
+
     const connection_id = userData?.user?.connection_id;
     const dispatch = useAppDispatch();
     const pingGate = usePingGate()
@@ -156,9 +162,6 @@ export const MainComments = memo(({ config_id, comments }: dataProps) => {
     }, [connection_id, config_id, dispatch, contextComment, userData]);
 
 
-
-
-
     return (
         <Box sx={mainCommentContainer}>
             <Typography sx={{textAlign:'center', p:'7px 0', fontSize:'14px', color:"text.disabled"}}>Total {comments}</Typography>
@@ -172,7 +175,7 @@ export const MainComments = memo(({ config_id, comments }: dataProps) => {
                     dataLength={commentsData.ids.length}
                     next={fetchMoreComments}
                     hasMore={!Number.isNaN(commentsData.page) &&
-                            commentsData.ids.length < comments}
+                            commentsData.ids.length < (comments - replyLength)}
                     loader={
                         <div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
                             <CircularProgress color="secondary" size="35px" />

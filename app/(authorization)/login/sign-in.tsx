@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { regiterIntup } from "../style";
 import { UXLoading } from "@/app/components/ux-helpers/loading";
+import { ModalInfo } from "../modal-info";
 
 
 
@@ -46,18 +47,23 @@ export function SignInForm() {
                 style={{ width: '100%', marginTop: '20px' }}
                 action={formAction}
             >
-            
+                
+
                 {state.error && (
                     <Box sx={{ color: '#FF7269', textAlign: 'center' }}>
                         Check the data you have entered. You may not be registered yet.<br />
                     </Box>
-                )}
-                <Typography
-                    sx={{ textAlign: "center", fontWeight: "600", padding: "15px 0", fontSize: "1.2rem" }}
-                    color="text.primary"
-                >
-                    Or sign in with email
-                </Typography>
+                )} 
+                <Box sx={{display:'flex', alignItems:'center', gap:'20px', justifyContent:'center'}}>
+                    <Typography
+                        sx={{ textAlign: "center", fontWeight: "600", padding: "15px 0", fontSize: "1.2rem" }}
+                        color="text.primary"
+                    >
+                        Or sign in with email
+                    </Typography>
+                    <ModalInfo></ModalInfo>
+                </Box>
+                
 
                 <TextField
                     margin="normal"

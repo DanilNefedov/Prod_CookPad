@@ -42,14 +42,14 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
 
       
     function changeAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        const newValue = e.target.value.trim();
+        const newValue = e.target.value;
 
         const resValue = handleAmountChange(newValue)
         // if (newValue === '' || (newValue.length <= 5 && parseFloat(newValue) >= 0)) {
             dispatch(
                 ingredientAmount({
                     ingredient_id: ingredient.ingredient_id,
-                    amount: resValue === '' ? 0 : parseFloat(resValue),
+                    amount: parseFloat(resValue),//resValue === '' ? 0 :
                 })
             );
         // }
@@ -129,7 +129,7 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
                         e.preventDefault();
                     }
                 }}
-                value={'list' in ingredient.units && ingredient.units.amount !== 0 ? ingredient.units.amount : '0'}//
+                value={('list' in ingredient.units && ingredient.units.amount !== 0) && ingredient.units.amount}//
                 onChange={(e) => changeAmount(e)}
                 sx={{
                     ...secondTextInput,

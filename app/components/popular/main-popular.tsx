@@ -146,8 +146,17 @@ export function MainPopular() {
     return (
         <>
             <Card
-                onClick={() => {
-                    if (openComment) setOpenComment(false);
+                onClick={(event) => {
+                    if( window.innerWidth <= 768 &&
+                        openComment &&
+                        commentRef.current &&
+                        !commentRef.current.contains(event.target as Node)
+                    ){
+                        setOpenComment(false);
+                    }
+
+
+                    // if (openComment) setOpenComment(false);
                 }}
                 sx={(theme) => mainCardContent(theme, openInfo)}
             >
@@ -288,7 +297,13 @@ export function MainPopular() {
                 sx={(theme) => mainContainerInfoComments(theme, openInfo, openComment)}>
 
                 <Box
-                    onClick={() => setOpenInfo(!openInfo)}
+                    onClick={() => {
+                        if(openInfo && openComment){
+                            setOpenComment(false)
+                        }
+                        setOpenInfo(!openInfo)
+                        
+                    }}
                     sx={btnOpenInfoMobile}>
                     <KeyboardArrowLeftIcon sx={{
                         width: "35px",
