@@ -8,8 +8,8 @@ import { Dispatch, SetStateAction, } from "react";
 
 interface PropsData { 
     recipe_id: string, 
-    isDeleting:boolean, 
-    setIsDeleting:Dispatch<SetStateAction<boolean>>,
+    isDeleting?:boolean, 
+    setIsDeleting?:Dispatch<SetStateAction<boolean>>,
 }
 
 
@@ -22,7 +22,10 @@ export function DeleteButton ({ recipe_id, isDeleting, setIsDeleting }: PropsDat
     function handleDeleteRecipe(recipe_id: string) {
         if (!recipe_id) return;
 
-        setIsDeleting(true); 
+        if(setIsDeleting){
+            setIsDeleting(true); 
+        }
+
         dispatch(deleteCookHistory({ connection_id: connectionId, recipe_id }));
     }
     console.log('DeleteButton')

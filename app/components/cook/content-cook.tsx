@@ -3,7 +3,7 @@
 import { containerContentRecipe } from "@/app/(main)/cook/[recipe_id]/styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { setFavoriteRecipe } from "@/state/slices/recipe-slice";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { favoriteBtnActive, favoriteBtnDesactive } from "@/app/(main)/home/style";
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -23,6 +23,7 @@ import { usePathname } from "next/navigation";
 import { theme } from "@/config/ThemeMUI/theme";
 import { IngredientSwiper } from "./ingredient-swiper";
 import dynamic from "next/dynamic";
+import { DeleteButton } from "./delete";
 
 
 const SwiperMediaCook = dynamic(() => import('./swiper-media'), {
@@ -36,7 +37,8 @@ export function ContentCook() {
     const cookStore = useAppSelector(state => state.cook)
     const userStore = useAppSelector(state => state.user)
     const favoriteStatus = useAppSelector(state => state.recipe.operations.setFavoriteRecipe.loading)
-    
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
     const pathName = usePathname()
 
     const segments = pathName.split("/");
@@ -69,9 +71,19 @@ export function ContentCook() {
         <Box sx={containerContentRecipe}>
             <Box sx={{
                 height: '100%', overflow: 'auto', [theme.breakpoints.down("md")]: {
-                    p: '5px 15px'
+                    p: '5px 15px',
+                    overflow: 'hidden',
+                    position:'relative'
                 }
             }}>
+                {isMobile &&
+                    <DeleteButton
+                        recipe_id={recipe_id}
+                        // isDeleting={isDeleting}
+                        // setIsDeleting={setIsDeleting}
+                    />
+                }
+
                 <Box sx={{
                     display: 'flex', height: 'auto', justifyContent: 'center', gap: '10px',
                     '& .swiper':{

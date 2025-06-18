@@ -116,8 +116,8 @@ export const favoriteBtnActive ={
     //     color: 'primary.main' 
     // },
     [theme.breakpoints.down("md")]: {
-        height:'17px',
-        width:'19px'
+        height:'20px',
+        width:'20px'
     }, 
 }
 
@@ -129,8 +129,8 @@ export const favoriteBtnDesactive = {
         },
     },
     [theme.breakpoints.down("md")]: {
-        height:'17px',
-        width:'19px'
+        height:'20px',
+        width:'20px'
     }, 
 }
 

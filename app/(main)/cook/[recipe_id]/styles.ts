@@ -4,6 +4,11 @@ export const mainBoxCook = {
     display: 'flex',
     height: 'calc(100dvh - 20px)',
     m: '10px 0',
+    
+    [theme.breakpoints.down("md")]: {
+        flexDirection:'column',
+        overflow:'auto',
+    }
 }
 
 
@@ -15,7 +20,14 @@ export const headerCook = {
     boxShadow: 'none',
     maxWidth:'200px',
     width: '100%',
-    padding:'10px 3px 10px 15px'
+    padding:'10px 3px 10px 15px',
+
+
+    [theme.breakpoints.down("md")]: {
+        padding:'0 3px 0 0',
+        maxWidth:'100%',
+        bgcolor: 'transparent',
+    }
 }
 
 
@@ -29,7 +41,13 @@ export const scrollBox = {
     scrollbarColor: "#353842 #1F2128",
     pr: '10px',
     width: '100%',
-    height:'100%'
+    height:'100%',
+
+    [theme.breakpoints.down("md")]: {
+        flexDirection: 'initial',
+        overflowY: 'hidden',
+        gap:'20px',
+    }
 }
 
 
@@ -53,6 +71,12 @@ export const btnsCookHeader = {
     maxWidth: '120px',
     '& .MuiButtonBase-root': {
         textAlign: 'center'
+    },
+
+    [theme.breakpoints.down("md")]: {
+        // bgcolor: 'background.default',
+        
+        m: '0',
     }
 }
 
@@ -70,6 +94,14 @@ export const deleteHeaderCook = {
             color: '#fff'
         }
     },
+
+    [theme.breakpoints.down("md")]: {
+        position:'absolute',
+        top:'0',
+        right:'0',
+        width: '35px',
+        height: '35px',
+    }
 
 }
 
@@ -134,7 +166,10 @@ export const containerContentRecipe = {
     p:'10px',
     
     [theme.breakpoints.down("md")]: {
-        width:'calc(100% - 50px)',
+        // width:'calc(100% - 50px)',
+        width:'100%',
+        ml:"0px",
+        mt:'20px'
     }
 }
 

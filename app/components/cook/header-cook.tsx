@@ -3,12 +3,13 @@
 import { btnsCookHeader, } from "@/app/(main)/cook/[recipe_id]/styles";
 import { btnMain } from "@/app/main-styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { Box, Button } from "@mui/material";
+import { Box, Button, useMediaQuery } from "@mui/material";
 import Link from "next/link";
 import { DeleteButton } from "./delete";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {  useEffect, useState } from "react";
 import { fetchHistoryCook, } from "@/state/slices/cook-history";
+import { theme } from "@/config/ThemeMUI/theme";
 
 
 
@@ -25,6 +26,7 @@ export function HeaderCook() {
     const recipe_id = segments[2];
     const searchParams = useSearchParams();
     const recipeName = searchParams.get("name") ?? '';
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -35,7 +37,7 @@ export function HeaderCook() {
     }, [userStore.user.connection_id, dispatch, recipeName, recipe_id]);
 
     useEffect(() => {
-        if (!isDeleting) return; 
+        if (!isDeleting && !isMobile) return; 
 
         const updatedLinks = cookHistoryStore;
 
@@ -71,18 +73,21 @@ export function HeaderCook() {
                     sx={{
                         ...btnMain, ...btnsCookHeader,
                         color: recipe_id === el.recipe_id ? 'text.primary' : 'text.secondary',
-                        backgroundColor: recipe_id === el.recipe_id ? 'primary' : 'secondary.main'
+                        backgroundColor: recipe_id === el.recipe_id ? 'primary' : 'background.default'
                     }}
                     disabled={isDeleting}
                 >
                     {el.recipe_name}
                 </Button>
 
-                <DeleteButton
-                    recipe_id={el.recipe_id}
-                    isDeleting={isDeleting}
-                    setIsDeleting={setIsDeleting}
-                />
+                {!isMobile &&
+                    <DeleteButton
+                        recipe_id={el.recipe_id}
+                        isDeleting={isDeleting}
+                        setIsDeleting={setIsDeleting}
+                    />
+                }
+                
             </Box>
         )))
     );

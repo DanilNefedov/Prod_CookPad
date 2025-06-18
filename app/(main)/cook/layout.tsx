@@ -10,18 +10,18 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
     return (
         <AlertsProvider sliceKeys={['cookHistory', 'cook', 'recipe', 'list']}> 
             <Box sx={mainBoxCook}>
-                <Box sx={{ ...headerCook, display: { xs: "none", md: "block" } }}>
+                <Box sx={{ ...headerCook, display: { xs: "block", md: "block" } }}>
                     <Box sx={scrollBox}>
                         <HeaderCook />
                     </Box>
                 </Box>
 
-                <Box sx={{
+                {/* <Box sx={{
                     display: { xs: "block", md: "none" },
                     backgroundColor: 'transparent'
                 }}>
                     <AdaptiveHeader></AdaptiveHeader>
-                </Box>
+                </Box> */}
                 {children}
             </Box>
         </AlertsProvider>
