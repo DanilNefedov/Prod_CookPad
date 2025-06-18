@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import _ from 'lodash';
 import RecipePopularConfig from "@/app/models/popular-config";
+import { PipelineStage } from "mongoose";
 
 
 
@@ -138,12 +139,29 @@ export async function POST(request: Request) {
             return NextResponse.json({ message: 'User data not found' }, { status: 404 });
         }
 
-        const formattedGetAllIds = getAllIds !== null ? getAllIds.map((id:string) => new mongoose.Types.ObjectId(id)) : [];
+        const formattedGetAllIds = getAllIds !== null
+        ? getAllIds.map((id: string) => new mongoose.Types.ObjectId(id))
+        : [];
+
+        const totalDocsCount = await RecipePopularConfig.countDocuments();
+
+        let matchStage: PipelineStage[] = [];
+
+        if (formattedGetAllIds.length < totalDocsCount) {
+            matchStage = [{ $match: { _id: { $nin: formattedGetAllIds } } }];
+        }
 
         const list = await RecipePopularConfig.aggregate([
-            ...(formattedGetAllIds.length > 0 ? [{ $match: { _id: { $nin: formattedGetAllIds } } }] : []),
+            ...matchStage,
             { $sample: { size: 200 } }
-        ])
+        ]);
+
+        // const formattedGetAllIds = getAllIds !== null ? getAllIds.map((id:string) => new mongoose.Types.ObjectId(id)) : [];
+        // const list = await RecipePopularConfig.aggregate([
+        //     ...(formattedGetAllIds.length > 0 ? [{ $match: { _id: { $nin: formattedGetAllIds } } }] : []),
+        //     { $sample: { size: 200 } }
+        // ])
+
 
         const sortedByCateries = getSortingByCategory(list, userData.popular_config);
         const fullSorted = orderByUsersImpact(sortedByCateries, +count);

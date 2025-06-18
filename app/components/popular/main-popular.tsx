@@ -46,8 +46,6 @@ export function MainPopular() {
     const pingGate = usePingGate()
     const [hasFetched, setHasFetched] = useState(false);
     const isFetching = useAppSelector(state => state.popular.operations.popularFetch.loading)
-    // const [isFetching, setIsFetching] = useState(false);
-    // const initialFetchDone = useRef(false);
 
 
     useEffect(() => {        
@@ -75,31 +73,14 @@ export function MainPopular() {
     useEffect(() => {
         if (!connection_id || errorPopular?.error) return;//|| initialFetchDone.current
 
-        // setIsFetching(true);
-        // initialFetchDone.current = true;
         pingGate(() => {
             dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
                 .finally(() => {
                     setHasFetched(true);
-                    // setIsFetching(false);
                 });
         });
     }, [connection_id, errorPopular?.error]);
 
-    // useEffect(() => {
-    //     if (!connection_id || hasFetched || initialFetchDone.current || !errorPopular) return;
-
-    //     initialFetchDone.current = true;
-    //     setIsFetching(true);
-
-    //     pingGate(() => {
-    //         dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
-    //             .finally(() => {
-    //                 setHasFetched(true);
-    //                 setIsFetching(false);
-    //             });
-    //     });
-    // }, [connection_id, hasFetched]);
 
     useEffect(() => {
         if (popularData.pop_list.length > 0 || !errorPopular) {
@@ -112,19 +93,6 @@ export function MainPopular() {
   
 
     useEffect(() => {
-        // const listLength = popularData.pop_list.length;
-
-        // if (
-        //     activeVideo >= listLength - 2 &&
-        //     // hasFetched &&
-        //     !isFetching &&
-        //     listLength - activeVideo < 5 && 
-        //     !errorPopular.error
-        // ) {
-        //     console.log('212')
-        //     handleNewVideo();
-        // }
-
         const current = popularData.pop_list[activeVideo];
         if ((current && !viewedVideos.current.has(current.config_id)) || !errorPopular) {
             viewedVideos.current.add(current.config_id);
@@ -132,23 +100,18 @@ export function MainPopular() {
         }
     }, [activeVideo, popularData.pop_list.length, hasFetched, isFetching]);
 
-    console.log((activeVideo >= popularData.pop_list.length - 2 && !isFetching && popularData.pop_list.length - activeVideo < 5 && !errorPopular.error))// hasFetched &&
 
     function handleNewVideo() {
         if (isFetching || errorPopular.error) return;
-        // setIsFetching(true);
 
         pingGate(() => {
-            if (connection_id && popularData.pop_list.length >= 5) {
+            if (connection_id ) {//&& popularData.pop_list.length >= 5
                 dispatch(popularFetch({
                     connection_id,
                     count: 1,
                     getAllIds: popularData.pop_list.map(item => item.config_id)
                 }))
-                    // .finally(() => setIsFetching(false));
-            } else {
-                // setIsFetching(false);
-            }
+            } 
         });
     }
 
