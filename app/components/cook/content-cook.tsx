@@ -3,7 +3,7 @@
 import { containerContentRecipe } from "@/app/(main)/cook/[recipe_id]/styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { setFavoriteRecipe } from "@/state/slices/recipe-slice";
-import { Box, IconButton, Typography, useMediaQuery } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { favoriteBtnActive, favoriteBtnDesactive } from "@/app/(main)/home/style";
 import { Swiper, SwiperSlide } from 'swiper/react';

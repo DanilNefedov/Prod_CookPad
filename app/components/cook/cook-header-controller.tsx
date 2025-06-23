@@ -10,8 +10,16 @@ import { HeaderCook } from "./header-cook";
 import { Box, useMediaQuery } from "@mui/material";
 import { theme } from "@/config/ThemeMUI/theme";
 import { headerCook, scrollBox } from "@/app/(main)/cook/[recipe_id]/styles";
+import { NameLinksT } from "@/app/types/types";
 
-
+export interface HeaderProps {
+    isDeleting:boolean,
+    cookHistoryStore: NameLinksT[];
+    recipe_id: string;
+    open: boolean;
+    toggleDrawer: (v: boolean) => () => void;
+    handleDeleteRecipe: (id: string) => void;
+}
 
 export function CookHeaderController() {
     const cookHistoryStore = useAppSelector(state => state.cookHistory.history_links);

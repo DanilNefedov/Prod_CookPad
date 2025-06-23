@@ -3,22 +3,13 @@
 import { btnsCookHeader, deleteHeaderCook, } from "@/app/(main)/cook/[recipe_id]/styles";
 import { Box, Button, } from "@mui/material";
 import Link from "next/link";
-import { NameLinksT } from "@/app/types/types";
 import ClearIcon from '@mui/icons-material/Clear';
+import { HeaderProps } from "./cook-header-controller";
 
 
 
-interface AdaptiveHeaderProps {
-    isDeleting:boolean,
-    cookHistoryStore: NameLinksT[];
-    recipe_id: string;
-    open: boolean;
-    toggleDrawer: (v: boolean) => () => void;
-    handleDeleteRecipe: (id: string) => void;
-}
 
-
-export function HeaderCook({cookHistoryStore, recipe_id, open, toggleDrawer, handleDeleteRecipe, isDeleting}: AdaptiveHeaderProps)  {
+export function HeaderCook({cookHistoryStore, recipe_id, handleDeleteRecipe, isDeleting}: HeaderProps)  {
 
     
     return (

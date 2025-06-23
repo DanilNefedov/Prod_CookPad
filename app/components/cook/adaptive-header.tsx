@@ -4,8 +4,8 @@ import { Box, Chip, ListItem, styled, SwipeableDrawer } from "@mui/material"
 import { useRef } from "react";
 import { theme } from "@/config/ThemeMUI/theme";
 import { grey } from "@mui/material/colors";
-import { NameLinksT } from "@/app/types/types";
 import Link from "next/link";
+import { HeaderProps } from "./cook-header-controller";
 
 
 
@@ -22,16 +22,9 @@ const Puller = styled('div')(({ theme }) => ({
     }),
 }));
 
-interface AdaptiveHeaderProps {
-    isDeleting:boolean,
-    cookHistoryStore: NameLinksT[];
-    recipe_id: string;
-    open: boolean;
-    toggleDrawer: (v: boolean) => () => void;
-    handleDeleteRecipe: (id: string) => void;
-}
 
-export function AdaptiveHeader({cookHistoryStore, recipe_id, open, toggleDrawer, handleDeleteRecipe, isDeleting,}: AdaptiveHeaderProps) {
+
+export function AdaptiveHeader({cookHistoryStore, recipe_id, open, toggleDrawer, handleDeleteRecipe, isDeleting,}: HeaderProps) {
     const boxRef = useRef(null)
 
     return (
