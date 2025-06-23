@@ -36,7 +36,7 @@ export function Ingredients() {
     }, [openPage, stepperState.ingredients]);
     
 
-
+    
     return (
         <Container sx={{
             p: '20px 10px', '&.MuiContainer-root': {
