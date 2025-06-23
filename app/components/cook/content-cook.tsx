@@ -23,7 +23,6 @@ import { usePathname } from "next/navigation";
 import { theme } from "@/config/ThemeMUI/theme";
 import { IngredientSwiper } from "./ingredient-swiper";
 import dynamic from "next/dynamic";
-import { DeleteButton } from "./delete";
 
 
 const SwiperMediaCook = dynamic(() => import('./swiper-media'), {
@@ -37,7 +36,6 @@ export function ContentCook() {
     const cookStore = useAppSelector(state => state.cook)
     const userStore = useAppSelector(state => state.user)
     const favoriteStatus = useAppSelector(state => state.recipe.operations.setFavoriteRecipe.loading)
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const pathName = usePathname()
 
@@ -76,19 +74,14 @@ export function ContentCook() {
                     position:'relative'
                 }
             }}>
-                {isMobile &&
-                    <DeleteButton
-                        recipe_id={recipe_id}
-                        // isDeleting={isDeleting}
-                        // setIsDeleting={setIsDeleting}
-                    />
-                }
+            
 
                 <Box sx={{
                     display: 'flex', height: 'auto', justifyContent: 'center', gap: '10px',
                     '& .swiper':{
                         marginLeft: 0,
                         marginRight: 0,
+                        m:'0 auto'
                     },
                     [theme.breakpoints.down(700)]: {
                         display: 'block',

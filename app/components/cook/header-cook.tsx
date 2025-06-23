@@ -1,92 +1,50 @@
 'use client'
 
-import { btnsCookHeader, } from "@/app/(main)/cook/[recipe_id]/styles";
-import { btnMain } from "@/app/main-styles";
-import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { Box, Button, useMediaQuery } from "@mui/material";
+import { btnsCookHeader, deleteHeaderCook, } from "@/app/(main)/cook/[recipe_id]/styles";
+import { Box, Button, } from "@mui/material";
 import Link from "next/link";
-import { DeleteButton } from "./delete";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import {  useEffect, useState } from "react";
-import { fetchHistoryCook, } from "@/state/slices/cook-history";
-import { theme } from "@/config/ThemeMUI/theme";
+import { NameLinksT } from "@/app/types/types";
+import ClearIcon from '@mui/icons-material/Clear';
 
 
 
-// export const HeaderCook = memo(() => {
+interface AdaptiveHeaderProps {
+    isDeleting:boolean,
+    cookHistoryStore: NameLinksT[];
+    recipe_id: string;
+    open: boolean;
+    toggleDrawer: (v: boolean) => () => void;
+    handleDeleteRecipe: (id: string) => void;
+}
 
-export function HeaderCook() {
-    
-    const cookHistoryStore = useAppSelector(state => state.cookHistory.history_links);
-    const userStore = useAppSelector(state => state.user);
-    const dispatch = useAppDispatch();
-    const router = useRouter();
-    const pathName = usePathname();
-    const segments = pathName.split("/");
-    const recipe_id = segments[2];
-    const searchParams = useSearchParams();
-    const recipeName = searchParams.get("name") ?? '';
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-    const [isDeleting, setIsDeleting] = useState(false);
+export function HeaderCook({cookHistoryStore, recipe_id, open, toggleDrawer, handleDeleteRecipe, isDeleting}: AdaptiveHeaderProps)  {
 
-    useEffect(() => {
-        if (userStore.user.connection_id !== '') {
-            dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id, recipe_id}));
-        }
-    }, [userStore.user.connection_id, dispatch, recipeName, recipe_id]);
-
-    useEffect(() => {
-        if (!isDeleting && !isMobile) return; 
-
-        const updatedLinks = cookHistoryStore;
-
-        if (updatedLinks.length === 0) {
-            router.push('/home'); 
-        } else if (!updatedLinks.some(el => el.recipe_id === recipe_id)) {
-            const currentIndex = updatedLinks.findIndex(el => el.recipe_id === recipe_id);
-            let nextRecipe = null;
-
-            if (currentIndex !== -1) {
-                nextRecipe = updatedLinks[currentIndex + 1] || updatedLinks[currentIndex - 1];
-            } else {
-                nextRecipe = updatedLinks[0]; 
-            }
-
-            if (nextRecipe) {
-                router.push(`/cook/${nextRecipe.recipe_id}`);
-            }
-        }
-
-        setIsDeleting(false);
-    }, [cookHistoryStore, recipe_id, router, cookHistoryStore.length]);
-
-    console.log('HeaderCook')
     
     return (
         (cookHistoryStore.map(el => (
-            <Box key={el.recipe_id} sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box component={'li'} key={el.recipe_id} sx={{ display: 'flex', alignItems: 'center', justifyContent:'center', mb:'15px', gap:'5px'}}>
                 <Button
                     component={Link}
                     variant="contained"
                     href={`/cook/${el.recipe_id}`}
-                    sx={{
-                        ...btnMain, ...btnsCookHeader,
+                    sx={[ btnsCookHeader, {
                         color: recipe_id === el.recipe_id ? 'text.primary' : 'text.secondary',
-                        backgroundColor: recipe_id === el.recipe_id ? 'primary' : 'background.default'
-                    }}
+                        backgroundColor: recipe_id === el.recipe_id ? 'primary' : 'secondary.main',
+                        
+                    }]}
                     disabled={isDeleting}
                 >
                     {el.recipe_name}
                 </Button>
 
-                {!isMobile &&
-                    <DeleteButton
-                        recipe_id={el.recipe_id}
-                        isDeleting={isDeleting}
-                        setIsDeleting={setIsDeleting}
-                    />
-                }
+                <Button 
+                    onClick={() => handleDeleteRecipe(recipe_id)} 
+                    sx={deleteHeaderCook} 
+                    disabled={isDeleting} 
+                >
+                    <ClearIcon sx={{ color: '#8E94A4', width:"100%", height:'100%' }} />
+                </Button>
                 
             </Box>
         )))

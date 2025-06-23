@@ -1,8 +1,7 @@
-import { HeaderCook } from "@/app/components/cook/header-cook";
 import { Box } from "@mui/material";
-import { headerCook, mainBoxCook, scrollBox } from "./[recipe_id]/styles";
-import { AdaptiveHeader } from "@/app/components/cook/adaptive-header";
+import { mainBoxCook, } from "./[recipe_id]/styles";
 import { AlertsProvider } from "@/app/components/ux-helpers/alerts-provider";
+import { CookHeaderController } from "@/app/components/cook/cook-header-controller";
 
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
@@ -10,23 +9,12 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
     return (
         <AlertsProvider sliceKeys={['cookHistory', 'cook', 'recipe', 'list']}> 
             <Box sx={mainBoxCook}>
-                <Box sx={{ ...headerCook, display: { xs: "block", md: "block" } }}>
-                    <Box sx={scrollBox}>
-                        <HeaderCook />
-                    </Box>
-                </Box>
-
-                {/* <Box sx={{
-                    display: { xs: "block", md: "none" },
-                    backgroundColor: 'transparent'
-                }}>
-                    <AdaptiveHeader></AdaptiveHeader>
-                </Box> */}
+                
+                <CookHeaderController></CookHeaderController>
+                
                 {children}
             </Box>
         </AlertsProvider>
-
-
 
     )
 }

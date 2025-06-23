@@ -8,6 +8,10 @@ export const mainBoxCook = {
     [theme.breakpoints.down("md")]: {
         flexDirection:'column',
         overflow:'auto',
+        scrollbarWidth: 'none', 
+        '&::-webkit-scrollbar': {
+            display: 'none', 
+        },
     }
 }
 
@@ -20,13 +24,14 @@ export const headerCook = {
     boxShadow: 'none',
     maxWidth:'200px',
     width: '100%',
-    padding:'10px 3px 10px 15px',
+    padding:'10px 0',
 
 
     [theme.breakpoints.down("md")]: {
-        padding:'0 3px 0 0',
+        // padding:'0 3px 0 0',
         maxWidth:'100%',
         bgcolor: 'transparent',
+        height:'initial'
     }
 }
 
@@ -39,14 +44,14 @@ export const scrollBox = {
     borderRight: 1,
     borderColor: 'transparent',
     scrollbarColor: "#353842 #1F2128",
-    pr: '10px',
+    // pr: '10px',
     width: '100%',
     height:'100%',
 
     [theme.breakpoints.down("md")]: {
         flexDirection: 'initial',
         overflowY: 'hidden',
-        gap:'20px',
+        gap:'10px',
     }
 }
 
@@ -57,28 +62,29 @@ export const btnsCookHeader = {
     borderRadius: '10px',
     minWidth: '110px',
     width: '100%',
-    m: '8px auto',
+    textTransform:'none',
+    // m: '8px auto',
     '@media (hover: hover) and (pointer: fine)': {
-        '& .hover': {
-            backgroundColor: 'primary.light'
+        '&:hover': {
+            color: '#fff',
+            opacity:1,
+            backgroundColor: 'primary.dark'
         },
     },
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     display: 'block',
     textAlign: 'center',
     maxWidth: '120px',
     '& .MuiButtonBase-root': {
-        textAlign: 'center'
+        textAlign: 'center',
     },
-
-    [theme.breakpoints.down("md")]: {
-        // bgcolor: 'background.default',
-        
+    [theme.breakpoints.down('md')]:{
         m: '0',
-    }
-}
+    },
+} as const;
+
 
 export const deleteHeaderCook = {
     minWidth: 'inherit',
@@ -169,7 +175,9 @@ export const containerContentRecipe = {
         // width:'calc(100% - 50px)',
         width:'100%',
         ml:"0px",
-        mt:'20px'
+        mt:'20px',
+        flexGrow: 1
+        // height:"100dvh",
     }
 }
 

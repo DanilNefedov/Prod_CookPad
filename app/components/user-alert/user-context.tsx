@@ -21,7 +21,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const { data: session, update } = useSession();
     const connection_id = session?.user?.connection_id;
 
-    console.log(session?.user, connection_id)
     useEffect(() => {
         const fetchAndUpdate = async () => {
             await update();
