@@ -12,6 +12,15 @@ export function AboutUser() {
     return (
         <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center', width:'100%', justifyContent:'center', flexDirection:'column',}}>
             <Tooltip title={userStore.name}>
+                {/* {userStore.img ? (
+                    <Image
+                    alt={userStore.name}
+                    src={userStore.img}
+                    width={45}
+                    height={45}
+                    style={{ borderRadius: '50%' }}
+                    />
+                ) : null} */}
                 <Avatar 
                 alt={userStore.name}
                 src={userStore.img } 
