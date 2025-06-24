@@ -1,7 +1,7 @@
 'use client'
 
 import { Box, Chip, ListItem, styled, SwipeableDrawer } from "@mui/material"
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { theme } from "@/config/ThemeMUI/theme";
 import { grey } from "@mui/material/colors";
 import Link from "next/link";
@@ -26,39 +26,41 @@ const Puller = styled('div')(({ theme }) => ({
 
 export function AdaptiveHeader({cookHistoryStore, recipe_id, open, toggleDrawer, handleDeleteRecipe, isDeleting,}: HeaderProps) {
     const boxRef = useRef<HTMLUListElement | null>(null)
-    const drawerContentRef = useRef<HTMLUListElement | null>(null);
+    // const drawerContentRef = useRef<HTMLUListElement | null>(null);
+    const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
 
 
-    useEffect(() => {
-        const drawerContent = drawerContentRef.current;
-        if (!drawerContent) return;
 
-        let startY = 0;
 
-        const onTouchStart = (e: TouchEvent) => {
-            startY = e.touches[0].clientY;
-        };
+    // useEffect(() => {
+    //     const drawerContent = drawerContentRef.current;
+    //     if (!drawerContent) return;
 
-        const onTouchMove = (e: TouchEvent) => {
-            const currentY = e.touches[0].clientY;
-            const deltaY = currentY - startY;
+    //     let startY = 0;
 
-            if (drawerContent.scrollTop === 0 && deltaY > 0) {
-            e.preventDefault();
-            }
-        };
+    //     const onTouchStart = (e: TouchEvent) => {
+    //         startY = e.touches[0].clientY;
+    //     };
 
-        drawerContent.addEventListener('touchstart', onTouchStart, { passive: false });
-        drawerContent.addEventListener('touchmove', onTouchMove, { passive: false });
+    //     const onTouchMove = (e: TouchEvent) => {
+    //         const currentY = e.touches[0].clientY;
+    //         const deltaY = currentY - startY;
 
-        return () => {
-            drawerContent.removeEventListener('touchstart', onTouchStart);
-            drawerContent.removeEventListener('touchmove', onTouchMove);
-        };
-    }, [open]); 
+    //         if (drawerContent.scrollTop === 0 && deltaY > 0) {
+    //         e.preventDefault();
+    //         }
+    //     };
 
-    console.log('22323')
+    //     drawerContent.addEventListener('touchstart', onTouchStart, { passive: false });
+    //     drawerContent.addEventListener('touchmove', onTouchMove, { passive: false });
+
+    //     return () => {
+    //         drawerContent.removeEventListener('touchstart', onTouchStart);
+    //         drawerContent.removeEventListener('touchmove', onTouchMove);
+    //     };
+    // }, [open]); 
+
     return (
         <Box ref={boxRef} sx={{
             position: 'relative',
@@ -105,6 +107,8 @@ export function AdaptiveHeader({cookHistoryStore, recipe_id, open, toggleDrawer,
             </Box>
 
             <SwipeableDrawer
+                disableBackdropTransition={!iOS} 
+                disableDiscovery={iOS} 
                 container={() => boxRef.current}
                 anchor={'top'}
                 open={open}
