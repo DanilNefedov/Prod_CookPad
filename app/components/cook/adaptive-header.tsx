@@ -65,6 +65,8 @@ export function AdaptiveHeader({cookHistoryStore, recipe_id, open, toggleDrawer,
         <Box ref={boxRef} sx={{
             position: 'relative',
             width: 'fit-content',
+            overscrollBehavior: "contain",
+            overflow:'auto',
             m: '0 auto',
             '& .PrivateSwipeArea-root': {
                 width: 'calc(100% - 60px)',
