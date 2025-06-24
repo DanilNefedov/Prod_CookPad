@@ -7,6 +7,7 @@ export const mainBoxCook = {
     
     [theme.breakpoints.down("md")]: {
         flexDirection:'column',
+        overscrollBehavior: "contain",
         overflow:'auto',
         scrollbarWidth: 'none', 
         '&::-webkit-scrollbar': {
