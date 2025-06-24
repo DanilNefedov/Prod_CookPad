@@ -1,7 +1,7 @@
 'use client'
 
 import { Box, Chip, ListItem, styled, SwipeableDrawer } from "@mui/material"
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { theme } from "@/config/ThemeMUI/theme";
 import { grey } from "@mui/material/colors";
 import Link from "next/link";
@@ -25,8 +25,40 @@ const Puller = styled('div')(({ theme }) => ({
 
 
 export function AdaptiveHeader({cookHistoryStore, recipe_id, open, toggleDrawer, handleDeleteRecipe, isDeleting,}: HeaderProps) {
-    const boxRef = useRef(null)
+    const boxRef = useRef<HTMLUListElement | null>(null)
+    const drawerContentRef = useRef<HTMLUListElement | null>(null);
 
+
+
+    useEffect(() => {
+        const drawerContent = drawerContentRef.current;
+        if (!drawerContent) return;
+
+        let startY = 0;
+
+        const onTouchStart = (e: TouchEvent) => {
+            startY = e.touches[0].clientY;
+        };
+
+        const onTouchMove = (e: TouchEvent) => {
+            const currentY = e.touches[0].clientY;
+            const deltaY = currentY - startY;
+
+            if (drawerContent.scrollTop === 0 && deltaY > 0) {
+            e.preventDefault();
+            }
+        };
+
+        drawerContent.addEventListener('touchstart', onTouchStart, { passive: false });
+        drawerContent.addEventListener('touchmove', onTouchMove, { passive: false });
+
+        return () => {
+            drawerContent.removeEventListener('touchstart', onTouchStart);
+            drawerContent.removeEventListener('touchmove', onTouchMove);
+        };
+    }, [open]); 
+
+    console.log('22323')
     return (
         <Box ref={boxRef} sx={{
             position: 'relative',
