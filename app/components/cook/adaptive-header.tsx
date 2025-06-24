@@ -72,6 +72,8 @@ export function AdaptiveHeader({cookHistoryStore, recipe_id, open, toggleDrawer,
                 width: 'calc(100% - 60px)',
                 right: '0',
                 left: 'initial',
+                overscrollBehavior: "contain",
+                overflow:'auto',
                 [theme.breakpoints.down(500)]: {
                     width: 'calc(100% - 45px)',
                 },
