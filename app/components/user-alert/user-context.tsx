@@ -31,6 +31,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         };
 
         fetchAndUpdate();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, connection_id]);
 
     if (error) {

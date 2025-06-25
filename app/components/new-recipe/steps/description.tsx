@@ -27,7 +27,7 @@ export function Description () {
         if(statusPage.open && statePage.description.length === 0){
             dispatch(updateError({step:numbStep, error:true}))
         }
-    },[statusPage.open, statePage.description.length])
+    },[statusPage.open, statePage.description.length, dispatch])
 
 
 

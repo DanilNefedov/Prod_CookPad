@@ -22,7 +22,7 @@ export function SignInForm() {
         if (state.success) {
             router.push('/home');
         }
-    }, [state.success]);
+    }, [state.success, router]);
 
     
     

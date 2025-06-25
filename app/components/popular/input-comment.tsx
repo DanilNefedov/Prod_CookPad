@@ -2,6 +2,7 @@ import { Box, Button, TextField } from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import { memo, useState } from "react";
 import { inputComment } from "@/app/(main)/popular/style";
+import { useAppSelector } from "@/state/hook";
 
 
 
@@ -11,17 +12,21 @@ interface DataProps {
     sendComm: (text: string) => void
 }
 export const InputComment = memo(({ sendComm }: DataProps) => {
+    const statusNewReplyComm = useAppSelector(state => state.comments.operations.newReplyComm.loading)
+    const statusNewCommPopular = useAppSelector(state => state.comments.operations.newCommPopular.loading)
     const [comm, setComm] = useState<string>('')
 
-    console.log('input')
 
     const handleSend = () => {
+        if(statusNewCommPopular || statusNewReplyComm) return
+
         if (comm.trim() !== '') {
             sendComm(comm);
             setComm('')
         }
-
     };
+
+
 
     return (
         <Box sx={{ position: 'relative', marginTop: "10px" }}>
@@ -38,8 +43,16 @@ export const InputComment = memo(({ sendComm }: DataProps) => {
                         setComm(e.target.value);
                     }
                 }}
+                onKeyDown={(e) => {
+                    if(statusNewCommPopular || statusNewReplyComm) return
+
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault(); 
+                        handleSend();
+                    }
+                }}
             />
-            <Button onClick={handleSend} sx={{ position: 'absolute', right: '15px', top: 'calc(50% - 19px)', minWidth: '0' }}>
+            <Button disabled={statusNewCommPopular || statusNewReplyComm} onClick={handleSend} sx={{ position: 'absolute', right: '15px', top: 'calc(50% - 19px)', minWidth: '0' }}>
                 <SendIcon />
             </Button>
         </Box>

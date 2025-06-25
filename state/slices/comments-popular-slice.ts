@@ -26,7 +26,7 @@ interface CommentStateI extends CommentState {
 }
 
 const defaultStatus: OperationStatus = { loading: true, error: false }
-
+const loadingStatus: OperationStatus = { loading: false, error: false }
 
 
 
@@ -65,9 +65,9 @@ const initialState: CommentStateI = {
     replies: {},  
     operations:{
         commVideoFetch:defaultStatus,
-        newCommPopular:defaultStatus,
+        newCommPopular:loadingStatus,
         likedComment:defaultStatus,
-        newReplyComm:defaultStatus,
+        newReplyComm:loadingStatus,
         getReplies:defaultStatus
     }
 };

@@ -31,7 +31,6 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
     const dispatch = useAppDispatch();
     const inputValue = useRef<string>('');
     
-    
 
 
     const handleInputChange = useCallback((newInputValue: string) => {
@@ -68,28 +67,27 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
         dispatch(choiceUnits({ ingredient_id: ingredient.ingredient_id, choice: newValue }));
     }
     
+    
+    //Dependency error ingredient.units. Rewrite the redux with more obvious data types
     useEffect(() => {
-        if ('list' in ingredient.units) {
+        if (!Array.isArray(ingredient.units) && 'amount' in ingredient.units) {
             const isNameEmpty = inputValue.current === '' && ingredient.name === '';
             const isAmountEmpty = ingredient.units.amount === 0;
             const isChoiceEmpty = ingredient.units.choice === '';
-    
+
             const emptyCount = [isNameEmpty, isAmountEmpty, isChoiceEmpty].filter(Boolean).length;
-    
-           
 
             if (emptyCount > 0 && emptyCount < 3) {
                 dispatch(addErrorIngredient(ingredientId));
-                
             } else {
                 dispatch(deleteErrorIngredient(ingredientId));
-                
-                
             }
         }
-        
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ingredient.name, ingredientId, dispatch]);
+    //Dependency error ingredient.units. Rewrite the redux with more obvious data types
 
-    },[inputValue.current, ingredient.units, ingredientId, foundId])
+
 
     return (
         <>

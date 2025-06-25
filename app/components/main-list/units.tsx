@@ -67,18 +67,18 @@ const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_id: stri
     }
 
 
-    const confirmAmount = useCallback((_id: string | undefined) => {
+    const confirmAmount = useCallback((_id: string | undefined, ingredientId:string) => {
         const numberAmount = evaluate(amount)
 
-        if (id !== '' && numberAmount !== thisUnit?.amount && _id && unitData) {
+        if (id !== '' && numberAmount !== thisUnit?.amount && _id ) {
             if (pathName === '/list') {
-                dispatch(changeAmountFetch({ ingredient_id: unitData.ingredientId, unit_id: _id, amount: numberAmount }));
+                dispatch(changeAmountFetch({ ingredient_id:ingredientId, unit_id: _id, amount: numberAmount }));
             }else if(pathName === '/list-recipe' && recipe_id){
-                dispatch(newAmountListRecipe({connection_id: id, ingredient_id: unitData.ingredientId, unit_id: _id, amount: numberAmount, _id:recipe_id }))
+                dispatch(newAmountListRecipe({connection_id: id, ingredient_id:ingredientId, unit_id: _id, amount: numberAmount, _id:recipe_id }))
             }   
         } 
         setEditAmount(null);
-    }, [id, amount, pathName, dispatch, recipe_id, thisUnit?.amount, unitData?.ingredientId]);
+    }, [id, amount, pathName, dispatch, recipe_id, thisUnit?.amount]);
     
 
    
@@ -120,7 +120,7 @@ const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_id: stri
 
                         if (e.key === 'Enter') {
                             e.preventDefault(); 
-                            confirmAmount(thisUnit?._id); 
+                            confirmAmount(thisUnit?._id, unitData.ingredientId); 
                         }
                     }}
                     
@@ -148,7 +148,7 @@ const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_id: stri
                     <EditIcon sx={{ width: '18px' }}></EditIcon>
                 </Button>
                 :
-                <Button onClick={() => confirmAmount(thisUnit?._id)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
+                <Button onClick={() => confirmAmount(thisUnit?._id, unitData.ingredientId)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
                     <CheckIcon sx={{ width: '18px' }}></CheckIcon>
                 </Button>
             }

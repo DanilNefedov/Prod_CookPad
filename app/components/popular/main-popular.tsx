@@ -44,15 +44,14 @@ export function MainPopular() {
     const [expanded, setExpanded] = useState(false);
     const commentRef = useRef<HTMLDivElement | null>(null);
     const pingGate = usePingGate()
-    const [hasFetched, setHasFetched] = useState(false);
     const isFetching = useAppSelector(state => state.popular.operations.popularFetch.loading)
-
-
+    const configId = popularData.pop_list[activeVideo]?.config_id;
+ 
     useEffect(() => {        
-        dispatch(initCommentsState(popularData.pop_list[activeVideo]?.config_id))
-    },[popularData.pop_list[activeVideo]?.config_id])
+        dispatch(initCommentsState(configId))
+    },[configId, activeVideo, dispatch])
 
-
+    console.log(popularData.pop_list)
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
@@ -75,30 +74,21 @@ export function MainPopular() {
 
         pingGate(() => {
             dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
-                .finally(() => {
-                    setHasFetched(true);
-                });
         });
-    }, [connection_id, errorPopular?.error]);
+    }, [connection_id, errorPopular?.error, dispatch, pingGate]);
 
 
     useEffect(() => {
-        if (popularData.pop_list.length > 0 || !errorPopular) {
-            const firstRecipe = popularData.pop_list[0];
-            if (!viewedVideos.current.has(firstRecipe.config_id)) {
-                dispatch(updateViews({config_id:firstRecipe.config_id}));
-            }
+        if (popularData.pop_list.length === 0 || errorPopular.error) {
+            return;
         }
-    }, [popularData.pop_list]);
-  
+        const currentRecipe = popularData.pop_list[activeVideo];
 
-    useEffect(() => {
-        const current = popularData.pop_list[activeVideo];
-        if ((current && !viewedVideos.current.has(current.config_id)) || !errorPopular) {
-            viewedVideos.current.add(current.config_id);
-            dispatch(updateViews({config_id:current.config_id}));
+        if (currentRecipe && !viewedVideos.current.has(currentRecipe.config_id)) {
+            viewedVideos.current.add(currentRecipe.config_id);
+            dispatch(updateViews({ config_id: currentRecipe.config_id }));
         }
-    }, [activeVideo, popularData.pop_list.length, hasFetched, isFetching]);
+    }, [activeVideo, popularData.pop_list, dispatch, errorPopular.error]);
 
 
     function handleNewVideo() {
@@ -244,7 +234,7 @@ export function MainPopular() {
                                 saved: popularData.pop_list[activeVideo]?.saved,
                                 saves: popularData.pop_list[activeVideo]?.saves,
                                 comments: popularData.pop_list[activeVideo]?.comments,
-                                config_id: popularData.pop_list[activeVideo]?.config_id,
+                                config_id: configId,
                                 openComment,
                                 toggleComment
                             }}></InfoAboutContent>
@@ -322,7 +312,7 @@ export function MainPopular() {
                 </Typography>
                 {openComment ?
 
-                    <MainComments config_id={popularData.pop_list[activeVideo]?.config_id} comments={popularData.pop_list[activeVideo]?.comments} ></MainComments>
+                    <MainComments config_id={configId} comments={popularData.pop_list[activeVideo]?.comments} ></MainComments>
 
                     :
                     <></>

@@ -68,7 +68,8 @@ export const MainComments = memo(({ config_id, comments }: dataProps) => {
             });
             
         }
-    }, [config_id, connection_id, dispatch]);
+    }, [config_id, connection_id, dispatch, comments, pingGate]);
+    
 
 
     const fetchMoreComments = useCallback(() => {
@@ -85,7 +86,7 @@ export const MainComments = memo(({ config_id, comments }: dataProps) => {
         // .finally(() => {
         //     setIsFetching(false);
         // });
-    }, [commentsData.page, config_id, connection_id, newComments, dispatch, firstFetch.current]);
+    }, [commentsData.page, config_id, connection_id, newComments, dispatch, pingGate]);
 
 
 
@@ -123,11 +124,12 @@ export const MainComments = memo(({ config_id, comments }: dataProps) => {
             observer.disconnect();
             if (timeout) clearTimeout(timeout);
         };
-    }, [commentsData.page, commentsData.ids.length, fetchMoreComments, firstFetch.current]);
+    }, [commentsData.page, commentsData.ids.length, fetchMoreComments]);
 
 
 
     const sendComm = useCallback((text: string) => {
+        
         if (connection_id !== '') {
             if (contextComment.id_comment !== '') {
                 const data = {

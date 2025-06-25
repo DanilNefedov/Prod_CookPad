@@ -19,7 +19,7 @@ export function Instruction() {
         if(statusPage.open && statePage.instruction.length === 0){
             dispatch(updateError({step:numbStep, error:true}))
         }
-    },[statusPage.open, statePage.instruction.length])
+    },[statusPage.open, statePage.instruction.length, dispatch])
 
 
     function handleInstruction(e: ChangeEvent<HTMLInputElement>) {

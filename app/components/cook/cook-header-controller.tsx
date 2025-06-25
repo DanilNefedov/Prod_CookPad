@@ -43,7 +43,7 @@ export function CookHeaderController() {
         }
     }, [userStore.user.connection_id, dispatch, recipeName, recipe_id]);
 
-    useEffect(() => {
+    useEffect(() => { 
         if (!isDeleting) return;
 
         const updatedLinks = cookHistoryStore;
@@ -59,7 +59,7 @@ export function CookHeaderController() {
         }
 
         setIsDeleting(false);
-    }, [cookHistoryStore, recipe_id]);
+    }, [cookHistoryStore, recipe_id, isDeleting, router]);
 
     const handleDeleteRecipe = (recipe_id: string) => {
         setIsDeleting(true);

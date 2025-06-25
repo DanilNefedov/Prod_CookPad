@@ -7,7 +7,7 @@ import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from '@/state/hook';
 import { theme } from '@/config/ThemeMUI/theme';
-import { memo, useEffect } from 'react';
+import { memo, useCallback, useEffect } from 'react';
 import { setSomeError } from '@/state/slices/stepper/error-open';
 
 
@@ -30,7 +30,7 @@ export const StepperProgress = memo(() => {
     ];
 
 
-    const isStepFailed = (step: number) => {
+    const isStepFailed = useCallback((step: number) => {
         const stepData = stepperState.steps[step];
         const errorStatus = stepData?.error_status;
         const isOpen = stepData?.open;
@@ -43,20 +43,21 @@ export const StepperProgress = memo(() => {
 
         if (step === 4) {
             const hasAtLeastOneFilled = ingredientsState.ingredients.some(ingredient => {
-                if (!('amount' in ingredient.units)) return false;
-    
+            if (!('amount' in ingredient.units)) return false;
+
                 const hasName = ingredient.name.trim() !== '';
                 const hasAmount = ingredient.units.amount > 0;
                 const hasChoice = ingredient.units.choice.trim() !== '';
-    
+
                 return hasName && hasAmount && hasChoice;
             });
-    
+
             return !hasAtLeastOneFilled;
         }
 
         return errorStatus.value === true;
-    };
+    }, [stepperState, ingredientsState]);
+
 
     useEffect(() => {
     
@@ -65,8 +66,7 @@ export const StepperProgress = memo(() => {
         );
     
         dispatch(setSomeError(hasAnyError));
-    }, [stepperState, ingredientsState]);
-
+    }, [stepperState, ingredientsState, dispatch, stepsCount, isStepFailed]);
 
     return (
         <Box sx={{ width: '100%', mt: '10px' }}>
