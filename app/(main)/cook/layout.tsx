@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { mainBoxCook, } from "./[recipe_id]/styles";
-import { AlertsProvider } from "@/app/components/ux-helpers/alerts-provider";
+import { AlertsProvider } from "@/app/components/ui-helpers/alerts-provider";
 import { CookHeaderController } from "@/app/components/cook/cook-header-controller";
 
 

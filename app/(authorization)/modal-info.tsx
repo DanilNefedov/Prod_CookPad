@@ -4,6 +4,7 @@
 import { Button, Popover, Typography } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
 import { MouseEvent, useState } from "react";
+import { modalButton } from "./style";
 
 
 
@@ -26,7 +27,7 @@ export function ModalInfo(){
 
     return (
         <div >
-            <Button aria-describedby={id} variant="contained" onClick={handleClick} sx={{width:'0', minWidth:'0', p:'0'}}>
+            <Button aria-describedby={id} variant="contained" onClick={handleClick} sx={modalButton}>
                 <InfoIcon sx={{width:'20px', height:'20px', mb:'4px'}}></InfoIcon>
             </Button>
             <Popover

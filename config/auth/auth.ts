@@ -3,7 +3,7 @@ import NextAuth, { AuthError } from "next-auth";
 import Discord from "next-auth/providers/discord";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import { getCall, postCall } from "./calls";
+import { getCall, postCall } from "../../app/services/auth-call";
 import { compare } from "bcryptjs";
 
 

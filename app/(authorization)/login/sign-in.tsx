@@ -6,7 +6,7 @@ import { useActionState, useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { regiterIntup } from "../style";
-import { UXLoading } from "@/app/components/ux-helpers/loading";
+import { UXLoading } from "@/app/components/ui-helpers/loading";
 import { ModalInfo } from "../modal-info";
 
 
@@ -27,9 +27,7 @@ export function SignInForm() {
     
     
     useEffect(() => {
-
         if (state.email) setEmailInput(state.email);
-        
     }, [state.email]);
 
 

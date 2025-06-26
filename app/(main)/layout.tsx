@@ -1,8 +1,8 @@
 import { Container, Paper } from "@mui/material";
 import { NavigationSite } from "../components/navigation-site/navigation";
 import { theme } from "@/config/ThemeMUI/theme";
-import GlobalErrorProvider from "../components/client-side-handler/global-error";
-import { UserProvider } from "../components/user-alert/user-context";
+import GlobalErrorProvider from "../../config/client-side-handler/global-error";
+import { UserProvider } from "../../config/user-alert/user-context";
 
 
 

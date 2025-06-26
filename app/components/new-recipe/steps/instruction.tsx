@@ -10,16 +10,16 @@ import { updateError } from '@/state/slices/stepper/error-open';
 export function Instruction() {
     const numbStep = 6
 
-    const statePage = useAppSelector(state => state.instructionSlice)
-    const statusPage = useAppSelector(state =>state.statusSlice.steps[numbStep]);
+    const instruction = useAppSelector((state) => state.instructionSlice.instruction);    
+    const stepStatus  = useAppSelector(state =>state.statusSlice.steps[numbStep]);
     const dispatch = useAppDispatch()
 
     useEffect(() =>{
         
-        if(statusPage.open && statePage.instruction.length === 0){
+        if(stepStatus.open && instruction.trim().length === 0){
             dispatch(updateError({step:numbStep, error:true}))
         }
-    },[statusPage.open, statePage.instruction.length, dispatch])
+    },[stepStatus.open, instruction.length, dispatch])
 
 
     function handleInstruction(e: ChangeEvent<HTMLInputElement>) {
@@ -38,12 +38,12 @@ export function Instruction() {
             <TextField
                 id="outlined-multiline-flexible"
                 label="Instruction"
-                value={statePage.instruction}
+                value={instruction}
                 multiline
                 name="instruction"
                 maxRows={8}
                 minRows={4}
-                error={statusPage.open && statusPage.error_status.value ? true : false}
+                error={stepStatus.open && stepStatus.error_status.value ? true : false}
                 helperText='max lenght 300 symbols'
                 onChange={handleInstruction}
                 sx={{

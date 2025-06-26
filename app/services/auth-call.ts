@@ -1,4 +1,4 @@
-import { RequestData } from "./auth";
+import { RequestData } from "../../config/auth/auth";
 
 
 

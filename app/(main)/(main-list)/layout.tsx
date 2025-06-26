@@ -4,11 +4,7 @@ import { AppBar, Box } from "@mui/material";
 
 
 
-export default async function ListLayout({
-    children,
-}: {
-    children: React.ReactNode
-}) {
+export default async function ListLayout({children}: {children: React.ReactNode}) {
 
     const links = [
         {

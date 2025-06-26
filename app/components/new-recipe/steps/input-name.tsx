@@ -10,9 +10,9 @@ import { ChangeEvent, memo } from "react";
 
 export const NameInput = memo(() => {
     const dispatch = useAppDispatch()
-    const nameTimeState = useAppSelector(state => state.nameTimeSlice.name.value)
-    const open = useAppSelector(state => state.statusSlice.steps[2].open)
-    const statusPage = useAppSelector(state => state.statusSlice.steps[2].error_status.name)
+    const name = useAppSelector((state) => state.nameTimeSlice.name.value);
+    const isStepOpen = useAppSelector((state) => state.statusSlice.steps[2].open)
+    const isNameError = useAppSelector((state) => state.statusSlice.steps[2].error_status.name);
 
 
     const handleName = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -35,9 +35,9 @@ export const NameInput = memo(() => {
     
     return (
         <TextField
-            error={open && statusPage ? true : false}
+            error={isStepOpen && isNameError ? true : false}
             id="outlined-basic" label="Name" variant="outlined"
-            value={nameTimeState}
+            value={name}
             type="text"
             onKeyDown={(e) => {
                 if (['-', '+'].includes(e.key)) {

@@ -3,29 +3,14 @@
 import { signIn } from "@/config/auth/auth"
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { storage } from "@/firebase";
-
-
-type State = {
-    error: {
-        server?: boolean;
-        email?: boolean;
-        post?: boolean;
-    } | null
-};
+import { RegisterFormData, RegisterResult, UploadFileParams } from "../types";
 
 
 
-interface DataType {
-    connection_id:string,
-    image: File
-}
 
-export async function uploadFile(data: DataType): Promise<string> {
-    const { connection_id, image } = data;
-
+export async function uploadFile({ connection_id, image }: UploadFileParams): Promise<string> {
     try {
        
-
         const blob = image;
         
         const storageRef = ref(storage, `avatar/${connection_id}/${connection_id}`);//folder -> folder -> file
@@ -65,15 +50,9 @@ export async function uploadFile(data: DataType): Promise<string> {
     }
 }
 
-interface ServerFormData {
-    email:string,
-    password:string,
-    name:string,
-    image: string, 
-    connection_id:string
-};
 
-export async function handleRegister(formData: ServerFormData): Promise<State>{
+
+export async function handleRegister(formData: RegisterFormData): Promise<RegisterResult> {
     "use server"
     try {
         const { email, image, name, password, connection_id} = formData
@@ -128,7 +107,7 @@ export async function handleRegister(formData: ServerFormData): Promise<State>{
 }
 
 
-export async function registerAndSignIn(prevState: State, formData: ServerFormData): Promise<State> {
+export async function registerAndSignIn(_prevState: RegisterResult, formData: RegisterFormData): Promise<RegisterResult> {
     'use server'
     const { email, password } = formData
 

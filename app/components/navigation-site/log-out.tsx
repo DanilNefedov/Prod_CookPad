@@ -62,24 +62,5 @@ export function LogOut() {
             }}></LogoutIcon>
             <span>Sign Out</span> 
         </Button>
-
-        // <form
-        //     action={async () => {
-        //         "use server"
-        //         await signOut({ redirectTo: '/login' })
-        //     }}
-        // >
-            // <Button 
-            //     variant="contained" 
-            //     color='secondary' 
-            //     type="submit"
-            //     sx={styleLink}
-            // >
-            //     <LogoutIcon sx={{mr:'5px',  [theme.breakpoints.down("md")]: {
-            //         mr:'0'
-            //     },}}></LogoutIcon>
-            //     <span>Sign Out</span> 
-            // </Button>
-        // </form>
     )
 }

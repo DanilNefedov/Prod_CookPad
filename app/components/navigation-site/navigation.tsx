@@ -11,10 +11,11 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import RecommendIcon from '@mui/icons-material/Recommend';
 import { theme } from '@/config/ThemeMUI/theme';
+import { DataPage } from '@/app/(main)/types';
 
 
 export function NavigationSite() {
-    const pages:dataPage[] = [
+    const pages:DataPage[] = [
         { 
             name: 'Home', 
             path: ['/home', '/cook/:path*' ],

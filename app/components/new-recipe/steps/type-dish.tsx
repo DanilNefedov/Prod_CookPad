@@ -14,7 +14,7 @@ import { ChangeEvent } from "react";
 export function TypeDish() {
   const numbStep = 1
 
-  const stepperState = useAppSelector(state => state.stepTypeRecommend)
+  const statePage = useAppSelector(state => state.stepTypeRecommend)
   const statusPage = useAppSelector(state => state.statusSlice.steps[numbStep])
   const dispatch = useAppDispatch()
 
@@ -50,7 +50,7 @@ export function TypeDish() {
   }
 
   function handleOpenRecommendation() {
-    dispatch(openRecommendation(stepperState.recommendation))
+    dispatch(openRecommendation(statePage.recommendation))
   }
 
   return (
@@ -61,7 +61,7 @@ export function TypeDish() {
         select
         label="Select"
         // defaultValue="Salad"
-        value={stepperState.type_recipe}
+        value={statePage.type_recipe}
         onChange={e => { handleChange(e) }}
         helperText="Choose the type of dish"
         error={statusPage.error_status.value && statusPage.open}
@@ -118,7 +118,7 @@ export function TypeDish() {
           }
         }}
 
-        onClick={() => handleOpenRecommendation()} checked={stepperState.recommendation} />} label="Open for recommendations" />
+        onClick={() => handleOpenRecommendation()} checked={statePage.recommendation} />} label="Open for recommendations" />
 
     </>
   )

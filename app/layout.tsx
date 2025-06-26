@@ -1,9 +1,9 @@
 import ThemeRegistry from "@/config/ThemeMUI/provider-theme-mui";
 import "./globals.css";
 import { Roboto } from 'next/font/google'
-import { ProviderStore } from "@/state/provider-store";
 import { ProviderAuth } from "@/config/auth/provider-auth";
-import WrapperLayout from "./wrapper-layout";
+import { ProviderStore } from "@/config/state/provider-store";
+import WrapperLayout from "@/config/wrapper/wrapper-layout";
 
 
 const IBM = Roboto({

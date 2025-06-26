@@ -17,7 +17,7 @@ export function Ingredients() {
     const openPage = useAppSelector(state => state.statusSlice.steps[numbStep].open);
 
 
-    const showMinOneFilledWarning = useMemo(() => {
+    const showMinOneFilledWarning = useMemo<boolean>(() => {
         if (!openPage) return false;
     
         const ingredients = stepperState.ingredients;

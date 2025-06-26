@@ -14,13 +14,13 @@ import { useState } from "react"
 
 
 export function MainBuildPage() {
-    const dispatch = useAppDispatch()
-    const statusPage = useAppSelector(state =>state.statusSlice.some_error);
-    const activePage = useAppSelector(state =>state.statusSlice.active_page);
+    const dispatch = useAppDispatch();
+    const store = useStore<RootState>();
+    const statusPage = useAppSelector((state) => state.statusSlice.some_error);
+    const activePage = useAppSelector((state) => state.statusSlice.active_page);
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-    const store = useStore<RootState>()
 
 
     async function handleSave() {
@@ -64,45 +64,51 @@ export function MainBuildPage() {
     
     return (
         <>
-            {
-                loading ? 
-                <Box sx={{ 
-                    display: 'flex', 
-                    alignItems:'center',
-                    justifyContent:'center',
-                    position:'absolute', 
-                    width:'100%', 
-                    height:'100%', 
-                    top:'0', 
-                    left:'0',
+            {loading && (
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'absolute',
+                    width: '100%',
+                    height: '100%',
+                    top: '0',
+                    left: '0',
                     backgroundColor: 'rgba(53, 56, 66, 0.5)',
                     backdropFilter: 'blur(10px)',
-                    zIndex: 99999
+                    zIndex: 99999,
                 }}
+            >
+                <CircularProgress />
+            </Box>
+            )}
+
+
+            
+            {errorMsg !== null && (
+                <Stack
+                    sx={{
+                        maxWidth: "270px",
+                        width: '100%',
+                        position: 'absolute',
+                        bottom: '20px',
+                        right: 'calc(50% - 135px)',
+                        zIndex: "99999",
+                    }}
+                    spacing={2}
                 >
-                    <CircularProgress />
-                </Box> 
-                : 
-                <></>
-            }
-
-
-            {
-                errorMsg !== null ? 
-                <Stack sx={{
-                    maxWidth:"270px", 
-                    width: '100%',
-                    position:'absolute', 
-                    bottom:'20px', 
-                    right:'calc(50% - 135px)', 
-                    zIndex:"99999",
-                    
-                }} spacing={2}>
-                    <Alert sx={{bgcolor:'#A5514F', color:'#dbcaca'}} onClose={() => {setErrorMsg(null)}} severity="error">{errorMsg}</Alert>
-                </Stack> 
-                :
-                <></>
-            }
+                    <Alert
+                        sx={{ bgcolor: '#A5514F', color: '#dbcaca' }}
+                        onClose={() => {
+                        setErrorMsg(null);
+                        }}
+                        severity="error"
+                    >
+                        {errorMsg}
+                    </Alert>
+                </Stack>
+            )}
 
             <Paper sx={{
                 border: "5px solid #1F2128",
@@ -119,19 +125,27 @@ export function MainBuildPage() {
             }}>
                 <SelectPage step={activePage}></SelectPage>
 
-                {activePage === 6 ? 
-                <Button variant="contained" color='darkButton' 
-                sx={{ ...styleLink, 
-                    width: '150px', m: '0 auto',
-                    [theme.breakpoints.down(500)]: {
-                        width:"100px"
-                    }
-                }} 
-                disabled={statusPage}
-                onClick={(e) => {
-                    e.preventDefault()
-                    handleSave()
-                }}>Save</Button> : <></>}
+                {activePage === 6 && (
+                    <Button
+                        variant="contained"
+                        color="darkButton"
+                        sx={{
+                            ...styleLink,
+                            width: '150px',
+                            m: '0 auto',
+                            [theme.breakpoints.down(500)]: {
+                                width: "100px",
+                            },
+                        }}
+                        disabled={statusPage}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            handleSave();
+                        }}
+                    >
+                        Save
+                    </Button>
+                )}
             </Paper>
 
 

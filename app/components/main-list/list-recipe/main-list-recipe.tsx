@@ -6,8 +6,8 @@ import { Accordion, AccordionSummary, Box, Button, Typography } from "@mui/mater
 import { useEffect, useState } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ContentAccordion } from "./content-accordion";
-import { UXLoading } from "../../ux-helpers/loading";
-import { EmptyInfo } from "../../ux-helpers/empty-info";
+import { UXLoading } from "../../ui-helpers/loading";
+import { EmptyInfo } from "../../ui-helpers/empty-info";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { theme } from "@/config/ThemeMUI/theme";
 import { styleLink } from "../../home/header/header";

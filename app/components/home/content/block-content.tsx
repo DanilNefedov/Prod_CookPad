@@ -1,16 +1,16 @@
 'use client'
 
 import { useEffect, useState, } from "react";
-import { useNavigationState } from "../context-navigation";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { fetchRecipes } from "@/state/slices/recipe-slice";
 import { CardContentBlock } from "./card-content-block";
 import { Box, Button } from "@mui/material";
 import { styleLink } from "../header/header";
 import { theme } from "@/config/ThemeMUI/theme";
-import { UXLoading } from "../../ux-helpers/loading";
-import { EmptyInfo } from "../../ux-helpers/empty-info";
+import { UXLoading } from "../../ui-helpers/loading";
+import { EmptyInfo } from "../../ui-helpers/empty-info";
 import Link from "next/link";
+import { useNavigationState } from "@/config/home-navigation/context-navigation";
 
 
 export function BlockContent() {
@@ -20,7 +20,6 @@ export function BlockContent() {
   const page = useAppSelector(state => state.recipe.page);
   const id = useAppSelector(state => state.user?.user?.connection_id);
   const { nav } = useNavigationState()
-  // const [status, setStatus] = useState<boolean>(recipes.length === 0 ? true : false)
   const status = useAppSelector(state => state.recipe.operations.fetchRecipes.loading)
   const [statusMore, setStatusMore] = useState<boolean>(false)
 
@@ -28,18 +27,13 @@ export function BlockContent() {
 
   useEffect(() => {
       if (id !== '' && recipes.length === 0 && page === 1) {
-        // setStatus(true)
         dispatch(fetchRecipes({ id, page}))
-        // .finally(() => {
-          // setStatus(false)
-        // });
       }
   }, [id, dispatch, page, recipes.length]); 
   
 
   const filteredRecipes = recipes.filter(recipe => recipe.sorting.includes(nav.toLowerCase()));
 
-  // if(!status && recipes.length === 0) return (<><EmptyInfo ></EmptyInfo> <Link href={'/new-recipe'}>Create new one</Link></>)
 
   return (
     <>

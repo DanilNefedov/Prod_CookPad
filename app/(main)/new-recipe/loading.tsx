@@ -1,4 +1,4 @@
-import { UXLoading } from "@/app/components/ux-helpers/loading";
+import { UXLoading } from "@/app/components/ui-helpers/loading";
 
 
 

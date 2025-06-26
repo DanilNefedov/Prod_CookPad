@@ -10,8 +10,11 @@ import { addErrorIngredient, deleteErrorIngredient } from "@/state/slices/steppe
 import { handleAmountChange } from "@/app/components/main-list/function";
 
 
+interface Props {
+    ingredientId: string;
+}
 
-export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => {
+export const Autocomplite = memo(({ingredientId}: Props) => {
     const numbStep = 4
     
     const ingredient = useAppSelector((state) => {
@@ -44,14 +47,12 @@ export const Autocomplite = memo(({ingredientId,}: { ingredientId: string,}) => 
         const newValue = e.target.value;
 
         const resValue = handleAmountChange(newValue)
-        // if (newValue === '' || (newValue.length <= 5 && parseFloat(newValue) >= 0)) {
-            dispatch(
-                ingredientAmount({
-                    ingredient_id: ingredient.ingredient_id,
-                    amount: parseFloat(resValue),//resValue === '' ? 0 :
-                })
-            );
-        // }
+        dispatch(
+            ingredientAmount({
+                ingredient_id: ingredient.ingredient_id,
+                amount: parseFloat(resValue),
+            })
+        );
     }
 
     function isDisabled() {

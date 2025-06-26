@@ -5,12 +5,12 @@ import { Box, CircularProgress } from "@mui/material";
 
 
 
-interface DataProps {
+interface Props {
     color?: string;
     position?: string
 }
 
-export function UXLoading({ color = "secondary", position = "absolute" }: DataProps) {
+export function UXLoading({ color = "secondary", position = "absolute" }: Props) {
 
 
     return (

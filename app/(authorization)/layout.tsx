@@ -1,4 +1,5 @@
 import { Container } from "@mui/material";
+import { layoutAuth } from "./style";
 
 
 
@@ -6,16 +7,7 @@ import { Container } from "@mui/material";
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
   return (
     <Container component="main" maxWidth="xs"
-      sx={{
-        backgroundColor: 'background.paper',
-        borderRadius: '20px',
-        height: '600px',
-        margin: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
+      sx={layoutAuth}
     >{ children }</Container>
   );
 }

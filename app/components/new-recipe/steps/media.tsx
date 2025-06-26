@@ -71,7 +71,6 @@ export function Media() {
         // }
     }
 
-    console.log('Media')
     return (
         <>
             <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px' } }}>Select media</Typography>
@@ -123,7 +122,7 @@ export function Media() {
                 >
                     {pageState.media.map(el => (
                         <SwiperSlide key={el.media_id} className={el.media_type === 'image' ? 'step-media-main-slide' : 'step-media-main-slide-video'} >
-                            <SwiperStepMedia props={{ el }} />
+                            <SwiperStepMedia el={ el } />
                             {/* </SwiperStepMedia> */}
 
                             <Tooltip title="Main" >

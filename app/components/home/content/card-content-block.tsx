@@ -29,9 +29,9 @@ const SwiperMediaCard = dynamic(() => import('./swiper-media-card'), {
     loading: () => <div style={{ height: 200 }}>loading...</div>,
 });
 
+ 
 
-
-interface propsData {
+interface Props {
     recipe_id:string,
     id:string
 }
@@ -39,14 +39,12 @@ interface propsData {
 
 
 
-export const CardContentBlock = memo(({ props }: { props: propsData }) => {
+export const CardContentBlock = memo(({ props }: { props: Props }) => {
     const { recipe_id, id} = props
     const recipes = useAppSelector(state => state.recipe.recipes.find(el => el.recipe_id === recipe_id));
     const favoriteStatus = useAppSelector(state => state.recipe.operations.setFavoriteRecipe.loading)
     const listStatus = useAppSelector(state => state.listRecipe.operations.newListRecipe.loading)
-
     const dispatch = useAppDispatch()
-
     const isMobile = useMediaQuery("(max-width:500px)");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openAdaptive = Boolean(anchorEl);

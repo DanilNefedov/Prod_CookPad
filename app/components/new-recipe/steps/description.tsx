@@ -14,65 +14,59 @@ import { ChangeEvent, useEffect } from "react";
 
 
 
-export function Description () {
+export function Description() {
     const numbStep = 5
 
-    const statePage = useAppSelector(state => state.descriptionSlice)
-    const dispatch = useAppDispatch()
-    const statusPage = useAppSelector(state =>state.statusSlice.steps[numbStep]);
+    const description = useAppSelector((state) => state.descriptionSlice.description);
+    const statusPage = useAppSelector((state) => state.statusSlice.steps[numbStep]);
+    const dispatch = useAppDispatch();
 
-
-    useEffect(() =>{
-        
-        if(statusPage.open && statePage.description.length === 0){
-            dispatch(updateError({step:numbStep, error:true}))
+    useEffect(() => {
+        if (statusPage.open && description.length === 0) {
+            dispatch(updateError({ step: numbStep, error: true }));
         }
-    },[statusPage.open, statePage.description.length, dispatch])
+    }, [statusPage.open, description.length, dispatch]);
 
-
-
-    function handleDescription(e: ChangeEvent<HTMLInputElement>) {
+    function handleDescriptionChange(e: ChangeEvent<HTMLInputElement>): void {
         const newValue = e.target.value;
-    
+
         if (newValue.length <= 150) {
             dispatch(setDescription(newValue));
             dispatch(updateError({ step: numbStep, error: false }));
         }
     }
-    
 
-    // console.log(statusPage.open && statusPage.error_status.value)
-    return(
+    return (
         <>
             <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px', } }}>Your description</Typography>
             <TextField
                 id="outlined-multiline-flexible"
                 label="Description"
-                value={statePage.description}
+                value={description}
                 multiline
                 name="description"
                 maxRows={8}
                 minRows={4}
                 error={statusPage.open && statusPage.error_status.value ? true : false}
                 helperText='max lenght 150 symbols'
-                onChange={handleDescription}
+                onChange={handleDescriptionChange}
                 sx={{
                     ...inputText, '& .MuiOutlinedInput-root': {
-                        mb: '0px', 
+                        mb: '0px',
                         '&.Mui-focused fieldset': {
                             borderColor: '#ffffff',
                         },
-                       
+
                         '& fieldset': {
                             borderColor: '#353842',
                         }
                     },
                     '& .MuiInputLabel-root': {
                         top: '0px',
-                        
+
                     },
-                    '& .MuiFormLabel-root.Mui-focused':{
-                        color:"#fff"
+                    '& .MuiFormLabel-root.Mui-focused': {
+                        color: "#fff"
                     },
                     '& .MuiInputBase-root': {
                         [theme.breakpoints.down('md')]: {

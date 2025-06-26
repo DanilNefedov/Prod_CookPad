@@ -6,13 +6,12 @@ import { memo } from "react";
 
 
 
-interface propsData {
+interface Props {
     el: MediaObj,
 }
 
 
-export const SwiperStepMedia = memo(({ props }: { props: propsData }) => {
-    const { el } = props
+export const SwiperStepMedia = memo(({ el }: Props) => {    
 
     return (
         <>
@@ -50,7 +49,7 @@ export const SwiperStepMedia = memo(({ props }: { props: propsData }) => {
         </>
     )
 },(prevProps, nextProps) => {
-    return prevProps.props.el.media_id === nextProps.props.el.media_id 
+    return prevProps.el.media_id === nextProps.el.media_id 
 })
 
 

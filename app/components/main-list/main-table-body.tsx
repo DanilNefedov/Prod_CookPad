@@ -14,7 +14,7 @@ import './list/styles.css';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { usePathname } from "next/navigation"
-import { EmptyInfo } from "../ux-helpers/empty-info"
+import { EmptyInfo } from "../ui-helpers/empty-info"
 import dynamic from "next/dynamic"
 
 const Units = dynamic(() => import('./units'), {

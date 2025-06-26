@@ -3,7 +3,7 @@ import { AccordionDetails, Table, TableBody, TableCell, TableRow,  } from "@mui/
 import { theme } from "@/config/ThemeMUI/theme"
 import { MainTableHeader } from "../main-table-header"
 import { memo, useMemo, useState } from "react"
-import { UXLoading } from "../../ux-helpers/loading"
+import { UXLoading } from "../../ui-helpers/loading"
 import dynamic from "next/dynamic"
 
 const MainTableBody = dynamic(() => import('../main-table-body'), {

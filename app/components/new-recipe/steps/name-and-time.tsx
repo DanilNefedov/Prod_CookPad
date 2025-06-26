@@ -12,7 +12,7 @@ import { errorTime, } from "@/state/slices/stepper/error-open"
 export function NameAndTime() {
     const numbStep = 2
 
-    const nameTimeState = useAppSelector(state => state.nameTimeSlice.time)
+    const timeState = useAppSelector(state => state.nameTimeSlice.time)
     const statusPage = useAppSelector(state => state.statusSlice.steps[numbStep].error_status.time)
     const openPage = useAppSelector(state => state.statusSlice.steps[numbStep].open)
     const dispatch = useAppDispatch()
@@ -21,7 +21,7 @@ export function NameAndTime() {
 
 
     const handleHourIncrement = (): void => {
-        const hours = nameTimeState.hours
+        const hours = timeState.hours
         if ((!isNaN(parseInt(hours)) && parseInt(hours) >= 0 && parseInt(hours) <= 59 && hours.length <= 2)) {
             dispatch(changeHours((parseInt(hours) + 1).toString()));
             dispatch(errorTime(false))
@@ -29,12 +29,12 @@ export function NameAndTime() {
     };
 
     const handleHourDecrement = (): void => {
-        const hoursAsNumber = parseInt(nameTimeState.hours);
+        const hoursAsNumber = parseInt(timeState.hours);
         if (!isNaN(hoursAsNumber) && hoursAsNumber > 0) {
             dispatch(changeHours((hoursAsNumber - 1).toString()));
             dispatch(errorTime(false))
         }
-        if (hoursAsNumber - 1 === 0 && parseInt(nameTimeState.minutes) === 0) {
+        if (hoursAsNumber - 1 === 0 && parseInt(timeState.minutes) === 0) {
             dispatch(errorTime(true))
 
         }
@@ -43,7 +43,7 @@ export function NameAndTime() {
 
 
     const handleMinuteIncrement = (): void => {
-        const minutes = nameTimeState.minutes
+        const minutes = timeState.minutes
         if ((!isNaN(parseInt(minutes)) && parseInt(minutes) >= 0 && parseInt(minutes) <= 59 && minutes.length <= 2)) {
             dispatch(changeMinutes((parseInt(minutes) + 1).toString()));
             dispatch(errorTime(false))
@@ -51,12 +51,14 @@ export function NameAndTime() {
     };
 
     const handleMinuteDecrement = (): void => {
-        const hoursAsNumber = parseInt(nameTimeState.minutes);
+        const hoursAsNumber = parseInt(timeState.minutes);
         if (!isNaN(hoursAsNumber) && hoursAsNumber > 0) {
             dispatch(changeMinutes((hoursAsNumber - 1).toString()));
             dispatch(errorTime(false))
         }
-        if (hoursAsNumber - 1 === 0 && parseInt(nameTimeState.hours) === 0) dispatch(errorTime(true))
+        if (hoursAsNumber - 1 === 0 && parseInt(timeState.hours) === 0) {
+            dispatch(errorTime(true))
+        }
 
         
     };
@@ -65,14 +67,16 @@ export function NameAndTime() {
 
     const handleHourChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const value = e.target.value;
-        const minutes = nameTimeState.minutes 
+        const minutes = timeState.minutes 
         if (value === '' || (!isNaN(parseInt(value)) && parseInt(value) >= 0 && parseInt(value) <= 60 && value.length <= 2)) {
             dispatch(changeHours(value));
             dispatch(errorTime(false))
             if(
                 (value === '' || value === '0' || value === '00') &&
                 (minutes === '' || minutes === '0' || minutes === '00')
-            ) dispatch(errorTime(true))
+            ) {
+                dispatch(errorTime(true))
+            }
 
         }
                 
@@ -80,14 +84,16 @@ export function NameAndTime() {
 
     const handleMinuteChange = (e: ChangeEvent<HTMLInputElement>): void => {
         const value = e.target.value;
-        const hours = nameTimeState.hours 
+        const hours = timeState.hours 
         if (value === '' || (!isNaN(parseInt(value)) && parseInt(value) >= 0 && parseInt(value) <= 60 && value.length <= 2)) {
             dispatch(changeMinutes(value));
             dispatch(errorTime(false))
             if(
                 (value === '' || value === '0' || value === '00') &&
                 (hours === '' || hours === '0' || hours === '00')
-            )  dispatch(errorTime(true))
+            )  {
+                dispatch(errorTime(true))
+            }
         }
     };
 
@@ -95,11 +101,11 @@ export function NameAndTime() {
 
     const handleEmpty = (e: FocusEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        if (value === '' && nameTimeState.hours === '') {
+        if (value === '' && timeState.hours === '') {
             dispatch(changeHours('0'));
         }
 
-        if (value === '' && nameTimeState.minutes === '') {
+        if (value === '' && timeState.minutes === '') {
             dispatch(changeMinutes('0'));
         }
     }
@@ -120,7 +126,7 @@ export function NameAndTime() {
                             handleHourDecrement();
                         }}>-</Button>
                     <TextField id="outlined-basic" label="Hours" variant="outlined"
-                        value={nameTimeState.hours}
+                        value={timeState.hours}
                         onChange={handleHourChange}
                         onBlur={handleEmpty}
                         type="number"
@@ -148,7 +154,7 @@ export function NameAndTime() {
                         }}>-</Button>
                     <TextField id="outlined-basic" label="Minutes" variant="outlined"
                         type="number"
-                        value={nameTimeState.minutes}
+                        value={timeState.minutes}
                         sx={secondTextInput}
                         onChange={handleMinuteChange}
                         onBlur={handleEmpty}

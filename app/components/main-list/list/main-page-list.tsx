@@ -6,8 +6,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { theme } from '@/config/ThemeMUI/theme';
 import { MainTableHeader } from '../main-table-header';
 import MainTableBody from '../main-table-body';
-import { UXLoading } from '../../ux-helpers/loading';
-import { EmptyInfo } from '../../ux-helpers/empty-info';
+import { UXLoading } from '../../ui-helpers/loading';
+import { EmptyInfo } from '../../ui-helpers/empty-info';
 import { styleLink } from '../../home/header/header';
 
 

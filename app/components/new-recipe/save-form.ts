@@ -12,17 +12,11 @@ import { IngredientT } from "@/state/slices/stepper/ingredients";
 import { InitialStateDescriptionI } from "@/state/slices/stepper/description";
 import { InitialStateI } from "@/state/slices/stepper/instruction";
 import { resetAllState } from "@/state/slices/stepper/reset-action";
+import { DataType, SaveFormResult } from "@/app/(main)/new-recipe/types";
 
 
 
-interface dataType {
-    id: string,
-    idRecipe: string,
-    media_id: string,
-    media_url: string,
-}
-
-async function uploadFile(data: dataType): Promise<string> {
+async function uploadFile(data: DataType): Promise<string> {
     const { id, idRecipe, media_id, media_url } = data;
 
     try {
@@ -69,19 +63,14 @@ async function uploadFile(data: dataType): Promise<string> {
 }
 
 
-type SaveFormResult = {
-    error?: unknown;
-    message?: string | null;
-} | null;
-
 export async function saveForm(
-    stepTypeRecommendation: StepTypeRecommend, 
-    stepNameTime: NameTimeT, 
-    stepMedia: MediaT, 
-    stepIngredients: IngredientT, 
-    stepDescription: InitialStateDescriptionI, 
+    stepTypeRecommendation: StepTypeRecommend,
+    stepNameTime: NameTimeT,
+    stepMedia: MediaT,
+    stepIngredients: IngredientT,
+    stepDescription: InitialStateDescriptionI,
     stepInstruction: InitialStateI,
-    userId: string, 
+    userId: string,
     userName: string,
     dispatch: AppDispatch
 ): Promise<SaveFormResult> {

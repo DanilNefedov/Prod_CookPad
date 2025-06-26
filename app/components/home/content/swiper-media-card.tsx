@@ -5,13 +5,13 @@ import { useEffect, useRef, useState } from "react";
 
 
 
-interface propsData {
+interface Props {
     el: MediaObj,
     name: string,
     
 }
 
-export default function SwiperMediaCard({ props }: { props: propsData }) {
+export default function SwiperMediaCard({ props }: { props: Props }) {
     const { el, name, } = props;
     const ref = useRef<HTMLDivElement | null>(null);
     const [isVisible, setIsVisible] = useState(false);

@@ -11,7 +11,7 @@ import numbro from "numbro";
 import { theme } from "@/config/ThemeMUI/theme";
 import { containerAvatarComment, containerCommentItem, containerSecondBlockComm, dataComm, hideBtn, likeComm, moreBtn, repliesOpen, replyComm, textComment } from "@/app/(main)/popular/style";
 import { usePingGate } from "@/app/hooks/ping";
-import { UXLoading } from "../ux-helpers/loading";
+import { UXLoading } from "../ui-helpers/loading";
 
 
 

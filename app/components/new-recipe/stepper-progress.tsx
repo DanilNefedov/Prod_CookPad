@@ -12,12 +12,10 @@ import { setSomeError } from '@/state/slices/stepper/error-open';
 
 
 export const StepperProgress = memo(() => {
-
-    const stepperState = useAppSelector(state => state.statusSlice);
-    const dispatch = useAppDispatch()
-
-    const ingredientsState = useAppSelector(state => state.ingredientsSlice)
-    const activePage = useAppSelector(state => state.statusSlice.active_page);
+    const dispatch = useAppDispatch();
+    const stepperState = useAppSelector((state) => state.statusSlice);
+    const ingredientsState = useAppSelector((state) => state.ingredientsSlice);
+    const activePage = useAppSelector((state) => state.statusSlice.active_page);
     const stepsCount = Object.keys(stepperState.steps).length;
 
     const nameErrors = [
@@ -27,7 +25,7 @@ export const StepperProgress = memo(() => {
         'Insert ingredients',
         'Write a description',
         'Write the instructions',
-    ];
+    ]; 
 
 
     const isStepFailed = useCallback((step: number) => {
@@ -60,12 +58,11 @@ export const StepperProgress = memo(() => {
 
 
     useEffect(() => {
-    
         const hasAnyError = Array.from({ length: stepsCount }, (_, i) => i + 1).some((step) =>
             isStepFailed(step)
         );
-    
         dispatch(setSomeError(hasAnyError));
+        
     }, [stepperState, ingredientsState, dispatch, stepsCount, isStepFailed]);
 
     return (

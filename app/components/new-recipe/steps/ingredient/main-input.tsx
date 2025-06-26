@@ -1,4 +1,5 @@
 import { secondTextInput } from "@/app/main-styles";
+import { fetchLocationSuggestions } from "@/app/services/autocomplite";
 import { IngredientForAutocomplite, ingredintFetch } from "@/app/types/types";
 import { theme } from "@/config/ThemeMUI/theme";
 import { useAppDispatch } from "@/state/hook";
@@ -6,17 +7,16 @@ import { choiceAutocomplite } from "@/state/slices/stepper/ingredients";
 import { Autocomplete, Box, debounce, ListItem, TextField, Typography } from "@mui/material";
 import { memo, useEffect, useMemo, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
-import { fetchLocationSuggestions } from "../request-search";
 
 
-interface PropsData {
+interface Props {
     ingredient: IngredientForAutocomplite, 
     handleInputChange: (newInputValue: string) => void, 
     error:boolean
 }
 
 
-export const MainInput = memo(({ ingredient, handleInputChange, error }: PropsData) => {
+export const MainInput = memo(({ ingredient, handleInputChange, error }: Props) => {
 
     const [options, setOptions] = useState<IngredientForAutocomplite[]>([]);
     const [value, setValue] = useState<IngredientForAutocomplite | null>(ingredient);
@@ -66,7 +66,6 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: PropsDa
                     };
                 });
                 setOptions(value ? [value, ...newOptions] : newOptions);
-                // dispatch(errorIngredient(ingredient.ingredient_id));
             }
         });
 

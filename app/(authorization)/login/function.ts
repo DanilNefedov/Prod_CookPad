@@ -1,16 +1,11 @@
 'use server'
 
 import { signIn } from "@/config/auth/auth";
+import { State } from "../types";
 
 
-export type State = {
-    error: boolean;
-    email: string;
-    success?: boolean;
-};
 
-
-export async function signInCall(prevState: State, formData: FormData): Promise<State> {
+export async function signInCall(_prevState: State, formData: FormData): Promise<State> {
     'use server'
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;

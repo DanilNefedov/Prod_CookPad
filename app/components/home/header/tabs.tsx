@@ -1,10 +1,10 @@
 'use client';
 
+import { useNavigationState } from '@/config/home-navigation/context-navigation';
 import { useAppSelector } from '@/state/hook';
 import { Tab, Tabs } from '@mui/material';
 import NextLink from 'next/link';
 import { useEffect, useMemo } from 'react';
-import { useNavigationState } from '../context-navigation';
 
 
 interface TabsRendererProps {
