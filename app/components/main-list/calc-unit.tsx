@@ -14,7 +14,7 @@ import { changeAmountFetch } from "@/state/slices/list-slice";
 import { theme } from "@/config/ThemeMUI/theme";
 import { newAmountListRecipe } from "@/state/slices/list-recipe-slice";
 
-interface DataProps {
+interface Props {
     elem: UnitsList;
     id: string;
     ingredient_id: string;
@@ -24,7 +24,7 @@ interface DataProps {
 }
 
 
-export const CalcUnit = memo(({ props }: { props: DataProps }) => {
+export const CalcUnit = memo(({ props }: { props: Props }) => {
     const { elem, id, ingredient_id, amount, setAmount, recipe_id } = props
     const [currentValue, setCurrentValue] = useState<string>(amount);
     const [isParenthesisOpen, setIsParenthesisOpen] = useState<number>(0);

@@ -12,7 +12,7 @@ import { authorName, containerBtnsStats, statsBtn, statsBtnMobileIcon, statsReci
 import { usePingGate } from "@/app/hooks/ping";
 
 
-interface DataPropsT {
+interface Props {
     author: PopularAuthorInfoT,
     likes: number,
     liked: boolean,
@@ -25,7 +25,7 @@ interface DataPropsT {
 }
 
 
-export const InfoAboutContent = memo(({ props }: { props: DataPropsT }) => {
+export const InfoAboutContent = memo(({ props }: { props: Props }) => {
     const { author, likes, liked, saved, saves, comments, config_id, openComment, toggleComment } = props
 
     const pingGate = usePingGate()

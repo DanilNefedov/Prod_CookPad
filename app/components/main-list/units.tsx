@@ -12,29 +12,35 @@ import { theme } from "@/config/ThemeMUI/theme"
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import { deleteUnitListRecipe, newAmountListRecipe, shopUnitListRecipe } from "@/state/slices/list-recipe-slice"
-import { handleAmountChange } from "./function"
+import { handleAmountChange } from "../../helpers/input-unit"
 import { shallowEqual } from "react-redux"
 import { UnitsList } from "@/app/types/types"
 
+interface Props {
+    ingredient_id: string, 
+    unit_id: string, 
+    recipe_id?: string 
+}
 
-
-const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_id: string, unit_id: string, recipe_id?: string }) => {
+const Units = memo(({ ingredient_id, unit_id, recipe_id }: Props) => {
     const unitData = useAppSelector(state => {
-        let thisIngredient;
+        let ingredient;
+
         if (recipe_id) {
-            thisIngredient = state.listRecipe.recipes
-                .find(el => el._id === recipe_id)
-                ?.ingredients_list.find(ing => ing._id === ingredient_id);
+            ingredient = state.listRecipe.recipes
+                .find(recipe => recipe._id === recipe_id)
+                ?.ingredients_list.find(ingr => ingr._id === ingredient_id);
         } else {
-            thisIngredient = state.list.list_ingr.find(el => el._id === ingredient_id);
+            ingredient = state.list.list_ingr.find(ingr => ingr._id === ingredient_id);
         }
-        
-        if (!thisIngredient) return null;
-        return {
-            unitInfo: thisIngredient.units.find(el => el._id === unit_id),
-            ingredientId: thisIngredient._id,
-        };
-    }, shallowEqual); 
+
+        if (!ingredient) return null;
+
+        const unitInfo = ingredient.units.find(unit => unit._id === unit_id);
+        const ingredientId = ingredient._id;
+
+        return { unitInfo, ingredientId };
+    }, shallowEqual);
 
     const userStore = useAppSelector(state => state.user); 
     const pathName = usePathname();
@@ -45,9 +51,10 @@ const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_id: stri
     const [amount, setAmount] = useState<string>(thisUnit ? thisUnit.amount.toString() : '0');
 
     const shopStatus = useAppSelector(state => {
-        if(recipe_id) return state.listRecipe.operations.shopUnitListRecipe.loading
-        return state.list.operations.shopUnitUpdate.loading
-    })
+        return recipe_id
+            ? state.listRecipe.operations.shopUnitListRecipe.loading
+            : state.list.operations.shopUnitUpdate.loading;
+    });
 
 
 
@@ -84,9 +91,8 @@ const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_id: stri
    
     
     const handleAmount = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const resIntupChange = handleAmountChange(e.target.value)
-
-        setAmount(resIntupChange);
+        const sanitized = handleAmountChange(e.target.value);
+        setAmount(sanitized);
     }
     
 
@@ -105,10 +111,9 @@ const Units = memo(({ ingredient_id, unit_id, recipe_id }: { ingredient_id: stri
         }
     }
 
-    if (!unitData || unitData === undefined || !unitData.unitInfo) return null;
 
 
-    return (
+    return !unitData?.unitInfo ? null : (
         <Box key={thisUnit?._id} sx={{...blockUnits, opacity:`${thisUnit?.shop_unit ? 0.4 : 1}`, 
         backgroundColor:pathName ==='/list' ? 'background.paper' : 'background.default'}}>
             {editAmount && editAmount === thisUnit?._id ?

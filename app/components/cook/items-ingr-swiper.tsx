@@ -10,28 +10,25 @@ import { useAppDispatch } from "@/state/hook";
 import { newIngredientList, newUnitIngredientList, updateCookUnit } from "@/state/slices/list-slice";
 import { add, bignumber, } from "mathjs";
 import { useSnackbar } from "notistack";
+import { ReturnData } from "@/app/(main)/cook/types";
 
 
-interface propsData {
+interface Props {
     el: IngredientFullData,
     id: string
 }
 
-interface returnData {
-    choice: string,
-    amount: number,
-    _id: string
-}
+
 const SlideTransition = (props: SlideProps) => <Slide {...props} direction="down" />;
 
 
-export function ItemsIngrSwiper({ props }: { props: propsData }) {
+export function ItemsIngrSwiper({ props }: { props: Props }) {
     const { el, id } = props
     const dispatch = useAppDispatch()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [units, setUnits] = useState<returnData[] | null>(null)
-    const [method, setMethod] = useState<string>('')
+    const [units, setUnits] = useState<ReturnData[] | null>(null)
+    const [method, setMethod] = useState<'PATCH' | 'POST' | ''>('');
     const open = Boolean(anchorEl);
     
 
@@ -130,16 +127,16 @@ export function ItemsIngrSwiper({ props }: { props: propsData }) {
 
 
 
-    function addOldUnit(elem: returnData) {
+    function addOldUnit(elem: ReturnData) {
         const sum = add(bignumber(el.units.amount), bignumber(elem.amount));
-        const new_amount = Number(sum.toFixed(5));
+        const newAmount  = Number(sum.toFixed(5));
 
         if (id !== '') {
             const data = {
                 name: el.name,
                 connection_id: id,
                 _id: elem._id,
-                amount: new_amount
+                amount: newAmount 
             }
 
             dispatch(updateCookUnit(data))

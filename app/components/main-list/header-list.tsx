@@ -6,12 +6,12 @@ import { btnMain } from "@/app/main-styles";
 import { usePathname } from "next/navigation";
 import { theme } from "@/config/ThemeMUI/theme";
 
-interface PropsData {
+interface Props {
     url:string,
     name:string
 }
 
-export function HeaderList({props}:{props:PropsData}) {
+export function HeaderList({props}:{props:Props}) {
     const pathname = usePathname()
    
     return (

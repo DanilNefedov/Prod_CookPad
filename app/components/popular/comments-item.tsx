@@ -16,7 +16,7 @@ import { UXLoading } from "../ui-helpers/loading";
 
 
 
-interface DataProps {
+interface Props {
     id_comment: string,
     config_id: string,
     newReply: string[],
@@ -24,7 +24,7 @@ interface DataProps {
 
 
 
-export const CommentsItem = memo(({ id_comment, config_id, newReply,}: DataProps) => {
+export const CommentsItem = memo(({ id_comment, config_id, newReply,}: Props) => {
 
     const isActive = useAppSelector(
         state => state.commentContext.comment.id_comment === id_comment

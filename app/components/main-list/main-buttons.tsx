@@ -13,13 +13,13 @@ import { usePathname } from "next/navigation";
 import { deleteIngrRecipeList, shopIngrListRecipe } from "@/state/slices/list-recipe-slice";
 
 
-interface DataProps{
+interface Props{
     el: IListObj,
     recipe_id?:string
 }
 
 
-export function MainButtons({props}: {props:DataProps}) {
+export function MainButtons({props}: {props:Props}) {
     const {el, recipe_id} = props
 
     const dispatch = useAppDispatch()

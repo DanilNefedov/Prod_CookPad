@@ -26,12 +26,12 @@ const Units = dynamic(() => import('./units'), {
 
 
 
-interface DataProps {
+interface Props {
     ingredient_id: string,
     recipe_id?: string
 }
 
-const MainTableBody = memo(({ props }: { props: DataProps }) => {
+const MainTableBody = memo(({ props }: { props: Props }) => {
     const { ingredient_id, recipe_id } = props;
 
     const thisIngredient = useAppSelector(state => {
@@ -55,8 +55,8 @@ const MainTableBody = memo(({ props }: { props: DataProps }) => {
         setExpandedId((prevId) => (prevId === id ? null : id));
     }
 
-    return (
-        <Fragment >
+    return !thisIngredient ? null : (
+        <>
             <TableRow sx={{
                 ...mainIngrList, opacity: `${thisIngredient.shop_ingr ? 0.4 : 1}`,
                 '& .MuiTableCell-root': {
@@ -251,7 +251,7 @@ const MainTableBody = memo(({ props }: { props: DataProps }) => {
 
             }
 
-        </Fragment>
+        </>
     )
 }, (prevProps, nextProps) => {
     const isRecipeIdEqual = 

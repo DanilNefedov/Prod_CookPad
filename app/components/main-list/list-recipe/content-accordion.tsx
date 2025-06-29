@@ -14,14 +14,14 @@ const MainTableBody = dynamic(() => import('../main-table-body'), {
 
 
 
-interface dataProps {
+interface Props {
     _id: string,
     status:boolean
 }
 
 
 
-export const ContentAccordion = memo(({ props }: { props: dataProps }) => {
+export const ContentAccordion = memo(({ props }: { props: Props }) => {
     const {_id, status } = props   
     const ingredients_list = useAppSelector(state => state.listRecipe.recipes.find(el => el._id === _id)?.ingredients_list);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);

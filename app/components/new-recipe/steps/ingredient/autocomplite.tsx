@@ -7,7 +7,7 @@ import { MainInput } from "./main-input";
 import { choiceUnits, ingredientAmount } from "@/state/slices/stepper/ingredients";
 import { shallowEqual } from "react-redux";
 import { addErrorIngredient, deleteErrorIngredient } from "@/state/slices/stepper/error-open";
-import { handleAmountChange } from "@/app/components/main-list/function";
+import { handleAmountChange } from "@/app/helpers/input-unit";
 
 
 interface Props {

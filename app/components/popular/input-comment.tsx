@@ -8,10 +8,10 @@ import { useAppSelector } from "@/state/hook";
 
 
 
-interface DataProps {
+interface Props {
     sendComm: (text: string) => void
 }
-export const InputComment = memo(({ sendComm }: DataProps) => {
+export const InputComment = memo(({ sendComm }: Props) => {
     const statusNewReplyComm = useAppSelector(state => state.comments.operations.newReplyComm.loading)
     const statusNewCommPopular = useAppSelector(state => state.comments.operations.newCommPopular.loading)
     const [comm, setComm] = useState<string>('')

@@ -12,13 +12,13 @@ import { theme } from '@/config/ThemeMUI/theme';
 import { IngredientFullData } from '@/app/types/types';
 import { memo } from 'react';
 
-interface PropsData {
+interface Props {
     findCook: IngredientFullData[] | undefined,
     id: string
 }
 
 
-export const IngredientSwiper = memo(({ props }: { props: PropsData }) => {
+export const IngredientSwiper = memo(({ props }: { props: Props }) => {
 
     const { findCook, id } = props;
     const itemCount = findCook?.length || 0;

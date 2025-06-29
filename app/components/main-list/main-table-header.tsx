@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 
 
 
-interface DataProps{
+interface Props{
     sortOrder:'asc' | 'desc' | null, 
     setSortOrder:Dispatch<SetStateAction<"asc" | "desc" | null>>,
     sortBy:string | null, 
@@ -16,7 +16,7 @@ interface DataProps{
 }
 
 
-export function MainTableHeader ({props}: {props:DataProps}) {
+export function MainTableHeader ({props}: {props:Props}) {
     const {setSortBy, setSortOrder, sortBy, sortOrder} = props
     const pathName = usePathname()
 

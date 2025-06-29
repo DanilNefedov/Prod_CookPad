@@ -11,13 +11,13 @@ import { avatarReply, containerPrimaryReplyText, dataReply, fullTextReply, likes
 
 
 
-interface dataProps {
+interface Props {
     id_comment_p: string,
     id_branch_p: string,
     handleLike: (params: LikeT) => void
     config_id: string,
 }
-export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, config_id,}: dataProps) => {
+export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, config_id,}: Props) => {
     const reply = useAppSelector(state => state.comments.replies[id_branch_p]?.entities[id_comment_p]);
     const dispatch = useAppDispatch()
     

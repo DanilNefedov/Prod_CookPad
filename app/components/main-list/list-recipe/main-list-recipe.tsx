@@ -11,7 +11,6 @@ import { EmptyInfo } from "../../ui-helpers/empty-info";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { theme } from "@/config/ThemeMUI/theme";
 import { styleLink } from "../../home/header/header";
-// import { ErrorAlert } from "../../ux-helpers/error-alert";
 
 
 
@@ -20,11 +19,10 @@ export function MainListRecipe() {
     const dispatch = useAppDispatch()
     const listRecipeStore = useAppSelector(state => state.listRecipe)
     const pageListRecipe = useAppSelector(state => state.listRecipe.page)
-    const statusListRecipe = useAppSelector(state => state.listRecipe.operations.preLoaderMain.loading)
-    const preLoaderMainStatus = useAppSelector(state => state.listRecipe.operations.preLoaderMain)
-    const userStore = useAppSelector(state => state.user)
+    const isPreloadingLoading = useAppSelector(state => state.listRecipe.operations.preLoaderMain.loading);    
+    const isPreloadingError = useAppSelector(state => state.listRecipe.operations.preLoaderMain.error)
+    const connection_id = useAppSelector(state => state.user.user.connection_id)
 
-    const connection_id = userStore.user.connection_id
     const [loadingRecipeIds, setLoadingRecipeIds] = useState<string[]>([]);
     const [expandedIds, setExpandedIds] = useState<string[]>([]);
 
@@ -75,10 +73,10 @@ export function MainListRecipe() {
     return (
         <Box sx={{ height: '100%', position: 'relative' }}>
             {
-                !preLoaderMainStatus.error && preLoaderMainStatus.loading && listRecipeStore.recipes.length === 0 ?
+                !isPreloadingError && isPreloadingLoading && listRecipeStore.recipes.length === 0 ?
                     <UXLoading ></UXLoading>//color:'#1F2128'
                     :
-                    !preLoaderMainStatus.loading && listRecipeStore.recipes.length === 0 ?
+                    !isPreloadingLoading && listRecipeStore.recipes.length === 0 ?
                         <EmptyInfo></EmptyInfo>
                         :
                         listRecipeStore?.recipes.map(el => (
@@ -190,7 +188,7 @@ export function MainListRecipe() {
             }
 
             {
-                !statusListRecipe && listRecipeStore.recipes.length > 0 ? 
+                !isPreloadingLoading && listRecipeStore.recipes.length > 0 ? 
                 <Button
                     disabled={pageListRecipe === null ? true : false}
                     sx={{
@@ -219,7 +217,7 @@ export function MainListRecipe() {
                     onClick={() => handleMore()}
                 >More</Button>
                 :
-                statusListRecipe && listRecipeStore.recipes.length > 0 ?
+                isPreloadingLoading && listRecipeStore.recipes.length > 0 ?
                 <UXLoading position={'static'}></UXLoading>
                 :
                 <></>

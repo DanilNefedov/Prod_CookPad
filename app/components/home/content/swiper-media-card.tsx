@@ -8,7 +8,6 @@ import { useEffect, useRef, useState } from "react";
 interface Props {
     el: MediaObj,
     name: string,
-    
 }
 
 export default function SwiperMediaCard({ props }: { props: Props }) {

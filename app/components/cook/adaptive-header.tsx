@@ -26,40 +26,8 @@ const Puller = styled('div')(({ theme }) => ({
 
 export function AdaptiveHeader({cookHistoryStore, recipe_id, open, toggleDrawer, handleDeleteRecipe, isDeleting,}: HeaderProps) {
     const boxRef = useRef<HTMLUListElement | null>(null)
-    // const drawerContentRef = useRef<HTMLUListElement | null>(null);
     const iOS = typeof navigator !== 'undefined' && /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-
-
-
-
-    // useEffect(() => {
-    //     const drawerContent = drawerContentRef.current;
-    //     if (!drawerContent) return;
-
-    //     let startY = 0;
-
-    //     const onTouchStart = (e: TouchEvent) => {
-    //         startY = e.touches[0].clientY;
-    //     };
-
-    //     const onTouchMove = (e: TouchEvent) => {
-    //         const currentY = e.touches[0].clientY;
-    //         const deltaY = currentY - startY;
-
-    //         if (drawerContent.scrollTop === 0 && deltaY > 0) {
-    //         e.preventDefault();
-    //         }
-    //     };
-
-    //     drawerContent.addEventListener('touchstart', onTouchStart, { passive: false });
-    //     drawerContent.addEventListener('touchmove', onTouchMove, { passive: false });
-
-    //     return () => {
-    //         drawerContent.removeEventListener('touchstart', onTouchStart);
-    //         drawerContent.removeEventListener('touchmove', onTouchMove);
-    //     };
-    // }, [open]); 
 
     return (
         <Box ref={boxRef} sx={{

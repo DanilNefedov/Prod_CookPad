@@ -11,16 +11,16 @@ import { evaluate } from "mathjs";
 import { addNewUnit } from "@/state/slices/list-slice";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { theme } from "@/config/ThemeMUI/theme";
-import { handleAmountChange } from "./function";
+import { handleAmountChange } from "../../helpers/input-unit";
 import { newUnitListRecipe } from "@/state/slices/list-recipe-slice";
 
-interface PropsData {
+interface Props {
     ingr: IListObj;
     id: string;
     recipe_id?: string,
 }
 
-export function AddNewUnit({ props }: { props: PropsData }) {
+export function AddNewUnit({ props }: { props: Props }) {
     const { ingr, id, recipe_id, } = props;
     const [open, setOpen] = useState<boolean>(false)
     const dispatch = useAppDispatch()
@@ -31,33 +31,32 @@ export function AddNewUnit({ props }: { props: PropsData }) {
 
 
     function handleAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        const resIntupChange = handleAmountChange(e.target.value)
+        const formattedValue = handleAmountChange(e.target.value)
 
-        setAmount(resIntupChange);
+        setAmount(formattedValue);
     }
 
     
     function confirmAmount(ingredient_id: string) {
-        if (id !== '') {
-            const numericAmount = evaluate(amount);
+        if (id === "") return;
 
-            const newUnit = {
-                shop_unit: false,
-                choice: unit,
-                amount: numericAmount,
-            }
-            if (pathName === '/list') {
-                setOpen(false)
-                setAmount('0')
-                setUnit('')
-                dispatch(addNewUnit({ ingredient_id, new_unit: newUnit }))
-            }else if(pathName === '/list-recipe' && recipe_id){
-                setOpen(false)
-                setAmount('0')
-                setUnit('')
-                dispatch(newUnitListRecipe({connection_id: id,  ingredient_id, updated_unit:newUnit, _id:recipe_id}))
-            }
+        const numericAmount = evaluate(amount);
 
+        const newUnit = {
+            shop_unit: false,
+            choice: unit,
+            amount: numericAmount,
+        }
+        
+        setAmount('0')
+        setUnit('')
+
+        if (pathName === '/list') {
+            setOpen(false)
+            dispatch(addNewUnit({ ingredient_id, new_unit: newUnit }))
+        }else if(pathName === '/list-recipe' && recipe_id){
+            setOpen(false)
+            dispatch(newUnitListRecipe({connection_id: id,  ingredient_id, updated_unit:newUnit, _id:recipe_id}))
         }
 
     }

@@ -18,28 +18,26 @@ export default async function ListLayout({children}: {children: React.ReactNode}
     ]
 
     return (
-        // <AlertsProvider>
-            <Box sx={{ height: 'inherit' }}>
-                <AppBar position="static" sx={{
-                    backgroundColor: 'background.default',
-                    alignItems: 'center',
-                    m: '10px 0',
-                    justifyContent: 'center',
-                    flexDirection: 'inherit',
-                    borderRadius: '10px',
-                    p: '10px 0',
-                    gap: '20px',
-                    boxShadow: 'none',
+        <Box sx={{ height: 'inherit' }}>
+            <AppBar position="static" sx={{
+                backgroundColor: 'background.default',
+                alignItems: 'center',
+                m: '10px 0',
+                justifyContent: 'center',
+                flexDirection: 'inherit',
+                borderRadius: '10px',
+                p: '10px 0',
+                gap: '20px',
+                boxShadow: 'none',
 
-                }}>
-                    {links.map(el => (
-                        <HeaderList props={el} key={el.url}></HeaderList>
-                    ))}
+            }}>
+                {links.map(el => (
+                    <HeaderList props={el} key={el.url}></HeaderList>
+                ))}
 
-                </AppBar>
-                {children}
-            </Box>
-        // </AlertsProvider>
+            </AppBar>
+            {children}
+        </Box>
 
     )
 }

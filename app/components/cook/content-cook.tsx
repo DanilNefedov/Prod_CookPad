@@ -54,7 +54,7 @@ export function ContentCook() {
     }, [id, recipe_id, dispatch, findCook, userStore.user.connection_id]);
 
 
-    const handlerFavorite = ({ recipe_id }: { recipe_id: string | undefined }): void => {
+    const handleFavorite = ({ recipe_id }: { recipe_id: string | undefined }): void => {
         if(favoriteStatus) return
 
         if (recipe_id !== '' && recipe_id) {
@@ -163,7 +163,7 @@ export function ContentCook() {
                                 },
                             }}
                             >Time: {findCook?.time.hours}h : {findCook?.time.minutes}m</Typography>
-                            <IconButton sx={{ padding: '0' }} aria-label="add to favorites" onClick={() => handlerFavorite({ recipe_id: findCook?.recipe_id })}>
+                            <IconButton sx={{ padding: '0' }} aria-label="add to favorites" onClick={() => handleFavorite({ recipe_id: findCook?.recipe_id })}>
                                 {findCook?.favorite ? <FavoriteIcon sx={favoriteBtnActive} /> : <FavoriteIcon sx={favoriteBtnDesactive} />}
                             </IconButton>
 

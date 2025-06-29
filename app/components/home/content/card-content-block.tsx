@@ -41,26 +41,33 @@ interface Props {
 
 export const CardContentBlock = memo(({ props }: { props: Props }) => {
     const { recipe_id, id} = props
-    const recipes = useAppSelector(state => state.recipe.recipes.find(el => el.recipe_id === recipe_id));
-    const favoriteStatus = useAppSelector(state => state.recipe.operations.setFavoriteRecipe.loading)
-    const listStatus = useAppSelector(state => state.listRecipe.operations.newListRecipe.loading)
-    const dispatch = useAppDispatch()
-    const isMobile = useMediaQuery("(max-width:500px)");
+    const recipe = useAppSelector((state) =>
+        state.recipe.recipes.find((el) => el.recipe_id === recipe_id)
+    );
+    const isFavoriteLoading = useAppSelector(
+        (state) => state.recipe.operations.setFavoriteRecipe.loading
+    );
+    const isListLoading = useAppSelector(
+        (state) => state.listRecipe.operations.newListRecipe.loading
+    );
+
+    const dispatch = useAppDispatch();
+    const isMobile = useMediaQuery('(max-width:500px)');
+
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openAdaptive = Boolean(anchorEl);
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
-
-
-
 
     const handleCloseAdaptive = () => {
         setAnchorEl(null);
     };
 
+
     const handlerFavorite = (recipe_id: string, favorite: boolean | undefined): void => {
-        if(favoriteStatus) return
+        if(isFavoriteLoading) return
 
         if (recipe_id && id !== '' && favorite !== undefined) {
             const data = { connection_id: id, recipe_id, favorite }
@@ -69,7 +76,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
     }
    
     function addToList() {
-        if(listStatus) return
+        if(isListLoading) return
 
         if (id !== '' && recipe_id) {
             dispatch(newListRecipe({ connection_id: id, recipe_id: recipe_id }))
@@ -87,7 +94,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                     alignItems="center"
                 >
                     <CardHeader
-                        title={recipes?.name}
+                        title={recipe?.name}
                         sx={{ padding: 0, maxWidth: "70%", '& .MuiCardHeader-content':{width:'100%'}, [theme.breakpoints.down(500)]: {maxWidth: "57%"}}}
                         slotProps={{
                             title: {
@@ -127,7 +134,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                             }}
 
                         >
-                            {`${recipes?.time.hours === '' ? '00' : recipes?.time.hours}:${recipes?.time.minutes === '' ? '00' : recipes?.time.minutes}h`}
+                            {`${recipe?.time.hours === '' ? '00' : recipe?.time.hours}:${recipe?.time.minutes === '' ? '00' : recipe?.time.minutes}h`}
                         </Typography>
                     </Box>
                 </Box>
@@ -147,12 +154,12 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                 spaceBetween={1}
             // lazy={true}
             >
-                {recipes?.media
+                {recipe?.media
                     .slice()
                     .sort((a, b) => Number(b.main) - Number(a.main))
                     .map((el, index) => (
                         <SwiperSlide key={el.media_id} className="media-main-slide" virtualIndex={index}>
-                            <SwiperMediaCard props={{ el, name:recipes?.name }} />
+                            <SwiperMediaCard props={{ el, name:recipe?.name }} />
                         </SwiperSlide>
                     )
                     )}
@@ -210,12 +217,12 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                             textOverflow: "ellipsis"
                         },
                     }}>
-                        {"type: " + recipes?.recipe_type}
+                        {"type: " + recipe?.recipe_type}
                     </Typography>
                     <IconButton sx={{
                         padding: '0',
-                    }} aria-label="add to favorites" onClick={() => handlerFavorite(recipe_id, recipes?.favorite)}>
-                        {recipes?.favorite ? <FavoriteIcon sx={favoriteBtnActive} /> : <FavoriteIcon sx={favoriteBtnDesactive} />}
+                    }} aria-label="add to favorites" onClick={() => handlerFavorite(recipe_id, recipe?.favorite)}>
+                        {recipe?.favorite ? <FavoriteIcon sx={favoriteBtnActive} /> : <FavoriteIcon sx={favoriteBtnDesactive} />}
                     </IconButton>
                 </Box>
                 <Box>
@@ -237,7 +244,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                             },
                         }}
                     >
-                        {recipes?.description}
+                        {recipe?.description}
                     </Typography>
                 </Box>
 
@@ -309,7 +316,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                             <Link 
                             href={{
                                 pathname: `/cook/${recipe_id}`,
-                                query: { name:recipes?.name },
+                                query: { name:recipe?.name },
                             }}
                             className='cookLinkMainContent'
                             >Cook</Link>

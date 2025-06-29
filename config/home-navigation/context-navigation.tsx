@@ -1,26 +1,22 @@
 'use client'
 
+import { NavigationContextProps } from "@/app/(main)/home/types";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 
-export interface INavigationContext {
-    handlerNavigation: (navigation: string | null) => void 
-    nav: string
-}
 
-
-export interface IProps{
-    children:ReactNode
+export interface Props{
+  children:ReactNode
 }
 
 
 
-const StepsContext = createContext<INavigationContext>({
+const StepsContext = createContext<NavigationContextProps>({
   handlerNavigation: () => { },
   nav: 'all'
 });
 
-export function NavigationProvider({ children }: IProps) {
+export function NavigationProvider({ children }: Props) {
   const [nav, setNav] = useState<string>('all')
 
   function handlerNavigation(navigation: string | null) {

@@ -9,16 +9,15 @@ import MainTableBody from '../main-table-body';
 import { UXLoading } from '../../ui-helpers/loading';
 import { EmptyInfo } from '../../ui-helpers/empty-info';
 import { styleLink } from '../../home/header/header';
+import { shallowEqual } from 'react-redux';
 
 
 export function MainListPage() {
     const dispatch = useAppDispatch()
-    const listStore = useAppSelector(state => state.list.list_ingr);
-    const pageList = useAppSelector(state => state.list.page_list)
-    const statusfetch = useAppSelector(state => state.list.operations.fetchList.loading)
-    // const listStatus = useAppSelector(state => state.list.status)
-    const userStore = useAppSelector(state => state.user)
-    const id = userStore?.user?.connection_id
+    const ingredients = useAppSelector((state) => state.list.list_ingr);
+    const currentPage = useAppSelector((state) => state.list.page_list); 
+    const isLoading = useAppSelector((state) => state.list.operations.fetchList.loading); 
+    const id = useAppSelector((state) => state.user.user.connection_id);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
     const [sortBy, setSortBy] = useState<string | null>(null);
 
@@ -26,18 +25,18 @@ export function MainListPage() {
 
 
     useEffect(() => {
-        if (id !== '' && pageList === 1 && pageList !== null) {
-            dispatch(fetchList({ id, page_list:pageList }));
+        if (id !== '' && currentPage === 1 && currentPage !== null) {
+            dispatch(fetchList({ id, page_list:currentPage }));
         }
-    }, [dispatch, id, pageList]);
+    }, [dispatch, id, currentPage]);
 
 
 
 
     const sortedList = useMemo(() => {
-        if (!sortBy) return listStore;
+        if (!sortBy) return ingredients;
 
-        return [...listStore].sort((a, b) => {
+        return [...ingredients].sort((a, b) => {
             if (sortBy === 'name') {
                 return sortOrder === 'asc'
                     ? a.name.localeCompare(b.name)
@@ -49,16 +48,15 @@ export function MainListPage() {
             }
             return 0;
         });
-    }, [sortBy, sortOrder, listStore]);
+    }, [sortBy, sortOrder, ingredients]);
 
 
     function handleMore () {
-        if (id !== '' && pageList !== null) {
-            dispatch(fetchList({ id, page_list:pageList }));
+        if (id !== '' && currentPage !== null) {
+            dispatch(fetchList({ id, page_list:currentPage }));
         }
     }
 
-    console.log(listStore)
 
     return (
         <>
@@ -87,14 +85,14 @@ export function MainListPage() {
 
 
                 <TableBody sx={{ overflow: 'auto', borderTop: '2px solid rgba(255, 0, 0, 0.12)' }}>
-                    {statusfetch && listStore.length === 0 ?
+                    {isLoading && ingredients.length === 0 ?
                         <TableRow>
                             <TableCell sx={{ backgroundColor: 'transparent', border: '0' }}>
                                 <UXLoading ></UXLoading>{/* color:'#1F2128' */}
                             </TableCell>
                         </TableRow>
                         :
-                        !statusfetch && listStore.length === 0 ?
+                        !isLoading && ingredients.length === 0 ?
                             <TableRow>
                                 <TableCell sx={{ backgroundColor: 'transparent', border: '0' }}>
                                     <EmptyInfo></EmptyInfo>
@@ -117,9 +115,9 @@ export function MainListPage() {
             </Table>
 
             {
-                !statusfetch && listStore.length > 0 ? 
+                !isLoading && ingredients.length > 0 ? 
                 <Button
-                    disabled={pageList === null ? true : false}
+                    disabled={currentPage === null ? true : false}
                     sx={{
                         ...styleLink, 
                         backgroundColor:"primary.dark",
@@ -146,7 +144,7 @@ export function MainListPage() {
                     onClick={() => handleMore()}
                 >More</Button>
                 :
-                statusfetch && listStore.length > 0 ?
+                isLoading && ingredients.length > 0 ?
                 <UXLoading position={'static'}></UXLoading>
                 :
                 <></>

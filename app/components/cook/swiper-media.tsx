@@ -6,14 +6,14 @@ import { memo, useEffect, useRef, useState } from "react";
 
 
 
-interface propsData {
+interface Props {
     el: MediaObj,
 }
 
-const SwiperMediaCook = memo(({ props }: { props: propsData }) => {
+const SwiperMediaCook = memo(({ props }: { props: Props }) => {
     const { el } = props
 
-    const ref = useRef<HTMLDivElement | null>(null);
+    const containerRef = useRef<HTMLDivElement | null>(null);
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
@@ -31,8 +31,8 @@ const SwiperMediaCook = memo(({ props }: { props: propsData }) => {
             }
         );
 
-        if (ref.current) {
-            observer.observe(ref.current);
+        if (containerRef.current) {
+            observer.observe(containerRef.current);
         }
 
         return () => observer.disconnect();
@@ -40,7 +40,7 @@ const SwiperMediaCook = memo(({ props }: { props: propsData }) => {
 
 
     return (
-        <Box sx={{ ...imgRecipeContainer, }} ref={ref}>
+        <Box sx={{ ...imgRecipeContainer, }} ref={containerRef}>
             {el.media_type === 'image' ? (
                 <CardMedia
                     alt='image'

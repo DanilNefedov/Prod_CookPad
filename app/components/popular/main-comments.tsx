@@ -12,7 +12,7 @@ import { usePingGate } from "@/app/hooks/ping";
 
 
 
-interface dataProps {
+interface Props {
     config_id: string,
     comments: number
 }
@@ -24,7 +24,7 @@ export interface LikeT {
     reply: boolean,
     id_branch: string
 }
-export const MainComments = memo(({ config_id, comments }: dataProps) => {
+export const MainComments = memo(({ config_id, comments }: Props) => {
     const userData = useAppSelector(state => state.user);
     const replyLength = useAppSelector(state =>
         Object.values(state.comments.replies).reduce((sum, replyData) => {
