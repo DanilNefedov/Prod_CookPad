@@ -3,21 +3,21 @@ import { resetAllState } from "./reset-action";
 
 
 
-interface StepStatus {
+interface Steps {
     error_status: Record<string, boolean | string[]>;
     open: boolean;
 }
 
-interface PageStatusP  {
+interface ErrorState  {
     some_error:boolean
     active_page:number
-    steps: Record<number, StepStatus>; 
+    steps: Record<number, Steps>; 
 }
 
 
 
 
-const initialState: PageStatusP = {
+const initialState: ErrorState = {
     active_page:1,
     some_error:true,
     steps: {

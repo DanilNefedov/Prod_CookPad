@@ -1,6 +1,6 @@
-import { CookHistoryT, NameLinksT } from "@/app/types/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store";
+import { createOperations, createOperationStatus, OperationState } from "@/app/types";
+import { CookHistoryRootState, DeleteCookHistoryFetch, HistoryLinksFetchReq, NewCookHistoryFetch } from "@/app/(main)/cook/types";
 
 
 
@@ -10,42 +10,25 @@ export type CookHistoryOperationKey =
   | 'deleteCookHistory'
 
 
-
-type OperationStatus = {
-    loading: boolean
-    error: boolean
+interface CookHistoryState extends CookHistoryRootState {
+    operations: OperationState<CookHistoryOperationKey>
 }
-
-type OperationState = Record<CookHistoryOperationKey, OperationStatus>
-
-interface CookHistoryState extends CookHistoryT {
-    operations: OperationState
-}
-
-const defaultStatus: OperationStatus = { loading: true, error: false }
 
 
 const initialState:CookHistoryState = {
-    status: false,
-    error: false,
     connection_id: '',
-    history_links:[
-    ],
-    operations:{
-        fetchHistoryCook:defaultStatus,
-        newCookHistory:defaultStatus,
-        deleteCookHistory:defaultStatus
-    }
+    history_links:[],
+    operations:createOperations<CookHistoryOperationKey>(
+        ['fetchHistoryCook', 'newCookHistory', 'deleteCookHistory'],
+        (key) => {
+            return createOperationStatus();
+        }
+    )
 }
 
 
-interface fetchCookHistoryT {
-    connection_id:string,
-    history_links:NameLinksT[]
-}
 
-
-export const fetchHistoryCook = createAsyncThunk<fetchCookHistoryT, {connection_id:string, recipe_id:string}, {rejectValue: string}>(
+export const fetchHistoryCook = createAsyncThunk<CookHistoryRootState, HistoryLinksFetchReq, {rejectValue: string}>(
     'cook-history/fetchHistoryCook',
     async function ({connection_id, recipe_id,}, {rejectWithValue, dispatch }){
         try{
@@ -72,16 +55,9 @@ export const fetchHistoryCook = createAsyncThunk<fetchCookHistoryT, {connection_
     }
 )
 
-interface newCookHistoryT {
-    connection_id:string,
-    history_links:{
-        recipe_id:string,
-        recipe_name:string
-    }
-}
 
 
-export const newCookHistory = createAsyncThunk<newCookHistoryT, newCookHistoryT, {rejectValue: string}>(
+export const newCookHistory = createAsyncThunk<NewCookHistoryFetch, NewCookHistoryFetch, {rejectValue: string}>(
     'cook-history/changeCookHistory',
     async function (data, {rejectWithValue}){
         try{
@@ -108,7 +84,7 @@ export const newCookHistory = createAsyncThunk<newCookHistoryT, newCookHistoryT,
     }
 )
 
-export const deleteCookHistory = createAsyncThunk<{connection_id:string, recipe_id:string}, {connection_id:string, recipe_id:string}, {rejectValue: string}>(
+export const deleteCookHistory = createAsyncThunk<DeleteCookHistoryFetch, DeleteCookHistoryFetch, {rejectValue: string}>(
     'cook-history/deleteCookHistory',
     async function ({connection_id, recipe_id}, {rejectWithValue}){
         try {
@@ -170,7 +146,7 @@ const CookHistorySlice = createSlice({
         builder
             .addCase(fetchHistoryCook.pending, fetchHistoryCookHandlers.pending)
             .addCase(fetchHistoryCook.rejected, fetchHistoryCookHandlers.rejected)
-            .addCase(fetchHistoryCook.fulfilled, (state, action: PayloadAction<fetchCookHistoryT, string>) => {
+            .addCase(fetchHistoryCook.fulfilled, (state, action: PayloadAction<CookHistoryRootState, string>) => {
                 state.operations.fetchHistoryCook.error = false
                 state.operations.fetchHistoryCook.loading = false
 
@@ -189,7 +165,7 @@ const CookHistorySlice = createSlice({
 
             .addCase(newCookHistory.pending, newCookHistoryHandlers.pending)
             .addCase(newCookHistory.rejected, newCookHistoryHandlers.rejected)
-            .addCase(newCookHistory.fulfilled, (state, action: PayloadAction<newCookHistoryT, string>) => {
+            .addCase(newCookHistory.fulfilled, (state, action: PayloadAction<NewCookHistoryFetch, string>) => {
                 state.operations.newCookHistory.error = false
                 state.operations.newCookHistory.loading = false
 
@@ -203,7 +179,7 @@ const CookHistorySlice = createSlice({
 
             .addCase(deleteCookHistory.pending, deleteCookHistoryHandlers.pending)
             .addCase(deleteCookHistory.rejected, deleteCookHistoryHandlers.rejected)
-            .addCase(deleteCookHistory.fulfilled, (state, action: PayloadAction<{ connection_id: string, recipe_id: string }>) => {
+            .addCase(deleteCookHistory.fulfilled, (state, action: PayloadAction<DeleteCookHistoryFetch, string>) => {
                 state.operations.deleteCookHistory.error = false
                 state.operations.deleteCookHistory.loading = false
             

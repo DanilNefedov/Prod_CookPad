@@ -3,7 +3,6 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { getReplies, likedComment } from "@/state/slices/comments-popular-slice";
-import { LikeT } from "./main-comments";
 import { ReplyComment } from "./reply-comment";
 import { setActiveComment } from "@/state/slices/comments-context";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -12,6 +11,7 @@ import { theme } from "@/config/ThemeMUI/theme";
 import { containerAvatarComment, containerCommentItem, containerSecondBlockComm, dataComm, hideBtn, likeComm, moreBtn, repliesOpen, replyComm, textComment } from "@/app/(main)/popular/style";
 import { usePingGate } from "@/app/hooks/ping";
 import { UXLoading } from "../ui-helpers/loading";
+import { Like } from "@/app/(main)/popular/types";
 
 
 
@@ -38,7 +38,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: Props) =>
     const localLikeLoadingRef = useRef(false);
     const prevLengthRef = useRef<number>(repliesData?.ids?.length || 0)
     const pingGate = usePingGate()
-    const [statusReply, setStatusReply] = useState<string>('')
+    const [statusReply, setStatusReply] = useState<'all' | 'more' | ''>('')
 
 
     useEffect(() => {
@@ -80,7 +80,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: Props) =>
         }
 
     }
-    const handleLike = useCallback(({ id_comment, config_id, liked, reply, id_branch }: LikeT) => {
+    const handleLike = useCallback(({ id_comment, config_id, liked, reply, id_branch }: Like) => {
         if (connection_id !== "" && liked !== undefined && !localLikeLoadingRef.current) {
             localLikeLoadingRef.current = true;
             dispatch(

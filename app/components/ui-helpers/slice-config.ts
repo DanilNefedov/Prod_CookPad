@@ -12,7 +12,7 @@ import { closeAlertPopular, PopularOperationKey } from "@/state/slices/popular-s
 import { closeAlertCook, CookOperationKey } from "@/state/slices/cook-slice";
 import { closeAlertCookHistory, CookHistoryOperationKey } from "@/state/slices/cook-history";
 import { closeAlertComments, CommentsOperationKey } from "@/state/slices/comments-popular-slice";
-import { closeAlertList, listOperationKey } from "@/state/slices/list-slice";
+import { closeAlertList, ListOperationKey } from "@/state/slices/list-slice";
 
 
 
@@ -32,7 +32,7 @@ export const SLICE_CONFIGS = {
         errorMessages: ERROR_MESSAGES_LIST,
         loadingMessages: LOADING_MESSAGES_LIST,
         closeErrorAction: closeAlertList
-    } as OperationConfig<listOperationKey>, 
+    } as OperationConfig<ListOperationKey>, 
 
     recipe: {
         sliceSelector: (state: RootState) => state.recipe.operations,

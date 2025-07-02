@@ -2,7 +2,7 @@ import { CommentsOperationKey } from "@/state/slices/comments-popular-slice";
 import { CookOperationKey } from "@/state/slices/cook-slice";
 import { CookHistoryOperationKey } from "@/state/slices/cook-history";
 import { OperationKey } from "@/state/slices/list-recipe-slice";
-import { listOperationKey } from "@/state/slices/list-slice";
+import { ListOperationKey } from "@/state/slices/list-slice";
 import { PopularOperationKey } from "@/state/slices/popular-slice";
 import { RecipeOperationKey } from "@/state/slices/recipe-slice";
 import { UserOperationKey } from "@/state/slices/user-slice";
@@ -35,20 +35,20 @@ export const ERROR_MESSAGES_LIST_RECIPE: Partial<Record<OperationKey, string>> =
 
 
 //----------------------------------  list ---------------------------------//
-export const SUCCESS_MESSAGES_LIST: Partial<Record<listOperationKey, string>> = {
+export const SUCCESS_MESSAGES_LIST: Partial<Record<ListOperationKey, string>> = {
     newIngredientList: 'New ingredient added successfully.',
     newUnitIngredientList: 'New unit added successfully.',
     updateCookUnit: 'Cooking unit updated successfully.',
 };
 
-export const LOADING_MESSAGES_LIST: Partial<Record<listOperationKey, string>> = {
+export const LOADING_MESSAGES_LIST: Partial<Record<ListOperationKey, string>> = {
     newIngredientList: 'Adding new ingredient...',
     newUnitIngredientList: 'Adding new unit...',
     updateCookUnit: 'Updating cooking unit...',
 
 };
     
-export const ERROR_MESSAGES_LIST: Partial<Record<listOperationKey, string>> = {
+export const ERROR_MESSAGES_LIST: Partial<Record<ListOperationKey, string>> = {
     fetchList: 'Failed to load ingredient list.',
     newIngredientList: 'Failed to load ingredient list.',
     newUnitIngredientList:'Failed to load ingredient list.',

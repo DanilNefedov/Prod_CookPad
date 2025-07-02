@@ -9,20 +9,21 @@ import { useAppSelector } from "@/state/hook";
 
 
 interface Props {
-    sendComm: (text: string) => void
+    sendComment: (text: string) => void
 }
-export const InputComment = memo(({ sendComm }: Props) => {
-    const statusNewReplyComm = useAppSelector(state => state.comments.operations.newReplyComm.loading)
-    const statusNewCommPopular = useAppSelector(state => state.comments.operations.newCommPopular.loading)
-    const [comm, setComm] = useState<string>('')
+export const InputComment = memo(({ sendComment }: Props) => {
+    const isReplyLoading = useAppSelector(state => state.comments.operations.newReplyComm.loading);
+    const isCommentLoading = useAppSelector(state => state.comments.operations.newCommPopular.loading);
+
+    const [commentText, setCommentText] = useState<string>('');
 
 
     const handleSend = () => {
-        if(statusNewCommPopular || statusNewReplyComm) return
+        if(isReplyLoading || isCommentLoading) return
 
-        if (comm.trim() !== '') {
-            sendComm(comm);
-            setComm('')
+        if (commentText.trim() !== '') {
+            sendComment(commentText);
+            setCommentText('')
         }
     };
 
@@ -37,14 +38,14 @@ export const InputComment = memo(({ sendComm }: Props) => {
                 multiline
                 maxRows={2}
                 variant="filled"
-                value={comm}
+                value={commentText}
                 onChange={(e) => {
                     if (e.target.value.length <= 500) {
-                        setComm(e.target.value);
+                        setCommentText(e.target.value);
                     }
                 }}
                 onKeyDown={(e) => {
-                    if(statusNewCommPopular || statusNewReplyComm) return
+                    if(isReplyLoading || isCommentLoading) return
 
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault(); 
@@ -52,7 +53,7 @@ export const InputComment = memo(({ sendComm }: Props) => {
                     }
                 }}
             />
-            <Button disabled={statusNewCommPopular || statusNewReplyComm} onClick={handleSend} sx={{ position: 'absolute', right: '15px', top: 'calc(50% - 19px)', minWidth: '0' }}>
+            <Button disabled={isReplyLoading || isCommentLoading} onClick={handleSend} sx={{ position: 'absolute', right: '15px', top: 'calc(50% - 19px)', minWidth: '0' }}>
                 <SendIcon />
             </Button>
         </Box>

@@ -1,18 +1,18 @@
-import { MediaObj } from "@/app/types/types"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { resetAllState } from "./reset-action"
+import { RecipeMedia } from "@/app/(main)/types"
 
 
 
 
 
-export interface MediaT {
-    media:MediaObj[]
+export interface MediaState {
+    media:RecipeMedia[]
 }
     
 
 
-const initialState: MediaT = {
+const initialState: MediaState = {
     media: [],
 }
 
@@ -23,7 +23,7 @@ const mediaSlice = createSlice({
     name: 'mediaSlice',
     initialState,
     reducers: {
-        changeMedia(state, action: PayloadAction<{media:MediaObj[]}>) {
+        changeMedia(state, action: PayloadAction<{media:RecipeMedia[]}>) {
             action.payload.media.map(el => {
                 state.media.push(el)
             })

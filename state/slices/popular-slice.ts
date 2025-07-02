@@ -1,4 +1,5 @@
-import { popularInitData, PopularListDataT } from "@/app/types/types";
+import { LikePopFetchReq, LikePopFetchRes, PopularData, PopularFetchReq, PopularRootState, SavePopFetchReq, SavePopFetchRes} from "@/app/(main)/popular/types";
+import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
@@ -12,40 +13,40 @@ export type PopularOperationKey =
   
 
 
-type OperationStatus = {
-    loading: boolean
-    error: boolean
+// type OperationStatus = {
+//     loading: boolean
+//     error: boolean
+// }
+
+// type OperationState = Record<PopularOperationKey, OperationStatus>
+
+interface PopularState extends PopularRootState {
+    operations: OperationState<PopularOperationKey>
 }
 
-type OperationState = Record<PopularOperationKey, OperationStatus>
-
-interface PopularState extends popularInitData {
-    operations: OperationState
-}
-
-const defaultStatus: OperationStatus = { loading: true, error: false }
-const loadingStatus: OperationStatus = { loading: false, error: false }
+// const defaultStatus: OperationStatus = { loading: true, error: false }
+// const loadingStatus: OperationStatus = { loading: false, error: false }
 
 
 //maybe shouldn't add the number of views to the redux.
 
 const initialState: PopularState = {
-    status: false,
-    error: false,
-    pop_list: [
-    ],
-    operations:{
-        popularFetch:defaultStatus,
-        likePopContent:loadingStatus,
-        savePopContent:loadingStatus,
-        updateViews:defaultStatus
-    }
+    pop_list: [],
+    operations:createOperations<PopularOperationKey>(
+        ['popularFetch', 'likePopContent', 'savePopContent', 'updateViews'],
+        (key) => {
+            if (key === 'likePopContent' || 'savePopContent') {
+                return createOperationStatus(false);
+            }
+            return createOperationStatus();
+        }
+    )
 }
 
 
 
 
-export const popularFetch = createAsyncThunk<PopularListDataT[], { connection_id: string, count: number, getAllIds:null | string[] }, { rejectValue: string }>(
+export const popularFetch = createAsyncThunk<PopularData[], PopularFetchReq, { rejectValue: string }>(
     'popular/popularFetch',
     async function (data, { rejectWithValue }) {
         try {
@@ -83,7 +84,7 @@ export const popularFetch = createAsyncThunk<PopularListDataT[], { connection_id
 
 
 
-export const likePopContent = createAsyncThunk<{ config_id: string, liked: boolean }, { config_id: string, liked: boolean, user_id: string}, { rejectValue: string } >(
+export const likePopContent = createAsyncThunk<LikePopFetchRes, LikePopFetchReq, { rejectValue: string } >(
     'popular/likePopContent',
     async function (data, { rejectWithValue }) {
         try {
@@ -107,7 +108,6 @@ export const likePopContent = createAsyncThunk<{ config_id: string, liked: boole
             if (!userConfigRes.ok) return rejectWithValue('Server Error!');
 
             const returnData = await response.json()
-
             return returnData
 
         } catch (error) {
@@ -119,7 +119,7 @@ export const likePopContent = createAsyncThunk<{ config_id: string, liked: boole
 
 
 
-export const savePopContent = createAsyncThunk<{ config_id: string, saved: boolean }, { config_id: string, saved: boolean, user_id: string }, { rejectValue: string }>(
+export const savePopContent = createAsyncThunk<SavePopFetchRes, SavePopFetchReq, { rejectValue: string }>(
     'popular/savePopContent',
     async function (data, { rejectWithValue }) {
         try {
@@ -143,7 +143,6 @@ export const savePopContent = createAsyncThunk<{ config_id: string, saved: boole
             if (!userConfigRes.ok) return rejectWithValue('Server Error!');
 
             const returnData = await response.json()
-
             return returnData
 
         } catch (error) {
@@ -223,7 +222,7 @@ const popularSlice = createSlice({
         builder
             .addCase(popularFetch.pending, popularFetchHandlers.pending)
             .addCase(popularFetch.rejected, popularFetchHandlers.rejected)
-            .addCase(popularFetch.fulfilled, (state, action: PayloadAction<PopularListDataT[], string>) => {
+            .addCase(popularFetch.fulfilled, (state, action: PayloadAction<PopularData[], string>) => {
                 state.operations.popularFetch.error = false
                 state.operations.popularFetch.loading = false
                     // console.log(action.payload)
@@ -237,7 +236,7 @@ const popularSlice = createSlice({
             
             .addCase(likePopContent.pending, likePopContentHandlers.pending)
             .addCase(likePopContent.rejected, likePopContentHandlers.rejected)
-            .addCase(likePopContent.fulfilled, (state, action: PayloadAction<{ config_id: string, liked: boolean }, string>) => {
+            .addCase(likePopContent.fulfilled, (state, action: PayloadAction<LikePopFetchRes, string>) => {
                 state.operations.likePopContent.error = false
                 state.operations.likePopContent.loading = false
                 // console.log(action.payload)
@@ -254,7 +253,7 @@ const popularSlice = createSlice({
 
             .addCase(savePopContent.pending, savePopContentHandlers.pending)
             .addCase(savePopContent.rejected, savePopContentHandlers.rejected)
-            .addCase(savePopContent.fulfilled, (state, action: PayloadAction<{ config_id: string, saved: boolean }, string>) => {
+            .addCase(savePopContent.fulfilled, (state, action: PayloadAction<SavePopFetchRes, string>) => {
                 state.operations.savePopContent.error = false
                 state.operations.savePopContent.loading = false
                 console.log(action.payload)

@@ -94,7 +94,7 @@ export async function POST(request: Request) {
         await session.commitTransaction(); 
 
         
-        return NextResponse.json({responseData, config_id});
+        return NextResponse.json({data:responseData, config_id});
     } catch (error) {
         console.log(error)
         await session.abortTransaction(); 

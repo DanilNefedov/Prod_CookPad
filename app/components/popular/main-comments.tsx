@@ -17,16 +17,10 @@ interface Props {
     comments: number
 }
 
-export interface LikeT {
-    id_comment: string,
-    config_id: string,
-    liked: boolean | undefined,
-    reply: boolean,
-    id_branch: string
-}
+
 export const MainComments = memo(({ config_id, comments }: Props) => {
     const userData = useAppSelector(state => state.user);
-    const replyLength = useAppSelector(state =>
+    const repliesCount = useAppSelector(state =>
         Object.values(state.comments.replies).reduce((sum, replyData) => {
             return sum + replyData.ids.length;
         }, 0)
@@ -51,13 +45,13 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
     const [newComments, setNewComments] = useState<string[]>([]);
     const [newReply, setNewReply] = useState<string[]>([]);
     const scrollRef = useRef<HTMLDivElement>(null);
-    const firstFetch = useRef<boolean>(true)
+    const firstFetchRef = useRef<boolean>(true);
 
       
 
     useEffect(() => {
-        if (config_id && connection_id && firstFetch.current && comments > 0) {
-            firstFetch.current = false
+        if (config_id && connection_id && firstFetchRef.current && comments > 0) {
+            firstFetchRef.current = false
             pingGate(() => {
                 dispatch(commVideoFetch({
                     config_id,
@@ -73,8 +67,7 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
 
 
     const fetchMoreComments = useCallback(() => {
-        if (firstFetch.current || Number.isNaN(commentsData.page) ) return;
-        // setIsFetching(true);
+        if (firstFetchRef.current || Number.isNaN(commentsData.page) ) return;
         pingGate(() => {
             dispatch(commVideoFetch({
                 config_id,
@@ -83,22 +76,20 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
                 newComments
             }))
         });
-        // .finally(() => {
-        //     setIsFetching(false);
-        // });
+        
     }, [commentsData.page, config_id, connection_id, newComments, dispatch, pingGate]);
 
 
 
     useEffect(() => {
         const el = scrollRef.current;
-        if (!el || Number.isNaN(commentsData.page) || firstFetch.current) return;
+        if (!el || Number.isNaN(commentsData.page) || firstFetchRef.current) return;
         let timeout: ReturnType<typeof setTimeout> | null = null;
         const scrollBuffer = 75;
 
 
         const checkNeedFetch = () => {
-            if (!el || firstFetch.current) return;
+            if (!el || firstFetchRef.current) return;
 
             const contentShort = el.scrollHeight <= el.clientHeight + scrollBuffer;
 
@@ -128,7 +119,7 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
 
 
 
-    const sendComm = useCallback((text: string) => {
+    const sendComment = useCallback((text: string) => {
         
         if (connection_id !== '') {
             if (contextComment.id_comment !== '') {
@@ -177,7 +168,7 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
                     dataLength={commentsData.ids.length}
                     next={fetchMoreComments}
                     hasMore={!Number.isNaN(commentsData.page) &&
-                            commentsData.ids.length < (comments - replyLength)}
+                            commentsData.ids.length < (comments - repliesCount)}
                     loader={
                         <div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
                             <CircularProgress color="secondary" size="35px" />
@@ -219,7 +210,7 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
             </Box>
 
             <InputComment
-                sendComm={sendComm}
+                sendComment={sendComment}
             ></InputComment>
 
 

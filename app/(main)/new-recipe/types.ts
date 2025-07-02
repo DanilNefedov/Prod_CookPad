@@ -1,3 +1,50 @@
+// *S - start
+// *E - end
+
+import { Unit } from "../cook/types";
+
+
+
+//----------- state S-----------//
+
+//-------- ingredient S---------//
+
+export interface IngredientAutocomplite {
+    ingredient_id: string;
+    name: string;
+    media: string;
+    new_ingredient?:boolean,
+    units: (string[] | Unit);
+}
+
+export interface Amount  {
+    ingredient_id: string,
+    amount: number
+}
+
+export interface Autocompite  {
+    ingredient_id: string,
+    name: string,
+    media: string,
+    new_ingredient:boolean,
+    units: string[]
+}
+
+export interface ChoiceUnits {
+    ingredient_id: string,
+    choice: string
+}
+
+//-------- ingredient E---------//
+
+//----------- state E-----------//
+
+
+
+
+
+
+
 export interface DataType {
     id: string,
     idRecipe: string,

@@ -1,7 +1,7 @@
-import { IngredientForAutocomplite } from "@/app/types/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from 'uuid';
 import { resetAllState } from "./reset-action";
+import { Amount, Autocompite, ChoiceUnits, IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
 
 
 
@@ -9,14 +9,14 @@ import { resetAllState } from "./reset-action";
 
 
 
-export interface IngredientT  {
-    ingredients: IngredientForAutocomplite[]; 
+interface IngredientState  {
+    ingredients: IngredientAutocomplite[]; 
 }
 
 
 
 
-const initialState: IngredientT = {
+const initialState: IngredientState = {
     ingredients: [
         {
             ingredient_id: uuidv4(),
@@ -32,22 +32,6 @@ const initialState: IngredientT = {
     ]
 }
 
-
-interface Amount  {
-    ingredient_id: string,
-    amount: number
-}
-interface Autocompite  {
-    ingredient_id: string,
-    name: string,
-    media: string,
-    new_ingredient:boolean,
-    units: string[]
-}
-interface Units {
-    ingredient_id: string,
-    choice: string
-}
 
 
 const ingredientsSlice = createSlice({
@@ -103,7 +87,7 @@ const ingredientsSlice = createSlice({
         },
 
 
-        choiceUnits(state, action: PayloadAction<Units>) {
+        choiceUnits(state, action: PayloadAction<ChoiceUnits>) {
             const findIngr = state.ingredients.find(el => el.ingredient_id === action.payload.ingredient_id)
             if (findIngr) {
 

@@ -1,6 +1,5 @@
 import { Avatar, Box, Button, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material"
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { LikeT } from "./main-comments";
 import { memo, } from "react";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
@@ -8,13 +7,14 @@ import { setActiveComment } from "@/state/slices/comments-context";
 import numbro from "numbro";
 import { theme } from "@/config/ThemeMUI/theme";
 import { avatarReply, containerPrimaryReplyText, dataReply, fullTextReply, likesReply, replyContainer, replyReplyBtn } from "@/app/(main)/popular/style";
+import { Like } from "@/app/(main)/popular/types";
 
 
 
 interface Props {
     id_comment_p: string,
     id_branch_p: string,
-    handleLike: (params: LikeT) => void
+    handleLike: (params: Like) => void
     config_id: string,
 }
 export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, config_id,}: Props) => {
@@ -62,7 +62,6 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
         });
     };
 
-    console.log('replies',)
     return (
         <ListItem sx={(theme) => replyContainer(theme, isActive)}>
             <Box sx={{display:'flex', alignItems:'center', width:'100%', p:'0px'}}>

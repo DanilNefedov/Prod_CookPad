@@ -2,13 +2,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { resetAllState } from "./reset-action"
 
 
-export interface StepTypeRecommend{
+export interface TypeRecommendState{
     type_recipe:string,
     recommendation:boolean
 }
 
 
-const initialState: StepTypeRecommend = {
+const initialState: TypeRecommendState = {
     type_recipe: '',
     recommendation:false,
 }

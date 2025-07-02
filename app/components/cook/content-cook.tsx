@@ -59,7 +59,7 @@ export function ContentCook() {
 
         if (recipe_id !== '' && recipe_id) {
             if (findCook && id !== '') {
-                const data = { connection_id: id, recipe_id, favorite: findCook?.favorite }
+                const data = { recipe_id, favorite: findCook?.favorite }
                 dispatch(setFavoriteRecipe(data))
             }
         }

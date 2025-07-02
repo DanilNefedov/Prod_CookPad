@@ -1,66 +1,35 @@
-import { CookPageT, CookSliceT } from "@/app/types/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { newCookHistory } from "./cook-history";
-import { favoriteDataRecipeT } from "./recipe-slice";
 import { RootState } from "../store";
 import { merge } from 'lodash';
+import { createOperations, createOperationStatus, OperationState } from "@/app/types";
+import { CookFetchReq, CookFetchRes, CookRootState, DeleteCookFetch } from "@/app/(main)/cook/types";
+import { FavoriteRecipeFetch } from "@/app/(main)/types";
 
 
-// export interface returnDataFavorite {
-//     recipe_id: string | null;
-//     favorite: boolean;
-// }
-
-// export interface favoriteDataRecipe {
-//     url:string, 
-//     recipeData: {
-//         recipe_id: string | null, 
-//         favorite: boolean
-//     }
-// }
 
 export type CookOperationKey =
   | 'fetchCook'
   | 'deleteRecipe'
 
 
-
-type OperationStatus = {
-    loading: boolean
-    error: boolean
+interface CookState extends CookRootState {
+    operations: OperationState<CookOperationKey>
 }
-
-type OperationState = Record<CookOperationKey, OperationStatus>
-
-interface CookState extends CookSliceT {
-    operations: OperationState
-}
-
-const defaultStatus: OperationStatus = { loading: true, error: false }
-
 
 const initialState: CookState = {
-    status: false,
-    error: false,
-    name_status: '',
     connection_id: '',
-    recipes: [
-    ],
-    operations:{
-        fetchCook:defaultStatus,
-        deleteRecipe:defaultStatus
-    }
-}
-
-
-interface fetchDataT {
-    recipe: CookPageT
-    connection_id: string
+    recipes: [],
+    operations:createOperations<CookOperationKey>(
+        ['fetchCook', 'deleteRecipe'],
+        (key) => {
+            return createOperationStatus();
+        }
+    )
 }
 
 
 
-export const fetchCook = createAsyncThunk<fetchDataT, { id: string, recipe_id: string}, { rejectValue: string }>(
+export const fetchCook = createAsyncThunk<CookFetchRes, CookFetchReq, { rejectValue: string }>(
     'cook/fetchCook',
     async function ({ id, recipe_id }, { rejectWithValue, getState }) {
         try {
@@ -101,12 +70,8 @@ export const fetchCook = createAsyncThunk<fetchDataT, { id: string, recipe_id: s
     }
 )
 
-type DataDelete = {
-    connection_id: string, 
-    recipe_id: string
-}
 
-export const deleteRecipe = createAsyncThunk<DataDelete, DataDelete, { rejectValue: string }>(
+export const deleteRecipe = createAsyncThunk<DeleteCookFetch, DeleteCookFetch, { rejectValue: string }>(
     'cook/deleteRecipe',
     async function (data, { rejectWithValue }) {
         try {
@@ -163,7 +128,7 @@ const cookSlice = createSlice({
 
         },
 
-        setFavoriteCook(state, action: PayloadAction<favoriteDataRecipeT, string>) {
+        setFavoriteCook(state, action: PayloadAction<FavoriteRecipeFetch, string>) {
             const payload = action.payload;
 
             const findRecipe = state.recipes.find(el => el.recipe_id === payload.recipe_id)
@@ -186,7 +151,7 @@ const cookSlice = createSlice({
         builder
             .addCase(fetchCook.pending, fetchCookHandlers.pending)
             .addCase(fetchCook.rejected, fetchCookHandlers.rejected)
-            .addCase(fetchCook.fulfilled, (state, action: PayloadAction<fetchDataT, string>) => {
+            .addCase(fetchCook.fulfilled, (state, action: PayloadAction<CookFetchRes, string>) => {
                 state.operations.fetchCook.error = false
                 state.operations.fetchCook.loading = false
 
@@ -205,7 +170,7 @@ const cookSlice = createSlice({
 
             .addCase(deleteRecipe.pending, deleteRecipeHandlers.pending)
             .addCase(deleteRecipe.rejected, deleteRecipeHandlers.rejected)
-            .addCase(deleteRecipe.fulfilled, (state, action: PayloadAction<DataDelete, string>) => {
+            .addCase(deleteRecipe.fulfilled, (state, action: PayloadAction<DeleteCookFetch, string>) => {
                 state.operations.deleteRecipe.error = false
                 state.operations.deleteRecipe.loading = false
                 // state.name_links = state.name_links.filter(link => link.recipe_id !== action.payload.recipe_id);

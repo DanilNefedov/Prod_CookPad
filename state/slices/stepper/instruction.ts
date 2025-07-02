@@ -3,13 +3,13 @@ import { resetAllState } from "./reset-action"
 
  
 
-export interface InitialStateI {
+export interface InstructionState {
     instruction:string
 }
 
 
 
-const initialState: InitialStateI = {
+const initialState: InstructionState = {
     instruction: '',
 }
 
@@ -23,10 +23,8 @@ const instructionSlice = createSlice({
         setInstruction(state, action: PayloadAction<string>) {
             state.instruction = action.payload
         },
-
-        
-       
     },
+    
     extraReducers: (builder) => {
         builder.addCase(resetAllState, () => initialState);
     },

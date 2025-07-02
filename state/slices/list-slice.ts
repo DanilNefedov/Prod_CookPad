@@ -1,4 +1,7 @@
-import { IListState, IngredientFullData, IRequestList, NewUnitIngredient, NewUnitObj, ResUnitObj } from "@/app/types/types";
+import { ChangeAmountFetch, DeleteUnitIngrFetch, ListFetchReq, ListFetchRes, 
+    ListRootState, NewIngrFetch, NewUnitFetchReq, NewUnitFetchRes, NewUnitIngrFetchReq, 
+    NewUnitIngrFetchRes, ShopIngrFetch, ShopUnitFetch, UpdCookUnitFetch } from "@/app/(main)/(main-list)/list/types";
+import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
@@ -6,8 +9,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 
-
-export type listOperationKey =
+export type ListOperationKey =
   | 'fetchList'
   | 'newIngredientList'
   | 'newUnitIngredientList'
@@ -21,93 +23,50 @@ export type listOperationKey =
 
 
 
+const listOperationKeys: ListOperationKey[] = [
+    'fetchList',
+    'newIngredientList',
+    'newUnitIngredientList',
+    'updateCookUnit',
+    'toggleShopIngrFetch',
+    'shopUnitUpdate',
+    'deleteIngredientFetch',
+    'deleteUnitIngrFetch',
+    'changeAmountFetch',
+    'addNewUnit'
+];
 
 
-
-type OperationStatus = {
-    loading: boolean
-    error: boolean
+interface ListState extends ListRootState {
+    operations: OperationState<ListOperationKey>
 }
 
-type OperationState = Record<listOperationKey, OperationStatus>
 
-interface ListState extends IListState {
-    operations: OperationState
-}
-
-const defaultStatus: OperationStatus = { loading: true, error: false }
-const loadingStatus: OperationStatus = { loading: false, error: false }
-
+const loadingStatus: ListOperationKey[] = [
+    'newIngredientList',
+    'newUnitIngredientList',
+    'updateCookUnit',
+    'toggleShopIngrFetch',
+    'shopUnitUpdate'
+];
 
 
 
 const initialState: ListState = {
-    status: true,
-    error: false,
     connection_id: '',
     page_list: 1,
-    list_ingr: [
-    ],
-    operations:{
-        fetchList:defaultStatus,
-        newIngredientList:loadingStatus,
-        newUnitIngredientList:loadingStatus,
-        updateCookUnit:loadingStatus,
-        toggleShopIngrFetch:loadingStatus,
-        shopUnitUpdate:loadingStatus,
-        deleteIngredientFetch:defaultStatus,
-        deleteUnitIngrFetch:defaultStatus,
-        changeAmountFetch:defaultStatus,
-        addNewUnit:defaultStatus,
-    }
+    list_ingr: [],
+    operations:createOperations<ListOperationKey>(
+        listOperationKeys,
+        (key) =>
+        loadingStatus.includes(key)
+            ? createOperationStatus(false)
+            : createOperationStatus()
+    )
 }
 
 
-interface NewIngredientListT {
-    connection_id:string,
-    name:string,
-    media:string,
-    shop_ingr:boolean
-    units:NewUnitObj[]
-    list:string[]
-}
-
-interface ResNewIngredientListT {
-    _id:string,
-    name:string,
-    media:string,
-    shop_ingr:boolean
-    units:ResUnitObj[]
-    list:string[]
-}
-
-
-
-interface ReqDataUpdateUnit {
-    connection_id: string,
-    name: string,
-    units: NewUnitObj,
-}
-interface ResDataUnitUpdate{
-    unit:ResUnitObj
-    _id:string
-}
-
-
-
-interface updateCookUnitI {
-    name:string,
-    connection_id: string,
-    _id: string,
-    amount: number,
-}
-
-
-interface RerturnFetchData extends IRequestList {
-    page_list:number | null
-}
-
-export const fetchList = createAsyncThunk<RerturnFetchData, {id:string, page_list:number}, { rejectValue: string }>(
+export const fetchList = createAsyncThunk<ListFetchRes, ListFetchReq, { rejectValue: string }>(
     'list/fetchList',
     async function (data, { rejectWithValue }) {
         try {
@@ -128,7 +87,7 @@ export const fetchList = createAsyncThunk<RerturnFetchData, {id:string, page_lis
 )
 
 
-export const newIngredientList = createAsyncThunk<ResNewIngredientListT, NewIngredientListT, { rejectValue: string }>(
+export const newIngredientList = createAsyncThunk<NewIngrFetch, NewIngrFetch, { rejectValue: string }>(
     'list/newIngredientList',
     async function (reqData, { rejectWithValue }) {
         try {
@@ -157,7 +116,7 @@ export const newIngredientList = createAsyncThunk<ResNewIngredientListT, NewIngr
 
 
 
-export const newUnitIngredientList = createAsyncThunk<ResDataUnitUpdate, ReqDataUpdateUnit, { rejectValue: string }>(
+export const newUnitIngredientList = createAsyncThunk<NewUnitIngrFetchRes, NewUnitIngrFetchReq, { rejectValue: string }>(
     'list/newUnitIngredientList',
     async function (reqData, { rejectWithValue }) {
         try {
@@ -184,7 +143,7 @@ export const newUnitIngredientList = createAsyncThunk<ResDataUnitUpdate, ReqData
 );
 
 
-export const updateCookUnit = createAsyncThunk<updateCookUnitI, updateCookUnitI, { rejectValue: string }>(
+export const updateCookUnit = createAsyncThunk<UpdCookUnitFetch, UpdCookUnitFetch, { rejectValue: string }>(
     'list/updateCookUnit',
     async function (data, { rejectWithValue }) {
         try {
@@ -210,12 +169,9 @@ export const updateCookUnit = createAsyncThunk<updateCookUnitI, updateCookUnitI,
     }
 );
 
-interface ShopIngredientT {
-    _id:string, 
-    shop_ingr:boolean
-}
 
-export const toggleShopIngrFetch = createAsyncThunk<ShopIngredientT, ShopIngredientT, { rejectValue: string }>(
+
+export const toggleShopIngrFetch = createAsyncThunk<ShopIngrFetch, ShopIngrFetch, { rejectValue: string }>(
     'list/toggleShopIngrFetch',
     async function (data, { rejectWithValue }) {
         try {
@@ -239,13 +195,9 @@ export const toggleShopIngrFetch = createAsyncThunk<ShopIngredientT, ShopIngredi
     }
 );
 
-interface ShopUnitUpdateT {
-    ingredient_id: string
-    unit_id:string
-    shop_unit:boolean
-}
 
-export const shopUnitUpdate = createAsyncThunk<ShopUnitUpdateT, ShopUnitUpdateT, { rejectValue: string }>(
+
+export const shopUnitUpdate = createAsyncThunk<ShopUnitFetch, ShopUnitFetch, { rejectValue: string }>(
     'list/toggleUnitFetch',
     async function (data, { rejectWithValue }) {
         try {
@@ -270,11 +222,7 @@ export const shopUnitUpdate = createAsyncThunk<ShopUnitUpdateT, ShopUnitUpdateT,
     }
 );
 
-interface DeleteIngredientT{
-    _id:string
-}
-
-export const deleteIngredientFetch = createAsyncThunk<DeleteIngredientT, DeleteIngredientT, { rejectValue: string }>(
+export const deleteIngredientFetch = createAsyncThunk<{_id:string}, {_id:string}, { rejectValue: string }>(
     'list/deleteIngredientFetch',
     async function (data, { rejectWithValue }) {
         try {
@@ -300,12 +248,8 @@ export const deleteIngredientFetch = createAsyncThunk<DeleteIngredientT, DeleteI
 )
 
 
-interface DeleteUnitIngredientT{
-    ingredient_id:string, 
-    unit_id:string 
-}
 
-export const deleteUnitIngrFetch = createAsyncThunk<DeleteUnitIngredientT, DeleteUnitIngredientT, { rejectValue: string }>(
+export const deleteUnitIngrFetch = createAsyncThunk<DeleteUnitIngrFetch, DeleteUnitIngrFetch, { rejectValue: string }>(
     'list/deleteUnitIngrFetch',
     async function (data, { rejectWithValue }) {
 
@@ -332,14 +276,8 @@ export const deleteUnitIngrFetch = createAsyncThunk<DeleteUnitIngredientT, Delet
 );
 
 
-interface ChangeAmountT {
-    ingredient_id:string,
-    unit_id:string,
-    amount:number
-}
 
-
-export const changeAmountFetch = createAsyncThunk<ChangeAmountT, ChangeAmountT, { rejectValue: string }>(
+export const changeAmountFetch = createAsyncThunk<ChangeAmountFetch, ChangeAmountFetch, { rejectValue: string }>(
     'list/changeAmountFetch',
     async function (data, { rejectWithValue }) {
         try {
@@ -368,17 +306,7 @@ export const changeAmountFetch = createAsyncThunk<ChangeAmountT, ChangeAmountT, 
 
 
 
-interface AddNewUnitT {
-    ingredient_id:string,
-    new_unit:NewUnitObj
-}
-
-interface ResAddNewUnitT {
-    ingredient_id:string,
-    new_unit:ResUnitObj
-}
-
-export const addNewUnit = createAsyncThunk<ResAddNewUnitT, AddNewUnitT, { rejectValue: string }>(
+export const addNewUnit = createAsyncThunk<NewUnitFetchRes, NewUnitFetchReq, { rejectValue: string }>(
     'list/addNewUnit',
     async function (data, { rejectWithValue }) {
 
@@ -436,7 +364,7 @@ const listSlice = createSlice({
     name: 'list',
     initialState,
     reducers: {
-        closeAlertList(state, action: PayloadAction<listOperationKey>){
+        closeAlertList(state, action: PayloadAction<ListOperationKey>){
             const key = action.payload
 
             if (state.operations[key]) {
@@ -449,7 +377,7 @@ const listSlice = createSlice({
         builder
             .addCase(fetchList.pending, fetchListHandlers.pending)
             .addCase(fetchList.rejected, fetchListHandlers.rejected)
-            .addCase(fetchList.fulfilled, (state, action: PayloadAction<RerturnFetchData, string>) => {
+            .addCase(fetchList.fulfilled, (state, action: PayloadAction<ListFetchRes, string>) => {
                 state.operations.fetchList.error = false
                 state.operations.fetchList.loading = false
                 
@@ -471,7 +399,7 @@ const listSlice = createSlice({
 
             .addCase(newIngredientList.pending, newIngredientListHandlers.pending)
             .addCase(newIngredientList.rejected, newIngredientListHandlers.rejected)
-            .addCase(newIngredientList.fulfilled, (state, action:PayloadAction<ResNewIngredientListT, string>) => {
+            .addCase(newIngredientList.fulfilled, (state, action:PayloadAction<NewIngrFetch, string>) => {
                 state.operations.newIngredientList.error = false
                 state.operations.newIngredientList.loading = false
 
@@ -485,7 +413,7 @@ const listSlice = createSlice({
 
             .addCase(newUnitIngredientList.pending, newUnitIngredientListHandlers.pending)
             .addCase(newUnitIngredientList.rejected, newUnitIngredientListHandlers.rejected)
-            .addCase(newUnitIngredientList.fulfilled, (state, action:PayloadAction<ResDataUnitUpdate, string>) => {
+            .addCase(newUnitIngredientList.fulfilled, (state, action:PayloadAction<NewUnitIngrFetchRes, string>) => {
                 state.operations.newUnitIngredientList.error = false
                 state.operations.newUnitIngredientList.loading = false
 
@@ -500,7 +428,7 @@ const listSlice = createSlice({
 
             .addCase(updateCookUnit.pending, updateCookUnitHandlers.pending)
             .addCase(updateCookUnit.rejected, updateCookUnitHandlers.rejected)
-            .addCase(updateCookUnit.fulfilled, (state, action: PayloadAction<updateCookUnitI, string>) => {
+            .addCase(updateCookUnit.fulfilled, (state, action: PayloadAction<UpdCookUnitFetch, string>) => {
                 state.operations.updateCookUnit.error = false
                 state.operations.updateCookUnit.loading = false
 
@@ -520,7 +448,7 @@ const listSlice = createSlice({
 
             .addCase(toggleShopIngrFetch.pending, toggleShopIngrFetchHandlers.pending)
             .addCase(toggleShopIngrFetch.rejected, toggleShopIngrFetchHandlers.rejected)
-            .addCase(toggleShopIngrFetch.fulfilled, (state, action: PayloadAction<ShopIngredientT, string>) => {
+            .addCase(toggleShopIngrFetch.fulfilled, (state, action: PayloadAction<ShopIngrFetch, string>) => {
                 state.operations.toggleShopIngrFetch.error = false
                 state.operations.toggleShopIngrFetch.loading = false
 
@@ -534,7 +462,7 @@ const listSlice = createSlice({
 
             .addCase(shopUnitUpdate.pending, shopUnitUpdateHandlers.pending)
             .addCase(shopUnitUpdate.rejected, shopUnitUpdateHandlers.rejected)
-            .addCase(shopUnitUpdate.fulfilled, (state, action: PayloadAction<ShopUnitUpdateT, string>) => {
+            .addCase(shopUnitUpdate.fulfilled, (state, action: PayloadAction<ShopUnitFetch, string>) => {
                 state.operations.shopUnitUpdate.error = false
                 state.operations.shopUnitUpdate.loading = false
 
@@ -552,7 +480,7 @@ const listSlice = createSlice({
 
             .addCase(deleteIngredientFetch.pending, deleteIngredientFetchHandlers.pending)
             .addCase(deleteIngredientFetch.rejected, deleteIngredientFetchHandlers.rejected)
-            .addCase(deleteIngredientFetch.fulfilled, (state, action: PayloadAction<DeleteIngredientT, string>) => {
+            .addCase(deleteIngredientFetch.fulfilled, (state, action: PayloadAction<{_id:string}, string>) => {
                 state.operations.deleteIngredientFetch.error = false
                 state.operations.deleteIngredientFetch.loading = false
 
@@ -566,7 +494,7 @@ const listSlice = createSlice({
 
             .addCase(deleteUnitIngrFetch.pending, deleteUnitIngrFetchHandlers.pending)
             .addCase(deleteUnitIngrFetch.rejected, deleteUnitIngrFetchHandlers.rejected)
-            .addCase(deleteUnitIngrFetch.fulfilled, (state, action: PayloadAction<DeleteUnitIngredientT, string>) => {
+            .addCase(deleteUnitIngrFetch.fulfilled, (state, action: PayloadAction<DeleteUnitIngrFetch, string>) => {
                 state.operations.deleteUnitIngrFetch.error = false
                 state.operations.deleteUnitIngrFetch.loading = false
 
@@ -580,7 +508,7 @@ const listSlice = createSlice({
 
             .addCase(changeAmountFetch.pending, changeAmountFetchHandlers.pending)
             .addCase(changeAmountFetch.rejected, changeAmountFetchHandlers.rejected)
-            .addCase(changeAmountFetch.fulfilled, (state, action: PayloadAction<ChangeAmountT, string>) => {
+            .addCase(changeAmountFetch.fulfilled, (state, action: PayloadAction<ChangeAmountFetch, string>) => {
                 state.operations.changeAmountFetch.error = false
                 state.operations.changeAmountFetch.loading = false
                 
@@ -605,7 +533,7 @@ const listSlice = createSlice({
 
             .addCase(addNewUnit.pending, addNewUnitHandlers.pending)
             .addCase(addNewUnit.rejected, addNewUnitHandlers.rejected)
-            .addCase(addNewUnit.fulfilled, (state, action: PayloadAction<ResAddNewUnitT, string>) => {
+            .addCase(addNewUnit.fulfilled, (state, action: PayloadAction<NewUnitFetchRes, string>) => {
                 state.operations.addNewUnit.error = false
                 state.operations.addNewUnit.loading = false
 

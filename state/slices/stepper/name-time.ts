@@ -5,7 +5,7 @@ import { resetAllState } from "./reset-action"
 
 
 
-export interface NameTimeT{
+export interface NameTimeState{
     name:{
         value:string
     },
@@ -15,7 +15,7 @@ export interface NameTimeT{
     }
 }
 
-const initialState: NameTimeT = {
+const initialState: NameTimeState = {
     name: {
         value:''
     },

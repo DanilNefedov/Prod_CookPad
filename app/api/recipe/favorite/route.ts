@@ -8,9 +8,9 @@ export async function PATCH(request: Request) {
         await connectDB();
 
         const data = await request.json();
-        const { connection_id, recipe_id, favorite } = data;
+        const { recipe_id, favorite } = data;
 
-        if (!connection_id || !recipe_id || typeof favorite !== 'boolean') {
+        if (!recipe_id || typeof favorite !== 'boolean') {
             return NextResponse.json(
                 { message: 'Invalid request data' },
                 { status: 400 }
@@ -28,7 +28,7 @@ export async function PATCH(request: Request) {
         }
 
         const updatedRecipe = await Recipe.findOneAndUpdate(
-            { connection_id, recipe_id },
+            { recipe_id },
             updateData,
             { new: true, select: '-_id recipe_id favorite' } 
         );

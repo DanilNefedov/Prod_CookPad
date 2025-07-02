@@ -19,11 +19,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     const error = useAppSelector((state) => state.user.operations.fetchUser.error);
     const dispatch = useAppDispatch();
     const { data: session, update } = useSession();
-    const connection_id = session?.user?.connection_id;
+    const connection_id = session?.user.connection_id;
 
     useEffect(() => {
         const fetchAndUpdate = async () => {
-            await update();
+            await update();// eslint error. asks to put a function into a dependency
 
             if (connection_id) {
                 dispatch(fetchUser(connection_id));

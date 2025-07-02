@@ -1,27 +1,7 @@
 'use client'
-// import { initUserStateType, collectionUser } from "@/types/types"
+import { UserData, UserRootState } from "@/app/(main)/types"
+import { createOperations, createOperationStatus, OperationState } from "@/app/types"
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
-
-export type popConfig = {
-    category_id: string
-    name:string
-    multiplier: number[]
-}
-
-export type collectionUser =  {
-    name: string ,
-    email: string ,
-    provider: string ,
-    img: string ,
-    connection_id: string ,
-    popular_config: popConfig[] 
-}
-
-export type initUserStateType = {
-    status: boolean,
-    error: boolean,
-    user:collectionUser
-}
 
 
 
@@ -31,43 +11,30 @@ export type UserOperationKey =
   
 
 
-type OperationStatus = {
-    loading: boolean
-    error: boolean
+interface UserState extends UserRootState {
+    operations: OperationState<UserOperationKey>
 }
-
-type OperationState = Record<UserOperationKey, OperationStatus>
-
-interface UserState extends initUserStateType {
-    operations: OperationState
-}
-
-const defaultStatus: OperationStatus = { loading: true, error: false }
-
-
 
 const initialState: UserState = {
-    status: false,
-    error: false,
     user: {
         name: '',
         email: '',
         provider: '',
         img: '',
         connection_id: '',
-        popular_config: [
-           
-        ]
+        popular_config: []
     },
-    operations:{
-        fetchUser:defaultStatus,
-        fetchClearUser:defaultStatus
-    }
+    operations:createOperations<UserOperationKey>(
+        ['fetchUser', 'fetchClearUser'],
+        (key) => {
+            return createOperationStatus();
+        }
+    )
 
 }
 
 
-export const fetchUser = createAsyncThunk<collectionUser, string, { rejectValue: string }>(
+export const fetchUser = createAsyncThunk<UserData, string, { rejectValue: string }>(
     'userSlice/fetchUser',
     async function (connection_id, { rejectWithValue }) {
         try {
@@ -78,7 +45,6 @@ export const fetchUser = createAsyncThunk<collectionUser, string, { rejectValue:
             }
 
             const data = await response.json();
-            console.log(data)
             return data.user;
 
         } catch (error) {
@@ -141,7 +107,7 @@ const userSlice = createSlice({
         builder
             .addCase(fetchUser.pending, fetchUserHandlers.pending)
             .addCase(fetchUser.rejected, fetchUserHandlers.rejected)
-            .addCase(fetchUser.fulfilled, (state, action: PayloadAction<collectionUser, string>) => {
+            .addCase(fetchUser.fulfilled, (state, action: PayloadAction<UserData, string>) => {
                 state.operations.fetchUser.error = false
                 state.operations.fetchUser.loading = false
 

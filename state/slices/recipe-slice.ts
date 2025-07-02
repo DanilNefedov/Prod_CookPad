@@ -1,7 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import {  IRecipeSlice, MainRecipeT } from "@/app/types/types";
 import { setFavoriteCook } from "./cook-slice";
-
+import { createOperations, createOperationStatus, OperationState } from "@/app/types";
+import { FavoriteRecipeFetch, RecipeData, RecipeRootState } from "@/app/(main)/types";
 
 
 
@@ -12,35 +12,26 @@ export type RecipeOperationKey =
   
 
 
-type OperationStatus = {
-    loading: boolean
-    error: boolean
+interface RecipeState extends RecipeRootState {
+    operations: OperationState<RecipeOperationKey>
 }
 
-type OperationState = Record<RecipeOperationKey, OperationStatus>
-
-interface ListrecipeState extends IRecipeSlice {
-    operations: OperationState
-}
-
-const defaultStatus: OperationStatus = { loading: true, error: false }
-const loadingStatus: OperationStatus = { loading: false, error: false }
-
-
-const initialState: ListrecipeState = {
-    status: false,
-    error: false,
+const initialState: RecipeState = {
     page: 1,
-    recipes: [
-    ],
-    operations:{
-        fetchRecipes:defaultStatus,
-        setFavoriteRecipe:loadingStatus
-    }
+    recipes: [],
+    operations:createOperations<RecipeOperationKey>(
+        ['fetchRecipes', 'setFavoriteRecipe'],
+        (key) => {
+            if (key === 'setFavoriteRecipe') {
+                return createOperationStatus(false);
+            }
+            return createOperationStatus();
+        }
+    )
 }
 
 
-export const fetchRecipes = createAsyncThunk<{recipes:MainRecipeT[], page:number | null}, {id:string, page:number}, { rejectValue: string }>(
+export const fetchRecipes = createAsyncThunk<{recipes:RecipeData[], page:number | null}, {id:string, page:number}, { rejectValue: string }>(
     'recipe/fetchRecipes',
     async function (data, { rejectWithValue}) {
         try {
@@ -61,14 +52,14 @@ export const fetchRecipes = createAsyncThunk<{recipes:MainRecipeT[], page:number
 )
 
 
-export interface favoriteDataRecipeT {
-    connection_id:string, 
-    recipe_id:string, 
-    favorite:boolean
-}
+// export interface favoriteDataRecipeT {
+//     connection_id:string, 
+//     recipe_id:string, 
+//     favorite:boolean
+// }
 
 
-export const setFavoriteRecipe = createAsyncThunk<favoriteDataRecipeT, favoriteDataRecipeT, {rejectValue: string}> (
+export const setFavoriteRecipe = createAsyncThunk<FavoriteRecipeFetch, FavoriteRecipeFetch, {rejectValue: string}> (
     'recipe/setFavoriteRecipe',
     async function (data, {rejectWithValue, dispatch}){
         try{
@@ -126,12 +117,12 @@ export const setFavoriteRecipe = createAsyncThunk<favoriteDataRecipeT, favoriteD
 //     }
 // )
 
-const createReducerHandlers = <T extends keyof ListrecipeState['operations']>(operationName: T) => ({
-    pending: (state: ListrecipeState) => {
+const createReducerHandlers = <T extends keyof RecipeState['operations']>(operationName: T) => ({
+    pending: (state: RecipeState) => {
         state.operations[operationName].error = false;
         state.operations[operationName].loading = true;
     },
-    rejected: (state: ListrecipeState) => {
+    rejected: (state: RecipeState) => {
         state.operations[operationName].error = true;
         state.operations[operationName].loading = false;
     }
@@ -163,7 +154,7 @@ const recipeSlice = createSlice({
         builder
             .addCase(fetchRecipes.pending, fetchRecipesHandlers.pending)
             .addCase(fetchRecipes.rejected, fetchRecipesHandlers.rejected)
-            .addCase(fetchRecipes.fulfilled, (state, action: PayloadAction<{ recipes: MainRecipeT[], page: number | null}, string>) => {
+            .addCase(fetchRecipes.fulfilled, (state, action: PayloadAction<{ recipes: RecipeData[], page: number | null}, string>) => {
                 state.operations.fetchRecipes.error = false
                 state.operations.fetchRecipes.loading = false
 
@@ -186,7 +177,7 @@ const recipeSlice = createSlice({
 
             .addCase(setFavoriteRecipe.pending, setFavoriteRecipeHandlers.pending)
             .addCase(setFavoriteRecipe.rejected, setFavoriteRecipeHandlers.rejected)
-            .addCase(setFavoriteRecipe.fulfilled, (state, action: PayloadAction<favoriteDataRecipeT, string>) => {
+            .addCase(setFavoriteRecipe.fulfilled, (state, action: PayloadAction<FavoriteRecipeFetch, string>) => {
                 state.operations.setFavoriteRecipe.error = false
                 state.operations.setFavoriteRecipe.loading = false
                 

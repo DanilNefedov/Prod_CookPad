@@ -70,7 +70,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
         if(isFavoriteLoading) return
 
         if (recipe_id && id !== '' && favorite !== undefined) {
-            const data = { connection_id: id, recipe_id, favorite }
+            const data = { recipe_id, favorite }
             dispatch(setFavoriteRecipe(data))
         }
     }

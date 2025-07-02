@@ -32,8 +32,7 @@ export const InfoAboutContent = memo(({ props }: { props: Props }) => {
     const popularStatus = useAppSelector(state => state.popular.status)
     const saveStatus = useAppSelector(state => state.popular.operations.savePopContent.loading)
     const likeStatus = useAppSelector(state => state.popular.operations.likePopContent.loading)
-    const userData = useAppSelector(state => state.user)
-    const connection_id = userData?.user?.connection_id
+    const connection_id = useAppSelector(state => state.user.user.connection_id)
     const dispatch = useAppDispatch()
 
 

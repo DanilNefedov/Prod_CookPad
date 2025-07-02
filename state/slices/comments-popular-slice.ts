@@ -1,6 +1,10 @@
-import { CommListData, ErrorStatus, ReplyCommData } from "@/app/types/types";
-import { createAsyncThunk, createEntityAdapter, createSlice, EntityState, PayloadAction } from "@reduxjs/toolkit";
+import { CommListData, ReplyCommData } from "@/app/types/types";
+import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { newCommCalc } from "./popular-slice";
+import { createOperations, createOperationStatus, OperationState } from "@/app/types";
+import { CommentRootState, CommentsFetchReq, CommentsFetchRes, 
+    GetRepliesFetchReq, GetRepliesFetchRes, LikeCommentFetch, NewCommentFetchReq, 
+    NewCommentFetchRes, NewReplyFetch } from "@/app/(main)/popular/types";
 
 
 
@@ -13,21 +17,23 @@ export type CommentsOperationKey =
   | 'getReplies'
 
 
+const listOperationKeys: CommentsOperationKey[] = [
+    'commVideoFetch',
+    'newCommPopular',
+    'likedComment',
+    'newReplyComm',
+    'getReplies',
+];
 
-type OperationStatus = {
-    loading: boolean
-    error: boolean
+interface CommentState extends CommentRootState {
+    operations: OperationState<CommentsOperationKey>
 }
 
-type OperationState = Record<CommentsOperationKey, OperationStatus>
 
-interface CommentStateI extends CommentState {
-    operations: OperationState
-}
-
-const defaultStatus: OperationStatus = { loading: true, error: false }
-const loadingStatus: OperationStatus = { loading: false, error: false }
-
+const loadingStatus: CommentsOperationKey[] = [
+    'newCommPopular',
+    'newReplyComm',
+];
 
 
 const commentsAdapter = createEntityAdapter({
@@ -39,51 +45,24 @@ const repliesAdapter = createEntityAdapter({
 });
 
 
-export type CommentState = {
-    status: boolean;
-    error: boolean;
-    comments: {
-        [parentId: string]: {
-            page: number;
-            ids: string[];
-            entities: Record<string, CommListData>;
-        }
-    };
-    replies: {
-        [parentId: string]: {
-            page: number;
-            ids: string[];
-            entities: Record<string, ReplyCommData>;
-        };
-    };
-};
-  
-const initialState: CommentStateI = {
-    status: false,
-    error: false,
+const initialState: CommentState = {
+
     comments: {},
     replies: {},  
-    operations:{
-        commVideoFetch:defaultStatus,
-        newCommPopular:loadingStatus,
-        likedComment:defaultStatus,
-        newReplyComm:loadingStatus,
-        getReplies:defaultStatus
-    }
+    operations:createOperations<CommentsOperationKey>(
+        listOperationKeys,
+        (key) =>
+        loadingStatus.includes(key)
+            ? createOperationStatus(false)
+            : createOperationStatus()
+    )
+
 };
 
 
 
 
-interface ReturnCommDataT {
-    formattedComments:CommListData[],
-    page:number,
-    totalCommentsCount:number,
-    config_id:string
-}
-
-
-export const commVideoFetch = createAsyncThunk<ReturnCommDataT, {config_id: string, user_id:string, page:number,newComments:string[]}, { rejectValue: string }>(
+export const commVideoFetch = createAsyncThunk<CommentsFetchRes, CommentsFetchReq, { rejectValue: string }>(
     'commentsPopular/commVideoFetch',
     async function (data, { rejectWithValue }) {
         try {
@@ -108,13 +87,7 @@ export const commVideoFetch = createAsyncThunk<ReturnCommDataT, {config_id: stri
     }
 )
 
-interface CommListDataReturn {
-    responseData:CommListData,
-    config_id:string
-}
-
-
-export const newCommPopular = createAsyncThunk<CommListDataReturn, CommListData, { rejectValue: string }>(
+export const newCommPopular = createAsyncThunk<NewCommentFetchRes, NewCommentFetchReq, { rejectValue: string }>(
     'commentsPopular/newCommPopular',
     async function (data, { rejectWithValue, dispatch }) {
         try {
@@ -143,18 +116,8 @@ export const newCommPopular = createAsyncThunk<CommListDataReturn, CommListData,
     }
 )
 
-interface LikedCommnetDataT {
-    id_author:string, 
-    id_branch:string, 
-    // id_branch:string,
-    id_comment:string, 
-    config_id:string, 
-    // id_parent, 
-    liked:boolean, 
-    reply:boolean
-}
 
-export const likedComment = createAsyncThunk<LikedCommnetDataT, LikedCommnetDataT, { rejectValue: string }>(
+export const likedComment = createAsyncThunk<LikeCommentFetch, LikeCommentFetch, { rejectValue: string }>(
     'commentsPopular/likedComment',
     async function (data, { rejectWithValue }) {
         try {
@@ -181,12 +144,8 @@ export const likedComment = createAsyncThunk<LikedCommnetDataT, LikedCommnetData
     }
 )
 
-interface ReplyCommDataReturn{
-    responseData:ReplyCommData
-    config_id:string
-}
 
-export const newReplyComm = createAsyncThunk<ReplyCommDataReturn, {data:ReplyCommData, config_id:string}, { rejectValue: string }>(
+export const newReplyComm = createAsyncThunk<NewReplyFetch, NewReplyFetch, { rejectValue: string }>(
     'popular/newReplyComm',
     async function (data, { rejectWithValue, dispatch }) {
         try {
@@ -213,14 +172,7 @@ export const newReplyComm = createAsyncThunk<ReplyCommDataReturn, {data:ReplyCom
     }
 )
 
-interface returnDataT {
-    dataList:ReplyCommData[],
-    page:number,
-    totalCommentsCount:number,
-    id_comment:string
-}
-
-export const getReplies = createAsyncThunk<returnDataT, {id_comment: string, page:number, id_author:string,newReply:string[]}, { rejectValue: string }>(
+export const getReplies = createAsyncThunk<GetRepliesFetchRes, GetRepliesFetchReq, { rejectValue: string }>(
     'popular/getReplies',
     async function (data, { rejectWithValue }) {
         try {
@@ -262,12 +214,12 @@ export const getReplies = createAsyncThunk<returnDataT, {id_comment: string, pag
 
 
 
-const createReducerHandlers = <T extends keyof CommentStateI['operations']>(operationName: T) => ({
-    pending: (state: CommentStateI) => {
+const createReducerHandlers = <T extends keyof CommentState['operations']>(operationName: T) => ({
+    pending: (state: CommentState) => {
         state.operations[operationName].error = false;
         state.operations[operationName].loading = true;
     },
-    rejected: (state: CommentStateI) => {
+    rejected: (state: CommentState) => {
         state.operations[operationName].error = true;
         state.operations[operationName].loading = false;
     }
@@ -316,7 +268,7 @@ const commentsPopularSlice = createSlice({
         builder
             .addCase(commVideoFetch.pending, commVideoFetchHandlers.pending)
             .addCase(commVideoFetch.rejected, commVideoFetchHandlers.rejected)
-            .addCase(commVideoFetch.fulfilled, (state, action: PayloadAction<ReturnCommDataT>) => {
+            .addCase(commVideoFetch.fulfilled, (state, action: PayloadAction<CommentsFetchRes, string>) => {
                 state.operations.commVideoFetch.error = false
                 state.operations.commVideoFetch.loading = false
                 
@@ -344,7 +296,7 @@ const commentsPopularSlice = createSlice({
 
             .addCase(newCommPopular.pending, newCommPopularHandlers.pending)
             .addCase(newCommPopular.rejected, newCommPopularHandlers.rejected)
-            .addCase(newCommPopular.fulfilled, (state, action: PayloadAction<CommListDataReturn, string>) => {
+            .addCase(newCommPopular.fulfilled, (state, action: PayloadAction<NewCommentFetchRes, string>) => {
                 state.operations.newCommPopular.error = false
                 state.operations.newCommPopular.loading = false
 
@@ -370,7 +322,7 @@ const commentsPopularSlice = createSlice({
 
             .addCase(likedComment.pending, likedCommentHandlers.pending)
             .addCase(likedComment.rejected, likedCommentHandlers.rejected)
-            .addCase(likedComment.fulfilled, (state, action: PayloadAction<LikedCommnetDataT, string>) => {
+            .addCase(likedComment.fulfilled, (state, action: PayloadAction<LikeCommentFetch, string>) => {
                 state.operations.likedComment.error = false
                 state.operations.likedComment.loading = false
 
@@ -413,12 +365,12 @@ const commentsPopularSlice = createSlice({
 
             .addCase(newReplyComm.pending, newReplyCommHandlers.pending)
             .addCase(newReplyComm.rejected, newReplyCommHandlers.rejected)
-            .addCase(newReplyComm.fulfilled, (state, action: PayloadAction<ReplyCommDataReturn, string>) => {
+            .addCase(newReplyComm.fulfilled, (state, action: PayloadAction<NewReplyFetch, string>) => {
                 state.operations.newReplyComm.error = false
                 state.operations.newReplyComm.loading = false
 
                 const data = action.payload;
-                const reply = data.responseData
+                const reply = data.data
                 const id_comment = reply.id_branch;
                 const config_id = data.config_id;
                 
@@ -459,7 +411,7 @@ const commentsPopularSlice = createSlice({
 
             .addCase(getReplies.pending, getRepliesHandlers.pending)
             .addCase(getReplies.rejected, getRepliesHandlers.rejected)
-            .addCase(getReplies.fulfilled, (state, action: PayloadAction<returnDataT, string>) => {
+            .addCase(getReplies.fulfilled, (state, action: PayloadAction<GetRepliesFetchRes, string>) => {
                 state.operations.getReplies.error = false
                 state.operations.getReplies.loading = false
             

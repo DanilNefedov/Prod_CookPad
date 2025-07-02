@@ -3,16 +3,14 @@ import { resetAllState } from "./reset-action"
 
  
 
-export interface InitialStateDescriptionI {
+export interface DescriptionState {
     description:string
 }
 
 
-
-const initialState: InitialStateDescriptionI = {
+const initialState: DescriptionState = {
     description: '',
 }
-
 
 
 
@@ -23,10 +21,8 @@ const descriptionSlice = createSlice({
         setDescription(state, action: PayloadAction<string>) {
             state.description = action.payload
         },
-
-        
-       
     },
+
     extraReducers: (builder) => {
         builder.addCase(resetAllState, () => initialState);
     },
