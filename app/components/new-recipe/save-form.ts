@@ -3,16 +3,16 @@ import { AppDispatch } from "@/state/store";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 import _ from "lodash";
-import { IFetchDataRecipe, IngredientForAutocomplite, unitsState } from "@/app/types/types";
 import { resetStateRecipes } from "@/state/slices/recipe-slice";
-import { StepTypeRecommend } from "@/state/slices/stepper/type-recommend";
-import { NameTimeT } from "@/state/slices/stepper/name-time";
-import { MediaT } from "@/state/slices/stepper/media";
-import { IngredientT } from "@/state/slices/stepper/ingredients";
-import { InitialStateDescriptionI } from "@/state/slices/stepper/description";
-import { InitialStateI } from "@/state/slices/stepper/instruction";
+import { TypeRecommendState } from "@/state/slices/stepper/type-recommend";
+import { NameTimeState, } from "@/state/slices/stepper/name-time";
+import { MediaState, } from "@/state/slices/stepper/media";
+import { IngredientState, } from "@/state/slices/stepper/ingredients";
+import { DescriptionState,} from "@/state/slices/stepper/description";
+import {InstructionState } from "@/state/slices/stepper/instruction";
 import { resetAllState } from "@/state/slices/stepper/reset-action";
-import { DataType, SaveFormResult } from "@/app/(main)/new-recipe/types";
+import { DataType, IngredientAutocomplite, NewDataRecipe, SaveFormResult } from "@/app/(main)/new-recipe/types";
+import { Unit } from "@/app/(main)/cook/types";
 
 
 
@@ -64,12 +64,12 @@ async function uploadFile(data: DataType): Promise<string> {
 
 
 export async function saveForm(
-    stepTypeRecommendation: StepTypeRecommend,
-    stepNameTime: NameTimeT,
-    stepMedia: MediaT,
-    stepIngredients: IngredientT,
-    stepDescription: InitialStateDescriptionI,
-    stepInstruction: InitialStateI,
+    stepTypeRecommendation: TypeRecommendState,
+    stepNameTime: NameTimeState,
+    stepMedia: MediaState,
+    stepIngredients: IngredientState,
+    stepDescription: DescriptionState,
+    stepInstruction: InstructionState,
     userId: string,
     userName: string,
     dispatch: AppDispatch
@@ -110,7 +110,7 @@ export async function saveForm(
         }
 
         const ingredientsWithValues = stepIngredients.ingredients.filter(
-            (ingredient): ingredient is IngredientForAutocomplite & { units: unitsState } =>
+            (ingredient): ingredient is IngredientAutocomplite & { units: Unit } =>
                 ingredient.name.trim() !== '' &&
                 typeof ingredient.units === 'object' &&
                 !Array.isArray(ingredient.units) &&
@@ -131,7 +131,7 @@ export async function saveForm(
             };
         });
 
-        const data: IFetchDataRecipe = {
+        const data: NewDataRecipe = {
             connection_id: userId,
             recipe_id: idRecipe,
             name: stepNameTime.name.value.trim(),
@@ -146,7 +146,7 @@ export async function saveForm(
         };
 
         if (stepTypeRecommendation.recommendation) {
-            const ingredientNames = ingredientsCopy.map((el: IngredientForAutocomplite) => el.name);
+            const ingredientNames = ingredientsCopy.map((el: IngredientAutocomplite) => el.name);
 
             const mediaF = mediaArray.length / 10;
             const descrF = stepDescription.description.trim().length < 100 ? stepDescription.description.trim().length / 100 : 1;

@@ -10,11 +10,11 @@ import { HeaderCook } from "./header-cook";
 import { Box, useMediaQuery } from "@mui/material";
 import { theme } from "@/config/ThemeMUI/theme";
 import { headerCook, scrollBox } from "@/app/(main)/cook/[recipe_id]/styles";
-import { NameLinksT } from "@/app/types/types";
+import { HistoryLinks } from "@/app/(main)/cook/types";
 
 export interface HeaderProps {
     isDeleting:boolean,
-    cookHistoryStore: NameLinksT[];
+    cookHistoryStore: HistoryLinks[];
     recipe_id: string;
     open: boolean;
     toggleDrawer: (v: boolean) => () => void;

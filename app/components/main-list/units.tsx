@@ -14,7 +14,7 @@ import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import { deleteUnitListRecipe, newAmountListRecipe, shopUnitListRecipe } from "@/state/slices/list-recipe-slice"
 import { handleAmountChange } from "../../helpers/input-unit"
 import { shallowEqual } from "react-redux"
-import { UnitsList } from "@/app/types/types"
+import { UnitsId } from "@/app/(main)/(main-list)/list/types"
 
 interface Props {
     ingredient_id: string, 
@@ -157,7 +157,7 @@ const Units = memo(({ ingredient_id, unit_id, recipe_id }: Props) => {
                     <CheckIcon sx={{ width: '18px' }}></CheckIcon>
                 </Button>
             }
-            <CalcUnit props={{ elem:thisUnit as UnitsList, id, ingredient_id:unitData.ingredientId, amount, setAmount, recipe_id }}></CalcUnit>
+            <CalcUnit props={{ elem:thisUnit as UnitsId, id, ingredient_id:unitData.ingredientId, amount, setAmount, recipe_id }}></CalcUnit>
             {/* <Convert props={{ elem, id, ingredient_id: el._id, editAmount, recipe_id }}></Convert> */}
            
             <Button onClick={() => deleteUnitIngr(unitData.ingredientId, thisUnit?._id)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>

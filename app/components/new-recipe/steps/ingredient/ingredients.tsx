@@ -1,5 +1,4 @@
 import { btnMain } from "@/app/main-styles"
-import { IngredientForAutocomplite } from "@/app/types/types"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { Box, Button, Container, Divider, Tooltip, Typography } from "@mui/material"
 import { Autocomplite } from "./autocomplite"
@@ -7,6 +6,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import { theme } from "@/config/ThemeMUI/theme"
 import { addIngredient, deleteIngredient } from "@/state/slices/stepper/ingredients"
 import { useMemo } from "react"
+import { IngredientAutocomplite } from "@/app/(main)/new-recipe/types"
 
 
 export function Ingredients() {
@@ -76,7 +76,7 @@ export function Ingredients() {
                     }}
                 >Minimum 1 filled ingredient</Typography>
 
-                {stepperState.ingredients.map((ingredient: IngredientForAutocomplite) => (
+                {stepperState.ingredients.map((ingredient: IngredientAutocomplite) => (
                     <Box key={ingredient.ingredient_id} sx={{ 
                         
                         display: 'flex', alignItems: 'center', borderColor: 'background.default', width: '100%', mb: '10px',

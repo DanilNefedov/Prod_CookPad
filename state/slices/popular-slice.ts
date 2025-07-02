@@ -35,7 +35,7 @@ const initialState: PopularState = {
     operations:createOperations<PopularOperationKey>(
         ['popularFetch', 'likePopContent', 'savePopContent', 'updateViews'],
         (key) => {
-            if (key === 'likePopContent' || 'savePopContent') {
+            if (key === 'likePopContent' || 'savePopContent' ) {
                 return createOperationStatus(false);
             }
             return createOperationStatus();

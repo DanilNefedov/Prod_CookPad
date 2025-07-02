@@ -5,15 +5,15 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CommentIcon from '@mui/icons-material/Comment';
 import { likePopContent, savePopContent } from "@/state/slices/popular-slice";
-import { PopularAuthorInfoT } from "@/app/types/types";
 import numbro from 'numbro';
 import { theme } from "@/config/ThemeMUI/theme";
 import { authorName, containerBtnsStats, statsBtn, statsBtnMobileIcon, statsRecipe } from "@/app/(main)/popular/style";
 import { usePingGate } from "@/app/hooks/ping";
+import { PopularAuthorInfo } from "@/app/(main)/popular/types";
 
 
 interface Props {
-    author: PopularAuthorInfoT,
+    author: PopularAuthorInfo,
     likes: number,
     liked: boolean,
     saved: boolean,
@@ -29,7 +29,7 @@ export const InfoAboutContent = memo(({ props }: { props: Props }) => {
     const { author, likes, liked, saved, saves, comments, config_id, openComment, toggleComment } = props
 
     const pingGate = usePingGate()
-    const popularStatus = useAppSelector(state => state.popular.status)
+    // const popularStatus = useAppSelector(state => state.popular)
     const saveStatus = useAppSelector(state => state.popular.operations.savePopContent.loading)
     const likeStatus = useAppSelector(state => state.popular.operations.likePopContent.loading)
     const connection_id = useAppSelector(state => state.user.user.connection_id)
@@ -40,7 +40,7 @@ export const InfoAboutContent = memo(({ props }: { props: Props }) => {
         if(likeStatus) return
 
         pingGate(() => {
-            if (connection_id !== '' && !popularStatus) {
+            if (connection_id !== '') {
                 dispatch(likePopContent({
                     config_id: config_id,
                     liked: liked,
@@ -57,7 +57,7 @@ export const InfoAboutContent = memo(({ props }: { props: Props }) => {
         if(saveStatus) return
 
         pingGate(() => {
-            if (connection_id !== '' && !popularStatus) {
+            if (connection_id !== '') {
                 dispatch(savePopContent({
                     config_id: config_id,
                     saved: saved,

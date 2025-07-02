@@ -31,7 +31,8 @@ import { initCommentsState } from "@/state/slices/comments-popular-slice";
 export function MainPopular() {
 
     const dispatch = useAppDispatch()
-    const popularStore = useAppSelector(state => state.popular);
+    const popularStore = useAppSelector(state => state.popular.pop_list);
+    const popularStatusLoading = useAppSelector(state => state.popular.operations.popularFetch)
     const userStore = useAppSelector(state => state.user);
     const errorState = useAppSelector(state => state.popular.operations.popularFetch.error);
     const connection_id = userStore?.user?.connection_id;
@@ -45,13 +46,13 @@ export function MainPopular() {
     const commentRef = useRef<HTMLDivElement | null>(null);
     const pingGate = usePingGate()
     const isFetching = useAppSelector(state => state.popular.operations.popularFetch.loading)
-    const configId = popularStore.pop_list[activeVideo]?.config_id;
+    const configId = popularStore[activeVideo]?.config_id;
  
     useEffect(() => {        
         dispatch(initCommentsState(configId))
     },[configId, activeVideo, dispatch])
 
-    console.log(popularStore.pop_list)
+    console.log(popularStore)
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
@@ -79,16 +80,16 @@ export function MainPopular() {
 
 
     useEffect(() => {
-        if (popularStore.pop_list.length === 0 || errorState) {
+        if (popularStore.length === 0 || errorState) {
             return;
         }
-        const currentRecipe = popularStore.pop_list[activeVideo];
+        const currentRecipe = popularStore[activeVideo];
 
         if (currentRecipe && !viewedVideos.current.has(currentRecipe.config_id)) {
             viewedVideos.current.add(currentRecipe.config_id);
             dispatch(updateViews({ config_id: currentRecipe.config_id }));
         }
-    }, [activeVideo, popularStore.pop_list, dispatch, errorState]);
+    }, [activeVideo, popularStore, dispatch, errorState]);
 
 
     function handleNewVideo() {
@@ -99,7 +100,7 @@ export function MainPopular() {
                 dispatch(popularFetch({
                     connection_id,
                     count: 1,
-                    getAllIds: popularStore.pop_list.map(item => item.config_id)
+                    getAllIds: popularStore.map(item => item.config_id)
                 }))
             } 
         });
@@ -132,7 +133,6 @@ export function MainPopular() {
     };
 
     
-
     return (
         <>
             <Card
@@ -157,14 +157,14 @@ export function MainPopular() {
                     <Box sx={(theme) => mobileNameDescriptionContainer(theme, expanded)}>
 
                         <Typography gutterBottom variant="h5" component="h1" sx={nameRecipe}>
-                            {popularStore.pop_list[activeVideo]?.recipe_name}
+                            {popularStore[activeVideo]?.recipe_name}
                         </Typography>
                         <Typography
                             variant="body2"
                             onClick={() => setExpanded(prev => !prev)}
                             sx={(theme) => descriptionRecipe(theme, expanded)}
                         >
-                            {popularStore.pop_list[activeVideo]?.description}
+                            {popularStore[activeVideo]?.description}
                         </Typography>
 
                     </Box>
@@ -206,8 +206,8 @@ export function MainPopular() {
                         modules={[Virtual, Mousewheel]}
                         style={{ height: '100%', zIndex: 3 }}
                     >
-                        {popularStore.pop_list.map((item, index) => (
-                            popularStore.status && index >= popularStore.pop_list.length - 1 ?
+                        {popularStore.map((item, index) => (
+                            popularStatusLoading && index >= popularStore.length - 1 ?
                                 <Box key={index} style={{ margin: '0 auto', width: '100%', height: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
                                     <CircularProgress color="secondary" size="35px" />
                                 </Box>
@@ -224,16 +224,16 @@ export function MainPopular() {
 
 
                     {
-                        popularStore.pop_list[activeVideo] &&
+                        popularStore[activeVideo] &&
                         <Box sx={containerActiveInfo}>
 
                             <InfoAboutContent props={{
-                                author: popularStore.pop_list[activeVideo]?.author_info,
-                                likes: popularStore.pop_list[activeVideo]?.likes,
-                                liked: popularStore.pop_list[activeVideo]?.liked,
-                                saved: popularStore.pop_list[activeVideo]?.saved,
-                                saves: popularStore.pop_list[activeVideo]?.saves,
-                                comments: popularStore.pop_list[activeVideo]?.comments,
+                                author: popularStore[activeVideo]?.author_info,
+                                likes: popularStore[activeVideo]?.likes,
+                                liked: popularStore[activeVideo]?.liked,
+                                saved: popularStore[activeVideo]?.saved,
+                                saves: popularStore[activeVideo]?.saves,
+                                comments: popularStore[activeVideo]?.comments,
                                 config_id: configId,
                                 openComment,
                                 toggleComment
@@ -261,12 +261,12 @@ export function MainPopular() {
                                     onClick={() => {
                                         handleCooldown(() => {
                                             
-                                            if (activeVideo + 1 < popularStore.pop_list.length || !errorState) {
+                                            if (activeVideo + 1 < popularStore.length || !errorState) {
                                                 const newIndex = activeVideo + 1;
                                                 swiperRef.current?.slideTo(newIndex);
                                                 setActiveVideo(newIndex);
                                                 handleNewVideo();
-                                                dispatch(updateViews({config_id:popularStore.pop_list[newIndex].config_id}));
+                                                dispatch(updateViews({config_id:popularStore[newIndex].config_id}));
                                             }
 
                                             if (openComment) {
@@ -305,14 +305,14 @@ export function MainPopular() {
                 </Box>
 
                 <Typography gutterBottom variant="h5" component="h1" sx={mainNameRecipe}>
-                    {popularStore.pop_list[activeVideo]?.recipe_name}
+                    {popularStore[activeVideo]?.recipe_name}
                 </Typography>
                 <Typography variant="body2" color="text.secondary" sx={mainDescriptionRecipe}>
-                    {popularStore.pop_list[activeVideo]?.description}
+                    {popularStore[activeVideo]?.description}
                 </Typography>
                 {openComment ?
 
-                    <MainComments config_id={configId} comments={popularStore.pop_list[activeVideo]?.comments} ></MainComments>
+                    <MainComments config_id={configId} comments={popularStore[activeVideo]?.comments} ></MainComments>
 
                     :
                     <></>

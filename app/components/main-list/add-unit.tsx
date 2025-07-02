@@ -1,5 +1,4 @@
 import { amountNewUnit, btnsListUnitHover, btnsModal, modalContainer, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/style";
-import { IListObj } from "@/app/types/types";
 import { useAppDispatch } from "@/state/hook";
 import { Autocomplete, Box, Button, ListItem, Modal, TextField, Typography, useMediaQuery } from "@mui/material";
 import { usePathname } from "next/navigation";
@@ -13,9 +12,10 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { theme } from "@/config/ThemeMUI/theme";
 import { handleAmountChange } from "../../helpers/input-unit";
 import { newUnitListRecipe } from "@/state/slices/list-recipe-slice";
+import { ListIngrData } from "@/app/(main)/(main-list)/list/types";
 
 interface Props {
-    ingr: IListObj;
+    ingr: ListIngrData;
     id: string;
     recipe_id?: string,
 }

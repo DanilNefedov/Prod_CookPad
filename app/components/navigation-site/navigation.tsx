@@ -3,7 +3,6 @@ import { Container, Paper } from '@mui/material'
 import Box from '@mui/material/Box';
 
 import { LogOut } from './log-out'
-import { dataPage } from '@/app/main-styles'
 import { BtnLinks } from './btn-links'
 import { AboutUser } from './user-info';
 import HomeIcon from '@mui/icons-material/Home';

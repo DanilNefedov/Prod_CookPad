@@ -1,4 +1,4 @@
-import { MediaObj } from "@/app/types/types";
+import { RecipeMedia } from "@/app/(main)/types";
 import { CardMedia, Skeleton } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 
 
 interface Props {
-    el: MediaObj,
+    el: RecipeMedia,
     name: string,
 }
 

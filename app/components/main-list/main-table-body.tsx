@@ -1,9 +1,8 @@
 import { Box, Collapse, ListItemText, TableCell, TableRow, Tooltip, Typography, useMediaQuery } from "@mui/material"
-import { Fragment, memo, useState } from "react"
+import { memo, useState } from "react"
 import { MainButtons } from "./main-buttons"
 import { imgIngrList, mainIngrList, nameIngredient } from "@/app/(main)/(main-list)/style"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { UnitsList } from "@/app/types/types"
 import { theme } from "@/config/ThemeMUI/theme"
 import { useAppSelector } from "@/state/hook"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -16,6 +15,7 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { usePathname } from "next/navigation"
 import { EmptyInfo } from "../ui-helpers/empty-info"
 import dynamic from "next/dynamic"
+import { UnitsId } from "@/app/(main)/(main-list)/list/types"
 
 const Units = dynamic(() => import('./units'), {
     ssr: false, 
@@ -159,7 +159,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                 thisIngredient.units.length === 0 ?
                                     <EmptyInfo></EmptyInfo>
                                 :
-                                thisIngredient.units.map((elem: UnitsList) => (
+                                thisIngredient.units.map((elem: UnitsId) => (
                                     <SwiperSlide key={elem._id} className="slide-list-unit" style={{ width: 'auto', maxWidth: '100%' }}>
                                         <Units ingredient_id={thisIngredient._id} unit_id={elem._id} recipe_id={recipe_id}/>
                                     </SwiperSlide>
@@ -226,7 +226,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                         thisIngredient.units.length === 0 ?
                                             <EmptyInfo mobileText={'13px'} right={'calc(50% - 70px)'}></EmptyInfo>
                                         :
-                                        thisIngredient.units.map((elem: UnitsList) => (
+                                        thisIngredient.units.map((elem: UnitsId) => (
                                             <SwiperSlide key={elem._id} className="slide-list-unit">
                                                 <Units ingredient_id={thisIngredient._id} unit_id={elem._id} recipe_id={recipe_id}/>
                                             </SwiperSlide>

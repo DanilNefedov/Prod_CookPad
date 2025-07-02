@@ -48,13 +48,22 @@ export interface ListFetchReq {
     page_list:number
 }
 
-export interface NewIngrFetch {
+export interface NewIngrFetchRes {
     _id:string,
     name:string,
     media:string,
     shop_ingr:boolean
     units:UnitsId[]
     list:string[]
+}
+
+export interface NewIngrFetchReq {
+    connection_id: string,
+    name: string
+    media: string
+    shop_ingr: boolean
+    units: UnitNoId[]
+    list: string[]
 }
 
 export interface NewUnitIngrFetchRes {

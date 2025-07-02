@@ -1,13 +1,13 @@
 import { theme } from "@/config/ThemeMUI/theme";
 
-export interface dataPage {
+export interface PageStyles {
     name: string
     path: string[]
     icon:React.ReactNode
 }
 
 
-export function btnLink(page: dataPage, pathname: string) {
+export function btnLink(page: PageStyles, pathname: string) {
     const thisPage = page.path.find(el => matchPath(el, pathname));
 
     return {

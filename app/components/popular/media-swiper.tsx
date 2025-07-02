@@ -1,4 +1,3 @@
-import { MediaObj } from "@/app/types/types";
 import { Box, CardMedia, CircularProgress } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Virtual } from 'swiper/modules';
@@ -11,6 +10,7 @@ import { memo, useEffect, useState } from "react";
 import { containerSlideMediaSwiper, mediaSwiperElement } from "@/app/(main)/popular/style";
 import { useAppSelector } from "@/state/hook";
 import { shallowEqual } from "react-redux";
+import { RecipeMedia } from "@/app/(main)/types";
 
 
 
@@ -68,7 +68,7 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
                 position: 'relative',
             }}
         >
-            {media.map((elem:MediaObj, index) => (
+            {media.map((elem:RecipeMedia, index) => (
 
                 <SwiperSlide key={elem.media_id} className="slide-popular" virtualIndex={index}>
                     <Box sx={{ ...containerSlideMediaSwiper, position: 'relative' }}>

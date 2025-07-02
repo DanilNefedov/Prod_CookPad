@@ -1,6 +1,5 @@
 'use client'
 
-import { IngredientFullData } from "@/app/types/types";
 import { MouseEvent, useState } from "react";
 import { Alert, Box, Button, ListItemAvatar, ListItemText, Menu, MenuItem, Slide, SlideProps, Typography } from "@mui/material";
 import { addListIngr, btnAddNew, btnListItem, containerContentSlide, menuListItems } from "@/app/(main)/cook/[recipe_id]/styles";
@@ -10,11 +9,11 @@ import { useAppDispatch } from "@/state/hook";
 import { newIngredientList, newUnitIngredientList, updateCookUnit } from "@/state/slices/list-slice";
 import { add, bignumber, } from "mathjs";
 import { useSnackbar } from "notistack";
-import { ReturnData } from "@/app/(main)/cook/types";
+import { Ingredients, ReturnData } from "@/app/(main)/cook/types";
 
 
 interface Props {
-    el: IngredientFullData,
+    el: Ingredients,
     id: string
 }
 
@@ -87,9 +86,9 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
         setMethod('')
     };
 
+    
 
-
-    function addNewUnit(el: IngredientFullData) {
+    function addNewUnit(el: Ingredients) {
         if (id !== '') {
             if (method === 'POST') {
                 console.log('2')

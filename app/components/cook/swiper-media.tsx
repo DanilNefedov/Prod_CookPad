@@ -1,5 +1,5 @@
 import { imgRecipeContainer } from "@/app/(main)/cook/[recipe_id]/styles";
-import { MediaObj } from "@/app/types/types";
+import { RecipeMedia } from "@/app/(main)/types";
 import { Box, CardMedia, Skeleton } from "@mui/material";
 import { memo, useEffect, useRef, useState } from "react";
 
@@ -7,7 +7,7 @@ import { memo, useEffect, useRef, useState } from "react";
 
 
 interface Props {
-    el: MediaObj,
+    el: RecipeMedia,
 }
 
 const SwiperMediaCook = memo(({ props }: { props: Props }) => {

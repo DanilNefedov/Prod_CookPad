@@ -6,15 +6,15 @@ import { AddNewUnit } from "./add-unit";
 import { btnsListUnitHover, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/style";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { deleteIngredientFetch, toggleShopIngrFetch } from "@/state/slices/list-slice";
-import { IListObj } from "@/app/types/types";
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { usePathname } from "next/navigation";
 import { deleteIngrRecipeList, shopIngrListRecipe } from "@/state/slices/list-recipe-slice";
+import { ListIngrData } from "@/app/(main)/(main-list)/list/types";
 
 
 interface Props{
-    el: IListObj,
+    el: ListIngrData,
     recipe_id?:string
 }
 

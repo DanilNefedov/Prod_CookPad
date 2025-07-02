@@ -9,11 +9,11 @@ import { Box } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { theme } from '@/config/ThemeMUI/theme';
-import { IngredientFullData } from '@/app/types/types';
 import { memo } from 'react';
+import { Ingredients } from '@/app/(main)/cook/types';
 
 interface Props {
-    findCook: IngredientFullData[] | undefined,
+    findCook: Ingredients[] | undefined,
     id: string
 }
 

@@ -1,6 +1,7 @@
 // *S - start
 // *E - end
 
+import { TempalateRecipe } from "@/app/types/types";
 import { Unit } from "../cook/types";
 
 
@@ -57,3 +58,18 @@ export type SaveFormResult = {
     error?: unknown;
     message?: string | null;
 } | null;
+
+export interface NewDataRecipe extends TempalateRecipe{
+    connection_id: string,
+    instruction:string,
+    sorting:string[],
+    ingredients:IngredientAutocomplite[],
+}
+
+export interface CallbackIngrAutocomplite{
+    _id: string;
+    ingr_type: string;
+    name: string;
+    units: string[];
+    media: string;
+}

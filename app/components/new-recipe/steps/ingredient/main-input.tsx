@@ -1,6 +1,6 @@
+import { CallbackIngrAutocomplite, IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
 import { secondTextInput } from "@/app/main-styles";
 import { fetchLocationSuggestions } from "@/app/services/autocomplite";
-import { IngredientForAutocomplite, ingredintFetch } from "@/app/types/types";
 import { theme } from "@/config/ThemeMUI/theme";
 import { useAppDispatch } from "@/state/hook";
 import { choiceAutocomplite } from "@/state/slices/stepper/ingredients";
@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 
 interface Props {
-    ingredient: IngredientForAutocomplite, 
+    ingredient: IngredientAutocomplite, 
     handleInputChange: (newInputValue: string) => void, 
     error:boolean
 }
@@ -18,8 +18,8 @@ interface Props {
 
 export const MainInput = memo(({ ingredient, handleInputChange, error }: Props) => {
 
-    const [options, setOptions] = useState<IngredientForAutocomplite[]>([]);
-    const [value, setValue] = useState<IngredientForAutocomplite | null>(ingredient);
+    const [options, setOptions] = useState<IngredientAutocomplite[]>([]);
+    const [value, setValue] = useState<IngredientAutocomplite | null>(ingredient);
     const [inputValue, setInputValue] = useState<string>('');
 
     const dispatch = useAppDispatch();
@@ -29,7 +29,7 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: Props) 
     const fetch = useMemo(
         () =>
             debounce(
-                async (request: { input: string }, callback: (results: ingredintFetch[]) => void) => {
+                async (request: { input: string }, callback: (results: CallbackIngrAutocomplite[]) => void) => {
                     try {
                         if (request.input?.trim().length > 1) {
                             const response = await fetchLocationSuggestions(request.input);
@@ -118,7 +118,7 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: Props) 
             value={value}
                      
             noOptionsText="No ingredients"
-            onChange={(event, newValue: IngredientForAutocomplite | string | null) => {
+            onChange={(event, newValue: IngredientAutocomplite | string | null) => {
                 if (typeof newValue === 'string') {
                     const newIngredient = {
                         ingredient_id: ingredient.ingredient_id,

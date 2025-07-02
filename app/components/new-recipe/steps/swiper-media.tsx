@@ -1,5 +1,5 @@
 
-import { MediaObj } from "@/app/types/types";
+import { RecipeMedia } from "@/app/(main)/types";
 import { CardMedia } from "@mui/material";
 import { memo } from "react";
 
@@ -7,7 +7,7 @@ import { memo } from "react";
 
 
 interface Props {
-    el: MediaObj,
+    el: RecipeMedia,
 }
 
 

@@ -1,5 +1,5 @@
-import { ChangeAmountFetch, DeleteUnitIngrFetch, ListFetchReq, ListFetchRes, 
-    ListRootState, NewIngrFetch, NewUnitFetchReq, NewUnitFetchRes, NewUnitIngrFetchReq, 
+import { ChangeAmountFetch, DeleteUnitIngrFetch, ListFetchReq, ListFetchRes, ListRootState, 
+    NewIngrFetchReq, NewIngrFetchRes, NewUnitFetchReq, NewUnitFetchRes, NewUnitIngrFetchReq,
     NewUnitIngrFetchRes, ShopIngrFetch, ShopUnitFetch, UpdCookUnitFetch } from "@/app/(main)/(main-list)/list/types";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -87,7 +87,7 @@ export const fetchList = createAsyncThunk<ListFetchRes, ListFetchReq, { rejectVa
 )
 
 
-export const newIngredientList = createAsyncThunk<NewIngrFetch, NewIngrFetch, { rejectValue: string }>(
+export const newIngredientList = createAsyncThunk<NewIngrFetchRes, NewIngrFetchReq, { rejectValue: string }>(
     'list/newIngredientList',
     async function (reqData, { rejectWithValue }) {
         try {
@@ -399,7 +399,7 @@ const listSlice = createSlice({
 
             .addCase(newIngredientList.pending, newIngredientListHandlers.pending)
             .addCase(newIngredientList.rejected, newIngredientListHandlers.rejected)
-            .addCase(newIngredientList.fulfilled, (state, action:PayloadAction<NewIngrFetch, string>) => {
+            .addCase(newIngredientList.fulfilled, (state, action:PayloadAction<NewIngrFetchRes, string>) => {
                 state.operations.newIngredientList.error = false
                 state.operations.newIngredientList.loading = false
 

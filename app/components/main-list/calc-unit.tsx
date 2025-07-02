@@ -1,6 +1,5 @@
 'use client'
 
-import { UnitsList } from "@/app/types/types";
 import { useAppDispatch } from "@/state/hook";
 import { usePathname } from "next/navigation";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
@@ -13,9 +12,10 @@ import CheckIcon from '@mui/icons-material/Check';
 import { changeAmountFetch } from "@/state/slices/list-slice";
 import { theme } from "@/config/ThemeMUI/theme";
 import { newAmountListRecipe } from "@/state/slices/list-recipe-slice";
+import { UnitsId } from "@/app/(main)/(main-list)/list/types";
 
 interface Props {
-    elem: UnitsList;
+    elem: UnitsId;
     id: string;
     ingredient_id: string;
     amount: string

@@ -9,7 +9,7 @@ import { Amount, Autocompite, ChoiceUnits, IngredientAutocomplite } from "@/app/
 
 
 
-interface IngredientState  {
+export interface IngredientState  {
     ingredients: IngredientAutocomplite[]; 
 }
 
