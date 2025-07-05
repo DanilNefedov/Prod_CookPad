@@ -1,5 +1,5 @@
 export const runtime = "nodejs";
-import NextAuth, { AuthError } from "next-auth";
+import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
@@ -7,11 +7,6 @@ import { getCall, postCall } from "../../app/services/auth-call";
 import { compare } from "bcryptjs";
 
 
-
-export interface RequestData <T>{
-  url: string;
-  data: T;
-}
 
 
  
@@ -90,8 +85,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return true;
       }
       if (account && (account.provider === 'google' || account.provider === 'discord')) {
-        // await connectDB();
-        // const existingUser = await User.findOne({ connection_id: account.providerAccountId });
         const url = `${process.env.APP_MAIN_URL}/api/user?connection_id=${account.providerAccountId}`
         const existingUser = await getCall(url)
         const { user } = await existingUser.json();
@@ -162,16 +155,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return token;
     },
-
-    // jwt: async ({  token, account }) => {
-    //   // console.log('jwtjwtjwtjwtjwtjwtjwtjwtjwt', {  token, account })
-    //   if (account) {
-    //     token.connection_id = account.providerAccountId;
-    //   }
-    //   return token;
-    // },
-    
-
 
     authorized(params) {
       return !!params.auth?.user;

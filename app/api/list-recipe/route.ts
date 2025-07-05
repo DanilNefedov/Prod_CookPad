@@ -1,7 +1,8 @@
+import { Ingredients } from "@/app/(main)/cook/types";
+import { RecipeMedia } from "@/app/(main)/types";
 import connectDB from "@/app/lib/mongoose";
 import ListRecipe from "@/app/models/list-recipe";
 import Recipe from "@/app/models/recipe";
-import { IngredientFullData, MediaObj } from "@/app/types/types";
 import { NextResponse } from "next/server";
 
 
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
             );
         }
  
-        const recipe_media = recipe.media.find((m: MediaObj) => m.main) || recipe.media[0];
+        const recipe_media = recipe.media.find((m: RecipeMedia) => m.main) || recipe.media[0];
 
         const transformedRecipe = {
             recipe_id: recipe.recipe_id,
@@ -41,7 +42,7 @@ export async function POST(request: Request) {
                 type: recipe_media.media_type, 
             },
             recipe_shop: false,
-            ingredients_list: recipe.ingredients.map((ing: IngredientFullData) => ({
+            ingredients_list: recipe.ingredients.map((ing: Ingredients) => ({
                 name: ing.name,
                 media: ing.media || '',
                 shop_ingr: false, 

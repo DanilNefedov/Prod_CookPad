@@ -1,5 +1,8 @@
-import { RequestData } from "../../config/auth/auth";
 
+export interface RequestData <T>{
+    url: string;
+    data: T;
+}
 
 
 export async function postCall<T>(requestData: RequestData<T>): Promise<Response> {

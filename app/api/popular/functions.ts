@@ -1,18 +1,8 @@
+import { Avarage, UserHistoryMulti } from "@/app/(main)/popular/types";
 import { all, BigNumber, create, } from "mathjs";
 
-interface userT {
-    // id: string,
-    category: string,
-    multiplier: number[],
-    history_length_average: number
-}
 
-interface AvarageDataT{
-    multiplier: number[],
-    history_length_average: number
-}
-
-function averageCalc({ multiplier, history_length_average }: AvarageDataT): number {
+function averageCalc({ multiplier, history_length_average }: Avarage): number {
     const math = create(all, {
         number: 'BigNumber',
         precision: 64,
@@ -42,7 +32,7 @@ function averageCalc({ multiplier, history_length_average }: AvarageDataT): numb
 }
 
 
-export function categoryUser(popular_config: userT[], action: boolean, coef:number, categories: string[]): userT[] {
+export function categoryUser(popular_config: UserHistoryMulti[], action: boolean, coef:number, categories: string[]): UserHistoryMulti[] {
 
     //It may be necessary in the future to check the length of popular_config
     if (popular_config.length === 0 && !action) {

@@ -1,31 +1,16 @@
 import connectDB from "@/app/lib/mongoose";
 import User from "@/app/models/user";
-import { popularList } from "@/app/types/types";
 import { add, bignumber, divide,  mean, multiply, round, sum } from "mathjs";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import _ from 'lodash';
 import RecipePopularConfig from "@/app/models/popular-config";
 import { PipelineStage } from "mongoose";
+import { RecipeConfig, TopItems, UserMultiplier } from "@/app/(main)/popular/types";
 
 
 
 
-interface UserT {
-    id: string;
-    category: string;
-    multiplier: number[];
-}
-
-interface RecipeT extends popularList {
-    _id: string;
-    creator: mongoose.Schema.Types.ObjectId;
-}
-
-interface Top20ElementsT {
-    item: RecipeT;
-    matchCoefficient: number;
-}
 
 
 //--------------------    average coefficient of action history with EVERY item in the category    -------//
@@ -35,7 +20,7 @@ function categoryCoefUser(data: number[]): number {
 }
 
 
-function categoryCoefVideo(data: RecipeT, matchCoefficient: number): number {//form 1 to 2
+function categoryCoefVideo(data: RecipeConfig, matchCoefficient: number): number {//form 1 to 2
     const { comments, fully, likes, saves, views } = data;
 
     if (views === 0) return matchCoefficient;
@@ -53,14 +38,14 @@ function categoryCoefVideo(data: RecipeT, matchCoefficient: number): number {//f
 
 //------------------  return the number of matches between user and recipe ---------------------//
 
-function calculateMatchCount(categories: string[], userList: UserT[]): number {
+function calculateMatchCount(categories: string[], userList: UserMultiplier[]): number {
     return categories.filter(category => 
         userList.some(user => user.category === category)
     ).length;
 }
 
 
-function getSortingByCategory(selectedElements: RecipeT[], userList: UserT[]) {
+function getSortingByCategory(selectedElements: RecipeConfig[], userList: UserMultiplier[]) {
 
     const elementsWithMatchCoefficient = selectedElements.map(item => {
         const matchCount = calculateMatchCount(item.categories, userList);
@@ -81,10 +66,10 @@ function getSortingByCategory(selectedElements: RecipeT[], userList: UserT[]) {
 
 
 
-function calculateAverageCoef(item: RecipeT, userList: UserT[], matchCoefficient: number): number {
+function calculateAverageCoef(item: RecipeConfig, userList: UserMultiplier[], matchCoefficient: number): number {
     const matchingUsers = item.categories
         .map(category => userList.find(user => user.category === category))
-        .filter((user): user is UserT => !!user);
+        .filter((user): user is UserMultiplier => !!user);
 //----------------------------------- sum of the average coefficients of the categories (user) that matched the recipe ------------------//
 
     if (matchingUsers.length === 0) {
@@ -103,7 +88,7 @@ function calculateAverageCoef(item: RecipeT, userList: UserT[], matchCoefficient
 
 
 //----------------------------------- sorting by other users' activity -----------------------------------//
-function orderByUsersImpact(top20Elements: Top20ElementsT[], count: number): RecipeT[] {//RecipeT
+function orderByUsersImpact(top20Elements: TopItems[], count: number): RecipeConfig[] {//RecipeT
 
     const sortedByImpact = top20Elements.map(elem => ({
         item: elem.item,

@@ -1,6 +1,7 @@
 // *S - start
 // *E - end
 
+import mongoose from "mongoose"
 import { RecipeMedia } from "../types"
 
 //----------- state S-----------//
@@ -30,6 +31,14 @@ export interface PopularAuthorInfo {
     author_img:string,
 }
 
+export interface PopularConfig{
+    fully:number,
+    likes:number,
+    views:number,
+    saves:number,
+    comments:number,
+    categories:string[],
+}
 
 //---------- thunks S----------//
 
@@ -171,7 +180,32 @@ export interface GetRepliesFetchReq{
 
 //---------- route E----------//
 
+export interface UserMultiplier{
+    id: string;
+    category: string;
+    multiplier: number[];
+}
 
+export interface RecipeConfig extends PopularConfig {
+    _id: string;
+    creator: mongoose.Schema.Types.ObjectId;
+}
+
+export interface TopItems{
+    item: RecipeConfig;
+    matchCoefficient: number;
+}
+
+export interface UserHistoryMulti{
+    category: string,
+    multiplier: number[],
+    history_length_average: number
+}
+
+export interface Avarage{
+    multiplier: number[],
+    history_length_average: number
+}
 
 //---------- route E----------//
 
