@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { signInCall } from "./function";
-import { useActionState, useEffect, useState} from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { regiterIntup } from "../style";
+import { containerLoading, linksAuth, templateHeaderAuth } from "../style";
 import { UXLoading } from "@/app/components/ui-helpers/loading";
 import { ModalInfo } from "../modal-info";
+import { centerFlexBlock } from "@/app/styles";
 
 
 
@@ -24,8 +25,8 @@ export function SignInForm() {
         }
     }, [state.success, router]);
 
-    
-    
+
+
     useEffect(() => {
         if (state.email) setEmailInput(state.email);
     }, [state.email]);
@@ -33,39 +34,29 @@ export function SignInForm() {
 
     return (
         <>
-            {   
-                isPending ? 
-                <Box sx={{position:'absolute', top:'0', bottom:'0', width:'100%', height:'100%', zIndex:'9999', bgcolor: 'rgba(0, 0, 0, 0.5)'}}>
-                    <UXLoading></UXLoading>
-                </Box> 
-                : null
-            }
+            {isPending && (
+                <Box sx={containerLoading}>
+                    <UXLoading />
+                </Box>
+            )}
 
             <form
-                style={{ width: '100%', marginTop: '20px' }}
+                style={{ width: '100%', marginTop: '10px' }}
                 action={formAction}
             >
-                
-
                 {state.error && (
-                    <Box sx={{ color: '#FF7269', textAlign: 'center' }}>
+                    <Typography sx={{ color: 'error.main', textAlign: 'center' }}>
                         Check the data you have entered. You may not be registered yet.<br />
-                    </Box>
-                )} 
-                <Box sx={{display:'flex', alignItems:'center', gap:'20px', justifyContent:'center'}}>
-                    <Typography
-                        sx={{ textAlign: "center", fontWeight: "600", padding: "15px 0", fontSize: "1.2rem" }}
-                        color="text.primary"
-                    >
+                    </Typography>
+                )}
+                <Box sx={[centerFlexBlock, { gap: '20px' }]}>
+                    <Typography sx={templateHeaderAuth}>
                         Or sign in with email
                     </Typography>
                     <ModalInfo></ModalInfo>
                 </Box>
-                
-
                 <TextField
                     margin="normal"
-                    // required
                     fullWidth
                     label="Email Address"
                     autoComplete="off"
@@ -74,44 +65,32 @@ export function SignInForm() {
                     error={state.error}
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
-                    slotProps={{
-                        inputLabel: {
-                            shrink: true,
-                        },
-                    }}
-                    sx={regiterIntup}
                 />
                 <TextField
                     margin="normal"
                     autoComplete="new-password"
-                    // required
                     fullWidth
                     name="password"
                     label="Password"
                     type="password"
                     error={state.error}
-                    slotProps={{
-                        inputLabel: {
-                            shrink: true,
-                        },
-                    }}
-                    sx={regiterIntup}
                 />
-
                 <Button
                     type="submit"
                     fullWidth
                     variant="contained"
-                    color="grayButton"
+                    color="blackRedBtn"
                     disabled={isPending}
-                    sx={{ mt: 2, fontWeight: 600, borderRadius: "10px" }}
+                    sx={{ mt: 2, fontSize: '16px' }}
                 >
                     {isPending ? 'Signing in...' : 'Sign in'}
                 </Button>
-                <Link className="link-register" href={'/register'}>Create a new Account</Link>
+                <Typography href={'/register'} component={Link} sx={linksAuth}>
+                    Create a new Account
+                </Typography>
             </form>
         </>
 
-        
+
     )
 }

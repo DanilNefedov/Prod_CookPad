@@ -4,15 +4,15 @@
 import { Avatar, Box, Button, TextField, Typography } from "@mui/material";
 import Link from "next/link";
 import { registerAndSignIn, uploadFile } from "./function";
-import '../style.css';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { startTransition, useActionState, useState } from "react";
 import { VisuallyHiddenInput } from "@/app/(main)/new-recipe/style";
 import { UXLoading } from "@/app/components/ui-helpers/loading";
 import { v4 as uuidv4 } from 'uuid';
-import { regiterIntup } from "../style";
 import { ModalInfo } from "../modal-info";
 import { InputErrorState, RegisterFormData } from "../types";
+import { avatar, containerAvatar, containerLoading, helperTextAvatar, linksAuth, templateHeaderAuth } from "../style";
+import { centerFlexBlock } from "@/app/styles";
 
 
 export default function Register() {
@@ -56,7 +56,7 @@ export default function Register() {
     let imageUrl = "";
     if (imageFile instanceof File && imageFile.size > 0) {
       try {
-        imageUrl = await uploadFile({ connection_id, image: imageFile }); 
+        imageUrl = await uploadFile({ connection_id, image: imageFile });
       } catch (e) {
         fieldErrors.image = true;
       }
@@ -87,22 +87,16 @@ export default function Register() {
   return (
     <>
       {
-        isLoading ?
-          <Box sx={{ position: 'absolute', top: '0', bottom: '0', width: '100%', height: '100%', zIndex: '9999', bgcolor: 'rgba(0, 0, 0, 0.5)' }}>
-            <UXLoading></UXLoading>
-          </Box>
-          : null
+        isLoading &&
+        <Box sx={containerLoading}>
+          <UXLoading></UXLoading>
+        </Box>
       }
-
-
       <form
         style={{ width: '100%' }}
         onSubmit={handleSubmit}
       >
-
-        
-        {/* {state.error && ( */}
-        <Box sx={{ color: "#FF7269", textAlign: "center" }}>
+        <Box sx={{ color: "error.main", textAlign: "center" }}>
           {(state.error?.server || state.error?.post) && <>Whoa, something's wrong.<br />Check the data or the connection.</>}
           {inputErrorState.name && <>Enter the correct name.<br /></>}
           {inputErrorState.image && <>Check your avatar or connection.<br /></>}
@@ -110,102 +104,67 @@ export default function Register() {
           {state.error?.email && <>Email already used or invalid input.<br /></>}
           {inputErrorState.password && <>Enter the password correctly.<br /></>}
         </Box>
-        {/* )} */}
 
-
-        <Box sx={{display:'flex', alignItems:'center', gap:'20px', justifyContent:'center'}}>
-          <Typography
-            sx={{ textAlign: "center", fontWeight: "600", padding: "15px 0", fontSize: "1.2rem" }}
-            color="text.primary"
-          >
+        <Box sx={[centerFlexBlock, { gap: '20px' }]}>
+          <Typography sx={templateHeaderAuth}>
             Register with your email
           </Typography>
           <ModalInfo></ModalInfo>
-
         </Box>
-        
 
         <TextField
-          margin="normal"
           error={inputErrorState.name}
-          // required
+          margin="normal"
           fullWidth
-          label="Your name"
           autoComplete="off"
+          label="Your name"
           name="name"
           type="text"
-          slotProps={{
-            inputLabel: {
-              shrink: true,
-            },
-          }}
           helperText={
             "*Name: 1-15 letters & numbers"
           }
-          sx={[regiterIntup, { '& .MuiFormHelperText-root': { color: '#c2c6cf' } }]}
+          sx={{ marginBottom: '0', '& .MuiFormHelperText-root': { color: 'text.disabled' } }}
         />
         <TextField
           margin="normal"
-          // required
           fullWidth
           label="Email Address"
           autoComplete="off"
           error={state.error?.email}
           name="email"
           type="email"
-          slotProps={{
-            inputLabel: {
-              shrink: true,
-            },
-          }}
-          sx={regiterIntup}
         />
         <TextField
           margin="normal"
           autoComplete="new-password"
-          // required
           fullWidth
           name="password"
           error={inputErrorState.password}
           label="Password"
           type="password"
-          slotProps={{
-            inputLabel: {
-              shrink: true,
-            },
-
-          }}
-          sx={[regiterIntup, { '& .MuiFormHelperText-root': { color: '#c2c6cf' } }]}
+          sx={{ '& .MuiFormHelperText-root': { color: 'text.disabled' } }}
           helperText={
             "*Password: 4-8 chars, needs A-Z and 0-9"
           }
         />
 
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: '10px', position: 'relative', mb: '23px' }} >
-          <Typography variant="body1" sx={{ 
-            position: 'absolute', 
-            bottom: '-23px', 
-            left: 'calc(50% - 79px)', 
-            fontSize: '12px', 
-            color: sizeAvatar || inputErrorState.image ? '#FF7269' : '#c2c6cf' }}
+        <Box sx={[centerFlexBlock, containerAvatar]} >
+          <Typography variant="body1" sx={[helperTextAvatar,
+            { color: sizeAvatar || inputErrorState.image ? 'error.main' : 'text.disabled' }
+          ]}
           >{'*JPG, PNG, SVG — max 1 MB'}</Typography>
-
           <Avatar
             alt="User avatar"
             src={avatarPreview !== null ? avatarPreview : ''}
-            sx={{ width: 45, height: 45, mr: 2, }}
-
+            sx={avatar}
           />
-
-
           <Button
-            color="grayButton"
+            color="blackRedBtn"
             component="label"
             role={undefined}
             variant="contained"
             tabIndex={-1}
             startIcon={<CloudUploadIcon />}
-
           >
             Upload avatar
             <VisuallyHiddenInput
@@ -216,36 +175,31 @@ export default function Register() {
 
                 if (file.size > 1024 * 1024) {
                   setSizeAvatar(true);
-                  // e.target.value = '';
-                  // return;
-                }else{
+
+                } else {
                   setSizeAvatar(false);
-                  // setAvatarFile(file);
                   setAvatarPreview(URL.createObjectURL(file));
                 }
-
-                
               }}
               name="image"
               type="file"
-
             />
           </Button>
         </Box>
-
 
         <Button
           type="submit"
           fullWidth
           variant="contained"
-          color="darkButton"
-          sx={{ mt: 2, fontWeight: 600, borderRadius: "10px" }}
+          color="blackRedBtn"
+          sx={{ mt: 2, fontSize: '16px' }}
         >
           Register
         </Button>
 
-
-        <Link className="link-register" href={'/login'}>Back to the Login</Link>
+        <Typography href={'/login'} component={Link} sx={linksAuth}>
+          Back to the Login
+        </Typography>
       </form>
     </>
 

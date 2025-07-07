@@ -114,7 +114,6 @@ export async function registerAndSignIn(_prevState: RegisterResult, formData: Re
     const result = await handleRegister(formData);  
     if (result.error) return result;
 
-    console.log({ result, email, password })
     await signIn("credentials", {
         email,
         password,
