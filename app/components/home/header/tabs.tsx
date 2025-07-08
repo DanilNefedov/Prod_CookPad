@@ -1,5 +1,6 @@
 'use client';
 
+import { linksBar } from '@/app/(main)/home/styles';
 import { TabObject } from '@/app/(main)/home/types';
 import { useNavigationState } from '@/config/home-navigation/context-navigation';
 import { useAppSelector } from '@/state/hook';
@@ -8,13 +9,9 @@ import NextLink from 'next/link';
 import { useEffect, useMemo } from 'react';
 
 
-interface Props {
-  styleLink: Record<string, any>;
-}
 
 
-
-export default function TabsRenderer({ styleLink }: Props) {
+export default function TabsRenderer() {
   const recipeStore = useAppSelector((state) => state.recipe);
   const renderedNavigation = recipeStore.recipes.map((recipe) => ({
     sorting: recipe.sorting,
@@ -81,7 +78,7 @@ export default function TabsRenderer({ styleLink }: Props) {
       <Tab
         key="all"
         label="All"
-        sx={styleLink}
+        sx={linksBar}
         component={NextLink}
         href="#"
         value="all"
@@ -92,7 +89,7 @@ export default function TabsRenderer({ styleLink }: Props) {
         <Tab
           key={key}
           label={label}
-          sx={styleLink}
+          sx={linksBar}
           component={NextLink}
           href="#"
           value={key}

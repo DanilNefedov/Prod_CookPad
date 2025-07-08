@@ -80,6 +80,7 @@ const baseline: Components<Theme>['MuiCssBaseline'] = {
             fontFamily: 'inherit',
             fontWeight: 'inherit',
             fontSize: 'inherit',
+            transition:'all 0.2s'
         },
         'button::-moz-focus-inner': {
             padding: 0,
@@ -90,6 +91,8 @@ const baseline: Components<Theme>['MuiCssBaseline'] = {
         },
         a: {
             textDecoration: 'none',
+            textTransform: 'none',
+            transition:'all 0.2s'
         },
         'a:visited': {
             textDecoration: 'none',

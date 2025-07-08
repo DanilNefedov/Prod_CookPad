@@ -1,6 +1,7 @@
 'use client'
 
-import { theme } from '@/config/ThemeMUI/theme';
+import { containerUser, textAvatar } from '@/app/(main)/home/styles';
+import { avatarSize, centerFlexBlock, textMaxWidth } from '@/app/styles';
 import { useAppSelector } from '@/state/hook';
 import { Avatar, Box, Tooltip, Typography } from '@mui/material';
 
@@ -10,7 +11,7 @@ export function AboutUser() {
     const userStore = useAppSelector(state => state.user.user)
 
     return (
-        <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center', width:'100%', justifyContent:'center', flexDirection:'column',}}>
+        <Box sx={[centerFlexBlock, containerUser]}>
             <Tooltip title={userStore.name}>
                 {/* {userStore.img ? (
                     <Image
@@ -22,32 +23,17 @@ export function AboutUser() {
                     />
                 ) : null} */}
                 <Avatar 
-                alt={userStore.name}
-                src={userStore.img } 
-                slotProps={{
-                    img: {
-                        alt: userStore.name,
-                    },
-                }}
-                sx={{ 
-                    width: 45, 
-                    height: 45,
-                    [theme.breakpoints.down("md")]: {
-                        width:35,
-                        height: 35,
-                    },
-                }}></Avatar>
+                    alt={userStore.name}
+                    src={userStore.img } 
+                    slotProps={{
+                        img: {
+                            alt: userStore.name,
+                        },
+                    }}
+                    sx={avatarSize}
+                ></Avatar>
             </Tooltip>
-            <Typography fontWeight='600' mt={1} color='text.secondary' sx={{
-                maxWidth: '90px',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-
-                [theme.breakpoints.down("md")]: {
-                    display:'none'
-                },
-            }}>{userStore.name}</Typography>
+            <Typography color='text.disabled' sx={[textMaxWidth, textAvatar]}>{userStore.name}</Typography>
         </Box>
     )
 }

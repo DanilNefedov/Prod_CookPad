@@ -4,7 +4,7 @@
 import { IconButton, Popover, Typography } from "@mui/material";
 import InfoIcon from '@mui/icons-material/Info';
 import { MouseEvent, useState } from "react";
-import { textPopover } from "./style";
+import { textPopover } from "./styles";
 
 
 

@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { setFavoriteRecipe } from "@/state/slices/recipe-slice";
 import { Box, IconButton, Typography } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import { favoriteBtnActive, favoriteBtnDesactive } from "@/app/(main)/home/style";
+import { favoriteBtnActive, favoriteBtnDesactive } from "@/app/(main)/home/styles";
 import { Swiper, SwiperSlide } from 'swiper/react';
 // Import Swiper styles
 import 'swiper/css';

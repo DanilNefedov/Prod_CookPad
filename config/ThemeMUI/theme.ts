@@ -4,6 +4,7 @@ import { iconButtons } from './buttons/icon-buttons';
 import { inputLabel, inputs, outlinedInput } from './inputs/inputs';
 import { list, listItem } from './lists/lists';
 import { baseline } from './baseline/baseline';
+// import { container } from './blocks/container';
 
 
 
@@ -53,6 +54,7 @@ export const theme = createTheme({
     MuiInputLabel: inputLabel,
     MuiList: list,
     MuiListItem: listItem,
+    // MuiContainer: container,
     MuiLink: {
       styleOverrides: {
         root: {

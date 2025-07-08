@@ -7,3 +7,10 @@ export interface TabObject {
     key: string;
     label: string;
 }
+
+
+export interface PageStyles {
+    name: string
+    path: string[]
+    icon:React.ReactNode
+}

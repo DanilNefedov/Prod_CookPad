@@ -7,46 +7,6 @@ export interface PageStyles {
 }
 
 
-export function btnLink(page: PageStyles, pathname: string) {
-    const thisPage = page.path.find(el => matchPath(el, pathname));
-
-    return {
-        textTransform: 'initial',
-        color: thisPage ? 'text.primary' : 'text.secondary',
-        backgroundColor: thisPage ? 'primary.main' : 'background.paper',
-        '&:hover': {
-            color: 'text.primary'
-        },
-        mb: '20px',
-        lineHeight: 'inherit',
-        alignItems:'center',
-        justifyContent: "flex-start",
-        [theme.breakpoints.down("md")]: {
-            p:'5px',
-            minWidth:'auto',
-            borderRadius:'0 20px 20px 0',
-
-            '& span':{
-                display:'none'
-            }
-        },
-
-
-        // [theme.breakpoints.down(500)]: {
-        //     p:'5px 5px 5px 15px',
-        //     minWidth:'auto'
-        // }
-    }
-
-}
-
-function matchPath(pagePaths: string, pathname: string): boolean {
-    // return pagePaths.some(path => {
-        const regexPath = new RegExp('^' + pagePaths.replace(/:[^\s/]+/g, '([^\\s/]+)') + '$');
-        return regexPath.test(pathname);
-    // });
-}
-
 
 export const btnMain = {
     textTransform: 'initial',

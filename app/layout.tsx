@@ -1,5 +1,4 @@
 import ThemeRegistry from "@/config/ThemeMUI/provider-theme-mui";
-import "./globals.css";
 import { Roboto } from 'next/font/google'
 import { ProviderAuth } from "@/config/auth/provider-auth";
 import { ProviderStore } from "@/config/state/provider-store";

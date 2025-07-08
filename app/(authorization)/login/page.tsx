@@ -1,7 +1,7 @@
 import { signIn } from "@/config/auth/auth"
 import { Box, Button, Typography } from "@mui/material"
 import { SignInForm } from "./sign-in";
-import { templateHeaderAuth } from "../style";
+import { templateHeaderAuth } from "../styles";
 
 
 

@@ -5,7 +5,7 @@ import { signInCall } from "./function";
 import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { containerLoading, linksAuth, templateHeaderAuth } from "../style";
+import { containerLoading, linksAuth, templateHeaderAuth } from "../styles";
 import { UXLoading } from "@/app/components/ui-helpers/loading";
 import { ModalInfo } from "../modal-info";
 import { centerFlexBlock } from "@/app/styles";

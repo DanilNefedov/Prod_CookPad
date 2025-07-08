@@ -11,6 +11,8 @@ import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import RecommendIcon from '@mui/icons-material/Recommend';
 import { theme } from '@/config/ThemeMUI/theme';
 import { DataPage } from '@/app/(main)/types';
+import { containerButtons, containerExit, containerNavigation, paperNavigation } from '@/app/(main)/home/styles';
+import { columnSpaceBetween } from '@/app/styles';
 
 
 export function NavigationSite() {
@@ -38,55 +40,18 @@ export function NavigationSite() {
     ];
 
     return (
-        <Paper 
-        sx={{
-            backgroundColor: 'background.default',
-            flexGrow: 0,
-            borderRadius: '0',
-            width: '100%',
-            maxWidth: '165px',
-            [theme.breakpoints.down("md")]: {
-                maxWidth:'60px'
-            },
-            [theme.breakpoints.down(500)]: {
-                maxWidth:'45px'
-            }
-        }}>
-            <Container 
-            
-            sx={{
-                display: 'flex', 
-                flexDirection: 'column', 
-                justifyContent: 'space-between', 
-                height: '100dvh', 
-                paddingTop: '17px',
-                paddingBottom: '25px', '&.MuiContainer-root': {
-                    paddingLeft: '12px',
-                    paddingRight: '12px',
-                    [theme.breakpoints.down("md")]: {
-                        pl:'0px',
-                        pr:'0',
-                    },
-
-                    [theme.breakpoints.down(500)]: {
-                        pr:'0'
-                    }
-                },
-            }}>
+        <Paper sx={paperNavigation}>
+            <Container disableGutters sx={[columnSpaceBetween, containerNavigation]}>
                 <Box>
                     <AboutUser></AboutUser>
                 </Box>
-                <Box sx={{display:'flex', flexDirection:'column', [theme.breakpoints.down("md")]: {
-                        display:'block'
-                    }}}>
+                <Box sx={containerButtons}>
                     {pages.map((page) => (
                         <BtnLinks key={page.path[0]} page={page}></BtnLinks>
                     ))}
                 </Box>
 
-                <Box sx={{display:'flex', justifyContent:'center',[theme.breakpoints.down("md")]: {
-                        justifyContent:'flex-start'
-                    }}}>
+                <Box sx={containerExit}>
                     <LogOut></LogOut>
                 </Box>
             </Container>

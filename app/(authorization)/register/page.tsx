@@ -11,7 +11,7 @@ import { UXLoading } from "@/app/components/ui-helpers/loading";
 import { v4 as uuidv4 } from 'uuid';
 import { ModalInfo } from "../modal-info";
 import { InputErrorState, RegisterFormData } from "../types";
-import { avatar, containerAvatar, containerLoading, helperTextAvatar, linksAuth, templateHeaderAuth } from "../style";
+import { avatar, containerAvatar, containerLoading, helperTextAvatar, linksAuth, templateHeaderAuth } from "../styles";
 import { centerFlexBlock } from "@/app/styles";
 
 

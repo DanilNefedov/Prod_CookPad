@@ -1,5 +1,5 @@
 import { Container } from "@mui/material";
-import { layoutAuth } from "./style";
+import { layoutAuth } from "./styles";
 import { centerFlexBlock } from "../styles";
 
 

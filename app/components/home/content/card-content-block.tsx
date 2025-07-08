@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AvTimerIcon from '@mui/icons-material/AvTimer';
 import Link from "next/link";
-import { bottomTypeFavCard, contentPostionAbsolute, cookBtn, favoriteBtnActive, favoriteBtnDesactive, mainCard } from "@/app/(main)/home/style";
+import { bottomTypeFavCard, contentPostionAbsolute, cookBtn, favoriteBtnActive, favoriteBtnDesactive, mainCard } from "@/app/(main)/home/styles";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { Swiper, SwiperSlide } from 'swiper/react';
