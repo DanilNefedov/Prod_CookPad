@@ -26,6 +26,7 @@ declare module '@mui/material/TextField' {
 declare module '@mui/material/styles' {
     interface CommonColors {
         black46: string;
+        cardBlack7:string
     }
     
     interface Palette {
@@ -40,5 +41,13 @@ declare module '@mui/material/styles' {
             light: string;
             dark: string;
         };
+    }
+
+    interface PaletteText {
+        lightGray?: string;
+    }
+    
+    interface PaletteTextOptions {
+        lightGray?: string;
     }
 }

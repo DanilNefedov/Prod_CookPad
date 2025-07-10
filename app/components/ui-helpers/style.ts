@@ -1,4 +1,45 @@
+import { LoadingContainer } from "@/app/types";
 import { theme } from "@/config/ThemeMUI/theme";
+import { SxProps, Theme } from "@mui/material";
+
+
+
+
+
+export const emptyInfo = (params:LoadingContainer): SxProps<Theme> => (theme) => ({
+    position:params.position,
+    top: 'calc(50% - 12px)',
+    right:params.right,
+    zIndex: 10,
+    [theme.breakpoints.down('md')]: {
+        fontSize: params.mobileText,
+    },
+});
+
+export const loadingContainer = (position:string): SxProps<Theme> => (theme) =>({
+    position: position,
+    transform: position === 'static' ? 'none' : 'translate(-50%, -50%)',
+    top: '50%',
+    left: '50%',
+    zIndex: 10,
+    display: 'flex',
+    justifyContent: 'center',
+})
+
+export const loadingProgress = (color:string): SxProps<Theme>  => (theme) => ({
+    // width: '35px !important',
+    // height: '35px !important',
+    // color: color || 'secondary',
+    // [theme.breakpoints.down(750)]: {
+    //     width: '28px !important',
+    //     height: '28px !important'
+    // }
+                
+})
+
+
+
+
 
 
 export const containerErrorInfo = {

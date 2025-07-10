@@ -10,7 +10,7 @@ export default async function Main() {
     <NavigationProvider>
       <Header></Header>
       <Paper sx={mainContent} elevation={0}>
-        <Container sx={mainContainer} maxWidth={false}>
+        <Container sx={mainContainer} maxWidth={false} disableGutters>
           <BlockContent></BlockContent>
         </Container>
       </Paper>

@@ -5,12 +5,12 @@ import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { fetchRecipes } from "@/state/slices/recipe-slice";
 import { CardContentBlock } from "./card-content-block";
 import { Box, Button } from "@mui/material";
-import { styleLink } from "../header/header";
-import { theme } from "@/config/ThemeMUI/theme";
 import { UXLoading } from "../../ui-helpers/loading";
 import { EmptyInfo } from "../../ui-helpers/empty-info";
 import Link from "next/link";
 import { useNavigationState } from "@/config/home-navigation/context-navigation";
+import { linkEmptyPage, moreButtonContainer } from "@/app/(main)/home/styles";
+import { moreButton } from "@/app/styles";
 
 
 export function BlockContent() {
@@ -37,77 +37,54 @@ export function BlockContent() {
 
   return (
     <>
-      {
-        status && recipes.length === 0 ?
-          <UXLoading></UXLoading>
-        :
-        !status && recipes.length === 0 ? 
+      {status && recipes.length === 0 && (
+        <UXLoading />
+      )}
+      {!status && recipes.length === 0 && (
         <>
-          <EmptyInfo></EmptyInfo> 
-          <Button component={Link} href="/new-recipe"
-             
-            sx={[styleLink, {
-              bgcolor:'background.default',
-              position: 'absolute',
-              top: '65%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              transition:"0.3s",
-              '@media (hover: hover) and (pointer: fine)': {
-                  '&:hover': {
-                    backgroundColor: 'primary.main',
-                    color:'text.primary'
-                  },
-              },
-            }]}
+          <EmptyInfo />
+          <Button
+            component={Link}
+            href="/new-recipe"
+            color="blackBtn"
+            sx={linkEmptyPage}
           >
             Create a new
           </Button>
         </>
-        :
-        (nav === 'all' ? recipes : filteredRecipes).map(({ recipe_id, }) => (
-          <CardContentBlock
-            key={recipe_id}
-            props={{ recipe_id, id}}
-          />
+      )}
+
+      {recipes.length > 0 && (
+        (nav === 'all' ? recipes : filteredRecipes).map(({ recipe_id }) => (
+          <CardContentBlock key={recipe_id} props={{ recipe_id, id }} />
         ))
-      }
+      )}
 
-      
+      {statusMore && nav === 'all' && (
+        <Box sx={{ width: '100%' }}>
+          <UXLoading position="static" />
+        </Box>
+      )}
 
-      {
-        
-        statusMore && nav === 'all' ?
-        <Box sx={{width:'100%'}}>
-          <UXLoading position="static"></UXLoading>
-        </Box>  
-        :
-        nav === 'all' && !status && recipes.length !== 0 ?
-          <Box sx={{ width: '100%', display: 'flex' }}>
-            <Button variant="contained" color='darkButton'
-              disabled={page === null ? true : false}
-              sx={{ ...styleLink, width: '150px', height: '32.5px', m: '20px auto',
-                [theme.breakpoints.down("md")]: {
-                  mt:'7px',
-                  mb:'7px',
-                  width:'90px'
-                },
-                [theme.breakpoints.down(500)]: {
-                  height:'28px'
-                }
-               }}
-              onClick={() => {
-                if(page === null) return
-                setStatusMore(true)
-                dispatch(fetchRecipes({ id, page: page})).finally(() => {
-                  setStatusMore(false)
+      {!statusMore && nav === 'all' && !status && recipes.length !== 0 && (
+        <Box sx={moreButtonContainer}>
+          <Button
+            color="blackRedBtn"
+            disabled={page === null}
+            sx={moreButton}
+            onClick={() => {
+              if (page === null) return;
+              setStatusMore(true);
+              dispatch(fetchRecipes({ id, page }))
+                .finally(() => {
+                  setStatusMore(false);
                 });
-              }}
-            >More</Button>
-          </Box>
-          :
-          <></>
-      }
+            }}
+          >
+            More
+          </Button>
+        </Box>
+      )}
     </>
   );
 };

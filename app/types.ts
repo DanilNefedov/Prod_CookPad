@@ -32,3 +32,10 @@ export function createOperations<T extends string>(
 
 //---------------- state E---------------//
 
+
+
+export interface LoadingContainer {
+    position: string, 
+    right: string, 
+    mobileText: string
+}

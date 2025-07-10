@@ -193,10 +193,147 @@ export const linksBar = {
 
 //------- navigation home -------//
 
+//--------- home content --------//
 
+export const mainContainer = {
+    height: '100dvh',
+    display: 'flex',
+    flexWrap: 'wrap', 
+    borderRadius: '20px',
+    gap:'2%',
+    alignContent:'flex-start',
+}
 
+export const linkEmptyPage = {
+    position: 'absolute',
+    top: '65%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',      
+}
 
+export const moreButtonContainer = {
+    width: '100%', 
+    display: 'flex', 
+    justifyContent:'center'
+}
 
+export const mainCard = {
+    width: '32%',
+    backgroundColor: 'background.default',
+    mb: '20px',
+    borderRadius: '0',
+    '&:nth-child(1)': {
+        borderRadius: '20px 0 0 0',
+    },
+    '&:nth-child(3)': {
+        borderRadius: '0 20px 0 0',
+    },
+    alignItems: "stretch",
+    maxHeight:'450px',
+    height:'100%',
+    position:'relative',
+    [theme.breakpoints.down(710)]: {
+        maxHeight:'350px',
+        width: '48%',
+        mb:"0",
+        '&:nth-child(1)': {
+            borderRadius: '10px 0 0 0',
+        },
+        '&:nth-child(2)': {
+            borderRadius: '0 10px 0 0',
+        },
+        '&:nth-child(3)': {
+            borderRadius: '0 0 0 0',
+        },
+    },
+    [theme.breakpoints.down(500)]: {
+        maxHeight:'250px',
+        width: '48.5%',
+    }
+}
+
+export const contentPostionAbsolute = {
+    position:'absolute',
+    backgroundColor:'common.cardBlack7',
+    width: '100%',
+    padding:'7px 15px',
+    backdropFilter: 'blur(3px)',
+    zIndex:'100',
+
+    [theme.breakpoints.down(500)]: {
+       p:"7px"
+    },
+}
+
+export const headerCard = {
+    padding: 0, 
+    maxWidth: "70%", 
+    '& .MuiCardHeader-content':{
+        width:'100%'
+    }, 
+    [theme.breakpoints.down(500)]: {
+        maxWidth: "57%"
+    }
+}
+
+export const headerCardTitle = {
+    fontSize: '16px', 
+    textTransform: 'capitalize',
+    width:'100%',
+    [theme.breakpoints.down("md")]: {
+        fontSize:'14px'
+    },
+}
+
+export const timeIcon = {
+    fontSize: "20px",
+    height: '20px',
+    mr: '3px',
+    [theme.breakpoints.down("md")]: {
+        height: '17px',
+    },
+}
+
+export const arrowSwiper = {
+    width:'100%', 
+    height:'100%'
+}
+
+export const cardBottom = {
+    bottom: '0', 
+    '&:last-child':{
+        pb:'7px'
+    } 
+}
+
+export const typeRecipeText = {
+    mb:'0', 
+    color: 'text.lightGray',
+    lineHeight: 'inherit',
+    [theme.breakpoints.down("md")]: {
+        fontSize: '12px',
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis"
+    },
+}
+
+export const descriptionText = {
+    pb: '8px',
+    m: '0',
+    maxWidth:"80%",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    [theme.breakpoints.down("md")]: {
+        fontSize: '12px',
+    },
+
+    [theme.breakpoints.down(500)]: { 
+        p:'7px 0 0 0',
+    },
+}
+//--------- home content --------//
 
 
 
@@ -224,61 +361,9 @@ export const mainContent = {
     }
 }
 
-export const mainContainer = {
-    height: '100dvh',
-    display: 'flex',
-    flexWrap: 'wrap', 
-    '&.MuiContainer-root': {
-        paddingLeft: 0,
-        paddingRight: 0,
-    },
-    borderRadius: '20px',
-    gap:'2%',
-    alignContent:'flex-start',
-    
-    // justifyContent:'space-between'
-}
 
 
-export const mainCard = {
-    width: '32%',
-    backgroundColor: 'background.default',
-    mb: '20px',
-    // height: 'fit-content',
-    borderRadius: '0',
-    '&:nth-child(1)': {
-        borderRadius: '20px 0 0 0',
-    },
-    '&:nth-child(3)': {
-        borderRadius: '0 20px 0 0',
-    },
-    alignItems: "stretch",
-    height:'450px',
-    position:'relative',
 
-    [theme.breakpoints.down(710)]: {
-        height:'350px',
-        width: '48%',
-        mb:"0",
-
-        '&:nth-child(1)': {
-            borderRadius: '10px 0 0 0',
-        },
-        '&:nth-child(2)': {
-            borderRadius: '0 10px 0 0',
-        },
-        '&:nth-child(3)': {
-            borderRadius: '0 0 0 0',
-        },
-    },
-
-    [theme.breakpoints.down(500)]: {
-        height:'250px',
-        width: '48.5%',
-        // m: '0 0 15px 0',
-    }
-    
-}
 
 export const mainCardImg = { 
     // borderRadius: '50%', 
@@ -290,61 +375,14 @@ export const mainCardImg = {
     flex: '1',
 }
 
-export const contentPostionAbsolute = {
-    position:'absolute',
-    backgroundColor:'rgba(31,33,40, 0.7)',
-    width: '100%',
-    padding:'7px 15px',
-    backdropFilter: 'blur(3px)',
-    zIndex:'100',
-
-    [theme.breakpoints.down(500)]: {
-       p:"7px"
-    },
-}
 
 
-export const bottomTypeFavCard = {
-    display: 'flex', 
-    alignItems: 'center', 
-    justifyContent: 'space-between',
-    bottom:'0'
-}
 
 export const bottomDescriptionCard = {
     padding: '0 13px ', 
     maxWidth: '200p'
 }
 
-
-export const favoriteBtnActive ={ 
-    color: 'primary.main', 
-    '@media (hover: hover) and (pointer: fine)': {
-        '&:hover': {
-        color: 'primary.main',
-        },
-    },
-    // '&:hover': { 
-    //     color: 'primary.main' 
-    // },
-    [theme.breakpoints.down("md")]: {
-        height:'20px',
-        width:'20px'
-    }, 
-}
-
-export const favoriteBtnDesactive = { 
-    color: '#8E94A4', 
-    '@media (hover: hover) and (pointer: fine)': {
-        '&:hover': {
-        color: 'primary.main',
-        },
-    },
-    [theme.breakpoints.down("md")]: {
-        height:'20px',
-        width:'20px'
-    }, 
-}
 
 
 export const cookBtn = {

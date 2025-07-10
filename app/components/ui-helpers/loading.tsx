@@ -1,5 +1,8 @@
+'use client'
+
+import { Box, CircularProgress, useMediaQuery } from "@mui/material";
+import { loadingContainer } from "./style";
 import { theme } from "@/config/ThemeMUI/theme";
-import { Box, CircularProgress } from "@mui/material";
 
 
 
@@ -11,30 +14,12 @@ interface Props {
 }
 
 export function UXLoading({ color = "secondary", position = "absolute" }: Props) {
-
+    const isMobile = useMediaQuery(theme.breakpoints.down(750));
+    const fallbackSize = isMobile ? 28 : 35;
 
     return (
-        <Box
-            sx={{
-                position: position,
-                top: '50%',
-                left: '50%',
-                transform: position === 'static' ? 'none' : 'translate(-50%, -50%)',
-                zIndex: 10,
-                display: 'flex',
-                justifyContent: 'center',
-            }}
-        >
-            <CircularProgress sx={{
-                width: '35px !important',
-                height: '35px !important',
-                color: color || 'secondary',
-                [theme.breakpoints.down(750)]: {
-                    width: '28px !important',
-                    height: '28px !important'
-                }
-            }}
-            />
+        <Box sx={loadingContainer(position)}>
+            <CircularProgress size={fallbackSize}/>
         </Box>
 
     )

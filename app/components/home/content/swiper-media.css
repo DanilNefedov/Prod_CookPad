@@ -28,7 +28,7 @@
 
 
 /*may need to be moved to another file*/
-main{
+/* main{
     display: inline-flex;
     margin-right: 16px;
     flex-direction: column;
@@ -39,7 +39,7 @@ main{
     background: var(--bg-second);
     box-shadow: var(--shadow-bg);
 
-}
+} */
 
 
 .swiper-media-main .swiper-button-disabled svg{

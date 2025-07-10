@@ -4,8 +4,8 @@ import { iconButtons } from './buttons/icon-buttons';
 import { inputLabel, inputs, outlinedInput } from './inputs/inputs';
 import { list, listItem } from './lists/lists';
 import { baseline } from './baseline/baseline';
+// import { circularProgress } from './loaders/circular';
 // import { container } from './blocks/container';
-
 
 
 
@@ -23,7 +23,8 @@ export const theme = createTheme({
     },
     text: {
       primary: '#FFFFFF',
-      disabled: '#8E94A4'
+      disabled: '#8E94A4',
+      lightGray:'#B7BED3'
     },
     background: {
       paper: '#353842',
@@ -40,7 +41,8 @@ export const theme = createTheme({
       dark: '#A5514F',
     },
     common:{
-      black46:'rgba(0, 0, 0, 0.46)' 
+      cardBlack7:'rgba(31,33,40, 0.7)',
+      black46:'rgba(0, 0, 0, 0.46)' ,
     }
   },
   shape: {
@@ -55,6 +57,7 @@ export const theme = createTheme({
     MuiList: list,
     MuiListItem: listItem,
     // MuiContainer: container,
+    // MuiCircularProgress:circularProgress,
     MuiLink: {
       styleOverrides: {
         root: {

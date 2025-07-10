@@ -1,5 +1,5 @@
-import { theme } from "@/config/ThemeMUI/theme";
 import { Typography } from "@mui/material";
+import { emptyInfo } from "./style";
 
 
 
@@ -13,15 +13,7 @@ export function EmptyInfo({ position = 'absolute', mobileText = 'initial', right
 
     return (
         <Typography
-            sx={{
-                position: position,
-                top: 'calc(50% - 12px)',
-                right: right,
-                zIndex: '10',
-                [theme.breakpoints.down('md')]: {
-                    fontSize: mobileText
-                }
-            }}
+            sx={emptyInfo({position, right, mobileText})}
         >
             There`s nothing here yet
         </Typography>
