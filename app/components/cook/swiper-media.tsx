@@ -1,4 +1,4 @@
-import { imgRecipeContainer } from "@/app/(main)/cook/[recipe_id]/styles";
+import { imgRecipeContainer } from "@/app/(main)/cook/styles";
 import { RecipeMedia } from "@/app/(main)/types";
 import { Box, CardMedia, Skeleton } from "@mui/material";
 import { memo, useEffect, useRef, useState } from "react";

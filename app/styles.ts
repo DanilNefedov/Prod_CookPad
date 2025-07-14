@@ -42,6 +42,8 @@ export const moreButton = {
     mb:'2px',
     [theme.breakpoints.down("md")]: {
         width: '90px',
+        maxHeight:'30px',
+        p:'2px 14px'
     }        
 }
 
@@ -56,8 +58,8 @@ export const arrowFullTemplate = {
         height:'30px',
     },
     [theme.breakpoints.down(600)]: { 
-        width:'20px', 
-        height:'20px',
+        width:'22px', 
+        height:'22px',
     }           
 }
 

@@ -1,4 +1,7 @@
 import { theme } from "@/config/ThemeMUI/theme"
+import { SxProps, Theme } from "@mui/material"
+
+
 
 export const mainBoxCook = {
     display: 'flex',
@@ -16,44 +19,81 @@ export const mainBoxCook = {
 }
 
 
-export const headerCook = {
+//-------- header --------//
+
+export const headerCookContainer = {
     bgcolor: 'background.default',
     display: 'flex',
     height: '100%',
-    borderRadius: '20px',
-    boxShadow: 'none',
+    borderRadius: '15px',
     maxWidth:'200px',
     width: '100%',
-    padding:'10px 0',
-
-
-    [theme.breakpoints.down("md")]: {
-        // padding:'0 3px 0 0',
-        maxWidth:'100%',
-        bgcolor: 'transparent',
-        height:'initial'
-    }
+    padding:'15px 0',
 }
-
 
 export const scrollBox = {
     overflowY: 'auto',
     display: 'flex',
     flexDirection: 'column',
-    // m: '10px 10px 10px 10px',
-    borderRight: 1,
-    borderColor: 'transparent',
-    scrollbarColor: "#353842 #1F2128",
-    // pr: '10px',
     width: '100%',
     height:'100%',
 
+    '&::-webkit-scrollbar': {
+        display: 'none' 
+    },
     [theme.breakpoints.down("md")]: {
         flexDirection: 'initial',
         overflowY: 'hidden',
         gap:'10px',
     }
 }
+
+
+
+
+
+//-------- header --------//
+
+
+
+
+
+
+
+
+
+
+
+//-------- main content --------//
+
+
+
+
+
+
+
+//-------- main content --------//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 export const btnsCookHeader = {

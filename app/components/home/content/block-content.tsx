@@ -53,7 +53,7 @@ export function BlockContent() {
           </Button>
         </>
       )}
-
+     
       {recipes.length > 0 && (
         (nav === 'all' ? recipes : filteredRecipes).map(({ recipe_id }) => (
           <CardContentBlock key={recipe_id} props={{ recipe_id, id }} />

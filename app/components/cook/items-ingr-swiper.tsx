@@ -2,7 +2,7 @@
 
 import { MouseEvent, useState } from "react";
 import { Alert, Box, Button, ListItemAvatar, ListItemText, Menu, MenuItem, Slide, SlideProps, Typography } from "@mui/material";
-import { addListIngr, btnAddNew, btnListItem, containerContentSlide, menuListItems } from "@/app/(main)/cook/[recipe_id]/styles";
+import { addListIngr, btnAddNew, btnListItem, containerContentSlide, menuListItems } from "@/app/(main)/cook/styles";
 import { theme } from "@/config/ThemeMUI/theme";
 import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch } from "@/state/hook";

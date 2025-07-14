@@ -68,6 +68,12 @@ const baseline: Components<Theme>['MuiCssBaseline'] = {
             "&::-webkit-scrollbar-corner, & *::-webkit-scrollbar-corner": {
                 backgroundColor: "#353842",
             },
+
+            
+            '@media (max-width: 899.95px)': {
+                fontSize: '14px',
+            },
+           
         },
         'input::-ms-clear': {
             display: 'none',

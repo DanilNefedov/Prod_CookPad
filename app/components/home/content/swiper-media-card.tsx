@@ -1,5 +1,6 @@
+import { media } from "@/app/(main)/home/styles";
 import { RecipeMedia } from "@/app/(main)/types";
-import { CardMedia, Skeleton } from "@mui/material";
+import { Box, CardMedia, Skeleton } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 
 
@@ -40,35 +41,29 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
 
 
     return (
-
-
-        <div ref={ref} style={{ width: '100%', height: '100%' }}>
+        <Box ref={ref} style={{ width: '100%', height: '100%' }}>
             {el.media_type === 'image' ? (
                 <CardMedia
                     component="img"
                     alt={name}
-                    sx={{ height: '100%', objectFit: 'cover' }}
+                    sx={media}
                     src={el.media_url as string}
                     loading="lazy"
                 />
             ) : isVisible ? (
                 <CardMedia
                     component='video'
-                    sx={{height: '100%', objectFit: "cover",  width: '100%',}}
+                    sx={media}
                     autoPlay
                     loop
                     muted
                     poster={el.media_url as string}
-                    
                 >
                     <source src={el.media_url as string} type="video/mp4" />
                 </CardMedia>
             ) : (
-                <Skeleton variant="rectangular" sx={{objectFit: "cover", width:'100%', height:'100%'}}/>
-
+                <Skeleton variant="rectangular" sx={media}/>
             )}
-        </div>
-    
-
+        </Box>
     )
 }

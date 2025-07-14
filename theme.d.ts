@@ -43,11 +43,8 @@ declare module '@mui/material/styles' {
         };
     }
 
-    interface PaletteText {
+    interface TypeText {
         lightGray?: string;
     }
     
-    interface PaletteTextOptions {
-        lightGray?: string;
-    }
 }

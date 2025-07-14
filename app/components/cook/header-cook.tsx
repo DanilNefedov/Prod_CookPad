@@ -1,6 +1,6 @@
 'use client'
 
-import { btnsCookHeader, deleteHeaderCook, } from "@/app/(main)/cook/[recipe_id]/styles";
+import { btnsCookHeader, deleteHeaderCook, } from "@/app/(main)/cook/styles";
 import { Box, Button, } from "@mui/material";
 import Link from "next/link";
 import ClearIcon from '@mui/icons-material/Clear';

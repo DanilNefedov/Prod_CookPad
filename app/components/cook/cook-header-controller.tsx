@@ -9,7 +9,7 @@ import { AdaptiveHeader } from "./adaptive-header";
 import { HeaderCook } from "./header-cook";
 import { Box, useMediaQuery } from "@mui/material";
 import { theme } from "@/config/ThemeMUI/theme";
-import { headerCook, scrollBox } from "@/app/(main)/cook/[recipe_id]/styles";
+import { headerCookContainer, scrollBox } from "@/app/(main)/cook/styles";
 import { HistoryLinks } from "@/app/(main)/cook/types";
 
 export interface HeaderProps {
@@ -83,7 +83,7 @@ export function CookHeaderController() {
         isMobile ? 
         <AdaptiveHeader {...sharedProps} />
         :
-        <Box sx={ headerCook}>
+        <Box sx={headerCookContainer}>
             <Box component="ul" sx={[scrollBox, {display: 'flex',listStyle: 'none',p:'0 5px' }]}>
                 <HeaderCook {...sharedProps} />
             </Box>

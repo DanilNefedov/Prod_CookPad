@@ -1,6 +1,6 @@
 "use client"
 
-import { containerContentRecipe } from "@/app/(main)/cook/[recipe_id]/styles";
+import { containerContentRecipe } from "@/app/(main)/cook/styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { setFavoriteRecipe } from "@/state/slices/recipe-slice";
 import { Box, IconButton, Typography } from "@mui/material";

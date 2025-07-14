@@ -166,7 +166,7 @@ export const appBar = {
     padding: '10px 10px',
 
     [theme.breakpoints.down("md")]: {
-        padding: '5px 5px',
+        padding: '7px 7px',
         borderRadius: '10px',
     },
 } 
@@ -186,14 +186,23 @@ export const linksBar = {
     mr: '15px',
     borderRadius: '10px',
     color:'text.disabled',
-    [theme.breakpoints.down("md")]: {
-        fontSize: '12px'
-    },
+    
 }
 
 //------- navigation home -------//
 
 //--------- home content --------//
+
+export const mainContent = {
+    overflowY: 'auto',
+    mb: '20px',
+    borderRadius: '0',
+    scrollbarWidth: 'none',
+    '&::-webkit-scrollbar': {
+        display: 'none' 
+    }
+}
+
 
 export const mainContainer = {
     height: '100dvh',
@@ -247,7 +256,7 @@ export const mainCard = {
         },
     },
     [theme.breakpoints.down(500)]: {
-        maxHeight:'250px',
+        maxHeight:'300px',
         width: '48.5%',
     }
 }
@@ -277,12 +286,10 @@ export const headerCard = {
 }
 
 export const headerCardTitle = {
-    fontSize: '16px', 
+    // fontSize:'inherit',
     textTransform: 'capitalize',
     width:'100%',
-    [theme.breakpoints.down("md")]: {
-        fontSize:'14px'
-    },
+    
 }
 
 export const timeIcon = {
@@ -311,7 +318,6 @@ export const typeRecipeText = {
     color: 'text.lightGray',
     lineHeight: 'inherit',
     [theme.breakpoints.down("md")]: {
-        fontSize: '12px',
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis"
@@ -322,85 +328,83 @@ export const descriptionText = {
     pb: '8px',
     m: '0',
     maxWidth:"80%",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    [theme.breakpoints.down("md")]: {
-        fontSize: '12px',
-    },
-
-    [theme.breakpoints.down(500)]: { 
-        p:'7px 0 0 0',
-    },
+    cursor: 'pointer',
+    overflow: 'hidden',
+   
 }
-//--------- home content --------//
 
+export const mobileMenu = {
+    color: 'text.disabled', 
+    position:'absolute', 
+    top:'30px', 
+    right:'9px', 
+    width:'20px', 
+    height:'20px', 
+    padding:'0'
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-export const mainContent = {
-    backgroundColor: 'transparent',
-    flex: '1',
-    overflowY: 'auto',
-    mb: '20px',
-    borderRadius: '0',
-    scrollbarWidth: 'none',
-    '&::-webkit-scrollbar': {
-        display: 'none' 
+export const containerMenu = {
+    '& .MuiPaper-root':{
+        bgcolor:'background.default',
+        padding:'7px 0',
+        borderRadius:'15px'
     }
 }
 
-
-
-
-
-export const mainCardImg = { 
-    // borderRadius: '50%', 
-    objectFit: "cover", 
-    objectPosition: "center",
-    width: '100%',
-    height:'100%',
-    m: '0 auto',
-    flex: '1',
+export const mobileButtons = {
+    minHeight:'auto', 
+    justifyContent:'center', 
+    p:'4px 7px',
 }
-
-
-
-
-export const bottomDescriptionCard = {
-    padding: '0 13px ', 
-    maxWidth: '200p'
-}
-
-
 
 export const cookBtn = {
     padding: '2px 10px', 
     backgroundColor: '#4F5362', 
     color: 'text.primary', 
     textTransform: 'initial', 
-    fontSize: '15px', 
+    // fontSize: '15px', 
     '@media (hover: hover) and (pointer: fine)': {
         "&:hover": { 
             backgroundColor: 'primary.main', 
             color: "text.primary" 
         },
     },
-
     [theme.breakpoints.down("md")]: {
-        fontSize: '12px', 
+        // fontSize: '12px', 
         padding: '2px 5px',
         minWidth:'50px'
     },
+    [theme.breakpoints.down(500)]: {
+        borderRadius:'10px',
+    },
 }
+
+export const media = { 
+    height: '100%', 
+    objectFit: 'cover', 
+    width: '100%' 
+}
+
+export function transitionBlock(ellipsisEnabled:boolean) {
+
+    return {
+        overflow: 'hidden',
+        transition: 'opacity 0.3s ease, max-height 0.3s ease',
+        opacity: ellipsisEnabled ? 1 : 0,
+        maxHeight: ellipsisEnabled ? '150px' : 0,
+    }
+}
+
+export function transitionDescription(ellipsisEnabled:boolean) {
+
+    return {
+        maxWidth: ellipsisEnabled ? '80%' : '100%',
+        transition: 'all 0.3s ease',
+        whiteSpace: ellipsisEnabled ? 'nowrap' : 'normal',
+        textOverflow: ellipsisEnabled ? 'ellipsis' : 'unset',
+    }
+}
+
+
+//--------- home content --------//
+

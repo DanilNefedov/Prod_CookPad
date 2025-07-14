@@ -2,12 +2,14 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Box, CardHeader, Menu, MenuItem, useMediaQuery } from "@mui/material";
+import { Box, CardHeader, Collapse, Menu, MenuItem, useMediaQuery } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AvTimerIcon from '@mui/icons-material/AvTimer';
 import Link from "next/link";
-import { arrowSwiper, cardBottom, contentPostionAbsolute, cookBtn, descriptionText, headerCard, headerCardTitle, mainCard, timeIcon, typeRecipeText } from "@/app/(main)/home/styles";
+import { arrowSwiper, cardBottom, containerMenu, contentPostionAbsolute, 
+    cookBtn, descriptionText, headerCard, headerCardTitle, mainCard, mobileButtons, 
+    mobileMenu, timeIcon, transitionBlock, transitionDescription, typeRecipeText } from "@/app/(main)/home/styles";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -26,22 +28,22 @@ import { arrowFullTemplate, betweenCenter, centerFlexBlock, favoriteBtnActive, f
 
 
 const SwiperMediaCard = dynamic(() => import('./swiper-media-card'), {
-    ssr: false, 
+    ssr: false,
     loading: () => <div style={{ height: 200 }}>loading...</div>,
 });
 
- 
+
 
 interface Props {
-    recipe_id:string,
-    id:string
+    recipe_id: string,
+    id: string
 }
 
 
 
 
 export const CardContentBlock = memo(({ props }: { props: Props }) => {
-    const { recipe_id, id} = props
+    const { recipe_id, id } = props
     const recipe = useAppSelector((state) =>
         state.recipe.recipes.find((el) => el.recipe_id === recipe_id)
     );
@@ -53,10 +55,12 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
     );
 
     const dispatch = useAppDispatch();
-    const isMobile = useMediaQuery('(max-width:500px)');
+    const isMobile = useMediaQuery('(max-width:499px)');
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openAdaptive = Boolean(anchorEl);
+    const [expanded, setExpanded] = useState(false);
+    const [ellipsisEnabled, setEllipsisEnabled] = useState(true);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -68,23 +72,22 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
 
 
     const handlerFavorite = (recipe_id: string, favorite: boolean | undefined): void => {
-        if(isFavoriteLoading) return
+        if (isFavoriteLoading) return
 
         if (recipe_id && id !== '' && favorite !== undefined) {
             const data = { recipe_id, favorite }
             dispatch(setFavoriteRecipe(data))
         }
     }
-   
+
     function addToList() {
-        if(isListLoading) return
+        if (isListLoading) return
 
         if (id !== '' && recipe_id) {
             dispatch(newListRecipe({ connection_id: id, recipe_id: recipe_id }))
         }
     }
 
-    
 
     return (
         <Card sx={mainCard}>
@@ -101,10 +104,11 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                     />
 
                     <Box sx={centerFlexBlock}>
-                        <AvTimerIcon sx={timeIcon}/>
+                        <AvTimerIcon sx={timeIcon} />
                         <Typography
                             variant="body2"
                             sx={{
+                                fontSize:'14px',
                                 [theme.breakpoints.down("md")]: {
                                     fontSize: '12px'
                                 },
@@ -117,7 +121,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
             </CardContent>
 
             <Swiper
-                modules={[Navigation, Virtual ]}
+                modules={[Navigation, Virtual]}
                 virtual
                 slidesPerView={1}
                 className="swiper-media-main"
@@ -134,7 +138,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                     .sort((a, b) => Number(b.main) - Number(a.main))
                     .map((el, index) => (
                         <SwiperSlide key={el.media_id} className="media-main-slide" virtualIndex={index}>
-                            <SwiperMediaCard props={{ el, name:recipe?.name }} />
+                            <SwiperMediaCard props={{ el, name: recipe?.name }} />
                         </SwiperSlide>
                     )
                     )}
@@ -147,31 +151,41 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                     <ArrowLeftIcon viewBox="3 2 20 20" sx={arrowSwiper}></ArrowLeftIcon>
                 </Box>
             </Swiper>
-            
 
-            
-            <CardContent sx={[contentPostionAbsolute, cardBottom]}>
-                <Box sx={[betweenCenter, {bottom:'0'}]}>
+
+
+            <CardContent sx={[contentPostionAbsolute, cardBottom,]}>
+                <Box sx={[betweenCenter, transitionBlock(ellipsisEnabled)]}>
                     <Typography gutterBottom component="p" sx={typeRecipeText}>
                         {"type: " + recipe?.recipe_type}
                     </Typography>
-                    <IconButton 
-                        sx={{padding: '0'}} 
-                        aria-label="add to favorites" 
+                    <IconButton
+                        sx={{ padding: '0' }}
+                        aria-label="add to favorites"
                         onClick={() => handlerFavorite(recipe_id, recipe?.favorite)}
                     >
                         {recipe?.favorite ? <FavoriteIcon sx={favoriteBtnActive} /> : <FavoriteIcon sx={favoriteBtnDesactive} />}
                     </IconButton>
                 </Box>
                 <Box>
-                    <Typography gutterBottom
-                        sx={[textMaxWidth, descriptionText]}
+                    <Collapse in={expanded} collapsedSize={24} timeout={400}
+                        onEntering={() => setEllipsisEnabled(false)}
+                        onExited={() => setEllipsisEnabled(true)}
                     >
-                        {recipe?.description}
-                    </Typography>
+                        <Typography
+                            onClick={() => setExpanded(prev => !prev)}
+                            gutterBottom
+                            sx={[
+                                descriptionText,
+                                transitionDescription(ellipsisEnabled)
+                            ]}
+                        >
+                            {recipe?.description}
+                        </Typography>
+                    </Collapse>
+
                 </Box>
 
-                    {/* FINISHED */}
 
                 {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}> */}
                 {isMobile ? <>
@@ -182,9 +196,11 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                         aria-expanded={openAdaptive ? 'true' : undefined}
                         aria-haspopup="true"
                         onClick={handleClick}
-                        sx={{color: '#8E94A4', position:'absolute', top:'30px', right:'6px', width:'20px', height:'18px', padding:'0'}}
+                        sx={[mobileMenu,
+                            transitionBlock(ellipsisEnabled)
+                        ]}
                     >
-                        <MoreVertIcon sx={{width:'100%', height:'100%'}}/>
+                        <MoreVertIcon sx={{ width: '100%', height: '100%' }} viewBox='1 1 22 22'/>
                     </IconButton>
                     <Menu
                         id="long-menu"
@@ -194,49 +210,36 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                         anchorEl={anchorEl}
                         open={openAdaptive}
                         onClose={handleCloseAdaptive}
-                        slotProps={{
-                            paper: {
-                                style: {
-                                    maxHeight: 48 * 4.5,
-                                    width: '8ch',
-                                },
-                            },
-                        }}
+                        sx={containerMenu}
                     >
-                        <MenuItem onClick={handleCloseAdaptive} sx={{minHeight:'auto', justifyContent:'center', p:'4px 7px'}}>
-                            <Button href={`/cook/${recipe_id}`} component={Link} size="small" sx={cookBtn}>Cook</Button>
+                        <MenuItem onClick={handleCloseAdaptive} sx={mobileButtons}>
+                            <Button href={`/cook/${recipe_id}`} component={Link} sx={cookBtn}>Cook</Button>
                         </MenuItem>
 
-                        <MenuItem onClick={handleCloseAdaptive} sx={{minHeight:'auto', justifyContent:'center', p:'4px 7px'}}>
-                            <Button onClick={() => addToList()} size="small" sx={cookBtn}>To List</Button>
+                        <MenuItem onClick={handleCloseAdaptive} sx={mobileButtons}>
+                            <Button onClick={() => addToList()} sx={cookBtn}>To List</Button>
                         </MenuItem>
 
                     </Menu>
                 </>
-                :
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <Link 
-                        href={{
-                            pathname: `/cook/${recipe_id}`,
-                            query: { name:recipe?.name },
-                        }}
-                        className='cookLinkMainContent'
-                        >Cook</Link>
-                    <Button onClick={() => addToList()} size="small" sx={cookBtn}>To List</Button>
-                    
-                </Box>
+                    :
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt:'5px' }}>
+                        <Button
+                            component={Link}
+                            href={`/cook/${recipe_id}?name=${recipe?.name}`}
+                            sx={cookBtn}
+                        >Cook</Button>
+                        <Button onClick={() => addToList()} sx={cookBtn}>To List</Button>
+
+                    </Box>
                 }
 
             </CardContent>
         </Card>
     )
-}
-,(prevProps, nextProps) => {
-    
-    
-    return prevProps.props.recipe_id === nextProps.props.recipe_id &&
-    prevProps.props.id === nextProps.props.id
-   
+}, (prevProps, nextProps) => {
+    return  prevProps.props.recipe_id === nextProps.props.recipe_id &&
+            prevProps.props.id === nextProps.props.id
 });
 
 
