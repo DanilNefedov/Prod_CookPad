@@ -21,6 +21,9 @@ const initialState:CookHistoryState = {
     operations:createOperations<CookHistoryOperationKey>(
         ['fetchHistoryCook', 'newCookHistory', 'deleteCookHistory'],
         (key) => {
+            if (key === 'deleteCookHistory') {
+                return createOperationStatus(false);
+            }
             return createOperationStatus();
         }
     )
@@ -156,7 +159,7 @@ const CookHistorySlice = createSlice({
                     const thisCook = state.history_links.find(elem => elem.recipe_id === el.recipe_id)
                     if(!thisCook){
 
-                        state.history_links.push(el)
+                        state.history_links.unshift(el)
                     }
                 })
             })
@@ -171,7 +174,7 @@ const CookHistorySlice = createSlice({
 
                 const thisLink = state.history_links.find(el => el.recipe_id === action.payload.history_links.recipe_id)
                 // console.log(thisLink, action.payload.history_links)
-                if(!thisLink) state.history_links.push(action.payload.history_links)
+                if(!thisLink) state.history_links.unshift(action.payload.history_links)
                 
             })
 

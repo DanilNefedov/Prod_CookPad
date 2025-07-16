@@ -2,7 +2,7 @@
 
 import { MouseEvent, useState } from "react";
 import { Alert, Box, Button, ListItemAvatar, ListItemText, Menu, MenuItem, Slide, SlideProps, Typography } from "@mui/material";
-import { addListIngr, btnAddNew, btnListItem, containerContentSlide, menuListItems } from "@/app/(main)/cook/styles";
+import { addListIngr, avatarIngr, boxOr, btnAddNew, btnListItem, buttonList, containerButtons, containerContentSlide, containerUnit, headerMenu, menuContainer, menuListItems, nameIngr } from "@/app/(main)/cook/styles";
 import { theme } from "@/config/ThemeMUI/theme";
 import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch } from "@/state/hook";
@@ -10,6 +10,8 @@ import { newIngredientList, newUnitIngredientList, updateCookUnit } from "@/stat
 import { add, bignumber, } from "mathjs";
 import { useSnackbar } from "notistack";
 import { Ingredients, ReturnData } from "@/app/(main)/cook/types";
+import Image from "next/image";
+import { textMaxWidth } from "@/app/styles";
 
 
 interface Props {
@@ -144,38 +146,20 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
     }
 
     return (
-        <Box sx={containerContentSlide}>
-            <ListItemAvatar sx={{
-                width: '40px', height: '40px', borderRadius: '50%', minWidth: '0', m: '0 auto',
-                [theme.breakpoints.down("md")]: {
-                    width: '30px',
-                    height: '30px'
-                }
-            }}>
-
-                <Box sx={{
-                    width: '100%', height: '100%',
-                }} component="img"
-                    src={el.media !== '' ? el.media : '/images/load-ingr.svg'} alt={el.name}
-                    loading="lazy"></Box>
+        <Box sx={{p:'5px'}}>
+            <ListItemAvatar sx={avatarIngr}>
+                <img
+                    src={el.media !== '' ? el.media : '/images/load-ingr.svg'} 
+                    alt={el.name}
+                    loading="lazy"
+                >
+                </img>
             </ListItemAvatar>
             <ListItemText
                 primary={el.name}
-                sx={{
-                    textAlign: 'center', mb: '0', fontSize: '1.1rem',
-                    '& span': {
-                        [theme.breakpoints.down("md")]: {
-
-                            fontSize: '14px'
-                        },
-                    }
-                }}
+                sx={nameIngr}
             />
-            <Box sx={{
-                textAlign: 'center', opacity: '0.6', [theme.breakpoints.down("md")]: {
-                    fontSize: '14px'
-                },
-            }}>
+            <Box sx={containerUnit}>
                 <span
                 >
                     {'list' in el.units && el.units.amount !== 0
@@ -190,15 +174,16 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
                 </span>
             </Box>
 
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Box sx={containerButtons}>
 
                 <Button
-                    sx={addListIngr}
+                    sx={buttonList}
                     id="demo-positioned-button"
                     aria-controls={open ? 'demo-positioned-menu' : undefined}
                     aria-haspopup="true"
                     aria-expanded={open ? 'true' : undefined}
                     onClick={handleClick}
+                    color="blackBtn"
                 >
                     To List
                 </Button>
@@ -213,40 +198,35 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
                         vertical: 'top',
                         horizontal: 'right',
                     }}
-                    sx={{
-                        '& .MuiPaper-root': { backgroundColor: "#585B66" }, '@media (hover: hover) and (pointer: fine)': {
-                            '& .MuiMenuItem-root:hover': {
-                                backgroundColor: 'background.paper',
-                                cursor: 'auto'
-                            },
-                        },
-                        '& .MuiList-root': {
-                            p: '5px 10px'
-                        },
-
-                    }}
+                    sx={menuContainer}
                 >
-                    <MenuItem disabled={true} sx={{ opacity: "1 !important", display: 'block', minHeight: '0' }}>
-                        <Typography sx={{ textAlign: 'center', [theme.breakpoints.down("md")]: { fontSize: '14px' } }}>Your List Units</Typography>
+                    <MenuItem disabled={true} sx={headerMenu}>
+                        <Typography align="center">Your List Units</Typography>
                     </MenuItem>
                     {units !== null ?
                         units.map(elem => (
                             <MenuItem key={elem._id} sx={menuListItems}>
-                                <Typography sx={{ pr: '5px', [theme.breakpoints.down("md")]: { fontSize: '14px' } }}>{elem.amount}</Typography>
-                                <Typography sx={{ pr: '5px', [theme.breakpoints.down("md")]: { fontSize: '14px' } }}>{elem.choice}</Typography>
+                                <Typography pr={'5px'}>{elem.amount}</Typography>
+                                <Typography pr={'5px'}>{elem.choice}</Typography>
                                 <Button onClick={() => {
                                     addOldUnit(elem)
-                                }} sx={btnListItem}><AddIcon sx={{ [theme.breakpoints.down("md")]: { width: '20px', height: '20px' } }}></AddIcon></Button>
+                                }}>
+                                    <AddIcon sx={{ [theme.breakpoints.down("md")]: { width: '20px', height: '20px' } }}></AddIcon>
+                                </Button>
                             </MenuItem>
                         ))
                         :
                         <MenuItem disabled sx={{ display: 'block', textAlign: 'center', color: 'text.primary', [theme.breakpoints.down("md")]: { fontSize: '14px' }, '&.Mui-disabled': { opacity: '1' } }}>Nothing</MenuItem>
                     }
-                    <MenuItem disabled={true} sx={{ opacity: "1 !important", display: 'block', pt: '0', minHeight: "0" }}>
-                        <Typography sx={{ textAlign: 'center', [theme.breakpoints.down("md")]: { fontSize: '14px' } }}>Or</Typography>
+                    <MenuItem disabled={true} sx={boxOr}>
+                        <Typography align="center">Or</Typography>
                     </MenuItem>
 
-                    <Button disabled={method !== '' ? false : true} onClick={() => addNewUnit(el)} sx={{ ...btnListItem, ...btnAddNew }}>Like a new</Button>
+                    <Button 
+                    disabled={method !== '' ? false : true} onClick={() => addNewUnit(el)}
+                    color="grayButton" 
+                    sx={{width:"100%"}}
+                    >Like a new</Button>
                 </Menu>
             </Box>
         </Box>

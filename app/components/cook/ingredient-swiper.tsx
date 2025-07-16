@@ -11,6 +11,7 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { theme } from '@/config/ThemeMUI/theme';
 import { memo } from 'react';
 import { Ingredients } from '@/app/(main)/cook/types';
+import { ingredinetsArrow } from '@/app/(main)/cook/styles';
 
 interface Props {
     findCook: Ingredients[] | undefined,
@@ -81,10 +82,10 @@ export const IngredientSwiper = memo(({ props }: { props: Props }) => {
             ))}
 
             <Box className='btn-next-cook'>
-                <ArrowRightIcon viewBox="3 3 17 17" sx={{ fontSize: 35, [theme.breakpoints.down("md")]: { fontSize: 30 } }}></ArrowRightIcon>
+                <ArrowRightIcon viewBox="3 3 17 17" sx={ingredinetsArrow}></ArrowRightIcon>
             </Box>
             <Box className='btn-prev-cook'>
-                <ArrowLeftIcon viewBox="3 3 17 17" sx={{ fontSize: 35, [theme.breakpoints.down("md")]: { fontSize: 30 } }}></ArrowLeftIcon>
+                <ArrowLeftIcon viewBox="3 3 17 17" sx={ingredinetsArrow}></ArrowLeftIcon>
             </Box>
         </Swiper>
     );

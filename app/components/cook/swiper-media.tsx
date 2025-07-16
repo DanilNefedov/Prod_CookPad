@@ -1,5 +1,6 @@
-import { imgRecipeContainer } from "@/app/(main)/cook/styles";
+import { imgRecipeContainer, mediaContainer, mediaSwiper, skeletonMedia } from "@/app/(main)/cook/styles";
 import { RecipeMedia } from "@/app/(main)/types";
+import { centerFlexBlock } from "@/app/styles";
 import { Box, CardMedia, Skeleton } from "@mui/material";
 import { memo, useEffect, useRef, useState } from "react";
 
@@ -40,29 +41,18 @@ const SwiperMediaCook = memo(({ props }: { props: Props }) => {
 
 
     return (
-        <Box sx={{ ...imgRecipeContainer, }} ref={containerRef}>
+        <Box sx={[centerFlexBlock, mediaContainer]} ref={containerRef}>
             {el.media_type === 'image' ? (
                 <CardMedia
                     alt='image'
-                    sx={{
-                        height: '100%',
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        objectFit: "cover",
-
-                    }}
+                    sx={mediaSwiper}
                     component='img'
                     src={el.media_url as string}
                     loading="lazy"
                 />
             ) : isVisible ? (
                 <CardMedia
-                
-                    sx={{
-                        height: '100%',
-                        objectFit: "cover",
-                    }}
+                    sx={mediaSwiper}
                     component='video'
                     autoPlay
                     loop
@@ -70,13 +60,12 @@ const SwiperMediaCook = memo(({ props }: { props: Props }) => {
                     poster={el.media_url as string}
                 >
                     <source
-
                         src={el.media_url as string}
                         type="video/mp4"
                     />
                 </CardMedia>
             ) : (
-                <Skeleton variant="rectangular" sx={{objectFit: "cover", width:'100%', height:'100%', maxWidth: "465px", aspectRatio:" 4 / 5"}}/>
+                <Skeleton variant="rectangular" sx={skeletonMedia}/>
             )}
 
         </Box>

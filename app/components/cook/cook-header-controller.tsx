@@ -9,16 +9,15 @@ import { AdaptiveHeader } from "./adaptive-header";
 import { HeaderCook } from "./header-cook";
 import { Box, useMediaQuery } from "@mui/material";
 import { theme } from "@/config/ThemeMUI/theme";
-import { headerCookContainer, scrollBox } from "@/app/(main)/cook/styles";
+import { headerCookContainer, scrollBox, } from "@/app/(main)/cook/styles";
 import { HistoryLinks } from "@/app/(main)/cook/types";
 
 export interface HeaderProps {
-    isDeleting:boolean,
     cookHistoryStore: HistoryLinks[];
     recipe_id: string;
     open: boolean;
     toggleDrawer: (v: boolean) => () => void;
-    handleDeleteRecipe: (id: string) => void;
+    handleDeleteRecipe: (recipeId: string) => void;
 }
 
 export function CookHeaderController() {
@@ -32,7 +31,6 @@ export function CookHeaderController() {
     const recipeName = searchParams.get("name") ?? '';
     const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-    const [isDeleting, setIsDeleting] = useState(false);
     const [open, setOpen] = useState(false);
 
     const toggleDrawer = (newOpen: boolean) => () => setOpen(newOpen);
@@ -43,36 +41,34 @@ export function CookHeaderController() {
         }
     }, [userStore.user.connection_id, dispatch, recipeName, recipe_id]);
 
-    useEffect(() => { 
-        if (!isDeleting) return;
 
-        const updatedLinks = cookHistoryStore;
+    const handleDeleteRecipe = (recipeId: string) => {
+        const index = cookHistoryStore.findIndex(el => el.recipe_id === recipeId);
 
-        if (updatedLinks.length === 0) {
+        if (cookHistoryStore.length <= 1) {
             router.push('/home');
-        } else if (!updatedLinks.some(el => el.recipe_id === recipe_id)) {
-            const currentIndex = updatedLinks.findIndex(el => el.recipe_id === recipe_id);
-            const nextRecipe = updatedLinks[currentIndex + 1] || updatedLinks[currentIndex - 1] || updatedLinks[0];
-            if (nextRecipe) {
-                router.push(`/cook/${nextRecipe.recipe_id}`);
-            }
         }
 
-        setIsDeleting(false);
-    }, [cookHistoryStore, recipe_id, isDeleting, router]);
+        else if (recipeId === recipe_id) {
+            const nextIndex = index === 0 ? 1 : 0;
+            const nextRecipe = cookHistoryStore[nextIndex];
 
-    const handleDeleteRecipe = (recipe_id: string) => {
-        setIsDeleting(true);
+            if (nextRecipe) {
+                router.push(`/cook/${nextRecipe.recipe_id}`);
+            } else {     
+                router.push('/home'); //protection against unforeseen events
+            }
+        }
+        
         dispatch(deleteCookHistory({
             connection_id: userStore.user.connection_id,
-            recipe_id,
+            recipe_id:recipeId,
         }));
     };
 
     const sharedProps = {
         cookHistoryStore,
         recipe_id,
-        isDeleting,
         handleDeleteRecipe,
         open,
         toggleDrawer,
@@ -84,7 +80,7 @@ export function CookHeaderController() {
         <AdaptiveHeader {...sharedProps} />
         :
         <Box sx={headerCookContainer}>
-            <Box component="ul" sx={[scrollBox, {display: 'flex',listStyle: 'none',p:'0 5px' }]}>
+            <Box component="ul" sx={scrollBox}>
                 <HeaderCook {...sharedProps} />
             </Box>
         </Box>

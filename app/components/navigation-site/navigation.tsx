@@ -20,7 +20,7 @@ export function NavigationSite() {
         { 
             name: 'Home', 
             path: ['/home', '/cook/:path*' ],
-            icon: <HomeIcon sx={{mr:'5px'}}/>
+            icon: <HomeIcon viewBox="0 1 24 24" sx={{mr:'5px'}}/>
         },
         { 
             name: 'Popular',

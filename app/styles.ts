@@ -16,6 +16,12 @@ export const betweenCenter = {
     alignItems:"center",
 }
 
+export const wrapCenter = {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+}
+
 export const columnSpaceBetween = {
     display: 'flex', 
     flexDirection: 'column', 

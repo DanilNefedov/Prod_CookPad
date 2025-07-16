@@ -5,6 +5,7 @@ import { inputLabel, inputs, outlinedInput } from './inputs/inputs';
 import { list, listItem } from './lists/lists';
 import { baseline } from './baseline/baseline';
 import { typography } from './text/typography';
+import { chip } from './chip/chip';
 // import { circularProgress } from './loaders/circular';
 // import { container } from './blocks/container';
 
@@ -58,6 +59,7 @@ export const theme = createTheme({
     MuiList: list,
     MuiListItem: listItem,
     MuiTypography: typography,
+    MuiChip:chip,
     // MuiContainer: container,
     // MuiCircularProgress:circularProgress,
     MuiLink: {
