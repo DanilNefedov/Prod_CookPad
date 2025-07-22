@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/state/hook';
 import { theme } from '@/config/ThemeMUI/theme';
 import { memo, useCallback, useEffect } from 'react';
 import { setSomeError } from '@/state/slices/stepper/error-open';
+import { containerProgress, stepper, stepperText } from '@/app/(main)/new-recipe/style';
 
 
 export const StepperProgress = memo(() => {
@@ -66,25 +67,9 @@ export const StepperProgress = memo(() => {
     }, [stepperState, ingredientsState, dispatch, stepsCount, isStepFailed]);
 
     return (
-        <Box sx={{ width: '100%', mt: '10px' }}>
+        <Box sx={containerProgress}>
             <Stepper activeStep={activePage - 1 }
-                sx={{
-                    '& .MuiStepConnector-root.Mui-active .MuiStepConnector-line': {
-                        borderColor: '#FF7269',
-                    },
-                    '& .MuiStepConnector-root.Mui-completed .MuiStepConnector-line': {
-                        borderColor: '#FF7269',
-                    },
-                    '& .MuiStepLabel-iconContainer': {
-                        [theme.breakpoints.down(500)]: {
-                            p: '0',
-                            '& svg': {
-                                width: '19px',
-                                height: '19px',
-                            }
-                        }
-                    }
-                }}
+                sx={stepper}
             >
                 {Array.from({ length: stepsCount }, (_, i) => i + 1).map((step) => {
                     const labelProps: {
@@ -94,7 +79,7 @@ export const StepperProgress = memo(() => {
 
                     if (isStepFailed(step)) {
                         labelProps.optional = (
-                            <Typography variant="caption" color="error" sx={{ [theme.breakpoints.down(1250)]: { display: 'none' } }}>
+                            <Typography variant="caption" color="error" sx={stepperText}>
                                 {nameErrors[step - 1]}
                             </Typography>
                         );

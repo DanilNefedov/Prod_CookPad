@@ -1,14 +1,14 @@
 'use client'
 import { Alert, Box, Button, CircularProgress, Paper, Stack } from "@mui/material"
-import { styleLink } from "../home/header/header"
 import { useAppDispatch, useAppSelector, } from "@/state/hook"
 import { SelectPage } from "./select-page"
 import { saveForm } from "./save-form"
-import { theme } from "@/config/ThemeMUI/theme"
 import { hasOpen, setActivePage } from "@/state/slices/stepper/error-open"
 import { useStore } from "react-redux"
 import { RootState } from "@/state/store"
 import { useState } from "react"
+import { alertMui, centerFlexBlock, containerBtns, nextBtn, pageBtns, paperForm, saveBtn } from "@/app/styles"
+import { buildLoaderBox, errorBox } from "@/app/(main)/new-recipe/style"
 
 
 
@@ -66,40 +66,19 @@ export function MainBuildPage() {
         <>
             {loading && (
             <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    position: 'absolute',
-                    width: '100%',
-                    height: '100%',
-                    top: '0',
-                    left: '0',
-                    backgroundColor: 'rgba(53, 56, 66, 0.5)',
-                    backdropFilter: 'blur(10px)',
-                    zIndex: 99999,
-                }}
+                sx={[centerFlexBlock, buildLoaderBox]}
             >
                 <CircularProgress />
             </Box>
             )}
-
-
             
-            {errorMsg !== null && (
+            {!errorMsg === null && (
                 <Stack
-                    sx={{
-                        maxWidth: "270px",
-                        width: '100%',
-                        position: 'absolute',
-                        bottom: '20px',
-                        right: 'calc(50% - 135px)',
-                        zIndex: "99999",
-                    }}
+                    sx={errorBox}
                     spacing={2}
                 >
                     <Alert
-                        sx={{ bgcolor: '#A5514F', color: '#dbcaca' }}
+                        sx={alertMui}
                         onClose={() => {
                         setErrorMsg(null);
                         }}
@@ -110,33 +89,13 @@ export function MainBuildPage() {
                 </Stack>
             )}
 
-            <Paper sx={{
-                border: "5px solid #1F2128",
-                display: 'flex',
-                backgroundColor: 'background.default',
-                flexGrow: '1',
-                flexDirection: 'column',
-                overflowY: 'auto',
-                scrollbarColor: "#353842 #1F2128",
-                [theme.breakpoints.down('md')]:{
-                    borderRadius:'10px'
-                }
-
-            }}>
+            <Paper sx={paperForm}>
                 <SelectPage step={activePage}></SelectPage>
 
                 {activePage === 6 && (
                     <Button
-                        variant="contained"
-                        color="darkButton"
-                        sx={{
-                            ...styleLink,
-                            width: '150px',
-                            m: '0 auto',
-                            [theme.breakpoints.down(500)]: {
-                                width: "100px",
-                            },
-                        }}
+                        color="grayButton"
+                        sx={saveBtn}
                         disabled={statusPage}
                         onClick={(e) => {
                             e.preventDefault();
@@ -148,12 +107,10 @@ export function MainBuildPage() {
                 )}
             </Paper>
 
-
-
-
-
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: '20px' }}>
-                <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: activePage === 1 ? 'none' : 'block' }} onClick={(e) => {
+            <Box sx={containerBtns}>
+                <Button color='blackBtn' 
+                sx={[{display: activePage === 1 ? 'none' : 'block'}, pageBtns]} 
+                onClick={(e) => {
                     e.preventDefault()
                     if (activePage === 1) return false
                     
@@ -161,7 +118,9 @@ export function MainBuildPage() {
                     dispatch(setActivePage(newPage))
                     dispatch(hasOpen(activePage))
                 }}>Back</Button>
-                <Button variant="contained" color='blackRedBtn' sx={{ ...styleLink, display: activePage === 6 ? 'none' : 'block', ml: 'auto', mr:'0' }} onClick={(e) => {
+                <Button color='blackBtn' 
+                sx={[{ display: activePage === 6 ? 'none' : 'block' }, pageBtns, nextBtn]} 
+                onClick={(e) => {
                     e.preventDefault()
                     const newPage = activePage + 1
                     dispatch(setActivePage(newPage))

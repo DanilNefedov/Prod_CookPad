@@ -54,4 +54,12 @@ declare module '@mui/material/styles' {
         lightGray?: string;
     }
     
+    interface PaletteColor {
+        contrast?: string;
+    }
+
+    interface SimplePaletteColorOptions {
+        contrast?: string;
+    }
+    
 }

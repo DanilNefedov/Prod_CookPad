@@ -96,3 +96,64 @@ export const favoriteBtnDesactive = {
         width:'20px'
     }, 
 }
+
+export const hideScroll = {
+    msOverflowStyle: "none",  
+    scrollbarWidth: "none",
+
+    '&::-webkit-scrollbar': {
+        display: 'none',
+        width: '0px',
+        height: '0px',
+    },
+}
+
+export const alertMui = {
+    bgcolor: 'error.contrast', 
+    color: 'text.primary', 
+    '& .MuiSvgIcon-root': { 
+        fill: '#fff' 
+    },
+    '& .MuiAlert-action':{
+        alignItems: 'center',
+        padding: '0',
+        marginRight: 0,
+    },
+    '& .MuiPaper-root':{
+        alignItems:'center'
+    },
+}
+
+export const paperForm: SxProps<Theme> = (theme) => ({  
+    display: 'flex',
+    backgroundColor: 'background.default',
+    flexGrow: '1',
+    flexDirection: 'column',
+    overflowY: 'auto',
+    scrollbarColor: `${theme.palette.background.paper} ${theme.palette.background.default}`,
+    [theme.breakpoints.down('md')]:{
+        borderRadius:'10px'
+    }
+})
+
+export const saveBtn = {
+    width: '150px',
+    m: '0 auto',
+    [theme.breakpoints.down(500)]: {
+        width: "100px",
+    },
+}
+
+export const containerBtns = { 
+    display: 'flex', 
+    justifyContent: 'space-between', 
+    mt: '20px' 
+}
+
+export const pageBtns = {
+    p:'6px 16px'
+}
+
+export const nextBtn = {
+    ml: 'auto', mr:'0',
+}

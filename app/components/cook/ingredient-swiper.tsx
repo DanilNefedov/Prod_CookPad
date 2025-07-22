@@ -8,7 +8,6 @@ import { ItemsIngrSwiper } from './items-ingr-swiper';
 import { Box } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import { theme } from '@/config/ThemeMUI/theme';
 import { memo } from 'react';
 import { Ingredients } from '@/app/(main)/cook/types';
 import { ingredinetsArrow } from '@/app/(main)/cook/styles';
@@ -81,6 +80,9 @@ export const IngredientSwiper = memo(({ props }: { props: Props }) => {
                 </SwiperSlide>
             ))}
 
+               
+
+        
             <Box className='btn-next-cook'>
                 <ArrowRightIcon viewBox="3 3 17 17" sx={ingredinetsArrow}></ArrowRightIcon>
             </Box>

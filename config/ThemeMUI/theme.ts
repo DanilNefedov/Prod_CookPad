@@ -41,6 +41,7 @@ export const theme = createTheme({
       light: "#ffc2b3",
       contrastText: '#FFFFFF',
       dark: '#A5514F',
+      contrast:'#d32f2f'
     },
     common:{
       cardBlack7:'rgba(31,33,40, 0.7)',

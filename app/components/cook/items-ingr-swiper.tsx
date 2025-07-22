@@ -1,18 +1,16 @@
 'use client'
 
 import { MouseEvent, useState } from "react";
-import { Alert, Box, Button, ListItemAvatar, ListItemText, Menu, MenuItem, Slide, SlideProps, Typography } from "@mui/material";
-import { addListIngr, avatarIngr, boxOr, btnAddNew, btnListItem, buttonList, containerButtons, containerContentSlide, containerUnit, headerMenu, menuContainer, menuListItems, nameIngr } from "@/app/(main)/cook/styles";
-import { theme } from "@/config/ThemeMUI/theme";
-import AddIcon from '@mui/icons-material/Add';
+import { Alert, Box, Button, Chip, ListItemAvatar, ListItemText, Menu, MenuItem, Slide, SlideProps, Stack, Typography } from "@mui/material";
+import { addIcon, avatarIngr, boxOr, buttonList, chipMenu, containerButtons, containerUnit, 
+    emptyUnits, headerMenu, menuContainer, menuListItems, nameIngr, scrollItems } from "@/app/(main)/cook/styles";
 import { useAppDispatch } from "@/state/hook";
 import { newIngredientList, newUnitIngredientList, updateCookUnit } from "@/state/slices/list-slice";
 import { add, bignumber, } from "mathjs";
 import { useSnackbar } from "notistack";
 import { Ingredients, ReturnData } from "@/app/(main)/cook/types";
-import Image from "next/image";
-import { textMaxWidth } from "@/app/styles";
-
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { alertMui, hideScroll } from "@/app/styles";
 
 interface Props {
     el: Ingredients,
@@ -45,14 +43,16 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
         if (!responseData.ok) {
             enqueueSnackbar('', {
                 content: (key) => (
-                    <Alert
-                        severity="error"
-                        onClose={() => closeSnackbar(key)}
-                        sx={{ bgcolor: '#d32f2f', color: '#fff', '& .MuiSvgIcon-root': { fill: '#fff' } }}
-
-                    >
-                        Unit retrieval error.
-                    </Alert>
+                    <Stack>
+                       <Alert
+                            severity="error"
+                            onClose={() => closeSnackbar(key)}
+                            sx={alertMui}
+                        >
+                            Unit retrieval error.
+                        </Alert> 
+                    </Stack>
+                    
                 ),
                 persist: true, 
                 anchorOrigin: { vertical: 'top', horizontal: 'center' },
@@ -193,6 +193,7 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
                     aria-labelledby="demo-positioned-button"
                     anchorEl={anchorEl}
                     open={open}
+                    // open
                     onClose={handleClose}
                     anchorOrigin={{
                         vertical: 'top',
@@ -203,29 +204,35 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
                     <MenuItem disabled={true} sx={headerMenu}>
                         <Typography align="center">Your List Units</Typography>
                     </MenuItem>
-                    {units !== null ?
-                        units.map(elem => (
-                            <MenuItem key={elem._id} sx={menuListItems}>
-                                <Typography pr={'5px'}>{elem.amount}</Typography>
-                                <Typography pr={'5px'}>{elem.choice}</Typography>
-                                <Button onClick={() => {
-                                    addOldUnit(elem)
-                                }}>
-                                    <AddIcon sx={{ [theme.breakpoints.down("md")]: { width: '20px', height: '20px' } }}></AddIcon>
-                                </Button>
-                            </MenuItem>
-                        ))
-                        :
-                        <MenuItem disabled sx={{ display: 'block', textAlign: 'center', color: 'text.primary', [theme.breakpoints.down("md")]: { fontSize: '14px' }, '&.Mui-disabled': { opacity: '1' } }}>Nothing</MenuItem>
-                    }
+                    <Box component='li'>
+                        <Box component='ul' sx={[scrollItems, hideScroll]}>
+                            {units !== null ?
+                                units.map(elem => (
+                                    <Box component='li' key={elem._id} sx={menuListItems}>
+                                        <Chip
+                                            color="secondary"
+                                            label={`${elem.amount} ${elem.choice}`}
+                                            sx={chipMenu}
+                                            onDelete={() => addOldUnit(elem)}
+                                            deleteIcon={<AddCircleIcon sx={[addIcon]}/>}
+                                        />
+                                    </Box>
+                                ))
+                                :
+                                <MenuItem disabled sx={emptyUnits}>Nothing</MenuItem>
+                            }
+                        </Box>
+                        
+                    </Box>
+                    
                     <MenuItem disabled={true} sx={boxOr}>
                         <Typography align="center">Or</Typography>
                     </MenuItem>
 
                     <Button 
-                    disabled={method !== '' ? false : true} onClick={() => addNewUnit(el)}
-                    color="grayButton" 
-                    sx={{width:"100%"}}
+                        disabled={method !== '' ? false : true} onClick={() => addNewUnit(el)}
+                        color="grayButton" 
+                        sx={{width:"100%"}}
                     >Like a new</Button>
                 </Menu>
             </Box>
