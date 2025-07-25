@@ -1,10 +1,10 @@
 import { TextField, Typography } from '@mui/material';
-import { inputText } from '@/app/main-styles';
 import { ChangeEvent, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/state/hook';
-import { theme } from '@/config/ThemeMUI/theme';
 import { setInstruction } from '@/state/slices/stepper/instruction';
 import { updateError } from '@/state/slices/stepper/error-open';
+import { headerSteps } from '@/app/styles';
+import { textAreaStepper } from '@/app/(main)/new-recipe/style';
 
 
 export function Instruction() {
@@ -34,7 +34,7 @@ export function Instruction() {
 
     return (
         <>
-            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px' }}>Your instruction</Typography>
+            <Typography variant="h6" component="h2" sx={headerSteps}>Your instruction</Typography>
             <TextField
                 id="outlined-multiline-flexible"
                 label="Instruction"
@@ -46,21 +46,7 @@ export function Instruction() {
                 error={stepStatus.open && stepStatus.error_status.value ? true : false}
                 helperText='max lenght 300 symbols'
                 onChange={handleInstruction}
-                sx={{
-                    ...inputText, '& .MuiOutlinedInput-root': {
-                        mb: '0px', '& fieldset': {
-                            borderColor: '#353842',
-                        },
-                        '&.Mui-focused fieldset': {
-                            borderColor: '#ffffff',
-                        },
-                    },
-                    '& .MuiInputBase-root': {
-                        [theme.breakpoints.down('md')]: {
-                            p: '5px'
-                        }
-                    }
-                }}
+                sx={textAreaStepper}
             />
         </>
     )

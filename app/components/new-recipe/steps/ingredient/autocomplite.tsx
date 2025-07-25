@@ -1,13 +1,15 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { Autocomplete, Box, TextField} from "@mui/material";
+import { Autocomplete, Box, ListItem, TextField, Typography} from "@mui/material";
 import { ChangeEvent, memo, useCallback, useEffect, useRef, } from "react";
-import { secondTextInput } from "@/app/main-styles";
-import { theme } from "@/config/ThemeMUI/theme";
 import { MainInput } from "./main-input";
 import { choiceUnits, ingredientAmount } from "@/state/slices/stepper/ingredients";
 import { shallowEqual } from "react-redux";
 import { addErrorIngredient, deleteErrorIngredient } from "@/state/slices/stepper/error-open";
 import { handleAmountChange } from "@/app/helpers/input-unit";
+import { amoutIngredient, autocompliteImg, autoCompliteItems, autocompliteMenuItem, 
+    autocompMenuBox, autocompMenuContainer, autocompMenuText, boxAutocompliteImg, 
+    paperMenu, weightItemList } from "@/app/(main)/new-recipe/style";
+import { textMaxWidth } from "@/app/styles";
 
 
 interface Props {
@@ -92,21 +94,11 @@ export const Autocomplite = memo(({ingredientId}: Props) => {
 
     return (
         <>
-        
-            <Box sx={{
-                width: '40px', height: '40px', borderRadius: '50%', backgroundColor: 'background.default',
-                [theme.breakpoints.down('md')]: {
-                    width: '30px',
-                    height: '30px'
-                }
-            }}>
-                <Box sx={{
-                    width: '100%', height: '100%', padding: '7px', [theme.breakpoints.down('md')]: {
-                        p: '5px'
-                    }
-                }} component="img"
+            <Box sx={boxAutocompliteImg}>
+                <Box sx={autocompliteImg} component="img"
                     src={ingredient.media !== '' ? ingredient.media : 'images/load-ingr.svg'} alt={ingredient.name}
-                    loading="lazy"></Box>
+                    loading="lazy">
+                </Box>
             </Box>
 
             <MainInput 
@@ -130,41 +122,7 @@ export const Autocomplite = memo(({ingredientId}: Props) => {
                 }}
                 value={('list' in ingredient.units && ingredient.units.amount !== 0) && ingredient.units.amount}//
                 onChange={(e) => changeAmount(e)}
-                sx={{
-                    ...secondTextInput,
-                    '& .MuiInputBase-input': {
-                        p: '7.5px 12px 7.5px',
-
-                        [theme.breakpoints.down('md')]: {
-                            fontSize: '14px',
-                            p: '5px 10px 5px '
-                        }
-                    },
-                    '& .MuiInputLabel-root': {
-                        top: '-10px',
-                        '&.Mui-focused': {
-                            color: '#fff',
-                        },
-                    },
-                    '& .MuiTextField-root': {
-                        m: '0',
-                    },
-                    '&&': {
-                        m: '4px',
-                        [theme.breakpoints.down(500)]: {
-                            ml: '0',
-
-                        }
-                    },
-                    '& .MuiButtonBase-root': {
-                        color: '#fff',
-                    },
-                    width: '15%',
-                    [theme.breakpoints.down(500)]: {
-                        width: '37%',
-
-                    }
-                }}
+                sx={amoutIngredient}
             />
             <Autocomplete
                 disabled={isDisabled()}
@@ -186,65 +144,35 @@ export const Autocomplite = memo(({ingredientId}: Props) => {
                                 },
                                 
                             }}
-                            
                             error={foundId === ingredientId && openPage ? true : false}
                         />
 
                 )}
                 slotProps={{
-                    popper: {
-                      modifiers: [
-                        {
-                          name: "preventOverflow",
-                          options: {
-                            boundary: "window",
-                          },
-                        },
-                      ],
-                    },
                     paper: {
-                      sx: {
-                        "& .MuiAutocomplete-listbox .MuiAutocomplete-option": {
-                          [theme.breakpoints.down("md")]: {
-                            minHeight: "33px",
-                            fontSize:'14px'
-                          },
-                        },
-                      },
+                        sx: paperMenu
                     },
-                  }}
-                sx={{
-                    ...secondTextInput,
-                    '& .MuiInputBase-input': {
-                        p: '7.5px 12px 7.5px',
-
-                        [theme.breakpoints.down('md')]: {
-                            fontSize: '14px',
-                            p: '5px 0px 5px !important'
-                        }
-                    },
-                    '& .MuiInputLabel-root': {
-                        top: '-10px',
-                        '&.Mui-focused': {
-                            color: '#fff',
-                        },
-                    },
-                    '& .MuiTextField-root': {
-                        m: '0',
-                    },
-                    '&&': {
-                        m: '4px',
-                    },
-                    '& .MuiButtonBase-root': {
-                        color: '#fff',
-                    },
-                    width: '15%',
-                    [theme.breakpoints.down(500)]: {
-                        width: '37%',
-
-                    },
-
                 }}
+                renderOption={(props, option) => (
+                    <ListItem
+                        sx={autocompliteMenuItem}
+                        {...props}
+                        key={props.id}
+                    >
+                        <Box sx={autocompMenuBox}>
+                            <Box sx={autocompMenuContainer}>
+                                <Typography
+                                    variant="body2"
+                                    sx={[textMaxWidth, autocompMenuText]}
+                                >
+                                    {typeof option === 'string' ? option : option}
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </ListItem>
+    
+                )}
+                sx={[autoCompliteItems, weightItemList]}
             />
 
 

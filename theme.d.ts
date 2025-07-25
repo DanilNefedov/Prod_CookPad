@@ -33,7 +33,8 @@ declare module '@mui/material/TextField' {
 declare module '@mui/material/styles' {
     interface CommonColors {
         black46: string;
-        cardBlack7:string
+        cardBlack7:string;
+        border:string;
     }
     
     interface Palette {

@@ -1,5 +1,5 @@
 import { theme } from "@/config/ThemeMUI/theme";
-import { SxProps, Theme } from "@mui/material";
+import { styled, SxProps, Theme } from "@mui/material";
 
 
 
@@ -26,6 +26,12 @@ export const columnSpaceBetween = {
     display: 'flex', 
     flexDirection: 'column', 
     justifyContent: 'space-between', 
+}
+
+export const columnCenter = {
+    display: 'flex', 
+    justifyContent: 'center', 
+    flexDirection: 'column', 
 }
 
 export const avatarSize = { 
@@ -124,36 +130,31 @@ export const alertMui = {
     },
 }
 
-export const paperForm: SxProps<Theme> = (theme) => ({  
-    display: 'flex',
-    backgroundColor: 'background.default',
-    flexGrow: '1',
-    flexDirection: 'column',
-    overflowY: 'auto',
-    scrollbarColor: `${theme.palette.background.paper} ${theme.palette.background.default}`,
-    [theme.breakpoints.down('md')]:{
-        borderRadius:'10px'
-    }
-})
-
-export const saveBtn = {
-    width: '150px',
-    m: '0 auto',
-    [theme.breakpoints.down(500)]: {
-        width: "100px",
-    },
+export const InputForMedia = {
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
 }
 
-export const containerBtns = { 
-    display: 'flex', 
-    justifyContent: 'space-between', 
-    mt: '20px' 
+export const headerSteps = { 
+    textAlign: "center",
+    mt: '25px', 
+    mb:'10px',
+    p:'0 5px',
+    [theme.breakpoints.down('md')]: { 
+        fontSize: '16px', 
+        mt: '10px' 
+    } 
 }
 
-export const pageBtns = {
-    p:'6px 16px'
-}
-
-export const nextBtn = {
-    ml: 'auto', mr:'0',
+export const cardMedia = {
+    height: '100%',
+    objectFit: 'cover',
+    width:"100%"
 }

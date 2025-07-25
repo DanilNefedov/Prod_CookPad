@@ -211,11 +211,6 @@ export const containerSwiperInfo = {
     }
 }
 
-export const mediaSwiper = {
-    height: '100%',
-    objectFit: "cover",            
-}
-
 export const skeletonMedia = {
     objectFit: "cover", 
     width:'100%', 

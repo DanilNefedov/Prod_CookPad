@@ -1,12 +1,12 @@
+import { autoCompliteItems, autocompliteMenuItem, autocompMenuBox, 
+    autocompMenuContainer, autocompMenuText, paperMenu } from "@/app/(main)/new-recipe/style";
 import { CallbackIngrAutocomplite, IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
-import { secondTextInput } from "@/app/main-styles";
 import { fetchLocationSuggestions } from "@/app/services/autocomplite";
-import { theme } from "@/config/ThemeMUI/theme";
+import { textMaxWidth } from "@/app/styles";
 import { useAppDispatch } from "@/state/hook";
 import { choiceAutocomplite } from "@/state/slices/stepper/ingredients";
 import { Autocomplete, Box, debounce, ListItem, TextField, Typography } from "@mui/material";
 import { memo, useEffect, useMemo, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
 
 
 interface Props {
@@ -79,44 +79,20 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: Props) 
     return (
         <Autocomplete
             id="ingredient"
-            sx={{
-                ...secondTextInput,
-                '& .MuiInputBase-input': {
-                    p: '6px 10px 6px',
-                    [theme.breakpoints.down('md')]: {
-                        fontSize: '14px',
-                        p: '5px 2px 5px !important'
-                    }
-                },
-                '& .MuiInputLabel-root': {
-                    top: '-10px',
-                    '&.Mui-focused': {
-                        color: '#fff',
-                    },
-                },
-                '& .MuiTextField-root': {
-                    m: '0',
-                },
-                '&&': {
-                    m: '4px',
-                },
-                '& .MuiButtonBase-root': {
-                    color: '#fff',
-                },
-                flexGrow: '1',
-                [theme.breakpoints.down(500)]: {
-                    width: '80%'
-                }
-            }}
+            sx={autoCompliteItems}
             getOptionLabel={(option) => (typeof option === 'string' ? option : option.name)}
             filterOptions={(x) => x}
             options={options}
             autoComplete
             includeInputInList
             filterSelectedOptions
+            slotProps={{
+                paper: {
+                    sx: paperMenu
+                },
+            }}
             freeSolo
             value={value}
-                     
             noOptionsText="No ingredients"
             onChange={(event, newValue: IngredientAutocomplite | string | null) => {
                 if (typeof newValue === 'string') {
@@ -157,64 +133,27 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: Props) 
                     {...params}  
                     placeholder="Add an ingredient" 
                     fullWidth 
+    
                     error={error ? true : false}
                     slotProps={{
                         htmlInput: {
                             ...params.inputProps,
                             maxLength:50
                         },
-                        
                     }}
                 />
             }//error={statusPage.open && !error ? true : false}
             renderOption={(props, option) => (
                 <ListItem
-                    sx={{
-                        color: '#fff', maxWidth: '100%',
-                        '&.MuiListItem-root.MuiListItem-gutters': {
-                            minHeight: '40px',
-                            [theme.breakpoints.down('md')]: {
-                                minHeight: '33px'
-                            }
-                        }
-                    }}
+                    sx={autocompliteMenuItem}
                     {...props}
-                    key={uuidv4()}
+                    key={props.id}
                 >
-                    <Box
-                        display="flex"
-                        alignItems="center"
-                        sx={{
-                            '@media (hover: hover) and (pointer: fine)': {
-                                ':hover': { backgroundColor: '#1F2128' },
-                            },
-                            width: '100%',
-                        }}
-                    >
-
-                        <Box
-                            sx={{
-                                flexGrow: 1,
-                                width: 'calc(100% - 44px)',
-                                wordWrap: 'break-word',
-                            }}
-                        >
+                    <Box sx={autocompMenuBox}>
+                        <Box sx={autocompMenuContainer}>
                             <Typography
                                 variant="body2"
-                                sx={{
-                                    '&.MuiMenuItem-root': {
-                                        color: '#fff',
-                                        '@media (hover: hover) and (pointer: fine)': {
-                                            '&:hover': {
-                                                backgroundColor: '#1F2128',
-                                            },
-                                        },
-                                        '&.Mui-selected': {
-                                            backgroundColor: '#1F2128',
-                                            color: '#fff',
-                                        },
-                                    },
-                                }}
+                                sx={[textMaxWidth, autocompMenuText]}
                             >
                                 {typeof option === 'string' ? option : option.name}
                             </Typography>

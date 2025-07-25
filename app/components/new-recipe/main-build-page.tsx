@@ -7,8 +7,8 @@ import { hasOpen, setActivePage } from "@/state/slices/stepper/error-open"
 import { useStore } from "react-redux"
 import { RootState } from "@/state/store"
 import { useState } from "react"
-import { alertMui, centerFlexBlock, containerBtns, nextBtn, pageBtns, paperForm, saveBtn } from "@/app/styles"
-import { buildLoaderBox, errorBox } from "@/app/(main)/new-recipe/style"
+import { alertMui, centerFlexBlock,} from "@/app/styles"
+import { buildLoaderBox, containerBtns, errorBox, nextBtn, pageBtns, paperForm, saveBtn } from "@/app/(main)/new-recipe/style"
 
 
 

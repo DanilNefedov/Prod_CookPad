@@ -13,11 +13,12 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import './swiper-styles-media.css';
 import { Navigation } from 'swiper/modules';
-import { VisuallyHiddenInput, addMainMediaSwiper, btnsSwiperMedia, deleteMediaSwiper } from "@/app/(main)/new-recipe/style";
+import { actionBtnIcons, actionButtons, containerMediaStep, deleteBtn, errorMedia, helperText, infoMediaStep, mainBtn, swiperArrowsBox } from "@/app/(main)/new-recipe/style";
 import { SwiperStepMedia } from "./swiper-media";
-import { theme } from "@/config/ThemeMUI/theme";
 import { changeMedia, deleteMediaState, setMainMedia } from "@/state/slices/stepper/media";
 import { updateError } from "@/state/slices/stepper/error-open";
+import { arrowFullTemplate, columnCenter, headerSteps, InputForMedia } from "@/app/styles";
+import { arrowSwiper } from "@/app/(main)/home/styles";
 
 
 
@@ -73,40 +74,35 @@ export function Media() {
 
     return (
         <>
-            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px' } }}>Select media</Typography>
-            <Box sx={{ p: 2, display: 'flex', justifyContent: 'center', flexDirection: 'column', [theme.breakpoints.down('md')]: { p: '10px' } }}>
-                <Button component="label" variant="contained" startIcon={<CloudUploadIcon />} sx={{
-                    maxWidth: '200px', m: '0 auto 20px',
-                    [theme.breakpoints.down('md')]: {
-                        padding: '5px 10px',
-                        fontSize: '12px',
-
-                    }
-
-                }}>
+            <Typography variant="h6" component="h2" sx={headerSteps}>Select media</Typography>
+            <Box sx={[containerMediaStep, columnCenter]}>
+                <Button component="label" variant="contained" startIcon={<CloudUploadIcon />} 
+                sx={infoMediaStep}>
                     Upload file
-                    <VisuallyHiddenInput type="file" id="media" accept="image/*, video/*" multiple onChange={(e) => handleFileChange(e)} />
+                    <Box
+                        component="input"
+                        type="file" 
+                        id="media" 
+                        accept="image/*, video/*" 
+                        multiple 
+                        onChange={(e) => handleFileChange(e)} 
+                        name="image"
+                        sx={InputForMedia}
+                    />
                 </Button>
-                <Typography sx={{
-                    display: statusPage.open && statusPage.error_status.value ? 'block' : 'none',
-                    fontSize: 13,
-                    textAlign: 'center',
-                    mt: 2,
-                    [theme.breakpoints.down('md')]: {
-                        mt: "0"
-                    }
-                }} color={"error"} >Upload the media file</Typography>
+                <Typography 
+                    sx={[
+                        {display: statusPage.open && statusPage.error_status.value ? 'block' : 'none',},
+                        errorMedia
+                    ]} 
+                    color={"error"} 
+                >Upload the media file</Typography>
 
 
-                <Typography sx={{
-                    display: helperError !== '' ? 'block' : 'none',
-                    fontSize: 13,
-                    textAlign: 'center',
-                    mt: 2,
-                    [theme.breakpoints.down('md')]: {
-                        mt: "0"
-                    }
-                }} color={"error"} >{helperError}</Typography>
+                <Typography sx={[
+                    {display: helperError !== '' ? 'block' : 'none'},
+                    helperText
+                    ]} color={"error"} >{helperError}</Typography>
 
                 <Swiper
                     modules={[Navigation]}
@@ -126,98 +122,44 @@ export function Media() {
                             {/* </SwiperStepMedia> */}
 
                             <Tooltip title="Main" >
-                                <IconButton sx={{
-                                    ...btnsSwiperMedia, ...addMainMediaSwiper, 
-                                    p:'4px',
-                                    width: '26px',
-                                    height: '26px',
-                                    [theme.breakpoints.down(500)]: {
-                                        width: '18px',
-                                        height: '18px',
-                                    }
-                                }} onClick={() => handleMain(el.media_id)}>
-                                    <GradeIcon sx={{
-                                        color: el.main ? 'primary.main' : 'text.primary', 
-                                        width: '20px',
-                                        height: '20px',
-                                        [theme.breakpoints.down(500)]: {
-                                            width: '14px',
-                                            height: '14px'
-                                        }
-                                    }} />
+                                <IconButton 
+                                sx={[
+                                    actionButtons,
+                                    mainBtn
+                                ]}
+                                onClick={() => handleMain(el.media_id)}>
+                                    <GradeIcon sx={[
+                                        {color: el.main ? 'primary.main' : 'text.primary'},
+                                        actionBtnIcons
+                                    ]} />
                                 </IconButton>
                             </Tooltip>
 
                             <Tooltip title="Delete" >
-                                <IconButton sx={{
-                                    ...btnsSwiperMedia, ...deleteMediaSwiper, 
-                                    p:'4px',
-                                    width: '26px',
-                                    height: '26px',
-                                    [theme.breakpoints.down(500)]: {
-                                        width: '18px',
-                                        height: '18px'
-                                    }
-                                }} onClick={() => deleteMedia(el.media_id)}>
-                                    <ClearIcon sx={{
-                                        color: 'text.primary', 
-                                        width: '20px',
-                                        height: '20px',
-                                        [theme.breakpoints.down(500)]: {
-                                            width: '14px',
-                                            height: '14px'
-                                        }
-                                    }} />
+                                <IconButton sx={[
+                                    actionButtons,
+                                    deleteBtn
+                                ]} onClick={() => deleteMedia(el.media_id)}>
+                                    <ClearIcon sx={[
+                                        {color:'text.primary'},
+                                        actionBtnIcons
+                                    ]} />
                                 </IconButton>
                             </Tooltip>
 
                         </SwiperSlide>
                     ))}
-                    <Box className='btn-next-step-media' sx={{
-                        cursor:"pointer",
-                        borderRadius: '50%', backgroundColor: 'background.paper', 
-                        width: '26px',
-                        height: '26px', 
-                        right: '10px',
-                        [theme.breakpoints.down(500)]: {
-                            width: '18px',
-                            height: '18px',
-                            
-                        }
-
-                    }}>
-                        <ArrowRightIcon viewBox="3 3 17 17" sx={{
-                            fontSize: 35,  position: 'relative',
-                            width: '24px',
-                            height: '24px',
-                            [theme.breakpoints.down(500)]: {
-                                width: '15px',
-                                height: '15px',
-                                right:"-1px",
-                            }
-                        }}></ArrowRightIcon>
+                    <Box className='btn-next-step-media' sx={[
+                        arrowFullTemplate,
+                        swiperArrowsBox
+                    ]}>
+                        <ArrowRightIcon viewBox="2 2 20 20" sx={arrowSwiper}></ArrowRightIcon>
                     </Box>
-                    <Box className='btn-prev-step-media' sx={{
-                        cursor:"pointer",
-                        borderRadius: '50%', backgroundColor: 'background.paper',
-                        width: '26px',
-                        height: '26px',  
-                        left: '10px',
-                        [theme.breakpoints.down(500)]: {
-                            width: '18px',
-                            height: '18px'
-                        }
-                    }}>
-                        <ArrowLeftIcon viewBox="3 3 17 17" sx={{
-                            fontSize: 35, right: '1px', position: 'relative',
-                            width: '24px',
-                            height: '24px',
-                            [theme.breakpoints.down(500)]: {
-                                width: '15px',
-                                height: '15px',
-                                right: '0px'
-                            }
-                        }}></ArrowLeftIcon>
+                    <Box className='btn-prev-step-media' sx={[
+                        arrowFullTemplate,
+                        swiperArrowsBox
+                    ]}>
+                        <ArrowLeftIcon viewBox="2 2 20 20" sx={arrowSwiper}></ArrowLeftIcon>
                     </Box>
 
                 </Swiper>

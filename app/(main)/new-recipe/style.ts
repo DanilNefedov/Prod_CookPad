@@ -1,5 +1,6 @@
 import { theme } from "@/config/ThemeMUI/theme";
-import { styled } from "@mui/material";
+import { alpha, styled } from "@mui/material";
+import { SxProps, Theme } from "@mui/material";
 
 
 
@@ -89,51 +90,201 @@ export const errorBox = {
     
 }
 
+export const paperForm: SxProps<Theme> = (theme) => ({  
+    display: 'flex',
+    backgroundColor: 'background.default',
+    flexGrow: '1',
+    flexDirection: 'column',
+    overflowY: 'auto',
+    scrollbarColor: `${theme.palette.background.paper} ${theme.palette.background.default}`,
+    [theme.breakpoints.down('md')]:{
+        borderRadius:'10px'
+    }
+})
 
+export const saveBtn = {
+    width: '150px',
+    m: '0 auto',
+    [theme.breakpoints.down(500)]: {
+        width: "100px",
+    },
+}
 
+export const containerBtns = { 
+    display: 'flex', 
+    justifyContent: 'space-between', 
+    mt: '20px' 
+}
 
+export const pageBtns = {
+    p:'6px 16px'
+}
 
+export const nextBtn = {
+    ml: 'auto', 
+    mr:'0',
+}
 
+export const typeDishInput = {
+    "& .MuiSvgIcon-root": {
+        color: "#8E94A4",
+    },
+    '&&': {
+        m: '20px 8px 0',
+        [theme.breakpoints.down('md')]: {
+            m: '10px 0'
+        }
+    },
+    '& .MuiSelect-select':{
+        p:'10px 16px'
+    },
+    '& .MuiFormLabel-root':{
+        top:'3.5px'
+    },
 
+    '& .MuiList-root':{
+        p:'7px 0'
+    },
+    
+    '& .MuiFormHelperText-root':{
+        color:'text.disabled'
+    }
+}
 
+export const paperMenu = {
+    borderRadius:'10px',
+    '& .MuiList-root':{
+        m:'10px 0',
+    },
+    '& .MuiAutocomplete-option[aria-selected="true"]':{
+        bgcolor: alpha(theme.palette.primary.main, 0.3),
+    },
+}
 
+export const typeMenu = {
+   
+    '& .MuiList-root':{
+        m:'7px 0',
+    },
+    '&.MuiMenuItem-root': {
+        color: '#fff',
+        '@media (hover: hover) and (pointer: fine)': {
+            '&:hover': {
+                backgroundColor: '#1F2128',
+            },
+        },
+        '&.Mui-selected': {
+            backgroundColor: '#1F2128',
+            color: '#fff',
+        },
 
+    },
+}
 
+export const checkRecommend = {
+    ml: '0',
+    [theme.breakpoints.down('md')]: {
+        margin: '5px 2px',
+        // '& .MuiTypography-root': {
+        // fontSize: '14px',
+        // }
+    }
+}
 
+export const checkIcon = {
+    color:'text.disabled',
+    transition:'0.2s',
+    p:'5px',
+    m:'5px',
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover':{
+            bgcolor: alpha(theme.palette.text.disabled, 0.3),
+        },
+    },
+    [theme.breakpoints.down('md')]: {
+        m: '2px',
+        maxWidth: '20px',
+        maxHeight: "20px",
+        '& svg': {
+            maxWidth: '20px',
+            maxHeight: "20px"
+        }
+    }
+}
 
+export const inputStepper = {
+    '&.MuiTextField-root':{
+        mt:'20px',
+    },
+    '& .MuiFormLabel-root':{
+        top:'3.5px'
+    },
+    '& .MuiInputBase-root':{
+        height:'43px'
+    }
+}
 
+export const flexAlign = { 
+    display: 'flex', 
+    alignItems: 'center' 
+}
 
+export const timeBtns = {
+    backgroundColor: 'background.paper',
+    lineHeight: '15px',
+    fontSize: '18px',
+    fontWeight:'600',
+    color: 'text.primary',
+    minWidth: '0',
+    width: '27px',
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': {
+            backgroundColor: 'primary.main'
+        }
+    }
+}
 
+export const containerMediaStep = { 
+    p: 2, 
+    display: 'flex', 
+    justifyContent: 'center', 
+    flexDirection: 'column', 
+    [theme.breakpoints.down('md')]: { 
+        p: '10px' 
+    } 
+}
 
+export const infoMediaStep = {
+    maxWidth: '200px', 
+    m: '0 auto 20px',
+    [theme.breakpoints.down('md')]: {
+        padding: '5px 10px',
+        fontSize: '12px',
+    }
+}
 
+export const errorMedia = {
+    fontSize: '14px',
+    textAlign: 'center',
+    mt: 2,
+    [theme.breakpoints.down('md')]: {
+        mt: "0"
+    }
+}
 
+export const helperText = {
+    fontSize: 13,
+    textAlign: 'center',
+    mt: 2,
+    [theme.breakpoints.down('md')]: {
+        mt: "0"
+    }
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-// export const VisuallyHiddenInput = styled('input')({
-//     clip: 'rect(0 0 0 0)',
-//     clipPath: 'inset(50%)',
-//     height: 1,
-//     overflow: 'hidden',
-//     position: 'absolute',
-//     bottom: 0,
-//     left: 0,
-//     whiteSpace: 'nowrap',
-//     width: 1,
-//   });
-
-
-export const btnsSwiperMedia = {
+export const actionButtons = {
+    position: 'absolute',
+    backgroundColor: 'background.paper',
+    top: '10px',
     '@media (hover: hover) and (pointer: fine)': {
         '&:hover': {
             backgroundColor: 'background.paper'
@@ -142,47 +293,142 @@ export const btnsSwiperMedia = {
             color: 'primary.main'
         },
     },
-    
-    position: 'absolute',
-    backgroundColor: 'background.paper',
-    top: '10px',
+    [theme.breakpoints.down(500)]: {
+        width: '20px',
+        height: '20px',
+    }
 }
 
-
-export const addMainMediaSwiper = {
+export const mainBtn = {
     left: '10px'
 }
 
-
-export const  deleteMediaSwiper= {
+export const deleteBtn = {
     right: '10px'
 }
 
+export const actionBtnIcons = {
+    width: '20px',
+    height: '20px',
+    [theme.breakpoints.down(500)]: {
+        width: '16px',
+        height: '16px'
+    }
+}
 
+export const swiperArrowsBox = {
+    width:'30px',
+    height:'30px'
+}
 
-export const typeDishInput = {
-    
-    display: 'flex',
-    borderColor: '#fff',
-    "& .MuiSvgIcon-root": {
-        color: "#8E94A4",
+export const ingredientStepContainer = {
+    p: '20px 10px', 
+    '&.MuiContainer-root': {
+        paddingLeft: '10px',
+        paddingRight: '10px',
     },
-    '&&': {
-        m: '40px 8px 0',
-        [theme.breakpoints.down('md')]: {
-            m: '10px 0'
-        }
-    },
+    [theme.breakpoints.down('md')]: {
+        p:'5px'
+    }
+}
 
-    '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-            borderColor: '#353842',
-        },
+export const tooltipText = {
+    [theme.breakpoints.down(500)]: {
+        width:'17px',
+        height:'17px'
+    }
+}
+
+export const ingredientBox = { 
+    borderRadius: '10px',
+    [theme.breakpoints.down('md')]: {
+        p:'7px'
     },
+    position:"relative",
+}
+
+export const errorIngrText = {
+    position:"absolute",
+    top:'-26px',
+    right:'calc(50% - 84px)',
+    fontSize:"14px"
+}
+
+export const ingredientContainer = {             
+    display: 'flex', 
+    alignItems: 'center', 
+    borderColor: 'background.default', 
+    width: '100%',
+    mb: '10px',
+    [theme.breakpoints.down('md')]: {
+        mb:'5px'
+    },
+    [theme.breakpoints.down(500)]: {
+        flexWrap:'wrap',
+    }
+}
+
+export const clearBtn = { 
+    mb: '0', 
+    minWidth: '40px', 
+    ackgroundColor: 'background.default', 
+    padding: '7px 18px', 
+    fontWeight: '600', 
+    fontSize: '12px',
+    [theme.breakpoints.down('md')]: {
+        width:'30px',
+        height:'30px',
+        p:'5px'
+    } 
+}
+
+export const ingrdientLine = {
+    height:'1px', 
+    bgcolor:"text.disabled", 
+    width:'100%', 
+    display:'none', 
+    [theme.breakpoints.down(500)]: {
+        display:'block'
+    }
+}
+
+export const addNewIngr = { 
+    m: '20px auto 0 ', 
+    display: 'block', 
+    width: '140px', 
+    p:'6px 16px',
+    [theme.breakpoints.down('md')]: {
+        fontSize:'12px',
+    } 
+}
+
+export const boxAutocompliteImg = (theme: Theme) => ({
+    width: '38px',
+    height: '38px',
+    borderRadius: '50%',
+    backgroundColor: theme.palette.background.default,
+    border: `1px solid ${theme.palette.common.border}`,
+    [theme.breakpoints.down('md')]: {
+        width: '30px',
+        height: '30px',
+    },
+});
+
+export const autocompliteImg = {
+    width: '100%', 
+    height: '100%', 
+    padding: '7px', 
+    [theme.breakpoints.down('md')]: {
+        p: '5px'
+    }
+}
+
+export const secondTextInput = {
     '& .MuiInputBase-root': {
         backgroundColor: '#1F2128',
         color: '#fff',
-
+        paddingTop:'0',
+        paddingBottom:'0',
         '&.Mui-focused': {
             backgroundColor: '#1F2128',
             color: '#fff',
@@ -191,23 +437,165 @@ export const typeDishInput = {
             },
         },
     },
-
-    '& .MuiSelect-select': {
-        [theme.breakpoints.down('md')]: {
-            p: "10px",
-            fontSize: '14px'
-        },
-    },
     '& .MuiInputLabel-root': {
         color: '#fff',
-        
         '&.Mui-focused': {
             color: '#fff',
         },
-        [theme.breakpoints.down('md')]: {
-            fontSize: '14px',
-            lineHeight: "14px"
+    },
+    '& .MuiOutlinedInput-root': {
+        
+        '& fieldset': {
+            borderColor: '#353842',
+        },
+
+    },
+    '& .MuiInputBase-input':{
+        padding:'5px 15px',
+        height:'none',
+    }
+}
+
+
+export const autoCompliteItems = {
+    flexGrow: '1',
+
+    '& .MuiInputBase-root': {
+        backgroundColor: 'background.default',
+        color: 'text.primary',
+        paddingTop:'0',
+        paddingBottom:'0',
+
+        '&.Mui-focused': {
+            backgroundColor: 'background.default',
+            color: 'text.primary',
         },
     },
-            
+    '& .MuiInputBase-input': {
+        p: '6px 10px 6px',
+        [theme.breakpoints.down('md')]: {
+            fontSize: '14px',
+            p: '5px 2px 5px !important'
+        }
+    },
+    '& .MuiTextField-root': {
+        m: '0',
+    },
+    '&&': {
+        m: '4px',
+    },
+    '& .MuiButtonBase-root': {
+        color: 'text.primary',
+    },
+    
+    [theme.breakpoints.down(500)]: {
+        width: '80%'
+    }
 }
+
+export const autocompliteMenuItem = {
+    color: '#fff', 
+
+    '&.MuiListItem-root.MuiListItem-gutters': {
+        minHeight: '38px',
+
+        '@media (hover: hover) and (pointer: fine)': {
+            '&:hover': { 
+                backgroundColor: 'background.default' 
+            },
+        },
+
+        [theme.breakpoints.down('md')]: {
+            minHeight: '33px'
+        },
+    }
+}
+
+export const autocompMenuBox = {
+    display:'flex', 
+    width:'100%'
+}
+
+export const autocompMenuContainer = {
+    flexGrow: 1,
+    width: 'calc(100% - 44px)',
+}
+
+export const autocompMenuText = {
+    '&.MuiMenuItem-root': {
+        color: 'text.primary',
+        '@media (hover: hover) and (pointer: fine)': {
+            ':hover': {
+                backgroundColor: 'background.default',
+            },
+        },
+        '&.Mui-selected': {
+            backgroundColor: 'background.default',
+            color: 'text.primary',
+        },
+    },
+}
+
+
+export const amoutIngredient = {
+    '& .MuiInputBase-input': {
+        p: '7.5px 12px 7.5px',
+
+        [theme.breakpoints.down('md')]: {
+            fontSize: '14px',
+            p: '5px 10px 5px '
+        }
+    },
+    '& .MuiInputLabel-root': {
+        top: '-10px',
+        '&.Mui-focused': {
+            color: '#fff',
+        },
+    },
+    '& .MuiTextField-root': {
+        m: '0',
+    },
+    '&&': {
+        m: '4px',
+        [theme.breakpoints.down(500)]: {
+            ml: '0',
+
+        }
+    },
+    '& .MuiButtonBase-root': {
+        color: '#fff',
+    },
+    width: '15%',
+    [theme.breakpoints.down(500)]: {
+        width: '37%',
+
+    }
+}
+
+export const weightItemList = { 
+    flexGrow:0, 
+    width:'15%', 
+    [theme.breakpoints.down(500)]: {
+        width: '37%',          
+    }
+}
+
+export const textAreaStepper = {
+    '& .MuiInputBase-input':{
+        p:'0'
+    },
+    '& .MuiFormLabel-root[data-shrink=true]':{
+        transform:'translate(14px, -13px) scale(0.75);'
+    },
+    '& .MuiOutlinedInput-root': {
+        mb: '0px',
+        p:'10px 14px'
+    },
+    '& .MuiInputLabel-root': {
+        top: '5px',
+    },
+    '& .MuiFormHelperText-root':{
+        color:'text.disabled'
+    }
+}
+

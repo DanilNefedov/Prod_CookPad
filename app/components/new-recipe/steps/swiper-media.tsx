@@ -1,5 +1,6 @@
 
 import { RecipeMedia } from "@/app/(main)/types";
+import { cardMedia } from "@/app/styles";
 import { CardMedia } from "@mui/material";
 import { memo } from "react";
 
@@ -18,22 +19,14 @@ export const SwiperStepMedia = memo(({ el }: Props) => {
         {
             el.media_type === 'image' ?
             <CardMedia
-                sx={{
-                    height: '100%',
-                    objectFit: 'cover',
-                    width:"100%"
-                }}
+                sx={cardMedia}
                 component='img'
                 src={el.media_url as string}
                 loading="lazy"
             />
             :
             <CardMedia
-                sx={{
-                    width:"100%",
-                    height: '100%',
-                    objectFit: 'cover',
-                }}
+                sx={cardMedia}
                 component='video'
                 autoPlay
                 loop

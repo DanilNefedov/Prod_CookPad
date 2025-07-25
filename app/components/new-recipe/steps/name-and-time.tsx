@@ -1,12 +1,11 @@
-import { btnIncDec, secondTextInput } from "@/app/main-styles"
-import { theme } from "@/config/ThemeMUI/theme"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { Box, Button, TextField, Typography } from "@mui/material"
 import { ChangeEvent, FocusEvent } from "react"
 import { NameInput } from "./input-name"
 import { changeHours, changeMinutes, } from "@/state/slices/stepper/name-time"
 import { errorTime, } from "@/state/slices/stepper/error-open"
-
+import { flexAlign, timeBtns } from "@/app/(main)/new-recipe/style"
+import { headerSteps } from "@/app/styles";
 
 
 export function NameAndTime() {
@@ -113,24 +112,24 @@ export function NameAndTime() {
 
     return (
         <>
-            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px' } }}>Enter the name of the recipe</Typography>
+            <Typography variant="h6" component="h2" sx={headerSteps}>Enter the name of the recipe</Typography>
             
             <NameInput></NameInput>
             
-            <Box sx={{ m: '0 8px' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={[{ m: '0 auto' }]}>
+                <Typography variant="h6" component="h2" sx={[headerSteps, {mt:'7px'}]}>Enter the cooking time</Typography>
+                <Box sx={flexAlign}>
                     <Button
-                        sx={btnIncDec}
+                        sx={timeBtns}
                         onClick={(e) => {
                             e.preventDefault();
                             handleHourDecrement();
-                        }}>-</Button>
+                        }}>—</Button>
                     <TextField id="outlined-basic" label="Hours" variant="outlined"
                         value={timeState.hours}
                         onChange={handleHourChange}
                         onBlur={handleEmpty}
                         type="number"
-                        sx={secondTextInput}
                         onKeyDown={(e) => {
                             if (['-', '+', 'e', ',', '.'].includes(e.key)) {
                                 e.preventDefault();
@@ -139,7 +138,7 @@ export function NameAndTime() {
                         error={openPage && statusPage ? true : false}
                     />
                     <Button
-                        sx={btnIncDec}
+                        sx={timeBtns}
                         onClick={(e) => {
                             e.preventDefault();
                             handleHourIncrement();
@@ -147,15 +146,14 @@ export function NameAndTime() {
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Button
-                        sx={btnIncDec}
+                        sx={timeBtns}
                         onClick={(e) => {
                             e.preventDefault();
                             handleMinuteDecrement();
-                        }}>-</Button>
+                        }}>—</Button>
                     <TextField id="outlined-basic" label="Minutes" variant="outlined"
                         type="number"
                         value={timeState.minutes}
-                        sx={secondTextInput}
                         onChange={handleMinuteChange}
                         onBlur={handleEmpty}
                         error={openPage && statusPage ? true : false}
@@ -166,7 +164,7 @@ export function NameAndTime() {
                         }}
                     />
                     <Button
-                        sx={btnIncDec}
+                        sx={timeBtns}
                         onClick={(e) => {
                             e.preventDefault();
                             handleMinuteIncrement();

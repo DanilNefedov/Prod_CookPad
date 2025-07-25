@@ -1,6 +1,6 @@
-import { imgRecipeContainer, mediaContainer, mediaSwiper, skeletonMedia } from "@/app/(main)/cook/styles";
+import { mediaContainer, skeletonMedia } from "@/app/(main)/cook/styles";
 import { RecipeMedia } from "@/app/(main)/types";
-import { centerFlexBlock } from "@/app/styles";
+import { cardMedia, centerFlexBlock } from "@/app/styles";
 import { Box, CardMedia, Skeleton } from "@mui/material";
 import { memo, useEffect, useRef, useState } from "react";
 
@@ -45,14 +45,14 @@ const SwiperMediaCook = memo(({ props }: { props: Props }) => {
             {el.media_type === 'image' ? (
                 <CardMedia
                     alt='image'
-                    sx={mediaSwiper}
+                    sx={cardMedia}
                     component='img'
                     src={el.media_url as string}
                     loading="lazy"
                 />
             ) : isVisible ? (
                 <CardMedia
-                    sx={mediaSwiper}
+                    sx={cardMedia}
                     component='video'
                     autoPlay
                     loop

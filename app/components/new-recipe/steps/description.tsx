@@ -1,5 +1,5 @@
-import { inputText } from "@/app/main-styles";
-import { theme } from "@/config/ThemeMUI/theme";
+import { textAreaStepper } from "@/app/(main)/new-recipe/style";
+import { headerSteps } from "@/app/styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { setDescription } from "@/state/slices/stepper/description";
 import { updateError } from "@/state/slices/stepper/error-open";
@@ -38,7 +38,7 @@ export function Description() {
 
     return (
         <>
-            <Typography variant="h6" component="h2" sx={{ textAlign: "center", mt: '25px', [theme.breakpoints.down('md')]: { fontSize: '18px', mt: '10px', } }}>Your description</Typography>
+            <Typography variant="h6" component="h2" sx={headerSteps}>Your description</Typography>
             <TextField
                 id="outlined-multiline-flexible"
                 label="Description"
@@ -50,31 +50,7 @@ export function Description() {
                 error={statusPage.open && statusPage.error_status.value ? true : false}
                 helperText='max lenght 150 symbols'
                 onChange={handleDescriptionChange}
-                sx={{
-                    ...inputText, '& .MuiOutlinedInput-root': {
-                        mb: '0px',
-                        '&.Mui-focused fieldset': {
-                            borderColor: '#ffffff',
-                        },
-
-                        '& fieldset': {
-                            borderColor: '#353842',
-                        }
-                    },
-                    '& .MuiInputLabel-root': {
-                        top: '0px',
-
-                    },
-                    '& .MuiFormLabel-root.Mui-focused': {
-                        color: "#fff"
-                    },
-                    '& .MuiInputBase-root': {
-                        [theme.breakpoints.down('md')]: {
-                            p: '5px'
-                        }
-                    }
-
-                }}
+                sx={textAreaStepper}
             />
         </>
     )

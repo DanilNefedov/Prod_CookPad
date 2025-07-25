@@ -1,3 +1,4 @@
+import { inputStepper, typeDishInput } from "@/app/(main)/new-recipe/style";
 import { inputText } from "@/app/main-styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { errorName } from "@/state/slices/stepper/error-open";
@@ -45,7 +46,7 @@ export const NameInput = memo(() => {
                 }
             }}
             onChange={(e) => handleName(e)}
-            sx={inputText}
+            sx={inputStepper}
         />
     )
 

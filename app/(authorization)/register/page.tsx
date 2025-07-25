@@ -6,13 +6,12 @@ import Link from "next/link";
 import { registerAndSignIn, uploadFile } from "./function";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { startTransition, useActionState, useState } from "react";
-import { VisuallyHiddenInput } from "@/app/(main)/new-recipe/style";
 import { UXLoading } from "@/app/components/ui-helpers/loading";
 import { v4 as uuidv4 } from 'uuid';
 import { ModalInfo } from "../modal-info";
 import { InputErrorState, RegisterFormData } from "../types";
 import { avatar, containerAvatar, containerLoading, helperTextAvatar, linksAuth, templateHeaderAuth } from "../styles";
-import { centerFlexBlock } from "@/app/styles";
+import { centerFlexBlock, InputForMedia } from "@/app/styles";
 
 
 export default function Register() {
@@ -167,7 +166,26 @@ export default function Register() {
             startIcon={<CloudUploadIcon />}
           >
             Upload avatar
-            <VisuallyHiddenInput
+            <Box
+              component="input"
+              type="file"
+              accept=".jpg,.png,.svg"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+
+                if (file.size > 1024 * 1024) {
+                  setSizeAvatar(true);
+
+                } else {
+                  setSizeAvatar(false);
+                  setAvatarPreview(URL.createObjectURL(file));
+                }
+              }}
+              name="image"
+              sx={InputForMedia}
+            />
+            {/* <InputForMedia
               accept=".jpg,.png,.svg"
               onChange={(e) => {
                 const file = e.target.files?.[0];
@@ -183,7 +201,7 @@ export default function Register() {
               }}
               name="image"
               type="file"
-            />
+            /> */}
           </Button>
         </Box>
 
