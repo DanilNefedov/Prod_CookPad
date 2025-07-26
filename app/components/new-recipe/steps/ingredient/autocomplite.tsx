@@ -10,6 +10,7 @@ import { amoutIngredient, autocompliteImg, autoCompliteItems, autocompliteMenuIt
     autocompMenuBox, autocompMenuContainer, autocompMenuText, boxAutocompliteImg, 
     paperMenu, weightItemList } from "@/app/(main)/new-recipe/style";
 import { textMaxWidth } from "@/app/styles";
+import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarning";
 
 
 interface Props {
@@ -24,20 +25,11 @@ export const Autocomplite = memo(({ingredientId}: Props) => {
         if (!found) throw new Error(`Ingredient with id ${ingredientId} not found`);
         return found;
     }, shallowEqual);
-    
-    const foundId = useAppSelector(state => {
-        const value = state.statusSlice.steps[numbStep].error_status.value;
-        return Array.isArray(value) ? value.find(el => el === ingredientId) || false : false;
-    }, shallowEqual);
 
-    const openPage = useAppSelector(state =>state.statusSlice.steps[numbStep].open);
-      
-    
+    const showMinOneFilledWarning = useShowMinOneFilledWarning(numbStep);
     const dispatch = useAppDispatch();
     const inputValue = useRef<string>('');
     
-
-
     const handleInputChange = useCallback((newInputValue: string) => {
         inputValue.current = newInputValue;
     }, []);
@@ -68,6 +60,7 @@ export const Autocomplite = memo(({ingredientId}: Props) => {
 
     function cahngeUnits(newValue: string) {
         dispatch(choiceUnits({ ingredient_id: ingredient.ingredient_id, choice: newValue }));
+        
     }
     
     
@@ -91,7 +84,6 @@ export const Autocomplite = memo(({ingredientId}: Props) => {
     //Dependency error ingredient.units. Rewrite the redux with more obvious data types
 
 
-
     return (
         <>
             <Box sx={boxAutocompliteImg}>
@@ -104,13 +96,12 @@ export const Autocomplite = memo(({ingredientId}: Props) => {
             <MainInput 
                 ingredient={ingredient}
                 handleInputChange={handleInputChange}
-                error={foundId === ingredientId && openPage}
             ></MainInput>
 
             
             <TextField
                 disabled={isDisabled()}
-                error={foundId === ingredientId && openPage ? true : false}
+                error={showMinOneFilledWarning ? true : false}
                 id="outlined-basic"
                 placeholder="Amount"
                 variant="outlined"
@@ -144,7 +135,7 @@ export const Autocomplite = memo(({ingredientId}: Props) => {
                                 },
                                 
                             }}
-                            error={foundId === ingredientId && openPage ? true : false}
+                            error={showMinOneFilledWarning ? true : false}
                         />
 
                 )}

@@ -15,7 +15,7 @@ export function TypeDish() {
   const numbStep = 1
 
   const statePage = useAppSelector(state => state.stepTypeRecommend)
-  const statusPage = useAppSelector(state => state.statusSlice.steps[numbStep])
+  const statusPage = useAppSelector(state => state.statusStepSlice.steps[numbStep])
   const dispatch = useAppDispatch()
 
   const types = [

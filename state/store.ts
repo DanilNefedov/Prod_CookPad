@@ -10,7 +10,7 @@ import popularSlice from './slices/popular-slice'
 import commentsPopular from './slices/comments-popular-slice'
 import commentContext from './slices/comments-context'
 import stepTypeRecommend from './slices/stepper/type-recommend'
-import statusSlice from './slices/stepper/error-open'
+import statusStepSlice from './slices/stepper/error-open'
 import nameTimeSlice from './slices/stepper/name-time'
 import mediaSlice from './slices/stepper/media'
 import ingredientsSlice from './slices/stepper/ingredients'
@@ -32,7 +32,7 @@ const appReducer = combineReducers({
     commentContext:commentContext,
 
 
-    statusSlice:statusSlice,
+    statusStepSlice:statusStepSlice,
     stepTypeRecommend:stepTypeRecommend,
     nameTimeSlice:nameTimeSlice,
     mediaSlice:mediaSlice,

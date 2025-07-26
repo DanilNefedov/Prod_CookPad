@@ -12,8 +12,8 @@ export function NameAndTime() {
     const numbStep = 2
 
     const timeState = useAppSelector(state => state.nameTimeSlice.time)
-    const statusPage = useAppSelector(state => state.statusSlice.steps[numbStep].error_status.time)
-    const openPage = useAppSelector(state => state.statusSlice.steps[numbStep].open)
+    const statusPage = useAppSelector(state => state.statusStepSlice.steps[numbStep].error_status.time)
+    const openPage = useAppSelector(state => state.statusStepSlice.steps[numbStep].open)
     const dispatch = useAppDispatch()
 
    

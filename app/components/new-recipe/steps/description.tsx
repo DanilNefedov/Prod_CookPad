@@ -18,7 +18,7 @@ export function Description() {
     const numbStep = 5
 
     const description = useAppSelector((state) => state.descriptionSlice.description);
-    const statusPage = useAppSelector((state) => state.statusSlice.steps[numbStep]);
+    const statusPage = useAppSelector((state) => state.statusStepSlice.steps[numbStep]);
     const dispatch = useAppDispatch();
 
     useEffect(() => {

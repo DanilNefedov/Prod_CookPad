@@ -11,7 +11,7 @@ export function Instruction() {
     const numbStep = 6
 
     const instruction = useAppSelector((state) => state.instructionSlice.instruction);    
-    const stepStatus  = useAppSelector(state =>state.statusSlice.steps[numbStep]);
+    const stepStatus  = useAppSelector(state =>state.statusStepSlice.steps[numbStep]);
     const dispatch = useAppDispatch()
 
     useEffect(() =>{

@@ -1,6 +1,7 @@
 import { autoCompliteItems, autocompliteMenuItem, autocompMenuBox, 
     autocompMenuContainer, autocompMenuText, paperMenu } from "@/app/(main)/new-recipe/style";
 import { CallbackIngrAutocomplite, IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
+import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarning";
 import { fetchLocationSuggestions } from "@/app/services/autocomplite";
 import { textMaxWidth } from "@/app/styles";
 import { useAppDispatch } from "@/state/hook";
@@ -12,15 +13,15 @@ import { memo, useEffect, useMemo, useState } from "react";
 interface Props {
     ingredient: IngredientAutocomplite, 
     handleInputChange: (newInputValue: string) => void, 
-    error:boolean
 }
 
 
-export const MainInput = memo(({ ingredient, handleInputChange, error }: Props) => {
-
+export const MainInput = memo(({ ingredient, handleInputChange }: Props) => {
+    const numbStep = 4
     const [options, setOptions] = useState<IngredientAutocomplite[]>([]);
     const [value, setValue] = useState<IngredientAutocomplite | null>(ingredient);
     const [inputValue, setInputValue] = useState<string>('');
+    const showMinOneFilledWarning = useShowMinOneFilledWarning(numbStep);
 
     const dispatch = useAppDispatch();
 
@@ -109,6 +110,7 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: Props) 
                         choiceAutocomplite(newIngredient)
                     );
                     handleInputChange(newIngredient.name)
+                    // dispatch(updateError({ step: numbStep, error: false }));
                 } else {
                     setOptions(newValue ? [newValue, ...options] : options);
                     setValue(newValue);
@@ -123,6 +125,7 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: Props) 
                         })
                     );
                     handleInputChange(newValue?.name.trim() || '')
+                    // dispatch(updateError({ step: numbStep, error: false }));
                 }
             }}
             onInputChange={(event, newInputValue) => {
@@ -133,8 +136,8 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: Props) 
                     {...params}  
                     placeholder="Add an ingredient" 
                     fullWidth 
-    
-                    error={error ? true : false}
+                    // sx={mainInputAutocomplite}
+                    error={showMinOneFilledWarning ? true : false}
                     slotProps={{
                         htmlInput: {
                             ...params.inputProps,
@@ -166,8 +169,7 @@ export const MainInput = memo(({ ingredient, handleInputChange, error }: Props) 
     )
 }, (prevProps, nextProps) => {
     return prevProps.ingredient.ingredient_id === nextProps.ingredient.ingredient_id &&
-    prevProps.ingredient.name === nextProps.ingredient.name && 
-    prevProps.error === nextProps.error
+    prevProps.ingredient.name === nextProps.ingredient.name 
 })
 
 

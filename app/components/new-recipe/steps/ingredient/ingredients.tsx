@@ -3,11 +3,11 @@ import { Box, Button, Container, Divider, Tooltip, Typography } from "@mui/mater
 import { Autocomplite } from "./autocomplite"
 import InfoIcon from '@mui/icons-material/Info';
 import { addIngredient, deleteIngredient } from "@/state/slices/stepper/ingredients"
-import { useMemo } from "react"
 import { IngredientAutocomplite } from "@/app/(main)/new-recipe/types"
-import { addNewIngr, clearBtn, errorIngrText, ingrdientLine, ingredientBox, 
+import { addNewIngr, clearBtn, errorIngrText, headerIngredient, ingrdientLine, ingredientBox, 
     ingredientContainer, ingredientStepContainer, tooltipText } from "@/app/(main)/new-recipe/style";
 import { columnCenter, headerSteps } from "@/app/styles";
+import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarning";
 
 
 export function Ingredients() {
@@ -15,32 +15,12 @@ export function Ingredients() {
 
     const stepperState = useAppSelector(state => state.ingredientsSlice)
     const dispatch = useAppDispatch()
-    const openPage = useAppSelector(state => state.statusSlice.steps[numbStep].open);
-
-
-    const showMinOneFilledWarning = useMemo<boolean>(() => {
-        if (!openPage) return false;
-    
-        const ingredients = stepperState.ingredients;
-    
-        const hasAtLeastOneFilled = ingredients.some(ingredient => {
-            if (!('amount' in ingredient.units)) return false;
-    
-            const hasName = ingredient.name.trim() !== '';
-            const hasAmount = ingredient.units.amount > 0;
-            const hasChoice = ingredient.units.choice.trim() !== '';
-    
-            return hasName && hasAmount && hasChoice;
-        });
-    
-        return !hasAtLeastOneFilled;
-    }, [openPage, stepperState.ingredients]);
-    
+    const showMinOneFilledWarning = useShowMinOneFilledWarning(numbStep);
 
     
     return (
         <Container sx={ingredientStepContainer}>
-            <Typography variant="h6" component="h2" sx={headerSteps}>
+            <Typography variant="h6" component="h2" sx={[headerSteps, headerIngredient]}>
                 Specify the ingredients    
             </Typography>
             <Tooltip title="Press enter for new ingredients"
@@ -58,7 +38,7 @@ export function Ingredients() {
                 {stepperState.ingredients.map((ingredient: IngredientAutocomplite) => (
                     <Box key={ingredient.ingredient_id} sx={ingredientContainer}>
 
-                        <Autocomplite ingredientId={ingredient.ingredient_id} />
+                        <Autocomplite ingredientId={ingredient.ingredient_id}/>
 
                         <Button 
                             color="grayButton"

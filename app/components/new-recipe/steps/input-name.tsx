@@ -12,8 +12,8 @@ import { ChangeEvent, memo } from "react";
 export const NameInput = memo(() => {
     const dispatch = useAppDispatch()
     const name = useAppSelector((state) => state.nameTimeSlice.name.value);
-    const isStepOpen = useAppSelector((state) => state.statusSlice.steps[2].open)
-    const isNameError = useAppSelector((state) => state.statusSlice.steps[2].error_status.name);
+    const isStepOpen = useAppSelector((state) => state.statusStepSlice.steps[2].open)
+    const isNameError = useAppSelector((state) => state.statusStepSlice.steps[2].error_status.name);
 
 
     const handleName = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

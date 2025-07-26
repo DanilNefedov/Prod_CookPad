@@ -16,8 +16,8 @@ import { buildLoaderBox, containerBtns, errorBox, nextBtn, pageBtns, paperForm, 
 export function MainBuildPage() {
     const dispatch = useAppDispatch();
     const store = useStore<RootState>();
-    const statusPage = useAppSelector((state) => state.statusSlice.some_error);
-    const activePage = useAppSelector((state) => state.statusSlice.active_page);
+    const statusPage = useAppSelector((state) => state.statusStepSlice.some_error);
+    const activePage = useAppSelector((state) => state.statusStepSlice.active_page);
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
 

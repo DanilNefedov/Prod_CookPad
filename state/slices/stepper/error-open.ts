@@ -65,8 +65,8 @@ const initialState: ErrorState = {
 
 
 
-const statusSlice = createSlice({
-    name: 'statusSlice',
+const statusStepSlice = createSlice({
+    name: 'statusStepSlice',
     initialState,
     reducers: {
         hasOpen(state, action: PayloadAction<number>) {
@@ -140,7 +140,7 @@ const statusSlice = createSlice({
 
 
 
-export const { hasOpen, updateError, errorName, errorTime, addErrorIngredient, deleteErrorIngredient, setSomeError, setActivePage } = statusSlice.actions
+export const { hasOpen, updateError, errorName, errorTime, addErrorIngredient, deleteErrorIngredient, setSomeError, setActivePage } = statusStepSlice.actions
 
 
-export default statusSlice.reducer
+export default statusStepSlice.reducer

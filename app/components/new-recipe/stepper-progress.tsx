@@ -6,7 +6,6 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
 import { useAppDispatch, useAppSelector } from '@/state/hook';
-import { theme } from '@/config/ThemeMUI/theme';
 import { memo, useCallback, useEffect } from 'react';
 import { setSomeError } from '@/state/slices/stepper/error-open';
 import { containerProgress, stepper, stepperText } from '@/app/(main)/new-recipe/style';
@@ -14,9 +13,9 @@ import { containerProgress, stepper, stepperText } from '@/app/(main)/new-recipe
 
 export const StepperProgress = memo(() => {
     const dispatch = useAppDispatch();
-    const stepperState = useAppSelector((state) => state.statusSlice);
+    const stepperState = useAppSelector((state) => state.statusStepSlice);
     const ingredientsState = useAppSelector((state) => state.ingredientsSlice);
-    const activePage = useAppSelector((state) => state.statusSlice.active_page);
+    const activePage = useAppSelector((state) => state.statusStepSlice.active_page);
     const stepsCount = Object.keys(stepperState.steps).length;
 
     const nameErrors = [
