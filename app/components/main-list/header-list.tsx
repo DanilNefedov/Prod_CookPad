@@ -2,9 +2,8 @@
 
 import { Button} from "@mui/material";
 import Link from "next/link";
-import { btnMain } from "@/app/main-styles";
 import { usePathname } from "next/navigation";
-import { theme } from "@/config/ThemeMUI/theme";
+import { headerLink } from "@/app/(main)/(main-list)/style";
 
 interface Props {
     url:string,
@@ -17,18 +16,9 @@ export function HeaderList({props}:{props:Props}) {
     return (
         <Button
             component={Link}
-            sx={{...btnMain, 
-                mb:'0', 
-                p:'6px 15px', 
-                minWidth:'100px',
-                backgroundColor:props.url === pathname ? 'primary.main' : 'background.paper',
-                [theme.breakpoints.down(1050)]:{
-                    p:'3px 10px',
-                    fontSize:'14px',
-                    minWidth:'70px'
-                }
-            }}
+            color={props.url === pathname ? 'primary' : 'grayButton'}
             href={props.url}
+            sx={headerLink}
         >
             {props.name}
         </Button>

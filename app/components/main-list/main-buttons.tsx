@@ -3,7 +3,7 @@ import { Box, Button, IconButton, Menu, MenuItem, TableCell, useMediaQuery } fro
 import { MouseEvent, useState } from "react";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { AddNewUnit } from "./add-unit";
-import { btnsListUnitHover, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/style";
+import { btnsListUnitHover, iconMenuMainBtns, mainButtonsBox, mainButtonsCell, mobileMenuMainBtns, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/style";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { deleteIngredientFetch, toggleShopIngrFetch } from "@/state/slices/list-slice";
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
@@ -70,7 +70,7 @@ export function MainButtons({props}: {props:Props}) {
     }
 
     return (
-        <TableCell className="ignore-toggle" sx={{  [theme.breakpoints.down(1050)]: { width: "30px" } }}>
+        <TableCell className="ignore-toggle" sx={mainButtonsCell}>
 
             {isSmallScreen ? (
                 <>
@@ -80,21 +80,25 @@ export function MainButtons({props}: {props:Props}) {
                         aria-haspopup="true"
                         aria-expanded={open ? 'true' : undefined}
                         onClick={handleClick}
-                        sx={{ color: '#8E94A4', maxWidth: '20px', width: '20px', height: '25px', padding: '0' }}
+                        sx={mobileMenuMainBtns}
                     >
-                        <MoreVertIcon sx={{ width: '100%', height: '100%' }} />
+                        <MoreVertIcon sx={iconMenuMainBtns} />
                     </IconButton>
 
                     <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
                         {/* <Box sx={{ display: "flex", justifyContent: "space-between" }}> */}
                         <MenuItem onClick={handleClose} >
-                            <Button onClick={() => toggleShopIngr(el._id, el.shop_ingr)} sx={[btnsListUnitHover, styleBtnsAdaptiveMenu]}>
+                            <Button 
+                                onClick={() => toggleShopIngr(el._id, el.shop_ingr)} 
+                                sx={[btnsListUnitHover, styleBtnsAdaptiveMenu]}
+                                
+                            >
                                 <ShoppingBagOutlinedIcon /> 
                                 <span>Shop</span>
                             </Button>
                         </MenuItem>
 
-                        <MenuItem  >
+                        <MenuItem>
                             <AddNewUnit props={{ ingr: el, id, recipe_id }} />
                         </MenuItem>
                 
@@ -112,14 +116,22 @@ export function MainButtons({props}: {props:Props}) {
                     
                 </>
             ) : (
-                <Box sx={{ display: "flex", justifyContent: "space-between", maxWidth:'130px', width:'100%', minWidth:'0' }}>
-                    <Button onClick={() => toggleShopIngr(el._id, el.shop_ingr)} sx={btnsListUnitHover}>
+                <Box sx={mainButtonsBox}>
+                    <Button 
+                        onClick={() => toggleShopIngr(el._id, el.shop_ingr)} 
+                        sx={btnsListUnitHover}
+                        color="grayButton"
+                    >
                         <ShoppingBagOutlinedIcon />
                     </Button>
 
                     <AddNewUnit props={{ ingr: el, id, recipe_id, }} />
 
-                    <Button onClick={() => deleteIngredient(el._id)} sx={btnsListUnitHover}>
+                    <Button 
+                        onClick={() => deleteIngredient(el._id)} 
+                        sx={btnsListUnitHover}
+                        color="grayButton"
+                    >
                         <DeleteOutlineOutlinedIcon />
                     </Button>
                 </Box>

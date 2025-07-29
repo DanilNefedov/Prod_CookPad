@@ -1,4 +1,4 @@
-import { blockUnits, btnsListUnitHover, inputUnitList, unitBtnsImg } from "@/app/(main)/(main-list)/style"
+import { btnsListUnitHover, inputUnitList, unitAmountText, unitBtnsImg, unitButton, unitChoiceText, unitsContainer } from "@/app/(main)/(main-list)/style"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { Box, Button, ListItemText, TextField } from "@mui/material"
 import { usePathname } from "next/navigation"
@@ -114,8 +114,14 @@ const Units = memo(({ ingredient_id, unit_id, recipe_id }: Props) => {
 
 
     return !unitData?.unitInfo ? null : (
-        <Box key={thisUnit?._id} sx={{...blockUnits, opacity:`${thisUnit?.shop_unit ? 0.4 : 1}`, 
-        backgroundColor:pathName ==='/list' ? 'background.paper' : 'background.default'}}>
+        <Box key={thisUnit?._id} 
+            sx={[
+                unitsContainer, 
+                {opacity:`${thisUnit?.shop_unit ? 0.4 : 1}`, 
+                backgroundColor:pathName ==='/list' ? 'background.paper' : 'background.default'
+                }
+            ]}
+        >
             {editAmount && editAmount === thisUnit?._id ?
                 <TextField 
                     onKeyDown={(e) => {
@@ -131,37 +137,52 @@ const Units = memo(({ ingredient_id, unit_id, recipe_id }: Props) => {
                     
                     type="number"
                     value={amount.toString()}
-                    sx={inputUnitList}
                     onChange={(e) => handleAmount(e)}
                 />
                 :
-                <ListItemText sx={{ paddingRight: '4px', [theme.breakpoints.down(1050)]: { '& span':{fontSize:'14px'}} }} primary={thisUnit?.amount} />
+                <ListItemText sx={unitAmountText} primary={thisUnit?.amount} />
             }
 
             <ListItemText
-                sx={{ mr: '10px', flex:'none', [theme.breakpoints.down(1050)]: { '& span':{fontSize:'14px'}}}}
+                sx={unitChoiceText}
                 primary={thisUnit?.choice}
             />
 
-            <Button onClick={() => toggleShopUnit(thisUnit?._id, thisUnit?.shop_unit)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
-                <ShoppingBagOutlinedIcon sx={{ width: '18px' }}></ShoppingBagOutlinedIcon>
+            <Button 
+                onClick={() => toggleShopUnit(thisUnit?._id, thisUnit?.shop_unit)}
+                sx={unitButton} 
+                color='blackBtn'
+            >
+                <ShoppingBagOutlinedIcon color='primary'></ShoppingBagOutlinedIcon>
             </Button>
 
 
             {editAmount !== thisUnit?._id ?
-                <Button onClick={() => setEditAmount(thisUnit?._id)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
-                    <EditIcon sx={{ width: '18px' }}></EditIcon>
+                <Button 
+                    onClick={() => setEditAmount(thisUnit?._id)} 
+                    sx={unitButton} 
+                    color='blackBtn'
+                >
+                    <EditIcon color='primary'></EditIcon>
                 </Button>
                 :
-                <Button onClick={() => confirmAmount(thisUnit?._id, unitData.ingredientId)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
-                    <CheckIcon sx={{ width: '18px' }}></CheckIcon>
+                <Button 
+                    onClick={() => confirmAmount(thisUnit?._id, unitData.ingredientId)}
+                    sx={unitButton} 
+                    color='blackBtn'
+                >
+                    <CheckIcon color='primary'></CheckIcon>
                 </Button>
             }
             <CalcUnit props={{ elem:thisUnit as UnitsId, id, ingredient_id:unitData.ingredientId, amount, setAmount, recipe_id }}></CalcUnit>
             {/* <Convert props={{ elem, id, ingredient_id: el._id, editAmount, recipe_id }}></Convert> */}
            
-            <Button onClick={() => deleteUnitIngr(unitData.ingredientId, thisUnit?._id)} sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}>
-                <DeleteOutlineOutlinedIcon></DeleteOutlineOutlinedIcon>
+            <Button 
+                onClick={() => deleteUnitIngr(unitData.ingredientId, thisUnit?._id)}
+                sx={unitButton} 
+                color='blackBtn'
+            >
+                <DeleteOutlineOutlinedIcon color='primary'></DeleteOutlineOutlinedIcon>
             </Button>
         </Box>
     )

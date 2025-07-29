@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { create, all, } from 'mathjs'
 import { Alert, Box, Button, Menu, MenuItem, TextField } from "@mui/material";
-import { btnsListUnitHover, calcInput, containerCalcBtns, containerCalcGrid, menuCalc, unitBtnsImg } from "@/app/(main)/(main-list)/style";
+import { btnsListUnitHover, calcInput, containerCalcBtns, containerCalcGrid, menuCalc, unitBtnsImg, unitButton } from "@/app/(main)/(main-list)/style";
 import CalculateIcon from '@mui/icons-material/Calculate';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import CheckIcon from '@mui/icons-material/Check';
@@ -211,9 +211,10 @@ export const CalcUnit = memo(({ props }: { props: Props }) => {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
-                sx={{ ...unitBtnsImg, ...btnsListUnitHover, minWidth: '0' }}
+                sx={unitButton} 
+                color='blackBtn'
             >
-                <CalculateIcon></CalculateIcon>
+                <CalculateIcon color='primary'></CalculateIcon>
             </Button>
 
             <Menu

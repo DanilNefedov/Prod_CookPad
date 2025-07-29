@@ -12,12 +12,12 @@ import { wrapCenter } from "@/app/styles";
 
 
 const Puller = styled('div')(({ theme }) => ({
-    width: 30,
-    height: 6,
+    width: 45,
+    height: 8,
     backgroundColor: grey[300],
     borderRadius: 3,
     position: 'absolute',
-    left: 'calc(50% - 15px)',
+    left: 'calc(50% - 22.5px)',
     pointerEvents: 'auto', 
     top: '0',
     ...theme.applyStyles('dark', {
@@ -52,12 +52,12 @@ export function AdaptiveHeader({cookHistoryStore, recipe_id, open, toggleDrawer,
                 onOpen={toggleDrawer(true)}
                 sx={drawer}
                 swipeAreaWidth={35}
-
             >
                 <Box component={'ul'}
                     sx={[wrapCenter, containerItems]}>
                     {cookHistoryStore.map((el) => (
-                        <ListItem key={el.recipe_id}
+                        <ListItem 
+                            key={el.recipe_id}
                             sx={headerItem}
                         >
                             <Chip

@@ -1,9 +1,8 @@
 import { Box, Collapse, ListItemText, TableCell, TableRow, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { memo, useState } from "react"
 import { MainButtons } from "./main-buttons"
-import { imgIngrList, mainIngrList, nameIngredient } from "@/app/(main)/(main-list)/style"
+import { imgIngrList, ingredientImage, ingredientImageBox, ingredientNameBox, ingredientRow, mainIngrList, mobileUnitBoxSwiper, mobileUnitCell, mobileUnitIcon, mobileUnitInfoBox, mobileUnitRow, mobileUnitText, nameIngredient, unitBox, unitBoxDesktop } from "@/app/(main)/(main-list)/style"
 import { Swiper, SwiperSlide } from "swiper/react"
-import { theme } from "@/config/ThemeMUI/theme"
 import { useAppSelector } from "@/state/hook"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import 'swiper/css';
@@ -16,6 +15,7 @@ import { usePathname } from "next/navigation"
 import { EmptyInfo } from "../ui-helpers/empty-info"
 import dynamic from "next/dynamic"
 import { UnitsId } from "@/app/(main)/(main-list)/list/types"
+import { centerFlexBlock, textMaxWidth } from "@/app/styles"
 
 const Units = dynamic(() => import('./units'), {
     ssr: false, 
@@ -48,98 +48,79 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
     const pathName = usePathname()
 
 
-    if (!thisIngredient) return null;
-
-
     const handleToggle = (id: string) => {
         setExpandedId((prevId) => (prevId === id ? null : id));
     }
 
-    return !thisIngredient ? null : (
+    if (!thisIngredient) return null;
+
+    return (
         <>
-            <TableRow sx={{
-                ...mainIngrList, opacity: `${thisIngredient.shop_ingr ? 0.4 : 1}`,
+            <TableRow sx={[ingredientRow, {
+                opacity: `${thisIngredient.shop_ingr ? 0.4 : 1}`,
                 '& .MuiTableCell-root': {
                     borderBottom: `${isMobile ? 'none' : '5px solid '}`,
-                    borderColor: `${pathName === '/list-recipe' ? '#1F2128' : '#353842'}`
+                    borderColor: `${pathName === '/list-recipe' ? 'background.default' : 'background.paper'}`
                 },
 
-            }}>
-                <TableCell onClick={() => { if (isMobile) handleToggle(thisIngredient._id) }} sx={{ width: '73px', [theme.breakpoints.down(1050)]: { width: '30px' }, }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Box component={'img'} src={thisIngredient.media !== '' ? thisIngredient.media : '/images/load-ingr.svg'} alt={thisIngredient.name} sx={imgIngrList}></Box>
+            }]}>
+                <TableCell 
+                    onClick={() => { 
+                        if (isMobile) handleToggle(thisIngredient._id) 
+                    }} 
+                    sx={ingredientImageBox}
+                >
+                    <Box sx={centerFlexBlock}>
+                        <Box 
+                            component={'img'} 
+                            src={thisIngredient.media !== '' ? thisIngredient.media : '/images/load-ingr.svg'} 
+                            alt={thisIngredient.name} 
+                            sx={ingredientImage}
+                        ></Box>
                     </Box>
                 </TableCell>
-                <TableCell onClick={() => { if (isMobile) handleToggle(thisIngredient._id) }} sx={{
-                    maxWidth: '150px',
-                    width: '150px',
-                    [theme.breakpoints.down(1050)]: {
-                        maxWidth: '100px',
-                        width: '100px',
-                    },
-
-                }}>
-
+                <TableCell 
+                    onClick={() => { 
+                        if (isMobile) handleToggle(thisIngredient._id) 
+                    }} 
+                    sx={ingredientNameBox}
+                >
                     {isMobile ?
                         <ListItemText
-                            sx={nameIngredient}
+                            sx={[nameIngredient, {'& span':textMaxWidth}]}
                             primary={thisIngredient.name}
                         />
                         :
                         <Tooltip title={thisIngredient.name} sx={{ display: isMobile ? 'block' : 'none' }} arrow>
                             <ListItemText
-                                sx={nameIngredient}
+                                sx={[nameIngredient, {'& span':textMaxWidth}]}
                                 primary={thisIngredient.name}
                             />
                         </Tooltip>
                     }
-
-
                 </TableCell>
 
 
                 {
                     isMobile ?
-                        <TableCell onClick={() => { if (isMobile) handleToggle(thisIngredient._id) }} sx={{
-                            position: 'relative', '& .slide-list-unit': { width: 'auto' }, '& .swiper-list-unit': {
-                                position: 'static',
-                                m: '0',
-                                ml: '7px',
-                                mr: '7px'
-                            }
-                        }}>
-
-                            <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'end' }}>
-                                <Typography sx={{
-                                    fontSize: '14px',
-                                    color: 'text.disabled',
-                                    pr: '5px',
-                                    overflow: 'hidden',
-                                    whiteSpace: 'nowrap',
-                                    textOverflow: 'ellipsis',
-                                    maxWidth: '65px'
-                                }}>x{thisIngredient.units.length}</Typography>
-                                <ExpandMoreIcon sx={{
-                                    transition: "transform 0.3s ease",
-                                    transform: expandedId === thisIngredient._id ? "rotate(180deg)" : "rotate(0deg)",
-                                    color: 'text.disabled'
-                                }}></ExpandMoreIcon>
+                        <TableCell 
+                            onClick={() => { 
+                                if (isMobile) handleToggle(thisIngredient._id) 
+                            }} 
+                            sx={unitBox}
+                        >
+                            <Box sx={mobileUnitInfoBox}>
+                                <Typography sx={[mobileUnitText, textMaxWidth]}>x{thisIngredient.units.length}</Typography>
+                                <ExpandMoreIcon sx={[
+                                    mobileUnitIcon,
+                                    {transform: expandedId === thisIngredient._id ? "rotate(180deg)" : "rotate(0deg)"}
+                                ]}></ExpandMoreIcon>
                             </Box>
                         </TableCell>
 
                         :
                         <TableCell 
-                        sx={{
-                            position: 'relative', '& .slide-list-unit': { width: 'auto' }, '& .swiper-list-unit': {
-                                position: 'static',
-                                m: '0',
-                                ml: '7px',
-                                mr: '7px'
-                            },
-                            maxWidth:"0px", /*     DO NOT CHANGE!     */
-                            width: '100%',
-                            
-                        }}>
+                        sx={[unitBox, unitBoxDesktop]}>
                             <Swiper
                                 navigation={{
                                     prevEl: '.custom-prev-list-unit',
@@ -151,7 +132,6 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                 modules={[Navigation]}
                                 spaceBetween={10}
                                 style={{ 
-                                  
                                 //    width:'100%'
                                 }}
                             >
@@ -163,8 +143,6 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                     <SwiperSlide key={elem._id} className="slide-list-unit" style={{ width: 'auto', maxWidth: '100%' }}>
                                         <Units ingredient_id={thisIngredient._id} unit_id={elem._id} recipe_id={recipe_id}/>
                                     </SwiperSlide>
-
-
                                 ))}
 
                                 <div className={`custom-prev-list-unit ${pathName === '/list-recipe' ? 'list-recipe-disabled-btn' : 'list-disabled-btn'}`}>
@@ -174,40 +152,33 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                     <ArrowRightIcon></ArrowRightIcon>
                                 </div>
                             </Swiper>
-
-                            
                         </TableCell>
                 }
 
                 <MainButtons props={{ el:thisIngredient, recipe_id }}></MainButtons>
-
-
-
+            
             </TableRow>
 
             {
                 isMobile ?
-                    <TableRow sx={{
-                        ...mainIngrList, opacity: `${thisIngredient.shop_ingr ? 0.4 : 1}`, p: "0",
-                        transition: 'height 300ms ease,',
-                    }}>
-                        <TableCell colSpan={4} sx={{
-                            p: "0 !important", border: 'none',
-                            minWidth: 0, width: '100%',
-                            borderBottom:`2px solid ${pathName === '/list-recipe' ? '#1F2128' : '#353842'}`
-                        }}>
+                    <TableRow 
+                        sx={[
+                            mobileUnitRow, 
+                            {opacity: `${thisIngredient.shop_ingr ? 0.4 : 1}`}
+                        ]}
+                    >
+                        <TableCell colSpan={4} 
+                            sx={[
+                                mobileUnitCell,
+                                {borderBottom:`2px solid ${pathName === '/list-recipe' ? 'background.default' : 'background.paper'}`}
+                            ]}
+                        >
                             <Collapse in={expandedId === thisIngredient._id} timeout={300}>
-                                <Box sx={{
-                                    position: 'relative', '& .slide-list-unit': { width: 'auto' }, '& .swiper-list-unit': {
-                                        position: 'static',
-
-                                        margin: '0 auto 15px'
-                                    },
-                                    overflow: 'hidden',
-                                    transition: 'max-height 300ms ease',
-                                    maxHeight: expandedId === thisIngredient._id ? '75px' : '0',
-                                    pb: thisIngredient.units.length === 0 ? '15px' : '0'
-                                }}>
+                                <Box sx={[
+                                    mobileUnitBoxSwiper,
+                                    {maxHeight: expandedId === thisIngredient._id ? '75px' : '0',
+                                    pb: thisIngredient.units.length === 0 ? '15px' : '0'}
+                                ]}>
                                     <Swiper
                                         navigation={{
                                             prevEl: '.custom-prev-list-unit',
@@ -230,8 +201,6 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                             <SwiperSlide key={elem._id} className="slide-list-unit">
                                                 <Units ingredient_id={thisIngredient._id} unit_id={elem._id} recipe_id={recipe_id}/>
                                             </SwiperSlide>
-
-
                                         ))}
 
                                         <div className={`custom-prev-list-unit ${pathName === '/list-recipe' ? 'list-recipe-disabled-btn' : 'list-disabled-btn'}`}>
@@ -248,7 +217,6 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                     </TableRow>
                     :
                     <></>
-
             }
 
         </>

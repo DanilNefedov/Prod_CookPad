@@ -154,6 +154,10 @@ export const typeDishInput = {
 export const paperMenu = {
     borderRadius:'10px',
 
+    '& .MuiPaper-root':{
+        borderRadius:'10px'
+    },
+
     '& .MuiList-root':{
         m:'10px 0',
     },
@@ -485,13 +489,13 @@ export const autoCompliteItems = {
     flexGrow: '1',
 
     '& .MuiInputBase-root': {
-        backgroundColor: 'background.default',
+        // backgroundColor: 'background.default',
         color: 'text.primary',
         paddingTop:'0',
         paddingBottom:'0',
 
         '&.Mui-focused': {
-            backgroundColor: 'background.default',
+            // backgroundColor: 'background.default',
             color: 'text.primary',
         },
     },

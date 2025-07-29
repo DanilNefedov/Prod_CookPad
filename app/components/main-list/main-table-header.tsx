@@ -1,8 +1,9 @@
-import { cellHeader, sortBtnHeader } from "@/app/(main)/(main-list)/style";
-import { Box, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { boxText, cellHeader, headerArrow, headerText, sortBtnHeader, tableHeader } from "@/app/(main)/(main-list)/style";
+import { Box, TableCell, TableHead, TableRow, Theme, Typography } from "@mui/material";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { Dispatch, SetStateAction, } from "react";
 import { usePathname } from "next/navigation";
+import { centerFlexBlock } from "@/app/styles";
 
 
 
@@ -21,15 +22,16 @@ export function MainTableHeader ({props}: {props:Props}) {
     const pathName = usePathname()
 
 
-    const border = pathName === '/list-recipe' ? {
-        borderRight: '2px solid #1F2128',
-        borderBottom:'2px solid #1F2128',
-    } 
-        : 
-    {
-        borderRight: '2px solid #37393c',
-        borderBottom:'2px solid #37393c',
+    const border = (theme: Theme) => pathName === '/list-recipe' ? {
+        borderRight: `3px solid ${theme.palette.background.default}`,
+        borderBottom: `3px solid ${theme.palette.background.default}`,
     }
+    : 
+    {
+        borderRight: `3px solid ${theme.palette.background.default}`,
+        borderBottom: `3px solid ${theme.palette.background.default}`,
+    };
+
 
 
     const handleSort = (name: string) => { 
@@ -45,24 +47,20 @@ export function MainTableHeader ({props}: {props:Props}) {
 
 
     return(
-        <TableHead sx={{
-            '& .MuiTableCell-root .head': {
-                borderBottom: '0',
-            },
-        }}>
-            <TableRow sx={{...cellHeader, '& .MuiTableCell-root': {
-                ...border,
-                '&:last-child': {
-                    borderRight: '0'
-                }
-            }}}>
-                <TableCell  align="center">Image</TableCell>
-                <TableCell align="center" onClick={() => handleSort("name")} sx={{ cursor: 'pointer', }}>
-                    <Box sx={sortBtnHeader}>
-                        <Typography fontSize={'0.875rem'} sx={{ borderBottom: '0', pr: '10px' }}>
+        <TableHead sx={tableHeader}>
+            <TableRow sx={[cellHeader, {
+                '& .MuiTableCell-root': (theme) => border(theme)
+            }]}>
+                <TableCell sx={[headerText, {cursor:'initial'}]}>Image</TableCell>
+                <TableCell sx={headerText} onClick={() => handleSort("name")}>
+                    <Box sx={[centerFlexBlock, sortBtnHeader]}>
+                        <Typography sx={boxText}>
                             Name
                         </Typography>
-                        <ArrowUpwardIcon sx={{ width: '16px', transition: "transform 0.3s ease", transform: `rotate(${sortOrder === 'asc' && sortBy === 'name' ? '180deg' : '0deg'})` }}></ArrowUpwardIcon>
+                        <ArrowUpwardIcon sx={[
+                            headerArrow,
+                            {transform: `rotate(${sortOrder === 'asc' && sortBy === 'name' ? '180deg' : '0deg'})`}
+                        ]}></ArrowUpwardIcon>
                     </Box>
 
                 </TableCell>
@@ -71,12 +69,15 @@ export function MainTableHeader ({props}: {props:Props}) {
 
                     </TableCell>
                     : */}
-                <TableCell align="center" onClick={() => handleSort("unit")} sx={{ cursor: 'pointer', }}>
-                    <Box sx={sortBtnHeader}>
-                        <Typography fontSize={'0.875rem'} sx={{ borderBottom: '0', pr: '10px' }}>
+                <TableCell sx={headerText} onClick={() => handleSort("unit")} >
+                    <Box sx={[centerFlexBlock, sortBtnHeader]}>
+                        <Typography sx={boxText}>
                             Unit
                         </Typography>
-                        <ArrowUpwardIcon sx={{ width: '16px', transition: "transform 0.3s ease", transform: `rotate(${sortOrder === 'desc' && sortBy === 'unit' ? '180deg' : '0deg'})` }}></ArrowUpwardIcon>
+                        <ArrowUpwardIcon sx={[
+                            headerArrow,
+                            {transform: `rotate(${sortOrder === 'asc' && sortBy === 'name' ? '180deg' : '0deg'})`}
+                        ]}></ArrowUpwardIcon>
                     </Box>
 
                 </TableCell>
