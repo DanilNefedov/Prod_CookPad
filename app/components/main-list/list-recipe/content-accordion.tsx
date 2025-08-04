@@ -89,7 +89,7 @@ export const ContentAccordion = memo(({ props }: { props: Props }) => {
                                 }}>
                                     <UXLoading position="static"></UXLoading>
                                 </TableCell>
-                            </TableRow>
+                            </TableRow> 
                             :
                             sortedList && sortedList.map(el => (
                                 <MainTableBody key={el._id} props={{

@@ -29,7 +29,7 @@ export function AddNewUnit({ props }: { props: Props }) {
     const [amount, setAmount] = useState<string>('0')
     const [unit, setUnit] = useState<string>('');
     const pathName = usePathname()
-    const isSmallScreen = useMediaQuery("(max-width:800px)");
+    const isSmallScreen = useMediaQuery("(max-width:1150px)");
 
 
     function handleAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {

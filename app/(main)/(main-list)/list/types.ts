@@ -35,6 +35,20 @@ export interface UnitNoId{
     shop_unit:boolean
 }
 
+export interface UnitRecipeIds {
+    recipe_id?: string;
+    ingredient_id: string;
+    unit_id: string;
+}
+
+export interface ListContext {
+    unit_info:UnitRecipeIds
+    input_value:{
+        value: string | null;
+        open_input:boolean
+    }
+}
+
 //---------- thunks S----------//
 
 export interface ListFetchRes {

@@ -3,7 +3,7 @@ import { Box, Button, IconButton, Menu, MenuItem, TableCell, useMediaQuery } fro
 import { MouseEvent, useState } from "react";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { AddNewUnit } from "./add-unit";
-import { btnsListUnitHover, iconMenuMainBtns, mainButtonsBox, mainButtonsCell, mobileMenuMainBtns, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/style";
+import { btnsListUnitHover, iconMenuMainBtns, mainButtonsBox, mainButtonsCell, mobileMenuMainBtns, modileMenuMainBtnsItem, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/style";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { deleteIngredientFetch, toggleShopIngrFetch } from "@/state/slices/list-slice";
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
@@ -26,7 +26,7 @@ export function MainButtons({props}: {props:Props}) {
     const userStore = useAppSelector(state => state.user)
     const id = userStore?.user?.connection_id
     const pathName = usePathname()
-    const isSmallScreen = useMediaQuery("(max-width:800px)");
+    const isSmallScreen = useMediaQuery("(max-width:1150px)");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const shopStatus = useAppSelector(state => {
         if(recipe_id) return state.listRecipe.operations.shopIngrListRecipe.loading
@@ -85,9 +85,26 @@ export function MainButtons({props}: {props:Props}) {
                         <MoreVertIcon sx={iconMenuMainBtns} />
                     </IconButton>
 
-                    <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+                    <Menu 
+                        sx={{width:'100%'}} 
+                        anchorEl={anchorEl} 
+                        open={Boolean(anchorEl)} 
+                        onClose={handleClose}
+                        slotProps={{
+                            root:{
+                                sx:{
+                                    '& .MuiPaper-root':{
+                                        borderRadius:'10px',
+                                    },
+                                    '& .MuiList-root':{
+                                        p:'6px 0'
+                                    }
+                                }
+                            }
+                        }}  
+                    >
                         {/* <Box sx={{ display: "flex", justifyContent: "space-between" }}> */}
-                        <MenuItem onClick={handleClose} >
+                        <MenuItem onClick={handleClose} sx={modileMenuMainBtnsItem}>
                             <Button 
                                 onClick={() => toggleShopIngr(el._id, el.shop_ingr)} 
                                 sx={[btnsListUnitHover, styleBtnsAdaptiveMenu]}
@@ -98,12 +115,12 @@ export function MainButtons({props}: {props:Props}) {
                             </Button>
                         </MenuItem>
 
-                        <MenuItem>
+                        <MenuItem sx={modileMenuMainBtnsItem}>
                             <AddNewUnit props={{ ingr: el, id, recipe_id }} />
                         </MenuItem>
                 
 
-                        <MenuItem onClick={handleClose} >
+                        <MenuItem onClick={handleClose} sx={modileMenuMainBtnsItem}>
                             <Button onClick={() => deleteIngredient(el._id)} sx={[btnsListUnitHover, styleBtnsAdaptiveMenu]}>
                                 <DeleteOutlineOutlinedIcon /> 
                                 <span>Delete</span>

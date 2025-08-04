@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { create, all, } from 'mathjs'
 import { Alert, Box, Button, Menu, MenuItem, TextField } from "@mui/material";
-import { btnsListUnitHover, calcInput, containerCalcBtns, containerCalcGrid, menuCalc, unitBtnsImg, unitButton } from "@/app/(main)/(main-list)/style";
+import { alertCalc, alertCalcBox, btnCleanInput, btnCleanInputIcon, btnsListUnitHover, calcInput, calcInputIcon, calcIntupBox, containerCalcBtns, containerCalcGrid, menuCalc, unitBtnsImg, unitButton } from "@/app/(main)/(main-list)/style";
 import CalculateIcon from '@mui/icons-material/Calculate';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import CheckIcon from '@mui/icons-material/Check';
@@ -13,6 +13,7 @@ import { changeAmountFetch } from "@/state/slices/list-slice";
 import { theme } from "@/config/ThemeMUI/theme";
 import { newAmountListRecipe } from "@/state/slices/list-recipe-slice";
 import { UnitsId } from "@/app/(main)/(main-list)/list/types";
+import { wrapCenter } from "@/app/styles";
 
 interface Props {
     elem: UnitsId;
@@ -202,7 +203,6 @@ export const CalcUnit = memo(({ props }: { props: Props }) => {
 
     }, [currentValue, id, pathName, ingredient_id, elem._id, dispatch, amount, handleEqual, recipe_id, setAmount]);
 
-
     return (
         <>
             <Button
@@ -220,33 +220,17 @@ export const CalcUnit = memo(({ props }: { props: Props }) => {
             <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
+                // open
                 open={Boolean(open)}
                 onClose={handleClose}
                 MenuListProps={{
                     'aria-labelledby': 'demo-positioned-button',
                 }}
-
-                sx={{
-                    ...menuCalc,
-                }}
-
+                sx={menuCalc}
             >
-                <Box component={MenuItem} sx={{
-                    p: "0", [theme.breakpoints.down(600)]: {
-                        minHeight: 'auto'
-                    }
-                }}>
+                <Box component={MenuItem} sx={alertCalcBox}>
                     {mathError !== '' ?
-                        <Alert severity="error" sx={{
-                            pb: '0',
-                            alignItems: "center",
-                            '& .MuiAlert-icon, & .MuiAlert-message': { p: '0', color: 'primary.main' },
-                            [theme.breakpoints.down('md')]: {
-                                fontSize: "14px",
-
-                            },
-
-                        }}>
+                        <Alert severity="error" sx={alertCalc}>
                             {mathError}
                         </Alert>
                         :
@@ -266,60 +250,39 @@ export const CalcUnit = memo(({ props }: { props: Props }) => {
                     }}
                 >
 
-                    <Box sx={{ width: '100%', position: 'relative', display: 'flex', alignItems: 'center' }}>
+                    <Box sx={calcIntupBox}>
                         <TextField
-                            sx={{ ...calcInput, flex: 1 }}
+                            sx={calcInput(theme)}
                             multiline
                             value={currentValue.toString()}
                             disabled
                         />
                         <CheckIcon
                             onClick={() => updateAmountCalc()}
-                            sx={{
-                                p: "4px",
-                                backgroundColor: 'primary.dark',
-                                borderRadius: "50%",
-                                position: 'absolute',
-                                right: '20px',
-                                width: '30px',
-                                height: '30px',
-                                bottom: 'calc(50% - 15px)',
-                                color: 'text.primary',
-                                cursor: 'pointer',
-                                [theme.breakpoints.down('md')]: {
-                                    width: '25px',
-                                    height: '25px',
-                                    bottom: 'calc(50% - 12px)',
-                                    p: '4px'
-                                }
-                            }}
+                            sx={calcInputIcon}
                         />
                     </Box>
 
-                    <Box sx={{ ...containerCalcBtns, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 1 }}>
-                        <Button variant="contained" onClick={cleanArea} sx={{
-                            backgroundColor: 'primary.dark', [theme.breakpoints.down('md')]: {
-                                minWidth: '50px'
-                            }
-                        }}>
-                            <BackspaceIcon sx={{ width: "16px", [theme.breakpoints.down('md')]: { mr: '2px' } }} />
+                    <Box sx={[containerCalcBtns, wrapCenter]}>
+                        <Button onClick={cleanArea} sx={btnCleanInput} color='blackRedBtn'>
+                            <BackspaceIcon sx={btnCleanInputIcon} />
                         </Button>
 
                         {btnValues.flat().map((btn, i) => {
                             return (
                                 <Button
                                     key={i}
+                                    color='blackRedBtn'
                                     sx={{
                                         width: i === 17 ? '128px' : '64px',
-                                        backgroundColor: 'primary.dark',
+                                        // backgroundColor: 'primary.dark',
                                         [theme.breakpoints.down('md')]: {
                                             width: i === 17 ? '100px' : '50px',
                                             minWidth: i === 17 ? '100px' : '50px',
-                                            // minWidth:'50px',
-                                            fontSize: '14px'
+                                            // fontSize: '14px'
                                         }
                                     }}
-                                    variant="contained"
+                                    // variant="contained"
                                     onClick={() => handlCalc(btn)}
                                 >
                                     {btn}

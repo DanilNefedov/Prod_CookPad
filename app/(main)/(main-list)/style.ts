@@ -1,4 +1,5 @@
 import { theme } from "@/config/ThemeMUI/theme"
+import { SxProps, Theme } from "@mui/material"
 
 
 
@@ -19,6 +20,10 @@ export const headerLink = {
     [theme.breakpoints.down(1050)]:{
         fontSize:'14px',
         minWidth:'70px'
+    },
+    [theme.breakpoints.down('md')]:{
+        p:'6px 14px',
+        maxHeight:'31px'
     }
 }
 
@@ -61,8 +66,20 @@ export const cellHeader = {
 export const headerText = {
     alignText:'center',
     fontSize:'16px',
-    cursor: 'pointer'
+    cursor: 'pointer',
+
+    [theme.breakpoints.down('md')]: { 
+        '&.MuiTableCell-root':{
+            p:'10px 14px 5px',
+        },
+    }, 
+    [theme.breakpoints.down(500)]: { 
+        '&.MuiTableCell-root':{
+            p:'10px 5px 5px 10px',
+        },
+    }, 
 }
+
 
 export const boxText = { 
     borderBottom: '0', 
@@ -84,6 +101,7 @@ export const sortBtnHeader = {
 export const ingredientRow = {
     backgroundColor: 'background.default',
     borderRadius: '15px',
+    height:'60px',
     '&:last-child .MuiTableCell-root': {
         borderBottom: '0'
     }
@@ -92,16 +110,29 @@ export const ingredientRow = {
 export const ingredientImageBox = { 
     width: '73px', 
     [theme.breakpoints.down(1050)]: { 
-        width: '30px' 
+        '&.MuiTableCell-root':{
+            p:'2px',
+        },
+        width: '30px',
     }, 
+}
+
+export const adaptiveIngredientImageBox = {
+    [theme.breakpoints.down(800)]: { 
+        maxWidth:'70px',
+        width: '70px',
+        minWidth: '70px',
+    }
 }
 
 export const ingredientImage = {
     maxHeight: '45px',
+    maxWidth:'45px',
     width:'100%',
     height:'100%',
-    [theme.breakpoints.down(1050)]: {
-        width:'30px'
+    [theme.breakpoints.down('md')]: {
+        width:'35px',
+        height:'35px'
     } 
 }
 
@@ -146,9 +177,7 @@ export const mobileUnitIcon = {
 
 export const unitBox = {
     position: 'relative', 
-    '& .slide-list-unit': { 
-        width: 'auto' 
-    }, 
+   
     '& .swiper-list-unit': {
         position: 'static',
         m: '0',
@@ -177,7 +206,7 @@ export const mobileUnitCell = {
     p: "0 !important", 
     border: 'none',
     minWidth: 0, 
-    width: '100%',
+    // width: '100%',
 }
 
 export const mobileUnitBoxSwiper = {
@@ -186,25 +215,37 @@ export const mobileUnitBoxSwiper = {
     transition: 'max-height 300ms ease',
 
     '& .slide-list-unit': { 
-        width: 'auto' 
+        // maxWidth: '100%',
+        width:'auto'
     }, 
     '& .swiper-list-unit': {
         position: 'static',
-        margin: '0 auto 15px'
+        margin: '0 auto 15px',
+        width: 'calc(100dvw - 120px)',
     },
 }
 
 export const mainButtonsCell = {
+    [theme.breakpoints.down(1150)]: { 
+        padding: "7px 10px" 
+    },
     [theme.breakpoints.down(1050)]: { 
         width: "30px" 
     }
 }
 
+export const modileMenuMainBtnsItem = {
+    width:'100%', 
+    maxWidth:'100%',
+    pl:'10px',
+    pr:'10px',
+}
+
 export const mobileMenuMainBtns = {
     color: 'text.disabled', 
-    maxWidth: '20px', 
-    width: '20px', 
-    height: '25px', 
+    maxWidth: '24px', 
+    width: '24px', 
+    height: '24px', 
     padding: '0' 
 }
 
@@ -230,11 +271,21 @@ export const btnsListUnitHover = {
     //         }
     //     },
     // },
-    // [theme.breakpoints.down(800)]: {
+    [theme.breakpoints.down(1150)]: {
+        maxWidth:'100%',
+        alignItems:'center',
+        borderRadius:'10px',
         
+
+        '& span':{
+            lineHeight:'19px',
+        },
+    },
+    // [theme.breakpoints.down(1050)]: {
+    //     width:'100%',
     //     maxWidth:'none',
     //     textAligh:'center',
-
+    // }
     //     '& span':{
     //         lineHeight:'initial',
         // },
@@ -257,7 +308,7 @@ export const styleBtnsAdaptiveMenu = {
     justifyContent:'start',
     
     '& svg':{
-        width:'18px'
+        width:'20px'
     }, 
 
     "& span":{
@@ -353,9 +404,17 @@ export const unitsContainer = {
     },
     '&:last-child':{
         mr:'0'
+    },
+    [theme.breakpoints.down(1150)]: {
+        gap:'3px',
+        width:'fit-content'
     }
 }
 
+export const unitButtonsBox = {
+    display:'flex',
+    gap:'3px'
+}
 
 export const inputUnitList = {
     maxWidth: '140px',
@@ -410,16 +469,178 @@ export const unitButton = {
                 color:'text.primary'
             }
         }
+    },
+    [theme.breakpoints.down(1150)]: {
+        width:'25px',
+        height:'25px',
+
+        '& svg': {
+            width:'22px',
+            height:'22px'
+        }
     }
 }
 
+export const unitMenuItem = {
+    pl:'10px',
+    pr:'10px',
+    minHeight:'0'
+}
 
+export const unitButton2 = {
+    position:'absolute',
+    top:'calc(50% - 10px)',
+    right:'10px',
+    width:'20px',
+    height:'20px',
+    borderRadius:'50%',
+    p:'5px',
+    bgcolor:'transparent',
+    transition:'all .2s',
 
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover':{
+            bgcolor:'primary.dark',
 
+            '& .MuiSvgIcon-root':{
+                color:'text.primary'
+            }
+        }
+    },
+    [theme.breakpoints.down(1150)]: {
+        width:'20px',
+        height:'20px',
+    }
+}
 
+export const menuCalc = {
+    '& .MuiPaper-root': {
+        maxWidth: '300px',
+        backgroundColor: 'supportBackground.dark',
 
+        [theme.breakpoints.down('md')]: {
+            maxWidth: '250px',
+        }
+    },
+    '& .MuiButtonBase-root': {
+        m: '0',
+    },
+    '& .MuiList-root': {
+        p: '0'
+    },
+    '& .MuiTouchRipple-root': {
+        display: 'none'
+    },
+}
 
+export const alertCalcBox = {
+    p: "0", 
+    [theme.breakpoints.down(600)]: {
+        minHeight: 'auto'
+    }
+}
 
+export const alertCalc = {
+    pb: '0',
+    alignItems: "center",
+    '& .MuiAlert-icon, & .MuiAlert-message': { 
+        p: '0', 
+        color: 'primary.main' 
+    },
+    [theme.breakpoints.down('md')]: {
+        fontSize: "14px",
+    },
+}
+
+export const calcIntupBox = { 
+    width: '100%', 
+    position: 'relative', 
+    display: 'flex', 
+    alignItems: 'center' 
+}
+
+export const calcInput = (theme: Theme): SxProps<Theme> => ({
+    width: '100%',
+    opacity: '1',
+    flex:1,
+    '& .MuiInputBase-root.Mui-disabled': {
+        opacity: '1',
+    },
+
+    '& .MuiInputBase-input': {
+        opacity: '1',
+        // WebkitTextFillColor: theme.palette.text.primary,
+        maxWidth: '210px',
+
+        // [theme.breakpoints.down('md')]: {
+        //     fontSize: '14px',
+        // },
+    },
+
+    '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: `${theme.palette.background.paper} !important`,
+    },
+
+    [theme.breakpoints.down('md')]: {
+        '& .MuiInputBase-root': {
+            p: '9.5px 15px',
+        },
+    },
+});
+
+export const calcInputIcon = {
+    p: "4px",
+    backgroundColor: 'primary.dark',
+    borderRadius: "50%",
+    position: 'absolute',
+    right: '20px',
+    width: '30px',
+    height: '30px',
+    bottom: 'calc(50% - 15px)',
+    color: 'text.primary',
+    cursor: 'pointer',
+    transition:'all .2s',
+
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': {
+            backgroundColor: 'primary.main',
+        },
+    },
+
+    [theme.breakpoints.down('md')]: {
+        width: '25px',
+        height: '25px',
+        bottom: 'calc(50% - 12px)',
+        // p: '4px'
+    }
+}
+
+export const containerCalcBtns = {
+    gap: 1,
+    '& .MuiGrid-item': {
+        width: '25%',
+        m: '7px 0',
+        '& button': {
+            fontWeight: '900'
+        }
+    }
+}
+
+export const btnCleanInput = {
+    width:'64px',
+    backgroundColor: 'primary.dark', 
+    [theme.breakpoints.down('md')]: {
+        width:'50px',
+        minWidth: '50px'
+    }
+}
+
+export const btnCleanInputIcon = { 
+    width: "16px", 
+    [theme.breakpoints.down('md')]: {
+        mr: '2px' 
+    } 
+}
 
 
 
@@ -579,28 +800,7 @@ export const btnsModal = {
 
 
 
-export const calcInput = {
-    width: '100%',
-    '& .MuiInputBase-input': {
-        WebkitTextFillColor: '#fff !important',
-        maxWidth: "210px",
 
-        [theme.breakpoints.down('md')]: {
-            fontSize:'14px',
-            
-        }
-    },
-    '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: '#353842 !important'
-    },
-    [theme.breakpoints.down('md')]: {
-        '& .MuiInputBase-root':{
-            p:'9.5px 15px'
-        }
-        
-    }
-    
-}
 
 export const containerCalcGrid = {
     backgroundColor: '#15161B',
@@ -615,36 +815,8 @@ export const containerCalcGrid = {
 }
 
 
-export const containerCalcBtns = {
-    '& .MuiGrid-item': {
-        width: '25%',
-        m: '7px 0',
-        '& button': {
-            fontWeight: '900'
-        }
-    }
-}
 
-export const menuCalc = {
-    '& .MuiPaper-root': {
-        maxWidth: '300px',
-        backgroundColor: '#15161B',
 
-        [theme.breakpoints.down('md')]: {
-            maxWidth: '250px',
-        }
-    },
-    '& .MuiButtonBase-root': {
-        m: '0',
-    },
-    '& .MuiList-root': {
-        p: '0'
-    },
-    '& .MuiTouchRipple-root': {
-        display: 'none'
-    },
-
-}
 
 
 

@@ -1,13 +1,4 @@
 
-.swiper-list-unit{
-    /* max-width: 1263px; */
-    /* max-width: 100%; */
-    margin-left: 0;
-    margin-right: 0;
-    margin: 0 10px;
-    /* width: 100%; */
-    /* max-width: 100%; */
-}
 
 
 .swiper-list-unit .list-disabled-btn.swiper-button-disabled svg{
@@ -38,7 +29,7 @@
 }
 
 
-.adaptive-list-unit-swiper{
+/* .adaptive-list-unit-swiper{
     width: 90%;
 }
 
@@ -46,7 +37,7 @@
 
 .adaptive-list-unit-swiper .swiper-wrapper{
     max-width: 100%;
-}
+} */
 
 .adaptive-list-unit-swiper .custom-prev-list-unit {
     left:0;
@@ -74,8 +65,8 @@
 }
 
 
-@media screen and (max-width:450px) {
+/* @media screen and (max-width:450px) {
     .adaptive-list-unit-swiper{
         width: 80%;
     }
-}
+} */

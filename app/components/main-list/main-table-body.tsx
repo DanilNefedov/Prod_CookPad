@@ -1,13 +1,13 @@
 import { Box, Collapse, ListItemText, TableCell, TableRow, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { memo, useState } from "react"
 import { MainButtons } from "./main-buttons"
-import { imgIngrList, ingredientImage, ingredientImageBox, ingredientNameBox, ingredientRow, mainIngrList, mobileUnitBoxSwiper, mobileUnitCell, mobileUnitIcon, mobileUnitInfoBox, mobileUnitRow, mobileUnitText, nameIngredient, unitBox, unitBoxDesktop } from "@/app/(main)/(main-list)/style"
+import { adaptiveIngredientImageBox, imgIngrList, ingredientImage, ingredientImageBox, ingredientNameBox, ingredientRow, mainIngrList, mobileUnitBoxSwiper, mobileUnitCell, mobileUnitIcon, mobileUnitInfoBox, mobileUnitRow, mobileUnitText, nameIngredient, unitBox, unitBoxDesktop } from "@/app/(main)/(main-list)/style"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { useAppSelector } from "@/state/hook"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { Navigation } from 'swiper/modules';
+import { Grid, Navigation } from 'swiper/modules';
 import './list/styles.css';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
@@ -16,11 +16,8 @@ import { EmptyInfo } from "../ui-helpers/empty-info"
 import dynamic from "next/dynamic"
 import { UnitsId } from "@/app/(main)/(main-list)/list/types"
 import { centerFlexBlock, textMaxWidth } from "@/app/styles"
-
-const Units = dynamic(() => import('./units'), {
-    ssr: false, 
-});
-
+import { theme } from "@/config/ThemeMUI/theme"
+import { Unit } from "./units"
 
 
 
@@ -59,7 +56,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
             <TableRow sx={[ingredientRow, {
                 opacity: `${thisIngredient.shop_ingr ? 0.4 : 1}`,
                 '& .MuiTableCell-root': {
-                    borderBottom: `${isMobile ? 'none' : '5px solid '}`,
+                    borderBottom: `${isMobile ? 'none' : '5px solid'}`,
                     borderColor: `${pathName === '/list-recipe' ? 'background.default' : 'background.paper'}`
                 },
 
@@ -68,9 +65,9 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                     onClick={() => { 
                         if (isMobile) handleToggle(thisIngredient._id) 
                     }} 
-                    sx={ingredientImageBox}
+                    sx={[ingredientImageBox, ]}
                 >
-                    <Box sx={centerFlexBlock}>
+                    <Box sx={[centerFlexBlock, ]}>
                         <Box 
                             component={'img'} 
                             src={thisIngredient.media !== '' ? thisIngredient.media : '/images/load-ingr.svg'} 
@@ -141,7 +138,9 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                 :
                                 thisIngredient.units.map((elem: UnitsId) => (
                                     <SwiperSlide key={elem._id} className="slide-list-unit" style={{ width: 'auto', maxWidth: '100%' }}>
-                                        <Units ingredient_id={thisIngredient._id} unit_id={elem._id} recipe_id={recipe_id}/>
+                                        
+                                        <Unit recipe_id={recipe_id} ingredient_id={thisIngredient._id} unit_id={elem._id}/>
+
                                     </SwiperSlide>
                                 ))}
 
@@ -164,19 +163,26 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                     <TableRow 
                         sx={[
                             mobileUnitRow, 
-                            {opacity: `${thisIngredient.shop_ingr ? 0.4 : 1}`}
+                            {opacity: `${thisIngredient.shop_ingr ? 0.4 : 1}`,
+                            // borderBottom: `${expandedId === thisIngredient._id ? '3px solid' : 'none'}`,    
+                            }
+                                
                         ]}
                     >
                         <TableCell colSpan={4} 
                             sx={[
                                 mobileUnitCell,
-                                {borderBottom:`2px solid ${pathName === '/list-recipe' ? 'background.default' : 'background.paper'}`}
+                                {borderBottom:`3px solid ${
+                                    pathName === '/list-recipe'
+                                    ? theme.palette.background.default
+                                    : theme.palette.background.paper
+                                }`}
                             ]}
                         >
                             <Collapse in={expandedId === thisIngredient._id} timeout={300}>
                                 <Box sx={[
                                     mobileUnitBoxSwiper,
-                                    {maxHeight: expandedId === thisIngredient._id ? '75px' : '0',
+                                    {maxHeight: expandedId === thisIngredient._id ? '75px' : '0',//75
                                     pb: thisIngredient.units.length === 0 ? '15px' : '0'}
                                 ]}>
                                     <Swiper
@@ -186,7 +192,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
 
                                         }}
                                         className="swiper-list-unit adaptive-list-unit-swiper"
-                                        modules={[ Navigation]}
+                                        modules={[Navigation]}
                                         spaceBetween={10}
                                         slidesPerView={'auto'}
                                         style={{ 
@@ -198,8 +204,9 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                             <EmptyInfo mobileText={'13px'} right={'calc(50% - 70px)'}></EmptyInfo>
                                         :
                                         thisIngredient.units.map((elem: UnitsId) => (
-                                            <SwiperSlide key={elem._id} className="slide-list-unit">
-                                                <Units ingredient_id={thisIngredient._id} unit_id={elem._id} recipe_id={recipe_id}/>
+                                            <SwiperSlide key={elem._id} className="slide-list-unit"
+                                            >
+                                                <Unit recipe_id={recipe_id} ingredient_id={thisIngredient._id} unit_id={elem._id}/>
                                             </SwiperSlide>
                                         ))}
 

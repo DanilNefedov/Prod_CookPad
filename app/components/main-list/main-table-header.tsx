@@ -1,4 +1,4 @@
-import { boxText, cellHeader, headerArrow, headerText, sortBtnHeader, tableHeader } from "@/app/(main)/(main-list)/style";
+import { adaptiveIngredientImageBox, boxText, cellHeader, headerArrow, headerText, sortBtnHeader, tableHeader } from "@/app/(main)/(main-list)/style";
 import { Box, TableCell, TableHead, TableRow, Theme, Typography } from "@mui/material";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { Dispatch, SetStateAction, } from "react";
@@ -51,7 +51,7 @@ export function MainTableHeader ({props}: {props:Props}) {
             <TableRow sx={[cellHeader, {
                 '& .MuiTableCell-root': (theme) => border(theme)
             }]}>
-                <TableCell sx={[headerText, {cursor:'initial'}]}>Image</TableCell>
+                <TableCell sx={[headerText, {cursor:'initial'}]}><Typography>Image</Typography></TableCell>
                 <TableCell sx={headerText} onClick={() => handleSort("name")}>
                     <Box sx={[centerFlexBlock, sortBtnHeader]}>
                         <Typography sx={boxText}>
@@ -76,7 +76,7 @@ export function MainTableHeader ({props}: {props:Props}) {
                         </Typography>
                         <ArrowUpwardIcon sx={[
                             headerArrow,
-                            {transform: `rotate(${sortOrder === 'asc' && sortBy === 'name' ? '180deg' : '0deg'})`}
+                            {transform: `rotate(${sortOrder === 'desc' && sortBy === 'unit' ? '180deg' : '0deg'})`}
                         ]}></ArrowUpwardIcon>
                     </Box>
 
