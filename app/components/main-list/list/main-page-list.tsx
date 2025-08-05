@@ -12,8 +12,12 @@ import { containerInfo, moreButton, table, tableBody } from '@/app/(main)/(main-
 
 export function MainListPage() {
     const dispatch = useAppDispatch()
-    const ingredients = useAppSelector((state) => state.list.list_ingr);
+    // const ingredients = useAppSelector((state) => state.list.list_ingr);
     const currentPage = useAppSelector((state) => state.list.page_list);
+
+    const ingredientsMap = useAppSelector((state) => state.list.ingredients);
+    const unitsMap = useAppSelector((state) => state.list.units);
+
     const isLoading = useAppSelector((state) => state.list.operations.fetchList.loading);
     const id = useAppSelector((state) => state.user.user.connection_id);
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
@@ -29,24 +33,43 @@ export function MainListPage() {
     }, [dispatch, id, currentPage]);
 
 
-
-
     const sortedList = useMemo(() => {
-        if (!sortBy) return ingredients;
+        const ingredientArray = Object.values(ingredientsMap);
 
-        return [...ingredients].sort((a, b) => {
+        if (!sortBy) return ingredientArray;
+
+        return [...ingredientArray].sort((a, b) => {
             if (sortBy === 'name') {
                 return sortOrder === 'asc'
                     ? a.name.localeCompare(b.name)
                     : b.name.localeCompare(a.name);
             } else if (sortBy === 'unit') {
+                const aUnitCount = a.unit_ids.length;
+                const bUnitCount = b.unit_ids.length;
                 return sortOrder === 'desc'
-                    ? b.units.length - a.units.length
-                    : a.units.length - b.units.length;
+                    ? bUnitCount - aUnitCount
+                    : aUnitCount - bUnitCount;
             }
             return 0;
         });
-    }, [sortBy, sortOrder, ingredients]);
+    }, [sortBy, sortOrder, ingredientsMap]);
+
+    // const sortedList = useMemo(() => {
+    //     if (!sortBy) return ingredients;
+
+    //     return [...ingredients].sort((a, b) => {
+    //         if (sortBy === 'name') {
+    //             return sortOrder === 'asc'
+    //                 ? a.name.localeCompare(b.name)
+    //                 : b.name.localeCompare(a.name);
+    //         } else if (sortBy === 'unit') {
+    //             return sortOrder === 'desc'
+    //                 ? b.units.length - a.units.length
+    //                 : a.units.length - b.units.length;
+    //         }
+    //         return 0;
+    //     });
+    // }, [sortBy, sortOrder, ingredients]);
 
 
     function handleMore() {
@@ -65,7 +88,8 @@ export function MainListPage() {
                     for now, the component is small.
                 */}
 
-                {isLoading && ingredients.length === 0 ?
+                {isLoading && Object.keys(ingredientsMap).length === 0
+ ?
                     <TableBody>
                         <TableRow>
                             <TableCell sx={containerInfo}>
@@ -75,7 +99,8 @@ export function MainListPage() {
                     </TableBody>
 
                     :
-                    !isLoading && ingredients.length === 0 ?
+                    !isLoading && Object.keys(ingredientsMap).length === 0 ?
+
                         <TableBody>
                             <TableRow>
                                 <TableCell sx={containerInfo}>
@@ -94,8 +119,8 @@ export function MainListPage() {
 
                             <TableBody sx={tableBody}>
                                 {sortedList.map((el) => ( 
-                                    <MainTableBody key={el._id} props={{
-                                        ingredient_id: el._id,
+                                    <MainTableBody key={el.ingredient_id} props={{
+                                        ingredient_id: el.ingredient_id,
 
                                     }}>
                                     </MainTableBody>
@@ -108,7 +133,7 @@ export function MainListPage() {
 
 
             {
-                !isLoading && ingredients.length > 0 ?
+                !isLoading && Object.keys(ingredientsMap).length > 0 ?
                     <Button
                         disabled={currentPage === null ? true : false}
                         color='blackRedBtn'
@@ -116,7 +141,7 @@ export function MainListPage() {
                         sx={moreButton}
                     >More</Button>
                     :
-                    isLoading && ingredients.length > 0 ?
+                    isLoading && Object.keys(ingredientsMap).length > 0 ?
                         <UXLoading position={'static'}></UXLoading>
                         :
                         <></>

@@ -16,7 +16,6 @@ import mediaSlice from './slices/stepper/media'
 import ingredientsSlice from './slices/stepper/ingredients'
 import descriptionSlice from './slices/stepper/description'
 import instructionSlice from './slices/stepper/instruction'
-import listContext from './slices/list-context'
 
 
 export const RESET_APP = 'RESET_APP';
@@ -31,7 +30,6 @@ const appReducer = combineReducers({
     popular:popularSlice,
     comments:commentsPopular,
     commentContext:commentContext,
-    listContext:listContext,
 
 
     statusStepSlice:statusStepSlice,

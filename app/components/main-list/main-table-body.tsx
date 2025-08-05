@@ -14,10 +14,13 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { usePathname } from "next/navigation"
 import { EmptyInfo } from "../ui-helpers/empty-info"
 import dynamic from "next/dynamic"
-import { UnitsId } from "@/app/(main)/(main-list)/list/types"
+// import { UnitsId } from "@/app/(main)/(main-list)/list/types"
 import { centerFlexBlock, textMaxWidth } from "@/app/styles"
 import { theme } from "@/config/ThemeMUI/theme"
 import { Unit } from "./units"
+import UnitContext from "@/config/unit-context/unit-context"
+import { UnitsId } from "@/app/(main)/(main-list)/list/types"
+import { selectIngredientUnits } from "@/state/selectors/list"
 
 
 
@@ -31,15 +34,19 @@ interface Props {
 const MainTableBody = memo(({ props }: { props: Props }) => {
     const { ingredient_id, recipe_id } = props;
 
-    const thisIngredient = useAppSelector(state => {
-        if (recipe_id) {
-            return state.listRecipe.recipes
-                .find(el => el._id === recipe_id)
-                ?.ingredients_list.find(ing => ing._id === ingredient_id);
-        }
+    // const thisIngredient = useAppSelector(state => {
+    //     if (recipe_id) {
+    //         return state.listRecipe.recipes
+    //             .find(el => el._id === recipe_id)
+    //             ?.ingredients_list.find(ing => ing._id === ingredient_id);
+    //     }
     
-        return state.list.list_ingr.find(el => el._id === ingredient_id);
-    });
+    //     return state.list.list_ingr.find(el => el._id === ingredient_id);
+    // });
+    const thisIngredient = useAppSelector(state => state.list.ingredients[ingredient_id])
+    const units = useAppSelector(selectIngredientUnits(ingredient_id));
+
+
     const isMobile = useMediaQuery("(max-width:800px)");
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const pathName = usePathname()
@@ -48,7 +55,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
     const handleToggle = (id: string) => {
         setExpandedId((prevId) => (prevId === id ? null : id));
     }
-
+    console.log(thisIngredient, units)
     if (!thisIngredient) return null;
 
     return (
@@ -63,7 +70,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
             }]}>
                 <TableCell 
                     onClick={() => { 
-                        if (isMobile) handleToggle(thisIngredient._id) 
+                        if (isMobile) handleToggle(thisIngredient.ingredient_id) 
                     }} 
                     sx={[ingredientImageBox, ]}
                 >
@@ -78,7 +85,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                 </TableCell>
                 <TableCell 
                     onClick={() => { 
-                        if (isMobile) handleToggle(thisIngredient._id) 
+                        if (isMobile) handleToggle(thisIngredient.ingredient_id) 
                     }} 
                     sx={ingredientNameBox}
                 >
@@ -102,15 +109,15 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                     isMobile ?
                         <TableCell 
                             onClick={() => { 
-                                if (isMobile) handleToggle(thisIngredient._id) 
+                                if (isMobile) handleToggle(thisIngredient.ingredient_id) 
                             }} 
                             sx={unitBox}
                         >
                             <Box sx={mobileUnitInfoBox}>
-                                <Typography sx={[mobileUnitText, textMaxWidth]}>x{thisIngredient.units.length}</Typography>
+                                <Typography sx={[mobileUnitText, textMaxWidth]}>x{thisIngredient.unit_ids.length}</Typography>
                                 <ExpandMoreIcon sx={[
                                     mobileUnitIcon,
-                                    {transform: expandedId === thisIngredient._id ? "rotate(180deg)" : "rotate(0deg)"}
+                                    {transform: expandedId === thisIngredient.ingredient_id ? "rotate(180deg)" : "rotate(0deg)"}
                                 ]}></ExpandMoreIcon>
                             </Box>
                         </TableCell>
@@ -133,16 +140,25 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                 }}
                             >
                                 {
-                                thisIngredient.units.length === 0 ?
+                                thisIngredient.unit_ids.length === 0 ?
                                     <EmptyInfo></EmptyInfo>
                                 :
-                                thisIngredient.units.map((elem: UnitsId) => (
-                                    <SwiperSlide key={elem._id} className="slide-list-unit" style={{ width: 'auto', maxWidth: '100%' }}>
-                                        
-                                        <Unit recipe_id={recipe_id} ingredient_id={thisIngredient._id} unit_id={elem._id}/>
+                                units.map((elem: UnitsId) => (
+                                    <SwiperSlide key={elem.unit_id} className="slide-list-unit" style={{ width: 'auto', maxWidth: '100%' }}>
+                                        <UnitContext.Provider
+                                            key={elem.unit_id}
+                                            value={{
+                                                recipe_id: recipe_id,
+                                                ingredient_id: thisIngredient.ingredient_id,
+                                                unit_id: elem.unit_id,
+                                            }}
+                                        >
+                                            <Unit/>
+                                        </UnitContext.Provider>
 
                                     </SwiperSlide>
-                                ))}
+                                ))
+                                }
 
                                 <div className={`custom-prev-list-unit ${pathName === '/list-recipe' ? 'list-recipe-disabled-btn' : 'list-disabled-btn'}`}>
                                     <ArrowLeftIcon></ArrowLeftIcon>
@@ -154,7 +170,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                         </TableCell>
                 }
 
-                <MainButtons props={{ el:thisIngredient, recipe_id }}></MainButtons>
+                {/* <MainButtons props={{ el:thisIngredient, recipe_id }}></MainButtons> */}
             
             </TableRow>
 
@@ -179,11 +195,11 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                 }`}
                             ]}
                         >
-                            <Collapse in={expandedId === thisIngredient._id} timeout={300}>
+                            <Collapse in={expandedId === thisIngredient.ingredient_id} timeout={300}>
                                 <Box sx={[
                                     mobileUnitBoxSwiper,
-                                    {maxHeight: expandedId === thisIngredient._id ? '75px' : '0',//75
-                                    pb: thisIngredient.units.length === 0 ? '15px' : '0'}
+                                    // {maxHeight: expandedId === thisIngredient._id ? '75px' : '0',//75
+                                    // pb: thisIngredient.units.length === 0 ? '15px' : '0'}
                                 ]}>
                                     <Swiper
                                         navigation={{
@@ -200,13 +216,22 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                         }}
                                     >
                                         {
-                                        thisIngredient.units.length === 0 ?
+                                        units.length === 0 ?
                                             <EmptyInfo mobileText={'13px'} right={'calc(50% - 70px)'}></EmptyInfo>
                                         :
-                                        thisIngredient.units.map((elem: UnitsId) => (
-                                            <SwiperSlide key={elem._id} className="slide-list-unit"
+                                        units.map((elem: UnitsId) => (
+                                            <SwiperSlide key={elem.unit_id} className="slide-list-unit"
                                             >
-                                                <Unit recipe_id={recipe_id} ingredient_id={thisIngredient._id} unit_id={elem._id}/>
+                                                <UnitContext.Provider
+                                                    key={elem.unit_id}
+                                                    value={{
+                                                        recipe_id: recipe_id,
+                                                        ingredient_id: thisIngredient.ingredient_id,
+                                                        unit_id: elem.unit_id,
+                                                    }}
+                                                >
+                                                    <Unit/>
+                                                </UnitContext.Provider>
                                             </SwiperSlide>
                                         ))}
 

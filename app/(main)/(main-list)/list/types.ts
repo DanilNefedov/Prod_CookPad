@@ -6,27 +6,58 @@
 
 
 //----------- state S-----------//
+export interface NormalizedData {
+    ingredients: {
+        [key: string]: ListIngrData;
+    };
+    units: {
+        [key: string]: UnitsId;
+    };
+}
+
+// export interface ListRootState {
+//     page_list: number | null,
+//     connection_id: string,
+//     list_ingr: ListIngrData[]
+// }
 
 export interface ListRootState {
     page_list: number | null,
     connection_id: string,
-    list_ingr: ListIngrData[]
+    ingredients: NormalizedData['ingredients']; 
+    units: NormalizedData['units'];
+    // list_ingr: ListIngrData[]
 }
 
+
+// export interface ListIngrDataFetch {
+//     _id:string,
+//     name: string,
+//     media:string,
+//     shop_ingr: boolean,
+//     list: string[],
+//     units: UnitsId[]
+// }
 export interface ListIngrData {
-    _id:string,
-    name: string,
-    media:string,
-    shop_ingr: boolean,
-    list: string[],
-    units: UnitsId[]
+    ingredient_id: string;
+    name: string;
+    media: string;
+    shop_ingr: boolean;
+    list: string[];
+    unit_ids: string[];
 }
 
+// export interface UnitsId {
+//     choice: string,
+//     amount: number,
+//     shop_unit:boolean,
+//     _id:string
+// }
 export interface UnitsId {
-    choice: string,
-    amount: number,
-    shop_unit:boolean,
-    _id:string
+    unit_id: string;
+    choice: string;
+    amount: number;
+    shop_unit: boolean;
 }
 
 export interface UnitNoId{
@@ -45,16 +76,32 @@ export interface ListContext {
     unit_info:UnitRecipeIds
     input_value:{
         value: string | null;
-        open_input:boolean
+        open_input:string
     }
 }
 
 //---------- thunks S----------//
 
+export interface UnitsIdFetch {
+    choice: string,
+    amount: number,
+    shop_unit:boolean,
+    _id:string
+}
+
+export interface ListIngrDataFetch {
+    _id:string,
+    name: string,
+    media:string,
+    shop_ingr: boolean,
+    list: string[],
+    units: UnitsIdFetch[]
+}
+
 export interface ListFetchRes {
     page_list:number | null
     connection_id: string,
-    list_ingr: ListIngrData[]
+    list_ingr: ListIngrDataFetch[]
 }
 
 export interface ListFetchReq {

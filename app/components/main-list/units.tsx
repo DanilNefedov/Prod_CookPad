@@ -1,49 +1,51 @@
 import { iconMenuMainBtns, unitAmountText, unitButton2, unitChoiceText, unitsContainer } from "@/app/(main)/(main-list)/style"
+import { useUnitContext } from "@/config/unit-context/unit-context"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
-import { Box, Button, IconButton, ListItemText, Menu, TextField, useMediaQuery } from "@mui/material"
-import { usePathname } from "next/navigation"
-import { ChangeEvent, memo, useCallback, useEffect, useState } from "react"
-import CheckIcon from '@mui/icons-material/Check';
-import { changeAmountFetch} from "@/state/slices/list-slice"
-import { evaluate, } from "mathjs"
 import { newAmountListRecipe } from "@/state/slices/list-recipe-slice"
+import { changeAmountFetch } from "@/state/slices/list-slice"
+import CheckIcon from '@mui/icons-material/Check'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import { Box, Button, IconButton, ListItemText, Menu, TextField, useMediaQuery } from "@mui/material"
+import { evaluate, } from "mathjs"
+import { usePathname } from "next/navigation"
+import { ChangeEvent, memo, useCallback, useEffect, useMemo, useState } from "react"
 import { handleAmountChange } from "../../helpers/input-unit"
-import { shallowEqual } from "react-redux"
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { UnitBtns } from "./unit-btns"
-import { UnitRecipeIds } from "@/app/(main)/(main-list)/list/types"
-import { editAmount, recordIds } from "@/state/slices/list-context"
+import { RootState } from "@/state/store"
+import { shallowEqual } from "react-redux"
 
 
 
-export const Unit = memo(({recipe_id, ingredient_id, unit_id}:UnitRecipeIds) => {
-    const amount = useAppSelector(state => state.listContext.input_value.value)
-    const openInput = useAppSelector(state => state.listContext.input_value.open_input)
-    const unitData = useAppSelector(state => {
-        let ingredient;
+export const Unit = memo(() => {
+    const { recipe_id, ingredient_id, unit_id } = useUnitContext();
+    // const isIputOpen = useAppSelector(state => state.listContext.input_value.open_input)
+    // const memoizedSelector = useMemo(() => selectUnitData(recipe_id, ingredient_id, unit_id), [recipe_id, ingredient_id, unit_id]);
+    // const unitData = useAppSelector(memoizedSelector); 
+    // const unitData = useAppSelector(useCallback(
+    //     (state: RootState) => { 
+    //         const ingredient = recipe_id
+    //             ? state.listRecipe.recipes
+    //                 .find(recipe => recipe._id === recipe_id)?.ingredients_list.find(ingr => ingr._id === ingredient_id)
+    //             : state.list.list_ingr.find(ingr => ingr._id === ingredient_id);
+    //         const unitInfo = ingredient?.units.find(unit => unit._id === unit_id);
+    //         return {
+    //             state_amount: unitInfo?.amount ?? 0,
+    //             state_shop: unitInfo?.shop_unit ?? false,
+    //             state_choice: unitInfo?.choice ?? ''
+    //         };
+    //     },
+    //     [recipe_id, ingredient_id, unit_id]
+    // ), shallowEqual);
+    const unitData = useAppSelector(state => state.list.units[unit_id])
 
-        if (recipe_id) {
-            ingredient = state.listRecipe.recipes
-                .find(recipe => recipe._id === recipe_id)
-                ?.ingredients_list.find(ingr => ingr._id === ingredient_id);
-        } else {
-            ingredient = state.list.list_ingr.find(ingr => ingr._id === ingredient_id);
-        } 
-
-        if (!ingredient) return null;
-
-        const unitInfo = ingredient.units.find(unit => unit._id === unit_id);
-        const ingredientId = ingredient._id;
-
-        return { unitInfo, ingredientId };
-    }, shallowEqual);
 
     const userStore = useAppSelector(state => state.user);
     const pathName = usePathname();
     const dispatch = useAppDispatch();
     const id = userStore?.user?.connection_id;
-    const thisUnit = unitData?.unitInfo;
+    const {amount, choice, shop_unit} = unitData;
     
+    const [isIputOpen, setIsIputOpen] = useState<string>('')
     // const [amount, setAmount] = useState<string>(thisUnit ? thisUnit.amount.toString() : '0');
     // const [editAmount, setEditAmount] = useState<string | null | undefined>(null);
 
@@ -59,17 +61,16 @@ export const Unit = memo(({recipe_id, ingredient_id, unit_id}:UnitRecipeIds) => 
         setAnchorEl(null);
     }, []);
 
+    const handleOpenInput = useCallback((value:string) => {
+        setIsIputOpen(value);
+    }, []);
 
-    useEffect(() => {
-        dispatch(recordIds({recipe_id, ingredient_id, unit_id}))
-    },[recipe_id, ingredient_id, unit_id])
 
     const confirmAmount = useCallback((_id: string | undefined, ingredientId: string) => {
-        if(amount === null) return
+        const numberAmount = amount
+        // const numberAmount = evaluate(amount)
 
-        const numberAmount = evaluate(amount)
-
-        if (id !== '' && numberAmount !== thisUnit?.amount && _id) {
+        if (id !== '' && _id) {//numberAmount !== thisUnit?.amount
             if (pathName === '/list') {
                 dispatch(changeAmountFetch({ ingredient_id: ingredientId, unit_id: _id, amount: numberAmount }));
             } else if (pathName === '/list-recipe' && recipe_id) {
@@ -77,31 +78,31 @@ export const Unit = memo(({recipe_id, ingredient_id, unit_id}:UnitRecipeIds) => 
             }
         }
         // setEditAmount(null);
-    }, [id, amount, pathName, dispatch, recipe_id, thisUnit?.amount]);
+    }, [id, amount, pathName, dispatch, recipe_id, ]);//thisUnit?.amount
 
 
 
 
     const handleAmount = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const sanitized = handleAmountChange(e.target.value);
-        dispatch(editAmount(sanitized))
         // setAmount(sanitized);
     }
 
     
-    console.log(openInput)
-    return !unitData?.unitInfo ? null : (
-        <Box key={thisUnit?._id}
+    console.log(recipe_id, ingredient_id, unit_id )
+    return (
+        <Box 
+        key={unit_id}
             sx={[
                 unitsContainer,
                 {
-                    opacity: `${thisUnit?.shop_unit ? 0.4 : 1}`,
+                    opacity: `${shop_unit ? 0.4 : 1}`,
                     backgroundColor: pathName === '/list' ? 'background.paper' : 'background.default'
                 }
             ]}
         >
             {/* editAmount && editAmount === thisUnit?._id */}
-            { openInput ?
+            { isIputOpen === unit_id ?
                 <Box sx={{ position: 'relative' }}>
                     <TextField
                         onKeyDown={(e) => {
@@ -111,17 +112,17 @@ export const Unit = memo(({recipe_id, ingredient_id, unit_id}:UnitRecipeIds) => 
 
                             if (e.key === 'Enter') {
                                 e.preventDefault();
-                                confirmAmount(thisUnit?._id, unitData.ingredientId);
+                                confirmAmount(unit_id, ingredient_id);//thisUnit?._id  unitData.ingredientId
                             }
                         }}
 
                         type="number"
-                        value={amount === null ? thisUnit?.amount.toString() : amount}
+                        value={unitData.amount !== null ? amount.toString() : amount}//thisUnit?.amount.toString()
                         onChange={(e) => handleAmount(e)}
                     />
 
                     <Button
-                        onClick={() => confirmAmount(thisUnit?._id, unitData.ingredientId)}
+                        onClick={() => confirmAmount(unit_id, ingredient_id)}//thisUnit?._id  unitData.ingredientId
                         sx={unitButton2}
                         color='blackBtn'
                     >
@@ -130,12 +131,12 @@ export const Unit = memo(({recipe_id, ingredient_id, unit_id}:UnitRecipeIds) => 
                 </Box>
 
                 :
-                <ListItemText sx={unitAmountText} primary={thisUnit?.amount} />
+                <ListItemText sx={unitAmountText} primary={amount} />//thisUnit?.amount
             }
 
             <ListItemText
                 sx={unitChoiceText}
-                primary={thisUnit?.choice}
+                primary={choice}//thisUnit?.choice
             />
 
 
@@ -170,19 +171,25 @@ export const Unit = memo(({recipe_id, ingredient_id, unit_id}:UnitRecipeIds) => 
                         }}
 
                     >
-                        <UnitBtns 
-                            isInsideMenu={true} 
-                            amount ={amount}
-                        ></UnitBtns>
+                        {/* <UnitBtns 
+                            isInsideMenu={true}
+                            state_shop={shop_unit} 
+                            handleOpenInput={handleOpenInput}
+                        ></UnitBtns> */}
                     </Menu>
                 </>
 
                 :
+                            <></>
+                // <UnitBtns 
+                //     isInsideMenu={false} 
+                //     state_shop={shop_unit}
+                //     handleOpenInput={handleOpenInput}
+                // ></UnitBtns>
 
-                <UnitBtns 
-                    isInsideMenu={false} 
-                    amount={amount}
-                ></UnitBtns>
+
+
+
                 // <>
                 //     <Button
                 //         onClick={() => toggleShopUnit(thisUnit?._id, thisUnit?.shop_unit)}

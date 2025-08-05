@@ -1,4 +1,5 @@
-import { ChangeAmountFetch, DeleteUnitIngrFetch, ListFetchReq, ListFetchRes, ListRootState, 
+import { ChangeAmountFetch, DeleteUnitIngrFetch, ListFetchReq, ListFetchRes, 
+    ListRootState, 
     NewIngrFetchReq, NewIngrFetchRes, NewUnitFetchReq, NewUnitFetchRes, NewUnitIngrFetchReq,
     NewUnitIngrFetchRes, ShopIngrFetch, ShopUnitFetch, UpdCookUnitFetch } from "@/app/(main)/(main-list)/list/types";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
@@ -51,11 +52,41 @@ const loadingStatus: ListOperationKey[] = [
 ];
 
 
+// {
+//   recipes: {
+//     "recipe1": { _id: "recipe1", ingredient_ids: ["ingredient1"] }
+//   },
+// {
+//   ingredients: {
+//     "ingredient1": { ingredient_id: "ingredient1", name:'name', media:'media', shop_ingr:boolean, list:[string], unit_ids: ["unit1", "unit2"] }
+//   },
+//   units: {
+//     "unit1": { unit_id: "unit1", choice:'choice', amount:number, shop_unit: false },
+//   }
+// }
+// export interface ListIngrData {
+//     _id:string,
+//     name: string,
+//     media:string,
+//     shop_ingr: boolean,
+//     list: string[],
+//     units: UnitsId[]
+// }
+// export interface UnitsId {
+//     choice: string,
+//     amount: number,
+//     shop_unit:boolean,
+//     _id:string
+// }
+
+
 
 const initialState: ListState = {
     connection_id: '',
     page_list: 1,
-    list_ingr: [],
+    ingredients:{},
+    units:{},
+    // list_ingr: [],
     operations:createOperations<ListOperationKey>(
         listOperationKeys,
         (key) =>
@@ -381,18 +412,46 @@ const listSlice = createSlice({
                 state.operations.fetchList.error = false
                 state.operations.fetchList.loading = false
                 
-                const payload = action.payload
-                state.connection_id = payload.connection_id
+                // const payload = action.payload
+                // state.connection_id = payload.connection_id
 
-                payload.list_ingr.map(el => {
-                    const findThisIngr = state.list_ingr.find(elem => (elem._id === el._id))
+                // payload.list_ingr.map(el => {
+                //     const findThisIngr = state.list_ingr.find(elem => (elem._id === el._id))
 
-                    if (!findThisIngr) {
-                        state.list_ingr.push(el)
+                //     if (!findThisIngr) {
+                //         state.list_ingr.push(el)
+                //     }
+                // })
+
+                // state.page_list = payload.page_list
+                
+                const payload = action.payload;
+                state.connection_id = payload.connection_id;
+                state.page_list = payload.page_list;
+
+                payload.list_ingr.forEach((el) => {
+                    if (!state.ingredients[el._id]) {
+                        state.ingredients[el._id] = {
+                            ingredient_id: el._id,
+                            name: el.name,
+                            media: el.media,
+                            shop_ingr: el.shop_ingr,
+                            list: el.list,
+                            unit_ids: el.units.map(unit => unit._id),
+                        };
                     }
-                })
 
-                state.page_list = payload.page_list
+                    el.units.forEach((unit) => {
+                        if (!state.units[unit._id]) {
+                            state.units[unit._id] = {
+                                unit_id: unit._id,
+                                choice: unit.choice,
+                                amount: unit.amount,
+                                shop_unit: unit.shop_unit,
+                            };
+                        }
+                    });
+                });
 
             })
 

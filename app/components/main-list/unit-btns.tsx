@@ -6,44 +6,26 @@ import { shallowEqual } from "react-redux";
 import { usePathname } from "next/navigation";
 import { changeAmountFetch, deleteUnitIngrFetch, shopUnitUpdate } from "@/state/slices/list-slice";
 import { deleteUnitListRecipe, newAmountListRecipe, shopUnitListRecipe } from "@/state/slices/list-recipe-slice";
-import { useCallback, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
 import { evaluate } from "mathjs";
 import { CalcUnit } from "./calc-unit";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import { openInput } from "@/state/slices/list-context";
+import { useUnitContext } from "@/config/unit-context/unit-context";
 
 
 interface Props {
     isInsideMenu:boolean, 
-    amount:string | null
+    state_shop:boolean,
+    handleOpenInput:(value: string) => void
 }
 
 
-export function UnitBtns ({isInsideMenu, amount}:Props) {
-    const recipeIds = useAppSelector(state => state.listContext.unit_info)
-    const {ingredient_id, unit_id, recipe_id} = recipeIds
-    const unitData = useAppSelector(state => {
-        let ingredient;
-
-        if (recipe_id) {
-            ingredient = state.listRecipe.recipes
-                .find(recipe => recipe._id === recipe_id)
-                ?.ingredients_list.find(ingr => ingr._id === ingredient_id);
-        } else {
-            ingredient = state.list.list_ingr.find(ingr => ingr._id === ingredient_id);
-        }
-
-        if (!ingredient) return null;
-
-        const unitInfo = ingredient.units.find(unit => unit._id === unit_id);
-        const ingredientId = ingredient._id;
-
-        return { unitInfo, ingredientId };
-    }, shallowEqual);
-
-    const thisUnit = unitData?.unitInfo;
+export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput}:Props) => {
+// export function UnitBtns ({isInsideMenu, state_shop, handleOpenInput}:Props) {
+    const { recipe_id, ingredient_id, unit_id } = useUnitContext();
+   
     const shopStatus = useAppSelector(state => {
         return recipe_id
             ? state.listRecipe.operations.shopUnitListRecipe.loading
@@ -53,8 +35,8 @@ export function UnitBtns ({isInsideMenu, amount}:Props) {
     const id = userStore?.user?.connection_id;
     const pathName = usePathname();
     const dispatch = useAppDispatch();
-    const [editAmount, setEditAmount] = useState<string | null | undefined>(null);
-    const [amount1, setAmount] = useState<string>(thisUnit ? thisUnit.amount.toString() : '0');
+    const isIputOpen = useAppSelector(state => state.listContext.input_value.open_input)
+    const amount = useAppSelector(state => state.listContext.input_value.value)
 
 
     
@@ -63,12 +45,12 @@ export function UnitBtns ({isInsideMenu, amount}:Props) {
     function toggleShopUnit(_id: string | undefined, shop_unit: boolean | undefined) {
         if (shopStatus) return
 
-        if (id !== '' && unitData && shop_unit !== undefined && _id) {
+        if (id !== '' && shop_unit !== undefined && _id) {
             if (pathName === '/list') {
-                dispatch(shopUnitUpdate({ ingredient_id: unitData.ingredientId, unit_id: _id, shop_unit }))
+                dispatch(shopUnitUpdate({ ingredient_id: ingredient_id, unit_id: _id, shop_unit }))
             }
             else if (pathName === '/list-recipe' && recipe_id) {
-                dispatch(shopUnitListRecipe({ connection_id: id, ingredient_id: unitData.ingredientId, unit_id: _id, shop_unit, _id: recipe_id }))
+                dispatch(shopUnitListRecipe({ connection_id: id, ingredient_id: ingredient_id, unit_id: _id, shop_unit, _id: recipe_id }))
             }
 
         }
@@ -76,17 +58,19 @@ export function UnitBtns ({isInsideMenu, amount}:Props) {
 
 
     const confirmAmount = useCallback((_id: string | undefined, ingredientId: string) => {
+        if(amount === null) return 
+
         const numberAmount = evaluate(amount)
 
-        if (id !== '' && numberAmount !== thisUnit?.amount && _id) {
+        if (id !== '' && _id) {//numberAmount !== thisUnit?.amount
             if (pathName === '/list') {
                 dispatch(changeAmountFetch({ ingredient_id: ingredientId, unit_id: _id, amount: numberAmount }));
             } else if (pathName === '/list-recipe' && recipe_id) {
                 dispatch(newAmountListRecipe({ connection_id: id, ingredient_id: ingredientId, unit_id: _id, amount: numberAmount, _id: recipe_id }))
             }
         }
-        setEditAmount(null);
-    }, [id, amount, pathName, dispatch, recipe_id, thisUnit?.amount]);
+        dispatch(openInput(''));
+    }, [id, amount, pathName, dispatch, recipe_id]);
 
 
     function deleteUnitIngr(ingredient_id: string, unit_id: string | undefined) {
@@ -102,7 +86,7 @@ export function UnitBtns ({isInsideMenu, amount}:Props) {
     }
     
     
-
+    // console.log(isIputOpen, unit_id)
     const wrap = (node: React.ReactNode) => isInsideMenu ? (
         <MenuItem sx={unitMenuItem}> 
         {/* onClick={handleClose} */}
@@ -113,11 +97,11 @@ export function UnitBtns ({isInsideMenu, amount}:Props) {
     );
 
     return(
-        unitData !== null && thisUnit?._id ?
+        // unitData !== null && thisUnit?._id ?
         <>
             {wrap(
                 <Button
-                    onClick={() => toggleShopUnit(thisUnit?._id, thisUnit?.shop_unit)}
+                    onClick={() => toggleShopUnit(unit_id, state_shop)}//thisUnit?.shop_unit
                     sx={unitButton}
                     color="blackBtn"
                 >
@@ -126,9 +110,13 @@ export function UnitBtns ({isInsideMenu, amount}:Props) {
             )}
 
             {wrap(
-                editAmount !== thisUnit?._id ? (
+                isIputOpen !== unit_id ? (
                     <Button
-                        onClick={() => dispatch(openInput(true))}
+                        onClick={() => {
+                            console.log(unit_id)
+                            handleOpenInput(unit_id)
+                            // dispatch(openInput(unit_id))
+                        }}
                         sx={unitButton}
                         color="blackBtn"
                     >
@@ -136,7 +124,7 @@ export function UnitBtns ({isInsideMenu, amount}:Props) {
                     </Button>
                 ) : (
                     <Button
-                        onClick={() => confirmAmount(thisUnit?._id, unitData?.ingredientId)}
+                        onClick={() => confirmAmount(unit_id, ingredient_id)}
                         sx={unitButton}
                         color="blackBtn"
                     >
@@ -145,22 +133,22 @@ export function UnitBtns ({isInsideMenu, amount}:Props) {
                 )
             )}
 
-            {wrap(
+            {/* {wrap(
                 <CalcUnit
                     props={{
                         elem: thisUnit,
                         id: thisUnit._id,
                         ingredient_id: unitData.ingredientId,
-                        amount,
-                        setAmount,
+                        // amount,
+                        // setAmount,
                         recipe_id,
                     }}
                 />
-            )}
+            )} */}
 
             {wrap(
                 <Button
-                    onClick={() => deleteUnitIngr(unitData.ingredientId, thisUnit._id)}
+                    onClick={() => deleteUnitIngr(ingredient_id, unit_id)}
                     sx={unitButton}
                     color="blackBtn"
                 >
@@ -169,7 +157,11 @@ export function UnitBtns ({isInsideMenu, amount}:Props) {
             )}
 
         </>
-        :
-        null
+        
     )
-}
+},(prevProps, nextProps) => {
+    return prevProps.isInsideMenu === nextProps.isInsideMenu &&
+    prevProps.state_shop === nextProps.state_shop 
+})
+
+
