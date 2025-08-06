@@ -19,31 +19,21 @@ interface Props {
     isInsideMenu:boolean, 
     state_shop:boolean,
     handleOpenInput:(value: string) => void
+    isIputOpen:string
+    newAmount:string
 }
 
 
-export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput}:Props) => {
-// export function UnitBtns ({isInsideMenu, state_shop, handleOpenInput}:Props) {
+export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput, isIputOpen, newAmount}:Props) => {
     const { recipe_id, ingredient_id, unit_id } = useUnitContext();
-   
-    const shopStatus = useAppSelector(state => {
-        return recipe_id
-            ? state.listRecipe.operations.shopUnitListRecipe.loading
-            : state.list.operations.shopUnitUpdate.loading;
-    });
+    
     const userStore = useAppSelector(state => state.user);
     const id = userStore?.user?.connection_id;
     const pathName = usePathname();
     const dispatch = useAppDispatch();
-    const isIputOpen = useAppSelector(state => state.listContext.input_value.open_input)
-    const amount = useAppSelector(state => state.listContext.input_value.value)
-
-
     
-
-
     function toggleShopUnit(_id: string | undefined, shop_unit: boolean | undefined) {
-        if (shopStatus) return
+        // if (state_shop) return
 
         if (id !== '' && shop_unit !== undefined && _id) {
             if (pathName === '/list') {
@@ -58,9 +48,9 @@ export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput}:Props)
 
 
     const confirmAmount = useCallback((_id: string | undefined, ingredientId: string) => {
-        if(amount === null) return 
+        if(newAmount === '0') return
 
-        const numberAmount = evaluate(amount)
+        const numberAmount = evaluate(newAmount)
 
         if (id !== '' && _id) {//numberAmount !== thisUnit?.amount
             if (pathName === '/list') {
@@ -68,9 +58,11 @@ export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput}:Props)
             } else if (pathName === '/list-recipe' && recipe_id) {
                 dispatch(newAmountListRecipe({ connection_id: id, ingredient_id: ingredientId, unit_id: _id, amount: numberAmount, _id: recipe_id }))
             }
+
+            handleOpenInput('')
         }
-        dispatch(openInput(''));
-    }, [id, amount, pathName, dispatch, recipe_id]);
+        // dispatch(openInput(''));
+    }, [id, newAmount, pathName, dispatch, recipe_id]);
 
 
     function deleteUnitIngr(ingredient_id: string, unit_id: string | undefined) {
@@ -133,18 +125,9 @@ export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput}:Props)
                 )
             )}
 
-            {/* {wrap(
-                <CalcUnit
-                    props={{
-                        elem: thisUnit,
-                        id: thisUnit._id,
-                        ingredient_id: unitData.ingredientId,
-                        // amount,
-                        // setAmount,
-                        recipe_id,
-                    }}
-                />
-            )} */}
+            {wrap(
+                <CalcUnit/>
+            )}
 
             {wrap(
                 <Button
@@ -161,7 +144,9 @@ export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput}:Props)
     )
 },(prevProps, nextProps) => {
     return prevProps.isInsideMenu === nextProps.isInsideMenu &&
-    prevProps.state_shop === nextProps.state_shop 
+    prevProps.state_shop === nextProps.state_shop &&
+    prevProps.isIputOpen === nextProps.isIputOpen && 
+    prevProps.newAmount === nextProps.newAmount
 })
 
 

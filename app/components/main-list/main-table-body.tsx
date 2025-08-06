@@ -1,5 +1,5 @@
 import { Box, Collapse, ListItemText, TableCell, TableRow, Tooltip, Typography, useMediaQuery } from "@mui/material"
-import { memo, useState } from "react"
+import { memo, useCallback, useMemo, useState } from "react"
 import { MainButtons } from "./main-buttons"
 import { adaptiveIngredientImageBox, imgIngrList, ingredientImage, ingredientImageBox, ingredientNameBox, ingredientRow, mainIngrList, mobileUnitBoxSwiper, mobileUnitCell, mobileUnitIcon, mobileUnitInfoBox, mobileUnitRow, mobileUnitText, nameIngredient, unitBox, unitBoxDesktop } from "@/app/(main)/(main-list)/style"
 import { Swiper, SwiperSlide } from "swiper/react"
@@ -17,10 +17,8 @@ import dynamic from "next/dynamic"
 // import { UnitsId } from "@/app/(main)/(main-list)/list/types"
 import { centerFlexBlock, textMaxWidth } from "@/app/styles"
 import { theme } from "@/config/ThemeMUI/theme"
-import { Unit } from "./units"
+import { Unit } from "./unit"
 import UnitContext from "@/config/unit-context/unit-context"
-import { UnitsId } from "@/app/(main)/(main-list)/list/types"
-import { selectIngredientUnits } from "@/state/selectors/list"
 
 
 
@@ -34,19 +32,8 @@ interface Props {
 const MainTableBody = memo(({ props }: { props: Props }) => {
     const { ingredient_id, recipe_id } = props;
 
-    // const thisIngredient = useAppSelector(state => {
-    //     if (recipe_id) {
-    //         return state.listRecipe.recipes
-    //             .find(el => el._id === recipe_id)
-    //             ?.ingredients_list.find(ing => ing._id === ingredient_id);
-    //     }
-    
-    //     return state.list.list_ingr.find(el => el._id === ingredient_id);
-    // });
     const thisIngredient = useAppSelector(state => state.list.ingredients[ingredient_id])
-    const units = useAppSelector(selectIngredientUnits(ingredient_id));
-
-
+     
     const isMobile = useMediaQuery("(max-width:800px)");
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const pathName = usePathname()
@@ -55,7 +42,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
     const handleToggle = (id: string) => {
         setExpandedId((prevId) => (prevId === id ? null : id));
     }
-    console.log(thisIngredient, units)
+    console.log(thisIngredient)
     if (!thisIngredient) return null;
 
     return (
@@ -142,15 +129,15 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                 {
                                 thisIngredient.unit_ids.length === 0 ?
                                     <EmptyInfo></EmptyInfo>
-                                :
-                                units.map((elem: UnitsId) => (
-                                    <SwiperSlide key={elem.unit_id} className="slide-list-unit" style={{ width: 'auto', maxWidth: '100%' }}>
+                                : 
+                                thisIngredient?.unit_ids.map((elem) => (
+                                    <SwiperSlide key={elem} className="slide-list-unit" style={{ width: 'auto', maxWidth: '100%' }}>
                                         <UnitContext.Provider
-                                            key={elem.unit_id}
+                                            key={elem}
                                             value={{
                                                 recipe_id: recipe_id,
                                                 ingredient_id: thisIngredient.ingredient_id,
-                                                unit_id: elem.unit_id,
+                                                unit_id: elem,
                                             }}
                                         >
                                             <Unit/>
@@ -170,7 +157,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                         </TableCell>
                 }
 
-                {/* <MainButtons props={{ el:thisIngredient, recipe_id }}></MainButtons> */}
+                <MainButtons props={{ el:thisIngredient, recipe_id }}></MainButtons>
             
             </TableRow>
 
@@ -216,18 +203,18 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                         }}
                                     >
                                         {
-                                        units.length === 0 ?
+                                        thisIngredient?.unit_ids.length === 0 ?
                                             <EmptyInfo mobileText={'13px'} right={'calc(50% - 70px)'}></EmptyInfo>
                                         :
-                                        units.map((elem: UnitsId) => (
-                                            <SwiperSlide key={elem.unit_id} className="slide-list-unit"
+                                        thisIngredient?.unit_ids.map((elem) => (
+                                            <SwiperSlide key={elem} className="slide-list-unit"
                                             >
                                                 <UnitContext.Provider
-                                                    key={elem.unit_id}
+                                                    key={elem}
                                                     value={{
                                                         recipe_id: recipe_id,
                                                         ingredient_id: thisIngredient.ingredient_id,
-                                                        unit_id: elem.unit_id,
+                                                        unit_id: elem,
                                                     }}
                                                 >
                                                     <Unit/>

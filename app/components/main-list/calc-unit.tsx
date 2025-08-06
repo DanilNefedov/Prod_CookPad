@@ -14,23 +14,16 @@ import { theme } from "@/config/ThemeMUI/theme";
 import { newAmountListRecipe } from "@/state/slices/list-recipe-slice";
 import { UnitsId } from "@/app/(main)/(main-list)/list/types";
 import { wrapCenter } from "@/app/styles";
-import { editAmount } from "@/state/slices/list-context";
-
-interface Props {
-    elem: UnitsId;
-    id: string;
-    ingredient_id: string;
-    // amount: string
-    // setAmount: (newValue: string) => void
-    recipe_id?: string;
-}
+import { useUnitContext } from "@/config/unit-context/unit-context";
 
 
-export const CalcUnit = memo(({ props }: { props: Props }) => {
-    const { elem, id, ingredient_id, recipe_id } = props
-    const isIputOpen = useAppSelector(state => state.listContext.input_value.open_input)
-    const amount = useAppSelector(state => state.listContext.input_value.value)
-    const [currentValue, setCurrentValue] = useState<string>(amount !== null ? amount : '0');
+export const CalcUnit = memo(() => {
+    const { recipe_id, ingredient_id, unit_id } = useUnitContext();
+    const amount = useAppSelector(state => state.list.units[unit_id].amount)
+    const [currentValue, setCurrentValue] = useState<string>(amount.toString())
+    const userStore = useAppSelector(state => state.user);
+    const connection_id = userStore?.user?.connection_id;
+
     const [isParenthesisOpen, setIsParenthesisOpen] = useState<number>(0);
     const [mathError, setMathError] = useState<string>('')
     const pathName = usePathname()
@@ -38,12 +31,6 @@ export const CalcUnit = memo(({ props }: { props: Props }) => {
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
-
-
-    // useEffect(() => {
-    //     setCurrentValue(amount);
-    // }, [amount]);
-
 
     const handleClick = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -196,16 +183,15 @@ export const CalcUnit = memo(({ props }: { props: Props }) => {
 
         setMathError("");
         setCurrentValue(resEqual);
-        dispatch(editAmount(numericValue.toString()))
         // setAmount(numericValue.toString())
 
-        if (id !== "" && pathName === "/list") {
-            dispatch(changeAmountFetch({ ingredient_id, unit_id: elem._id, amount: numericValue }));
-        } else if (id !== "" && pathName === "/list-recipe" && recipe_id) {
-            dispatch(newAmountListRecipe({ connection_id: id, ingredient_id: ingredient_id, unit_id: elem._id, amount: numericValue, _id: recipe_id }))
+        if (unit_id !== "" && pathName === "/list") {
+            dispatch(changeAmountFetch({ ingredient_id, unit_id: unit_id, amount: numericValue }));
+        } else if (unit_id !== "" && pathName === "/list-recipe" && recipe_id) {
+            dispatch(newAmountListRecipe({ connection_id: connection_id, ingredient_id: ingredient_id, unit_id: unit_id, amount: numericValue, _id: recipe_id }))
         }
 
-    }, [currentValue, id, pathName, ingredient_id, elem._id, dispatch, amount, handleEqual, recipe_id]);
+    }, [currentValue, unit_id, pathName, ingredient_id, dispatch, amount, handleEqual, recipe_id]);
 
     return (
         <>
@@ -302,21 +288,22 @@ export const CalcUnit = memo(({ props }: { props: Props }) => {
         </>
 
     )
-}, (prevProps, nextProps) => {
-    const prev = prevProps.props;
-    const next = nextProps.props;
-
-    const isRecipeIdEqual =
-        ('recipe_id' in prev && 'recipe_id' in next)
-            ? prev.recipe_id === next.recipe_id
-            : true;
-
-    return (
-        prev.id === next.id &&
-        prev.ingredient_id === next.ingredient_id &&
-        isRecipeIdEqual
-    );
-})
+}, )
 
 CalcUnit.displayName = "CalcUnit"
 
+// (prevProps, nextProps) => {
+//     const prev = prevProps.props;
+//     const next = nextProps.props;
+
+//     const isRecipeIdEqual =
+//         ('recipe_id' in prev && 'recipe_id' in next)
+//             ? prev.recipe_id === next.recipe_id
+//             : true;
+
+//     return (
+//         prev.id === next.id &&
+//         prev.ingredient_id === next.ingredient_id &&
+//         isRecipeIdEqual
+//     );
+// }

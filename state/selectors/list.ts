@@ -1,5 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../store';
+import { useMemo } from 'react';
+import { useAppSelector } from '../hook';
 
 
 
@@ -26,15 +28,20 @@ import { RootState } from '../store';
 
 
 
-export const selectIngredientUnits = (ingredient_id: string) => createSelector(
-        [
-            (state: RootState) => state.list.ingredients[ingredient_id],
-            (state: RootState) => state.list.units
-        ],
-        (ingredient, unitsMap) => {
-            if (!ingredient) return [];
-            return ingredient.unit_ids
-                .map((id) => unitsMap[id])
-                .filter(Boolean);
-        }
-);
+// export const selectIngredientUnits = (ingredient_id: string) => createSelector(
+//         [
+//             (state: RootState) => state.list.ingredients[ingredient_id],
+//             (state: RootState) => state.list.units
+//         ],
+//         (ingredient, unitsMap) => {
+//             if (!ingredient) return [];
+//             return ingredient.unit_ids
+//                 .map((id) => unitsMap[id])
+//                 .filter(Boolean);
+//         }
+// );
+
+// export const useMemoizedIngredientUnits = (ingredient_id: string) => {
+//     const selector = useMemo(() => selectIngredientUnits(ingredient_id), [ingredient_id]);
+//     return useAppSelector(selector);
+// };

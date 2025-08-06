@@ -144,7 +144,7 @@ export function AddNewUnit({ props }: { props: Props }) {
 
                         <Box sx={modalInputButtonsBox}>
                             <Button 
-                                onClick={() => confirmAmount(ingr._id)}
+                                onClick={() => confirmAmount(ingr.ingredient_id)}
                                 color="blackBtn"
                                 sx={modalInputButton}                            
                             >

@@ -53,7 +53,7 @@ export function MainButtons({props}: {props:Props}) {
             if(pathName === '/list'){
                 dispatch(toggleShopIngrFetch({ _id, shop_ingr }))            
             }else if(pathName === '/list-recipe' && recipe_id){
-                dispatch(shopIngrListRecipe({ ingredient_id:el._id, connection_id:id, shop_ingr, _id:recipe_id }))
+                dispatch(shopIngrListRecipe({ ingredient_id:el.ingredient_id, connection_id:id, shop_ingr, _id:recipe_id }))
             }
         }
     }
@@ -63,7 +63,7 @@ export function MainButtons({props}: {props:Props}) {
             if(pathName === '/list'){
                 dispatch(deleteIngredientFetch({ _id }))
             }else if(pathName === '/list-recipe' && recipe_id){
-                dispatch(deleteIngrRecipeList({ ingredient_id:el._id, connection_id:id, _id:recipe_id }))
+                dispatch(deleteIngrRecipeList({ ingredient_id:el.ingredient_id, connection_id:id, _id:recipe_id }))
             }
             
         }
@@ -106,7 +106,7 @@ export function MainButtons({props}: {props:Props}) {
                         {/* <Box sx={{ display: "flex", justifyContent: "space-between" }}> */}
                         <MenuItem onClick={handleClose} sx={modileMenuMainBtnsItem}>
                             <Button 
-                                onClick={() => toggleShopIngr(el._id, el.shop_ingr)} 
+                                onClick={() => toggleShopIngr(el.ingredient_id, el.shop_ingr)} 
                                 sx={[btnsListUnitHover, styleBtnsAdaptiveMenu]}
                                 
                             >
@@ -121,7 +121,7 @@ export function MainButtons({props}: {props:Props}) {
                 
 
                         <MenuItem onClick={handleClose} sx={modileMenuMainBtnsItem}>
-                            <Button onClick={() => deleteIngredient(el._id)} sx={[btnsListUnitHover, styleBtnsAdaptiveMenu]}>
+                            <Button onClick={() => deleteIngredient(el.ingredient_id)} sx={[btnsListUnitHover, styleBtnsAdaptiveMenu]}>
                                 <DeleteOutlineOutlinedIcon /> 
                                 <span>Delete</span>
                             </Button>
@@ -135,7 +135,7 @@ export function MainButtons({props}: {props:Props}) {
             ) : (
                 <Box sx={mainButtonsBox}>
                     <Button 
-                        onClick={() => toggleShopIngr(el._id, el.shop_ingr)} 
+                        onClick={() => toggleShopIngr(el.ingredient_id, el.shop_ingr)} 
                         sx={btnsListUnitHover}
                         color="grayButton"
                     >
@@ -145,7 +145,7 @@ export function MainButtons({props}: {props:Props}) {
                     <AddNewUnit props={{ ingr: el, id, recipe_id, }} />
 
                     <Button 
-                        onClick={() => deleteIngredient(el._id)} 
+                        onClick={() => deleteIngredient(el.ingredient_id)} 
                         sx={btnsListUnitHover}
                         color="grayButton"
                     >

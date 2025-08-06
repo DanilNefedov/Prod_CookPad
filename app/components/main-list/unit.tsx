@@ -18,41 +18,29 @@ import { shallowEqual } from "react-redux"
 
 export const Unit = memo(() => {
     const { recipe_id, ingredient_id, unit_id } = useUnitContext();
-    // const isIputOpen = useAppSelector(state => state.listContext.input_value.open_input)
-    // const memoizedSelector = useMemo(() => selectUnitData(recipe_id, ingredient_id, unit_id), [recipe_id, ingredient_id, unit_id]);
-    // const unitData = useAppSelector(memoizedSelector); 
-    // const unitData = useAppSelector(useCallback(
-    //     (state: RootState) => { 
-    //         const ingredient = recipe_id
-    //             ? state.listRecipe.recipes
-    //                 .find(recipe => recipe._id === recipe_id)?.ingredients_list.find(ingr => ingr._id === ingredient_id)
-    //             : state.list.list_ingr.find(ingr => ingr._id === ingredient_id);
-    //         const unitInfo = ingredient?.units.find(unit => unit._id === unit_id);
-    //         return {
-    //             state_amount: unitInfo?.amount ?? 0,
-    //             state_shop: unitInfo?.shop_unit ?? false,
-    //             state_choice: unitInfo?.choice ?? ''
-    //         };
-    //     },
-    //     [recipe_id, ingredient_id, unit_id]
-    // ), shallowEqual);
-    const unitData = useAppSelector(state => state.list.units[unit_id])
-
+   
+    const choice = useAppSelector(state => state.list.units[unit_id].choice)
+    const shop_unit = useAppSelector(state => state.list.units[unit_id].shop_unit)
+    const amount = useAppSelector(state => state.list.units[unit_id].amount)
 
     const userStore = useAppSelector(state => state.user);
     const pathName = usePathname();
     const dispatch = useAppDispatch();
     const id = userStore?.user?.connection_id;
-    const {amount, choice, shop_unit} = unitData;
     
     const [isIputOpen, setIsIputOpen] = useState<string>('')
-    // const [amount, setAmount] = useState<string>(thisUnit ? thisUnit.amount.toString() : '0');
-    // const [editAmount, setEditAmount] = useState<string | null | undefined>(null);
+    const [newAmount, setNewAmount] = useState<string>('');
 
 
     const isMobile = useMediaQuery("(max-width:600px)");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+
+    const handleNewAmount = useCallback((value:string) => {
+        if(value.trim() === '') return
+        setNewAmount(value);
+    }, []);
+
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -67,10 +55,12 @@ export const Unit = memo(() => {
 
 
     const confirmAmount = useCallback((_id: string | undefined, ingredientId: string) => {
-        const numberAmount = amount
-        // const numberAmount = evaluate(amount)
+        // const numberAmount = amount
+        if(newAmount === '0') return
 
-        if (id !== '' && _id) {//numberAmount !== thisUnit?.amount
+        const numberAmount = evaluate(newAmount)
+
+        if (id !== '' && _id ) {//numberAmount !== thisUnit?.amount
             if (pathName === '/list') {
                 dispatch(changeAmountFetch({ ingredient_id: ingredientId, unit_id: _id, amount: numberAmount }));
             } else if (pathName === '/list-recipe' && recipe_id) {
@@ -85,11 +75,12 @@ export const Unit = memo(() => {
 
     const handleAmount = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const sanitized = handleAmountChange(e.target.value);
+        handleNewAmount(sanitized)
         // setAmount(sanitized);
     }
 
     
-    console.log(recipe_id, ingredient_id, unit_id )
+    // console.log(newAmount, amount )
     return (
         <Box 
         key={unit_id}
@@ -117,17 +108,19 @@ export const Unit = memo(() => {
                         }}
 
                         type="number"
-                        value={unitData.amount !== null ? amount.toString() : amount}//thisUnit?.amount.toString()
+                        value={newAmount !== '' ? newAmount : amount}//thisUnit?.amount.toString()
                         onChange={(e) => handleAmount(e)}
                     />
 
-                    <Button
-                        onClick={() => confirmAmount(unit_id, ingredient_id)}//thisUnit?._id  unitData.ingredientId
-                        sx={unitButton2}
-                        color='blackBtn'
-                    >
-                        <CheckIcon color='primary'></CheckIcon>
-                    </Button>
+                    {isMobile && 
+                        <Button
+                            onClick={() => confirmAmount(unit_id, ingredient_id)}//thisUnit?._id  unitData.ingredientId
+                            sx={unitButton2}
+                            color='blackBtn'
+                        >
+                            <CheckIcon color='primary'></CheckIcon>
+                        </Button>
+                    }
                 </Box>
 
                 :
@@ -171,21 +164,24 @@ export const Unit = memo(() => {
                         }}
 
                     >
-                        {/* <UnitBtns 
+                        <UnitBtns 
                             isInsideMenu={true}
                             state_shop={shop_unit} 
                             handleOpenInput={handleOpenInput}
-                        ></UnitBtns> */}
+                            isIputOpen={isIputOpen}
+                            newAmount={newAmount}
+                        ></UnitBtns>
                     </Menu>
                 </>
 
                 :
-                            <></>
-                // <UnitBtns 
-                //     isInsideMenu={false} 
-                //     state_shop={shop_unit}
-                //     handleOpenInput={handleOpenInput}
-                // ></UnitBtns>
+                <UnitBtns 
+                    isInsideMenu={false} 
+                    state_shop={shop_unit}
+                    handleOpenInput={handleOpenInput}
+                    isIputOpen={isIputOpen}
+                    newAmount={newAmount}
+                ></UnitBtns>
 
 
 

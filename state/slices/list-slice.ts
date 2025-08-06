@@ -52,34 +52,6 @@ const loadingStatus: ListOperationKey[] = [
 ];
 
 
-// {
-//   recipes: {
-//     "recipe1": { _id: "recipe1", ingredient_ids: ["ingredient1"] }
-//   },
-// {
-//   ingredients: {
-//     "ingredient1": { ingredient_id: "ingredient1", name:'name', media:'media', shop_ingr:boolean, list:[string], unit_ids: ["unit1", "unit2"] }
-//   },
-//   units: {
-//     "unit1": { unit_id: "unit1", choice:'choice', amount:number, shop_unit: false },
-//   }
-// }
-// export interface ListIngrData {
-//     _id:string,
-//     name: string,
-//     media:string,
-//     shop_ingr: boolean,
-//     list: string[],
-//     units: UnitsId[]
-// }
-// export interface UnitsId {
-//     choice: string,
-//     amount: number,
-//     shop_unit:boolean,
-//     _id:string
-// }
-
-
 
 const initialState: ListState = {
     connection_id: '',
@@ -412,19 +384,6 @@ const listSlice = createSlice({
                 state.operations.fetchList.error = false
                 state.operations.fetchList.loading = false
                 
-                // const payload = action.payload
-                // state.connection_id = payload.connection_id
-
-                // payload.list_ingr.map(el => {
-                //     const findThisIngr = state.list_ingr.find(elem => (elem._id === el._id))
-
-                //     if (!findThisIngr) {
-                //         state.list_ingr.push(el)
-                //     }
-                // })
-
-                // state.page_list = payload.page_list
-                
                 const payload = action.payload;
                 state.connection_id = payload.connection_id;
                 state.page_list = payload.page_list;
@@ -458,79 +417,99 @@ const listSlice = createSlice({
 
             .addCase(newIngredientList.pending, newIngredientListHandlers.pending)
             .addCase(newIngredientList.rejected, newIngredientListHandlers.rejected)
-            .addCase(newIngredientList.fulfilled, (state, action:PayloadAction<NewIngrFetchRes, string>) => {
-                state.operations.newIngredientList.error = false
-                state.operations.newIngredientList.loading = false
+            .addCase(newIngredientList.fulfilled, (state, action: PayloadAction<NewIngrFetchRes, string>) => {
+                state.operations.newIngredientList.error = false;
+                state.operations.newIngredientList.loading = false;
 
                 const data = action.payload;
-                const thisIngr = state.list_ingr.find(el => el._id === data._id)
-                if(state.list_ingr && !thisIngr){
-                    state.list_ingr.push(data)
+
+                const existing = state.ingredients[data._id];
+                if (!existing) {
+                    state.ingredients[data._id] = {
+                        ingredient_id: data._id,
+                        name: data.name,
+                        media: data.media,
+                        shop_ingr: data.shop_ingr,
+                        list: data.list,
+                        unit_ids: data.units.map(unit => unit.unit_id),
+                    };
+
+                    data.units.forEach(unit => {
+                        state.units[unit.unit_id] = unit;
+                    });
                 }
             })
+
 
 
             .addCase(newUnitIngredientList.pending, newUnitIngredientListHandlers.pending)
             .addCase(newUnitIngredientList.rejected, newUnitIngredientListHandlers.rejected)
-            .addCase(newUnitIngredientList.fulfilled, (state, action:PayloadAction<NewUnitIngrFetchRes, string>) => {
-                state.operations.newUnitIngredientList.error = false
-                state.operations.newUnitIngredientList.loading = false
+            .addCase(newUnitIngredientList.fulfilled, (state, action: PayloadAction<NewUnitIngrFetchRes, string>) => {
+                state.operations.newUnitIngredientList.error = false;
+                state.operations.newUnitIngredientList.loading = false;
 
-                const {unit, _id} = action.payload;
-                
-                const thisIngr = state.list_ingr.find(el => el._id === _id)
-                if(thisIngr){
-                    thisIngr.units.push(unit)
+                const { unit, _id } = action.payload;
+
+                const ingredient = state.ingredients[_id];
+                if (ingredient) {
+                    state.units[unit.unit_id] = unit;
+
+                    if (!ingredient.unit_ids.includes(unit.unit_id)) {
+                        ingredient.unit_ids.push(unit.unit_id);
+                    }
                 }
             })
+
 
 
             .addCase(updateCookUnit.pending, updateCookUnitHandlers.pending)
             .addCase(updateCookUnit.rejected, updateCookUnitHandlers.rejected)
             .addCase(updateCookUnit.fulfilled, (state, action: PayloadAction<UpdCookUnitFetch, string>) => {
-                state.operations.updateCookUnit.error = false
-                state.operations.updateCookUnit.loading = false
+                state.operations.updateCookUnit.error = false;
+                state.operations.updateCookUnit.loading = false;
 
                 const { name, amount, _id } = action.payload;
 
-                const ingredient = state.list_ingr.find(ingr => ingr.name === name);
-                if (ingredient) {
-                    const unit = ingredient.units.find(unit => unit._id === _id);
+                const ingredient = Object.values(state.ingredients).find(ingr => ingr.name === name);
+
+                if (ingredient && ingredient.unit_ids.includes(_id)) {
+                    const unit = state.units[_id];
                     if (unit) {
                         unit.amount = amount;
                     }
-
                 }
             })
+
 
 
 
             .addCase(toggleShopIngrFetch.pending, toggleShopIngrFetchHandlers.pending)
             .addCase(toggleShopIngrFetch.rejected, toggleShopIngrFetchHandlers.rejected)
             .addCase(toggleShopIngrFetch.fulfilled, (state, action: PayloadAction<ShopIngrFetch, string>) => {
-                state.operations.toggleShopIngrFetch.error = false
-                state.operations.toggleShopIngrFetch.loading = false
+                state.operations.toggleShopIngrFetch.error = false;
+                state.operations.toggleShopIngrFetch.loading = false;
 
-                const ingredient = state.list_ingr.find(ingr => ingr._id === action.payload._id);
+                const { _id, shop_ingr } = action.payload;
+
+                const ingredient = state.ingredients[_id];
                 if (ingredient) {
-                    ingredient.shop_ingr = !action.payload.shop_ingr;
+                    ingredient.shop_ingr = !shop_ingr;
                 }
-
             })
+
 
 
             .addCase(shopUnitUpdate.pending, shopUnitUpdateHandlers.pending)
             .addCase(shopUnitUpdate.rejected, shopUnitUpdateHandlers.rejected)
             .addCase(shopUnitUpdate.fulfilled, (state, action: PayloadAction<ShopUnitFetch, string>) => {
-                state.operations.shopUnitUpdate.error = false
-                state.operations.shopUnitUpdate.loading = false
-
+                state.operations.shopUnitUpdate.error = false;
+                state.operations.shopUnitUpdate.loading = false;
+                
                 const { ingredient_id, unit_id, shop_unit } = action.payload;
-                const ingredient = state.list_ingr.find(ingr => ingr._id === ingredient_id);
-                if (ingredient) {
-                    const unit = ingredient.units.find(unit => unit._id === unit_id);
-                    if (unit) {
-                        unit.shop_unit = !shop_unit;
+                
+                if (state.ingredients[ingredient_id]) {
+                    if (state.units[unit_id] && state.ingredients[ingredient_id].unit_ids.includes(unit_id)) {
+                        state.units[unit_id].shop_unit = !shop_unit;
                     }
                 }
             })
@@ -539,69 +518,90 @@ const listSlice = createSlice({
 
             .addCase(deleteIngredientFetch.pending, deleteIngredientFetchHandlers.pending)
             .addCase(deleteIngredientFetch.rejected, deleteIngredientFetchHandlers.rejected)
-            .addCase(deleteIngredientFetch.fulfilled, (state, action: PayloadAction<{_id:string}, string>) => {
-                state.operations.deleteIngredientFetch.error = false
-                state.operations.deleteIngredientFetch.loading = false
+            .addCase(deleteIngredientFetch.fulfilled, (state, action: PayloadAction<{ _id: string }, string>) => {
+                state.operations.deleteIngredientFetch.error = false;
+                state.operations.deleteIngredientFetch.loading = false;
 
                 const { _id } = action.payload;
-                state.list_ingr = state.list_ingr.filter(
-                    (item) => item._id !== _id
-                );
+
+                const ingredient = state.ingredients[_id];
+                if (ingredient) {
+                    const unitsToRemove = new Set(ingredient.unit_ids);
+
+                    state.units = Object.fromEntries(
+                    Object.entries(state.units)
+                        .filter(([unitId]) => !unitsToRemove.has(unitId))
+                    );
+
+                    state.ingredients = Object.fromEntries(
+                    Object.entries(state.ingredients)
+                        .filter(([ingredientId]) => ingredientId !== _id)
+                    );
+                }
             })
+
+
 
 
 
             .addCase(deleteUnitIngrFetch.pending, deleteUnitIngrFetchHandlers.pending)
             .addCase(deleteUnitIngrFetch.rejected, deleteUnitIngrFetchHandlers.rejected)
             .addCase(deleteUnitIngrFetch.fulfilled, (state, action: PayloadAction<DeleteUnitIngrFetch, string>) => {
-                state.operations.deleteUnitIngrFetch.error = false
-                state.operations.deleteUnitIngrFetch.loading = false
+                state.operations.deleteUnitIngrFetch.error = false;
+                state.operations.deleteUnitIngrFetch.loading = false;
 
                 const { ingredient_id, unit_id } = action.payload;
-                const ingredient = state.list_ingr.find(ingr => ingr._id === ingredient_id);
+
+                const ingredient = state.ingredients[ingredient_id];
                 if (ingredient) {
-                    ingredient.units = ingredient.units.filter(unit => unit._id !== unit_id);
+                    ingredient.unit_ids = ingredient.unit_ids.filter(id => id !== unit_id);
                 }
+
+                state.units = Object.fromEntries(
+                    Object.entries(state.units).filter(([key]) => key !== unit_id)
+                );
             })
+
 
 
             .addCase(changeAmountFetch.pending, changeAmountFetchHandlers.pending)
             .addCase(changeAmountFetch.rejected, changeAmountFetchHandlers.rejected)
             .addCase(changeAmountFetch.fulfilled, (state, action: PayloadAction<ChangeAmountFetch, string>) => {
-                state.operations.changeAmountFetch.error = false
-                state.operations.changeAmountFetch.loading = false
-                
+                state.operations.changeAmountFetch.error = false;
+                state.operations.changeAmountFetch.loading = false;
+
                 const { ingredient_id, unit_id, amount } = action.payload;
-        
-                const ingredientIndex = state.list_ingr.findIndex(
-                    (ingredient) => ingredient._id === ingredient_id
-                );
-                
-                if (ingredientIndex !== -1) {
-                    const unitIndex = state.list_ingr[ingredientIndex].units.findIndex(
-                        (unit) => unit._id === unit_id
-                    );
-                    
-                    if (unitIndex !== -1) {
-                        state.list_ingr[ingredientIndex].units[unitIndex].amount = amount;
-                    }
+
+                const ingredient = state.ingredients[ingredient_id];
+                const unitExists = ingredient?.unit_ids.includes(unit_id);
+                const unit = state.units[unit_id];
+
+                if (ingredient && unitExists && unit) {
+                    unit.amount = amount;
                 }
             })
+
 
 
 
             .addCase(addNewUnit.pending, addNewUnitHandlers.pending)
             .addCase(addNewUnit.rejected, addNewUnitHandlers.rejected)
             .addCase(addNewUnit.fulfilled, (state, action: PayloadAction<NewUnitFetchRes, string>) => {
-                state.operations.addNewUnit.error = false
-                state.operations.addNewUnit.loading = false
+                state.operations.addNewUnit.error = false;
+                state.operations.addNewUnit.loading = false;
 
                 const { ingredient_id, new_unit } = action.payload;
-                const ingredient = state.list_ingr.find(ingr => ingr._id === ingredient_id);
+
+                const ingredient = state.ingredients[ingredient_id];
                 if (ingredient) {
-                    ingredient.units.push(new_unit)
+                    state.units[new_unit.unit_id] = new_unit;
+
+                    if (!ingredient.unit_ids.includes(new_unit.unit_id)) {
+                        ingredient.unit_ids.push(new_unit.unit_id);
+                    }
                 }
             })
+
         }
 })
     
