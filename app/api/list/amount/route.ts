@@ -10,6 +10,8 @@ export async function PATCH(request: Request) {
     try {
         const { ingredient_id, unit_id, amount } = await request.json();
 
+        console.log('ingredient_id, unit_id, amountingredient_id, unit_id, amountingredient_id, unit_id, amount',ingredient_id, unit_id, amount)
+
         if (!ingredient_id || !unit_id || amount === undefined) {
             return NextResponse.json(
                 { message: 'Invalid request data' }, 

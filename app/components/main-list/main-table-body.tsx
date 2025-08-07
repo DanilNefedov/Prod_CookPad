@@ -1,6 +1,5 @@
 import { Box, Collapse, ListItemText, TableCell, TableRow, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { memo, useCallback, useMemo, useState } from "react"
-import { MainButtons } from "./main-buttons"
 import { adaptiveIngredientImageBox, imgIngrList, ingredientImage, ingredientImageBox, ingredientNameBox, ingredientRow, mainIngrList, mobileUnitBoxSwiper, mobileUnitCell, mobileUnitIcon, mobileUnitInfoBox, mobileUnitRow, mobileUnitText, nameIngredient, unitBox, unitBoxDesktop } from "@/app/(main)/(main-list)/style"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { useAppSelector } from "@/state/hook"
@@ -19,6 +18,7 @@ import { centerFlexBlock, textMaxWidth } from "@/app/styles"
 import { theme } from "@/config/ThemeMUI/theme"
 import { Unit } from "./unit"
 import UnitContext from "@/config/unit-context/unit-context"
+import MainButtons from "./main-buttons"
 
 
 
@@ -33,6 +33,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
     const { ingredient_id, recipe_id } = props;
 
     const thisIngredient = useAppSelector(state => state.list.ingredients[ingredient_id])
+    const ingredient_shop = useAppSelector(state => state.list.ingredients[ingredient_id].shop_ingr)
      
     const isMobile = useMediaQuery("(max-width:800px)");
     const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -42,13 +43,13 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
     const handleToggle = (id: string) => {
         setExpandedId((prevId) => (prevId === id ? null : id));
     }
-    console.log(thisIngredient)
+    console.log('main-table-body')
     if (!thisIngredient) return null;
 
     return (
         <>
             <TableRow sx={[ingredientRow, {
-                opacity: `${thisIngredient.shop_ingr ? 0.4 : 1}`,
+                opacity: `${ingredient_shop ? 0.4 : 1}`,
                 '& .MuiTableCell-root': {
                     borderBottom: `${isMobile ? 'none' : '5px solid'}`,
                     borderColor: `${pathName === '/list-recipe' ? 'background.default' : 'background.paper'}`
@@ -130,21 +131,40 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                 thisIngredient.unit_ids.length === 0 ?
                                     <EmptyInfo></EmptyInfo>
                                 : 
-                                thisIngredient?.unit_ids.map((elem) => (
-                                    <SwiperSlide key={elem} className="slide-list-unit" style={{ width: 'auto', maxWidth: '100%' }}>
-                                        <UnitContext.Provider
-                                            key={elem}
-                                            value={{
-                                                recipe_id: recipe_id,
-                                                ingredient_id: thisIngredient.ingredient_id,
-                                                unit_id: elem,
-                                            }}
-                                        >
-                                            <Unit/>
-                                        </UnitContext.Provider>
+                                // thisIngredient?.unit_ids.map((elem) => (
+                                //     <SwiperSlide key={elem} className="slide-list-unit" style={{ width: 'auto', maxWidth: '100%' }}>
+                                //         <UnitContext.Provider
+                                //             key={elem}
+                                //             value={{
+                                //                 recipe_id: recipe_id,
+                                //                 ingredient_id: ingredient_id,
+                                //                 unit_id: elem,
+                                //             }}
+                                //         >
+                                //             <Unit/>
+                                //         </UnitContext.Provider>
 
-                                    </SwiperSlide>
-                                ))
+                                //     </SwiperSlide>
+                                // ))
+                                thisIngredient.unit_ids.map((elem) => {
+                                    const contextValue = useMemo(() => ({
+                                        recipe_id,
+                                        ingredient_id: thisIngredient.ingredient_id,
+                                        unit_id: elem,
+                                    }), [recipe_id, thisIngredient.ingredient_id, elem]);
+
+                                    return (
+                                        <SwiperSlide
+                                            key={elem}
+                                            className="slide-list-unit"
+                                            style={{ width: 'auto', maxWidth: '100%' }}
+                                        >
+                                            <UnitContext.Provider value={contextValue}>
+                                                <Unit />
+                                            </UnitContext.Provider>
+                                        </SwiperSlide>
+                                    );
+                                })
                                 }
 
                                 <div className={`custom-prev-list-unit ${pathName === '/list-recipe' ? 'list-recipe-disabled-btn' : 'list-disabled-btn'}`}>
@@ -157,7 +177,8 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                         </TableCell>
                 }
 
-                <MainButtons props={{ el:thisIngredient, recipe_id }}></MainButtons>
+                <MainButtons ingredient_id={ingredient_id} recipe_id={recipe_id} ingredient_shop={ingredient_shop}></MainButtons>
+                {/* el={thisIngredient} recipe_id={recipe_id}  */}
             
             </TableRow>
 
@@ -206,21 +227,40 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                         thisIngredient?.unit_ids.length === 0 ?
                                             <EmptyInfo mobileText={'13px'} right={'calc(50% - 70px)'}></EmptyInfo>
                                         :
-                                        thisIngredient?.unit_ids.map((elem) => (
-                                            <SwiperSlide key={elem} className="slide-list-unit"
-                                            >
-                                                <UnitContext.Provider
+                                        // thisIngredient?.unit_ids.map((elem) => (
+                                        //     <SwiperSlide key={elem} className="slide-list-unit"
+                                        //     >
+                                        //         <UnitContext.Provider
+                                        //             key={elem}
+                                        //             value={{
+                                        //                 recipe_id: recipe_id,
+                                        //                 ingredient_id: thisIngredient.ingredient_id,
+                                        //                 unit_id: elem,
+                                        //             }}
+                                        //         >
+                                        //             <Unit/>
+                                        //         </UnitContext.Provider>
+                                        //     </SwiperSlide>
+                                        // ))
+                                        thisIngredient.unit_ids.map((elem) => {
+                                            const contextValue = useMemo(() => ({
+                                                recipe_id,
+                                                ingredient_id: thisIngredient.ingredient_id,
+                                                unit_id: elem,
+                                            }), [recipe_id, thisIngredient.ingredient_id, elem]);
+
+                                            return (
+                                                <SwiperSlide
                                                     key={elem}
-                                                    value={{
-                                                        recipe_id: recipe_id,
-                                                        ingredient_id: thisIngredient.ingredient_id,
-                                                        unit_id: elem,
-                                                    }}
+                                                    className="slide-list-unit"
                                                 >
-                                                    <Unit/>
-                                                </UnitContext.Provider>
-                                            </SwiperSlide>
-                                        ))}
+                                                    <UnitContext.Provider value={contextValue}>
+                                                        <Unit />
+                                                    </UnitContext.Provider>
+                                                </SwiperSlide>
+                                            );
+                                        })
+                                        }
 
                                         <div className={`custom-prev-list-unit ${pathName === '/list-recipe' ? 'list-recipe-disabled-btn' : 'list-disabled-btn'}`}>
                                             <ArrowLeftIcon></ArrowLeftIcon>

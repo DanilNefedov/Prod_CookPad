@@ -63,7 +63,7 @@ export function AddNewUnit({ props }: { props: Props }) {
 
     }
 
-
+    console.log('add-unit')
     return (
         <>
             <Button 

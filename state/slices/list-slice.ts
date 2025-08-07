@@ -284,6 +284,7 @@ export const changeAmountFetch = createAsyncThunk<ChangeAmountFetch, ChangeAmoun
     'list/changeAmountFetch',
     async function (data, { rejectWithValue }) {
         try {
+            
             const response = await fetch('/api/list/amount', {
                 method: 'PATCH',
                 headers: {

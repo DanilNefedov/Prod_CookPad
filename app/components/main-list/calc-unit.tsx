@@ -193,6 +193,7 @@ export const CalcUnit = memo(() => {
 
     }, [currentValue, unit_id, pathName, ingredient_id, dispatch, amount, handleEqual, recipe_id]);
 
+    console.log('calc-unit')
     return (
         <>
             <Button

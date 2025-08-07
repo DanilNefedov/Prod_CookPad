@@ -3,11 +3,11 @@ import { useAppDispatch, useAppSelector } from '@/state/hook';
 import { fetchList, } from '@/state/slices/list-slice';
 import { Button, Table, TableBody, TableCell, TableRow, } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
-import { MainTableHeader } from '../main-table-header';
 import MainTableBody from '../main-table-body';
 import { UXLoading } from '../../ui-helpers/loading';
 import { EmptyInfo } from '../../ui-helpers/empty-info';
 import { containerInfo, moreButton, table, tableBody } from '@/app/(main)/(main-list)/list/styles';
+import MainTableHeader from '../main-table-header';
 
 
 export function MainListPage() {
@@ -116,6 +116,7 @@ export function MainListPage() {
                                 sortBy,
                                 setSortBy
                             }}></MainTableHeader>
+
 
                             <TableBody sx={tableBody}>
                                 {sortedList.map((el) => ( 

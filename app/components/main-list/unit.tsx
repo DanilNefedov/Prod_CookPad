@@ -36,11 +36,6 @@ export const Unit = memo(() => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
-    const handleNewAmount = useCallback((value:string) => {
-        if(value.trim() === '') return
-        setNewAmount(value);
-    }, []);
-
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -59,6 +54,7 @@ export const Unit = memo(() => {
         if(newAmount === '0') return
 
         const numberAmount = evaluate(newAmount)
+        console.log(numberAmount, newAmount)
 
         if (id !== '' && _id ) {//numberAmount !== thisUnit?.amount
             if (pathName === '/list') {
@@ -67,20 +63,22 @@ export const Unit = memo(() => {
                 dispatch(newAmountListRecipe({ connection_id: id, ingredient_id: ingredientId, unit_id: _id, amount: numberAmount, _id: recipe_id }))
             }
         }
+        setIsIputOpen('')
         // setEditAmount(null);
-    }, [id, amount, pathName, dispatch, recipe_id, ]);//thisUnit?.amount
+    }, [id, newAmount, amount, pathName, dispatch, recipe_id, ]);//thisUnit?.amount
 
 
 
 
     const handleAmount = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        if(e.target.value.trim() === '') return
         const sanitized = handleAmountChange(e.target.value);
-        handleNewAmount(sanitized)
+        setNewAmount(sanitized);
         // setAmount(sanitized);
     }
 
     
-    // console.log(newAmount, amount )
+    console.log('unit')
     return (
         <Box 
         key={unit_id}
@@ -168,6 +166,7 @@ export const Unit = memo(() => {
                             isInsideMenu={true}
                             state_shop={shop_unit} 
                             handleOpenInput={handleOpenInput}
+                            confirmAmount={confirmAmount}
                             isIputOpen={isIputOpen}
                             newAmount={newAmount}
                         ></UnitBtns>
@@ -179,6 +178,7 @@ export const Unit = memo(() => {
                     isInsideMenu={false} 
                     state_shop={shop_unit}
                     handleOpenInput={handleOpenInput}
+                    confirmAmount={confirmAmount}
                     isIputOpen={isIputOpen}
                     newAmount={newAmount}
                 ></UnitBtns>

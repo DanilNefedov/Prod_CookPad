@@ -20,11 +20,11 @@ interface Props {
     state_shop:boolean,
     handleOpenInput:(value: string) => void
     isIputOpen:string
+    confirmAmount: (_id: string | undefined, ingredientId: string) => void
     newAmount:string
 }
 
-
-export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput, isIputOpen, newAmount}:Props) => {
+export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput, isIputOpen, confirmAmount}:Props) => {
     const { recipe_id, ingredient_id, unit_id } = useUnitContext();
     
     const userStore = useAppSelector(state => state.user);
@@ -47,22 +47,22 @@ export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput, isIput
     }
 
 
-    const confirmAmount = useCallback((_id: string | undefined, ingredientId: string) => {
-        if(newAmount === '0') return
+    // const confirmAmount = useCallback((_id: string | undefined, ingredientId: string) => {
+    //     if(newAmount === '0') return
 
-        const numberAmount = evaluate(newAmount)
+    //     const numberAmount = evaluate(newAmount)
 
-        if (id !== '' && _id) {//numberAmount !== thisUnit?.amount
-            if (pathName === '/list') {
-                dispatch(changeAmountFetch({ ingredient_id: ingredientId, unit_id: _id, amount: numberAmount }));
-            } else if (pathName === '/list-recipe' && recipe_id) {
-                dispatch(newAmountListRecipe({ connection_id: id, ingredient_id: ingredientId, unit_id: _id, amount: numberAmount, _id: recipe_id }))
-            }
+    //     if (id !== '' && _id) {//numberAmount !== thisUnit?.amount
+    //         if (pathName === '/list') {
+    //             dispatch(changeAmountFetch({ ingredient_id: ingredientId, unit_id: _id, amount: numberAmount }));
+    //         } else if (pathName === '/list-recipe' && recipe_id) {
+    //             dispatch(newAmountListRecipe({ connection_id: id, ingredient_id: ingredientId, unit_id: _id, amount: numberAmount, _id: recipe_id }))
+    //         }
 
-            handleOpenInput('')
-        }
-        // dispatch(openInput(''));
-    }, [id, newAmount, pathName, dispatch, recipe_id]);
+    //         handleOpenInput('')
+    //     }
+    //     // dispatch(openInput(''));
+    // }, [id, newAmount, pathName, dispatch, recipe_id]);
 
 
     function deleteUnitIngr(ingredient_id: string, unit_id: string | undefined) {
@@ -78,7 +78,7 @@ export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput, isIput
     }
     
     
-    // console.log(isIputOpen, unit_id)
+    console.log('unit-btns')
     const wrap = (node: React.ReactNode) => isInsideMenu ? (
         <MenuItem sx={unitMenuItem}> 
         {/* onClick={handleClose} */}
@@ -145,7 +145,7 @@ export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput, isIput
 },(prevProps, nextProps) => {
     return prevProps.isInsideMenu === nextProps.isInsideMenu &&
     prevProps.state_shop === nextProps.state_shop &&
-    prevProps.isIputOpen === nextProps.isIputOpen && 
+    prevProps.isIputOpen === nextProps.isIputOpen &&
     prevProps.newAmount === nextProps.newAmount
 })
 

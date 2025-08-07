@@ -1,7 +1,7 @@
 import { adaptiveIngredientImageBox, boxText, cellHeader, headerArrow, headerText, sortBtnHeader, tableHeader } from "@/app/(main)/(main-list)/style";
 import { Box, TableCell, TableHead, TableRow, Theme, Typography } from "@mui/material";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { Dispatch, SetStateAction, } from "react";
+import { Dispatch, memo, SetStateAction, } from "react";
 import { usePathname } from "next/navigation";
 import { centerFlexBlock } from "@/app/styles";
 
@@ -16,8 +16,8 @@ interface Props{
     setSortBy:Dispatch<SetStateAction<string | null>>
 }
 
-
-export function MainTableHeader ({props}: {props:Props}) {
+export const MainTableHeader = memo(({ props }: { props: Props }) => { 
+// export function MainTableHeader ({props}: {props:Props}) {
     const {setSortBy, setSortOrder, sortBy, sortOrder} = props
     const pathName = usePathname()
 
@@ -45,7 +45,7 @@ export function MainTableHeader ({props}: {props:Props}) {
     };
 
 
-
+    console.log('head')
     return(
         <TableHead sx={tableHeader}>
             <TableRow sx={[cellHeader, {
@@ -87,4 +87,14 @@ export function MainTableHeader ({props}: {props:Props}) {
             </TableRow>
         </TableHead>
     )
-}
+}, (prevProps, nextProps) => {
+    
+    return prevProps.props.sortBy === nextProps.props.sortBy && 
+    prevProps.props.sortOrder === nextProps.props.sortOrder
+})
+
+
+MainTableHeader.displayName = "MainTableBody"
+
+
+export default MainTableHeader
