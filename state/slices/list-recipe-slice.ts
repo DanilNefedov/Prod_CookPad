@@ -49,7 +49,9 @@ const loadingStatus: OperationKey[] = [
 const initialState: ListRecipeState = {
     connection_id: '',
     page:1,
-    recipes: [],
+    recipes: {}, 
+    ingredients: {},
+    units: {}, 
     operations:createOperations<OperationKey>(
         listOperationKeys,
         (key) =>
@@ -371,73 +373,134 @@ const listRecipeSlice = createSlice({
         builder
             .addCase(newListRecipe.pending, newListRecipeHandlers.pending)
             .addCase(newListRecipe.rejected, newListRecipeHandlers.rejected)
-            .addCase(newListRecipe.fulfilled, (state, action: PayloadAction<ListRecipeData, string>) => {
-                state.operations.newListRecipe.error = false
-                state.operations.newListRecipe.loading = false
+            // .addCase(newListRecipe.fulfilled, (state, action: PayloadAction<ListRecipeData, string>) => {
+            //     state.operations.newListRecipe.error = false
+            //     state.operations.newListRecipe.loading = false
 
-                const payload = action.payload
+            //     const payload = action.payload
                 
-                const alreadyExists = state.recipes.some(recipe => recipe._id === payload._id);
+            //     const alreadyExists = state.recipes.some(recipe => recipe._id === payload._id);
 
-                if (!alreadyExists) {
-                    state.recipes.push(payload);
+            //     if (!alreadyExists) {
+            //         state.recipes.push(payload);
+            //     }
+
+            // })
+            .addCase(newListRecipe.fulfilled, (state, action: PayloadAction<ListRecipeData, string>) => {
+                state.operations.newListRecipe.error = false;
+                state.operations.newListRecipe.loading = false;
+
+                const payload = action.payload;
+
+                if (!state.recipes[payload._id]) {
+                    state.recipes[payload._id] = payload;
                 }
-
             })
+
            
 
             .addCase(preLoaderMain.pending, preLoaderMainHandlers.pending)
             .addCase(preLoaderMain.rejected, preLoaderMainHandlers.rejected)
-            .addCase(preLoaderMain.fulfilled, (state, action: PayloadAction<PreLoaderFetchRes, string>) => {
-                state.operations.preLoaderMain.error = false
-                state.operations.preLoaderMain.loading = false
-                console.log(action.payload)
-                const payload = action.payload
-                state.connection_id = payload.connection_id
+            // .addCase(preLoaderMain.fulfilled, (state, action: PayloadAction<PreLoaderFetchRes, string>) => {
+            //     state.operations.preLoaderMain.error = false
+            //     state.operations.preLoaderMain.loading = false
+
+            //     const payload = action.payload
+            //     state.connection_id = payload.connection_id
+
+            //     payload.recipe.forEach((recipe) => {
+            //         if (!state.recipes.some(existingRecipe => existingRecipe._id === recipe._id)) {
+            //             state.recipes.push({
+            //                 _id:recipe._id,
+            //                 recipe_id: recipe.recipe_id,
+            //                 recipe_name: recipe.recipe_name,
+            //                 recipe_media: recipe.recipe_media, 
+            //                 recipe_shop: recipe.recipe_shop,
+            //                 ingredients_list: [] 
+            //             });
+            //         }
+            //     });
+
                 
+            //     state.page = payload.page
+            // })
+            .addCase(preLoaderMain.fulfilled, (state, action: PayloadAction<PreLoaderFetchRes, string>) => {
+                    state.operations.preLoaderMain.error = false;
+                    state.operations.preLoaderMain.loading = false;
 
+                    const payload = action.payload;
+                    state.connection_id = payload.connection_id;
+                    state.page = payload.page;
 
-                payload.recipe.forEach((recipe) => {
-                    if (!state.recipes.some(existingRecipe => existingRecipe._id === recipe._id)) {
-                        state.recipes.push({
+                    payload.recipe.forEach((recipe) => {
+                    const recipeId = recipe._id;
+
+                    if (!state.recipes[recipeId]) {
+                        state.recipes[recipeId] = {
                             _id:recipe._id,
-                            recipe_id: recipe.recipe_id,
+                            recipe_id: recipeId,
                             recipe_name: recipe.recipe_name,
-                            recipe_media: recipe.recipe_media, 
+                            recipe_media: recipe.recipe_media,
                             recipe_shop: recipe.recipe_shop,
-                            ingredients_list: [] 
-                        });
+                            ingredient_ids: [] 
+                        };
                     }
                 });
-                
-                
-                state.page = payload.page
             })
+
            
 
 
 
             .addCase(ingredientsListRecipe.pending, ingredientsListRecipeHandlers.pending)
             .addCase(ingredientsListRecipe.rejected, ingredientsListRecipeHandlers.rejected)
+            // .addCase(ingredientsListRecipe.fulfilled, (state, action: PayloadAction<IngrListRecipeFetchRes, string>) => {
+            //     state.operations.ingredientsListRecipe.error = false
+            //     state.operations.ingredientsListRecipe.loading = false
+
+            //     const payload = action.payload;
+            //     state.connection_id = payload.connection_id;
+            
+            //     if (payload.ingredients.length > 0) {
+            //         payload.ingredients.forEach(ingr => {
+            //             const existingRecipeIndex = state.recipes.findIndex(existingRecipe => existingRecipe._id === payload._id);
+            
+            //             if (existingRecipeIndex !== -1) {
+            //                 const existingRecipe = state.recipes[existingRecipeIndex];
+                            
+            //                 existingRecipe.ingredients_list.unshift(ingr);
+            //             }
+            //         });
+            //     } 
+            // })
             .addCase(ingredientsListRecipe.fulfilled, (state, action: PayloadAction<IngrListRecipeFetchRes, string>) => {
-                state.operations.ingredientsListRecipe.error = false
-                state.operations.ingredientsListRecipe.loading = false
+                state.operations.ingredientsListRecipe.error = false;
+                state.operations.ingredientsListRecipe.loading = false;
 
                 const payload = action.payload;
                 state.connection_id = payload.connection_id;
-            
-                if (payload.ingredients.length > 0) {
-                    payload.ingredients.forEach(ingr => {
-                        const existingRecipeIndex = state.recipes.findIndex(existingRecipe => existingRecipe._id === payload._id);
-            
-                        if (existingRecipeIndex !== -1) {
-                            const existingRecipe = state.recipes[existingRecipeIndex];
-                            
-                            existingRecipe.ingredients_list.unshift(ingr);
-                        }
-                    });
-                } 
+
+                // payload._id - id рецепта
+                // payload.ingredients - массив новых ингредиентов (ListIngrData[])
+                console.log(payload)
+                const recipe = state.recipes[payload._id];
+                if (!recipe) {
+                    // если рецепт не найден - можно выйти
+                    return;
+                }
+
+                payload.ingredients.forEach(ingr => {
+                    // Добавляем или обновляем ингредиент в общем хранилище
+                    state.ingredients[ingr.ingredient_id] = ingr;
+                    
+                    // Если ingredient_id ещё нет в рецепте, добавляем
+                    if (!recipe.ingredient_ids.includes(ingr.ingredient_id)) {
+
+                        recipe.ingredient_ids.unshift(ingr.ingredient_id); // добавляем в начало, как было в unshift
+                    }
+                });
             })
+
 
 
 
@@ -453,7 +516,7 @@ const listRecipeSlice = createSlice({
 
                 if (thisRecipe) {
                     thisRecipe.ingredients_list.map(el => {
-                        if (el._id === ingredient_id) {
+                        if (el.ingredient_id === ingredient_id) {
                             el.shop_ingr = shop_ingr
                         }
                     })
@@ -491,9 +554,9 @@ const listRecipeSlice = createSlice({
                 const recipe = state.recipes.find(recipe => recipe._id === _id);
 
                 if (recipe) {
-                    const ingredient = recipe.ingredients_list.find(ingredient => ingredient._id === ingredient_id);
+                    const ingredient = recipe.ingredients_list.find(ingredient => ingredient.ingredient_id === ingredient_id);
                     if (ingredient) {
-                        const unit = ingredient.units.find(unit => unit._id === unit_id);
+                        const unit = ingredient.unit_ids.find(unit => unit === unit_id);
                         if (unit) {
                             unit.shop_unit = shop_unit;
                         }
@@ -516,7 +579,7 @@ const listRecipeSlice = createSlice({
                 if (recipe) {
                     const ingredient = recipe.ingredients_list.find(ingredient => ingredient._id === ingredient_id);
                     if (ingredient) {
-                        const unit = ingredient.units.find(unit => unit._id === unit_id);
+                        const unit = ingredient.unit_ids.find(unit => unit === unit_id);
                         if (unit) {
                             unit.amount = amount;
                         }
@@ -537,8 +600,8 @@ const listRecipeSlice = createSlice({
 
                 if (thisRecipe) {
                     thisRecipe.ingredients_list.map(el => {
-                        if (el._id === ingredient_id) {
-                            el.units.push(new_unit)
+                        if (el.ingredient_id === ingredient_id) {
+                            el.unit_ids.push(new_unit.unit_id)
                         }
                     })
                 }
@@ -559,7 +622,7 @@ const listRecipeSlice = createSlice({
                 if (recipe) {
                     const ingredient = recipe.ingredients_list.find(el => el._id === ingredient_id);
                     if (ingredient) {
-                        ingredient.units = ingredient.units.filter(unit => unit._id !== unit_id);
+                        ingredient.unit_ids = ingredient.unit_ids.filter(unit => unit !== unit_id);
                     }
                 }
 

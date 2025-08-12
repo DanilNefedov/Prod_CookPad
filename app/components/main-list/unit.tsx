@@ -15,8 +15,8 @@ import { RootState } from "@/state/store"
 import { shallowEqual } from "react-redux"
 
 
-
-export const Unit = memo(() => {
+export function Unit (){
+// export const Unit = memo(() => {
     const { recipe_id, ingredient_id, unit_id } = useUnitContext();
    
     const choice = useAppSelector(state => state.list.units[unit_id].choice)
@@ -64,6 +64,7 @@ export const Unit = memo(() => {
             }
         }
         setIsIputOpen('')
+        setNewAmount('')
         // setEditAmount(null);
     }, [id, newAmount, amount, pathName, dispatch, recipe_id, ]);//thisUnit?.amount
 
@@ -71,7 +72,7 @@ export const Unit = memo(() => {
 
 
     const handleAmount = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        if(e.target.value.trim() === '') return
+        // if(e.target.value.trim() === '') return
         const sanitized = handleAmountChange(e.target.value);
         setNewAmount(sanitized);
         // setAmount(sanitized);
@@ -182,48 +183,8 @@ export const Unit = memo(() => {
                     isIputOpen={isIputOpen}
                     newAmount={newAmount}
                 ></UnitBtns>
-
-
-
-
-                // <>
-                //     <Button
-                //         onClick={() => toggleShopUnit(thisUnit?._id, thisUnit?.shop_unit)}
-                //         sx={unitButton}
-                //         color='blackBtn'
-                //     >
-                //         <ShoppingBagOutlinedIcon color='primary'></ShoppingBagOutlinedIcon>
-                //     </Button>
-                //     {editAmount !== thisUnit?._id ?
-                //     <Button
-                //         onClick={() => setEditAmount(thisUnit?._id)}
-                //         sx={unitButton}
-                //         color='blackBtn'
-                //     >
-                //         <EditIcon color='primary'></EditIcon>
-                //     </Button>
-                //     :
-                //     <Button
-                //         onClick={() => confirmAmount(thisUnit?._id, unitData.ingredientId)}
-                //         sx={unitButton}
-                //         color='blackBtn'
-                //     >
-                //         <CheckIcon color='primary'></CheckIcon>
-                //     </Button>}
-                            
-                //     <CalcUnit props={{ elem: thisUnit as UnitsId, id, ingredient_id: unitData.ingredientId, amount, setAmount, recipe_id }}></CalcUnit>
-
-                //     <Button
-                //         onClick={() => deleteUnitIngr(unitData.ingredientId, thisUnit?._id)}
-                //         sx={unitButton}
-                //         color='blackBtn'
-                //     >
-                //         <DeleteOutlineOutlinedIcon color='primary'></DeleteOutlineOutlinedIcon>
-                //     </Button>       
-                // </>
             }
         </Box>
     )
-})
+}
 
-Unit.displayName = "Unit"

@@ -58,7 +58,6 @@ const initialState: ListState = {
     page_list: 1,
     ingredients:{},
     units:{},
-    // list_ingr: [],
     operations:createOperations<ListOperationKey>(
         listOperationKeys,
         (key) =>

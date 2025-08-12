@@ -34,6 +34,11 @@ export const moreButton = {
     width: '150px',
     height: '32.5px',
     m: '20px auto',
+
+    [theme.breakpoints.down('md')]: { 
+        width:'130px',
+        height:'30px'
+    }
 }
 
 

@@ -1,8 +1,6 @@
-import { theme } from "@/config/ThemeMUI/theme";
 import { Box, Button, IconButton, Menu, MenuItem, TableCell, useMediaQuery } from "@mui/material";
 import { memo, MouseEvent, useState } from "react";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { AddNewUnit } from "./add-unit";
 import { btnsListUnitHover, iconMenuMainBtns, mainButtonsBox, mainButtonsCell, mobileMenuMainBtns, modileMenuMainBtnsItem, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/style";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { deleteIngredientFetch, toggleShopIngrFetch } from "@/state/slices/list-slice";
@@ -10,9 +8,7 @@ import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { usePathname } from "next/navigation";
 import { deleteIngrRecipeList, shopIngrListRecipe } from "@/state/slices/list-recipe-slice";
-import { ListIngrData } from "@/app/(main)/(main-list)/list/types";
-import { useUnitContext } from "@/config/unit-context/unit-context";
-import { shallowEqual } from "react-redux";
+import AddNewUnit from "./add-unit";
 
 
 interface Props{
@@ -124,7 +120,7 @@ const MainButtons = memo((props: Props) => {//
                         </MenuItem>
 
                         <MenuItem sx={modileMenuMainBtnsItem}>
-                            {/* <AddNewUnit props={{ ingr: thisIngredient, id, recipe_id }} /> */}
+                            <AddNewUnit ingredient_id={ingredient_id} recipe_id={recipe_id} />
                         </MenuItem>
                 
 
@@ -150,7 +146,7 @@ const MainButtons = memo((props: Props) => {//
                         <ShoppingBagOutlinedIcon />
                     </Button>
 
-                    {/* <AddNewUnit props={{ ingr: thisIngredient, id, recipe_id, }} /> */}
+                    <AddNewUnit ingredient_id={ingredient_id} recipe_id={recipe_id}/>
 
                     <Button 
                         onClick={() => deleteIngredient(ingredient_id)} 

@@ -15,7 +15,7 @@ export default async function ListLayout({children}: {children: React.ReactNode}
         },
         {
             url: '/list-recipe',
-            name: 'Recipes'
+            name: 'Recipe List'
         }
     ]
 

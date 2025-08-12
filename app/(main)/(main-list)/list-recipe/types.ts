@@ -1,17 +1,27 @@
 // *S - start
 // *E - end
 
-import { ListIngrData, UnitNoId, UnitsId } from "../list/types"
+import { ListIngrData, NormalizedData, UnitNoId, UnitsId } from "../list/types"
 
 
 
 
 //----------- state S-----------//
 
+export interface NormalizedRecipeData extends NormalizedData{
+    recipes: {
+        [key: string]: ListRecipeData;
+    };
+}
+
+
 export interface ListRecipeRootState{
     connection_id:string
     page:number | null
-    recipes:ListRecipeData[]
+    // recipes:ListRecipeData[]
+    recipes: NormalizedRecipeData['recipes'];
+    ingredients: NormalizedRecipeData['ingredients']; 
+    units: NormalizedRecipeData['units'];
 }
 
 export interface ListRecipeData {
@@ -23,7 +33,8 @@ export interface ListRecipeData {
         type:string
     },
     recipe_shop:boolean
-    ingredients_list: ListIngrData[]
+    ingredient_ids: string[]
+    // ingredients_list: ListIngrData[]
 }
 
 export interface TemplateIngrListRecipe{

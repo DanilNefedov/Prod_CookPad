@@ -10,14 +10,13 @@ import { UXLoading } from "../../ui-helpers/loading";
 import { EmptyInfo } from "../../ui-helpers/empty-info";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { theme } from "@/config/ThemeMUI/theme";
-import { styleLink } from "../../home/header/header";
 
 
 
 
 export function MainListRecipe() {
     const dispatch = useAppDispatch()
-    const listRecipeStore = useAppSelector(state => state.listRecipe)
+    const listRecipeStore = useAppSelector(state => state.listRecipe.recipes)
     const pageListRecipe = useAppSelector(state => state.listRecipe.page)
     const isPreloadingLoading = useAppSelector(state => state.listRecipe.operations.preLoaderMain.loading);    
     const isPreloadingError = useAppSelector(state => state.listRecipe.operations.preLoaderMain.error)
@@ -41,20 +40,25 @@ export function MainListRecipe() {
 
 
     function getDataRecipe(_id: string) {
-        const findThisRecipe = listRecipeStore.recipes.find(el => el._id === _id);
+        // const findThisRecipe = listRecipeStore ? listRecipeStore.recipes[_id] : undefined;
 
-        if (findThisRecipe && findThisRecipe.ingredients_list?.length <= 0) {
+        // The entry in the state was on recipe_id, but it should be on _id, 
+        // since we may have many entries for the same recipes in the list.
+        
+        console.log(listRecipeStore, _id); 
+
+        // if (findThisRecipe && findThisRecipe.ingredient_ids.length <= 0) {
             if (connection_id !== '') {
                 setLoadingRecipeIds(prev => [...prev, _id]);
 
                 dispatch(ingredientsListRecipe({ connection_id, _id }))
                     .finally(() => {
                         setLoadingRecipeIds(prev => prev.filter(id => id !== _id));
-                        
                     });
             }
-        }
+        // }
     }
+
 
     function handleDeleteRecipe(recipe_id: string) {
         if (connection_id !== '') {
@@ -73,13 +77,13 @@ export function MainListRecipe() {
     return (
         <Box sx={{ height: '100%', position: 'relative' }}>
             {
-                !isPreloadingError && isPreloadingLoading && listRecipeStore.recipes.length === 0 ?
+                !isPreloadingError && isPreloadingLoading && Object.keys(listRecipeStore).length === 0 ?
                     <UXLoading ></UXLoading>//color:'#1F2128'
                     :
-                    !isPreloadingLoading && listRecipeStore.recipes.length === 0 ?
+                    !isPreloadingLoading && Object.keys(listRecipeStore).length === 0 ?
                         <EmptyInfo></EmptyInfo>
                         :
-                        listRecipeStore?.recipes.map(el => (
+                        Object.values(listRecipeStore).map(el => (
 
                             <Box key={el._id} sx={{ display: 'flex', alignItems: 'center', mb: '5px', }}>
                                 <Accordion
@@ -158,7 +162,7 @@ export function MainListRecipe() {
                                     </AccordionSummary>
 
                                     
-                                    <ContentAccordion props={{ _id: el._id, status: loadingRecipeIds.includes(el._id) && el.ingredients_list.length === 0 }} />
+                                    <ContentAccordion props={{ _id: el._id, status: loadingRecipeIds.includes(el._id) && el.ingredient_ids.length === 0 }} />
 
                                 
 
@@ -188,36 +192,36 @@ export function MainListRecipe() {
             }
 
             {
-                !isPreloadingLoading && listRecipeStore.recipes.length > 0 ? 
+                !isPreloadingLoading && Object.keys(listRecipeStore).length > 0 ? 
                 <Button
                     disabled={pageListRecipe === null ? true : false}
-                    sx={{
-                        ...styleLink, 
-                        backgroundColor:"primary.dark",
-                        display:'flex',
-                        alignItems:'center',
-                        width: '150px', 
-                        height: '32.5px', 
-                        m: '20px auto',
-                        color:'white',
-                        '@media (hover: hover) and (pointer: fine)': {
-                            "&:hover":{
-                                backgroundColor:"primary.main",
-                            },
-                        },
-                        [theme.breakpoints.down("md")]: {
-                            mt: '7px',
-                            mb: '7px',
-                            width: '90px'
-                        },
-                        [theme.breakpoints.down(500)]: {
-                            height: '28px'
-                        }
-                    }}
+                    // sx={{
+                    //     ...styleLink, 
+                    //     backgroundColor:"primary.dark",
+                    //     display:'flex',
+                    //     alignItems:'center',
+                    //     width: '150px', 
+                    //     height: '32.5px', 
+                    //     m: '20px auto',
+                    //     color:'white',
+                    //     '@media (hover: hover) and (pointer: fine)': {
+                    //         "&:hover":{
+                    //             backgroundColor:"primary.main",
+                    //         },
+                    //     },
+                    //     [theme.breakpoints.down("md")]: {
+                    //         mt: '7px',
+                    //         mb: '7px',
+                    //         width: '90px'
+                    //     },
+                    //     [theme.breakpoints.down(500)]: {
+                    //         height: '28px'
+                    //     }
+                    // }}
                     onClick={() => handleMore()}
                 >More</Button>
                 :
-                isPreloadingLoading && listRecipeStore.recipes.length > 0 ?
+                isPreloadingLoading && Object.keys(listRecipeStore).length > 0 ?
                 <UXLoading position={'static'}></UXLoading>
                 :
                 <></>

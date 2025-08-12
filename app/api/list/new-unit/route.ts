@@ -39,9 +39,16 @@ export async function PATCH(request: Request) {
 
         const addedUnit = units[units.length - 1]; 
 
+        const newUnit = {
+            unit_id: addedUnit._id,
+            choice: addedUnit.choice,
+            amount: addedUnit.amount,
+            shop_unit: addedUnit.shop_unit
+        }
+
         return NextResponse.json({
            ingredient_id: _id, 
-           new_unit: addedUnit
+           new_unit: newUnit
         });
 
     }catch(error){

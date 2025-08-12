@@ -43,7 +43,18 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
     const handleToggle = (id: string) => {
         setExpandedId((prevId) => (prevId === id ? null : id));
     }
-    console.log('main-table-body')
+
+
+    const contextValues = useMemo(() => {
+        return thisIngredient.unit_ids.map((elem) => ({
+            recipe_id,
+            ingredient_id: thisIngredient.ingredient_id,
+            unit_id: elem,
+        }));
+    }, [recipe_id, thisIngredient.ingredient_id, thisIngredient.unit_ids]);
+
+
+    console.log('main-table-body', contextValues, thisIngredient.unit_ids, thisIngredient)
     if (!thisIngredient) return null;
 
     return (
@@ -131,41 +142,19 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                 thisIngredient.unit_ids.length === 0 ?
                                     <EmptyInfo></EmptyInfo>
                                 : 
-                                // thisIngredient?.unit_ids.map((elem) => (
-                                //     <SwiperSlide key={elem} className="slide-list-unit" style={{ width: 'auto', maxWidth: '100%' }}>
-                                //         <UnitContext.Provider
-                                //             key={elem}
-                                //             value={{
-                                //                 recipe_id: recipe_id,
-                                //                 ingredient_id: ingredient_id,
-                                //                 unit_id: elem,
-                                //             }}
-                                //         >
-                                //             <Unit/>
-                                //         </UnitContext.Provider>
-
-                                //     </SwiperSlide>
-                                // ))
-                                thisIngredient.unit_ids.map((elem) => {
-                                    const contextValue = useMemo(() => ({
-                                        recipe_id,
-                                        ingredient_id: thisIngredient.ingredient_id,
-                                        unit_id: elem,
-                                    }), [recipe_id, thisIngredient.ingredient_id, elem]);
-
-                                    return (
-                                        <SwiperSlide
-                                            key={elem}
-                                            className="slide-list-unit"
-                                            style={{ width: 'auto', maxWidth: '100%' }}
-                                        >
-                                            <UnitContext.Provider value={contextValue}>
-                                                <Unit />
-                                            </UnitContext.Provider>
-                                        </SwiperSlide>
-                                    );
-                                })
-                                }
+                                
+                                contextValues.map((contextValue, index) => (
+                                    <SwiperSlide
+                                        key={contextValue.unit_id}
+                                        className="slide-list-unit"
+                                        style={{ width: 'auto', maxWidth: '100%' }}
+                                    >
+                                        <UnitContext.Provider value={contextValue}>
+                                            <Unit />
+                                        </UnitContext.Provider>
+                                    </SwiperSlide>
+                                ))}
+                                
 
                                 <div className={`custom-prev-list-unit ${pathName === '/list-recipe' ? 'list-recipe-disabled-btn' : 'list-disabled-btn'}`}>
                                     <ArrowLeftIcon></ArrowLeftIcon>
@@ -242,24 +231,17 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                         //         </UnitContext.Provider>
                                         //     </SwiperSlide>
                                         // ))
-                                        thisIngredient.unit_ids.map((elem) => {
-                                            const contextValue = useMemo(() => ({
-                                                recipe_id,
-                                                ingredient_id: thisIngredient.ingredient_id,
-                                                unit_id: elem,
-                                            }), [recipe_id, thisIngredient.ingredient_id, elem]);
-
-                                            return (
+                                        contextValues.map((contextValue, index) => (
                                                 <SwiperSlide
-                                                    key={elem}
+                                                    key={contextValue.unit_id}
                                                     className="slide-list-unit"
                                                 >
                                                     <UnitContext.Provider value={contextValue}>
                                                         <Unit />
                                                     </UnitContext.Provider>
                                                 </SwiperSlide>
-                                            );
-                                        })
+                                            )
+                                        )
                                         }
 
                                         <div className={`custom-prev-list-unit ${pathName === '/list-recipe' ? 'list-recipe-disabled-btn' : 'list-disabled-btn'}`}>

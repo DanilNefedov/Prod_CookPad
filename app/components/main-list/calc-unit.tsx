@@ -20,7 +20,7 @@ import { useUnitContext } from "@/config/unit-context/unit-context";
 export const CalcUnit = memo(() => {
     const { recipe_id, ingredient_id, unit_id } = useUnitContext();
     const amount = useAppSelector(state => state.list.units[unit_id].amount)
-    const [currentValue, setCurrentValue] = useState<string>(amount.toString())
+    const [currentValue, setCurrentValue] = useState<string>('')
     const userStore = useAppSelector(state => state.user);
     const connection_id = userStore?.user?.connection_id;
 
@@ -39,7 +39,7 @@ export const CalcUnit = memo(() => {
 
     const handleClose = useCallback(() => {
         setAnchorEl(null);
-        setCurrentValue(amount !== null ? amount.toString() : currentValue);
+        setCurrentValue('');
     }, [amount]);
 
 
@@ -148,13 +148,13 @@ export const CalcUnit = memo(() => {
             setCurrentValue(amount !== null ? amount.toString() : currentValue);
 
         } else {
-            const nextValue = currentValue + btn;
-
+            const nextValue = currentValue !== '' ? currentValue + btn : amount + btn;
+            
             if (/^[0-9+\-*/.()]*$/.test(nextValue)) {
                 const numbers = nextValue.split(/[-+*/()]/).filter(Boolean);
 
                 const isValid = numbers.every(num => (num.match(/\./g) || []).length <= 1);
-
+                console.log(nextValue, numbers, isValid, btn)
                 if (isValid) {
                     setCurrentValue(nextValue);
                 }
@@ -163,7 +163,7 @@ export const CalcUnit = memo(() => {
 
     }, [currentValue, isParenthesisOpen, amount, handleEqual]);
 
-
+    console.log(currentValue)
     const updateAmountCalc = useCallback(() => {
         if (amount === null || currentValue === amount.toString()) return
 
@@ -245,7 +245,7 @@ export const CalcUnit = memo(() => {
                         <TextField
                             sx={calcInput(theme)}
                             multiline
-                            value={currentValue.toString()}
+                            value={currentValue.toString() !== '' ? currentValue.toString() : amount}
                             disabled
                         />
                         <CheckIcon

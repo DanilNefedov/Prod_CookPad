@@ -1,30 +1,32 @@
-import { amountNewUnit, btnsListUnitHover, btnsModal, modalContainer, modalInputButton, modalInputButtonsBox, modalInputContainer, modalTextNewUnit, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/style";
-import { useAppDispatch } from "@/state/hook";
+import { btnsListUnitHover, modalContainer, modalInputButton, modalInputButtonsBox, modalInputContainer, modalTextNewUnit, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/style";
+import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { Autocomplete, Box, Button, ListItem, Modal, TextField, Typography, useMediaQuery } from "@mui/material";
 import { usePathname } from "next/navigation";
-import { ChangeEvent, useState } from "react";
-import { secondTextInput } from "@/app/main-styles";
+import { ChangeEvent, memo, useState } from "react";
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import { evaluate } from "mathjs";
 import { addNewUnit } from "@/state/slices/list-slice";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import { theme } from "@/config/ThemeMUI/theme";
 import { handleAmountChange } from "../../helpers/input-unit";
 import { newUnitListRecipe } from "@/state/slices/list-recipe-slice";
-import { ListIngrData } from "@/app/(main)/(main-list)/list/types";
 import { autoCompliteItems, autocompliteMenuItem, paperMenu, weightItemList } from "@/app/(main)/new-recipe/style";
 import { centerFlexBlock } from "@/app/styles";
 
 interface Props {
-    ingr: ListIngrData;
-    id: string;
-    recipe_id?: string,
+    ingredient_id:string 
+    recipe_id?:string
 }
 
-export function AddNewUnit({ props }: { props: Props }) {
-    const { ingr, id, recipe_id, } = props;
+
+const AddNewUnit = memo(({ingredient_id, recipe_id}:Props) => { 
+
     const [open, setOpen] = useState<boolean>(false)
+    const userStore = useAppSelector(state => state.user)
+    const id = userStore?.user?.connection_id
+    const ingredient_name = useAppSelector(state => state.list.ingredients[ingredient_id].name)
+    const ingredient_list = useAppSelector(state => state.list.ingredients[ingredient_id].list)
+
     const dispatch = useAppDispatch()
     const [amount, setAmount] = useState<string>('0')
     const [unit, setUnit] = useState<string>('');
@@ -84,7 +86,7 @@ export function AddNewUnit({ props }: { props: Props }) {
                 }}
             >
                 <Box sx={modalContainer}>
-                    <Typography sx={modalTextNewUnit}>Add a new Unit to {ingr.name}</Typography>
+                    <Typography sx={modalTextNewUnit}>Add a new Unit to {ingredient_name}</Typography>
                     <Box sx={[modalInputContainer, centerFlexBlock]}>
                         <TextField
                             onKeyDown={(e) => {
@@ -97,7 +99,7 @@ export function AddNewUnit({ props }: { props: Props }) {
                         ></TextField>
                         <Autocomplete
                             freeSolo
-                            options={ingr.list}
+                            options={ingredient_list}
                             sx={[autoCompliteItems, weightItemList, 
                                 {'& .MuiInputBase-input': {
                                     p: '5.5px 10px 9.5px'}
@@ -144,7 +146,7 @@ export function AddNewUnit({ props }: { props: Props }) {
 
                         <Box sx={modalInputButtonsBox}>
                             <Button 
-                                onClick={() => confirmAmount(ingr.ingredient_id)}
+                                onClick={() => confirmAmount(ingredient_id)}
                                 color="blackBtn"
                                 sx={modalInputButton}                            
                             >
@@ -166,4 +168,14 @@ export function AddNewUnit({ props }: { props: Props }) {
             </Modal>
         </>
     )
-}
+}, (prevProps, nextProps) => {
+    
+    return prevProps.ingredient_id === nextProps.ingredient_id && 
+    prevProps.recipe_id === nextProps.recipe_id
+})
+
+
+AddNewUnit.displayName = "AddNewUnit"
+
+
+export default AddNewUnit
