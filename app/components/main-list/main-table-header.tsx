@@ -1,4 +1,4 @@
-import { adaptiveIngredientImageBox, boxText, cellHeader, headerArrow, headerText, sortBtnHeader, tableHeader } from "@/app/(main)/(main-list)/style";
+import { boxText, cellHeader, headerArrow, headerText, sortBtnHeader, tableHeader } from "@/app/(main)/(main-list)/style";
 import { Box, TableCell, TableHead, TableRow, Theme, Typography } from "@mui/material";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { Dispatch, memo, SetStateAction, } from "react";
@@ -16,8 +16,7 @@ interface Props{
     setSortBy:Dispatch<SetStateAction<string | null>>
 }
 
-export const MainTableHeader = memo(({ props }: { props: Props }) => { 
-// export function MainTableHeader ({props}: {props:Props}) {
+const MainTableHeader = memo(({ props }: { props: Props }) => { 
     const {setSortBy, setSortOrder, sortBy, sortOrder} = props
     const pathName = usePathname()
 

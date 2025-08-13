@@ -64,7 +64,23 @@ export interface NewListRecipeFetchReq {
 export interface IngrListRecipeFetchRes {
     connection_id:string,
     _id:string,
-    ingredients:ListIngrData[]
+    ingredients:ListIngrDataFetch[]
+}
+
+export interface ListIngrDataFetch {
+    _id:string,
+    name: string,
+    media:string,
+    shop_ingr: boolean,
+    list: string[],
+    units: UnitsIdFetch[]
+}
+
+export interface UnitsIdFetch {
+    choice: string,
+    amount: number,
+    shop_unit:boolean,
+    _id:string
 }
 
 export interface IngrListRecipeFetchReq { 
@@ -94,7 +110,7 @@ export interface ChangeAmountListRecipeFetch extends TemplateIngrListRecipe{
 }
 
 export interface NewUnitListRecipeFetchRes extends TemplateIngrListRecipe{
-    new_unit:UnitsId
+    new_unit:UnitsIdFetch
 }
 
 export interface NewUnitListRecipeFetchReq extends TemplateIngrListRecipe{

@@ -1,7 +1,7 @@
 import { Box, Button, IconButton, Menu, MenuItem, TableCell, useMediaQuery } from "@mui/material";
 import { memo, MouseEvent, useState } from "react";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { btnsListUnitHover, iconMenuMainBtns, mainButtonsBox, mainButtonsCell, mobileMenuMainBtns, modileMenuMainBtnsItem, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/style";
+import { btnsListUnitHover, iconMenuMainBtns, mainButtonsBox, mainButtonsCell, mobileContainerMenuMainBtns, mobileMenuMainBtns, modileMenuMainBtnsItem, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/style";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { deleteIngredientFetch, toggleShopIngrFetch } from "@/state/slices/list-slice";
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
@@ -17,22 +17,16 @@ interface Props{
     ingredient_shop:boolean
 }
 
-const MainButtons = memo((props: Props) => {// 
+const MainButtons = memo((props: Props) => {
     const {ingredient_id, recipe_id, ingredient_shop} = props
-// export function MainButtons({props}: {props:Props}) {
-    // const shop_ingr = useAppSelector(state => state.list.ingredients[ingredient_id].shop_ingr)
     
-
     const dispatch = useAppDispatch()
     const userStore = useAppSelector(state => state.user)
     const id = userStore?.user?.connection_id
     const pathName = usePathname()
     const isSmallScreen = useMediaQuery("(max-width:1150px)");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    // const shopStatus = useAppSelector(state => {
-    //     if(recipe_id) return state.listRecipe.operations.shopIngrListRecipe.loading
-    //     return state.list.operations.toggleShopIngrFetch.loading
-    // }, shallowEqual)
+   
 
     const [shopStatus, setShopStatus] = useState<boolean>(false)
     const open = Boolean(anchorEl);
@@ -96,14 +90,7 @@ const MainButtons = memo((props: Props) => {//
                         onClose={handleClose}
                         slotProps={{
                             root:{
-                                sx:{
-                                    '& .MuiPaper-root':{
-                                        borderRadius:'10px',
-                                    },
-                                    '& .MuiList-root':{
-                                        p:'6px 0'
-                                    }
-                                }
+                                sx:mobileContainerMenuMainBtns
                             }
                         }}  
                     >

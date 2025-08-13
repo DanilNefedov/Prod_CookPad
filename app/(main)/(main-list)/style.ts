@@ -642,6 +642,31 @@ export const btnCleanInputIcon = {
     } 
 }
 
+export const containerCalcGrid = {
+    backgroundColor: 'supportBackground.dark',
+    borderRadius: '20px',
+    width: '100%',
+    cursor: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 2,
+    alignItems: 'center',
+    p: '10px',
+
+    '&>.MuiGrid-item': {
+        p: '0'
+    },   
+}
+
+export const mobileContainerMenuMainBtns = {
+    '& .MuiPaper-root':{
+        borderRadius:'10px',
+    },
+    '& .MuiList-root':{
+        p:'6px 0'
+    }
+}
+
 
 
 
@@ -802,17 +827,17 @@ export const btnsModal = {
 
 
 
-export const containerCalcGrid = {
-    backgroundColor: '#15161B',
-    display: 'block',
-    borderRadius: '20px',
-    width: '100%',
+// export const containerCalcGrid = {
+//     backgroundColor: '#15161B',
+//     display: 'block',
+//     borderRadius: '20px',
+//     width: '100%',
 
-    '&>.MuiGrid-item': {
-        p: '0'
-    },
-    p: '10px'
-}
+//     '&>.MuiGrid-item': {
+//         p: '0'
+//     },
+//     p: '10px'
+// }
 
 
 

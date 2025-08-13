@@ -24,8 +24,15 @@ const AddNewUnit = memo(({ingredient_id, recipe_id}:Props) => {
     const [open, setOpen] = useState<boolean>(false)
     const userStore = useAppSelector(state => state.user)
     const id = userStore?.user?.connection_id
-    const ingredient_name = useAppSelector(state => state.list.ingredients[ingredient_id].name)
-    const ingredient_list = useAppSelector(state => state.list.ingredients[ingredient_id].list)
+
+    const ingredient_name = useAppSelector(state =>
+        recipe_id ? state.listRecipe.ingredients[ingredient_id]?.name : state.list.ingredients[ingredient_id]?.name
+    );
+    
+    const ingredient_list = useAppSelector(state =>
+        recipe_id ? state.listRecipe.ingredients[ingredient_id]?.list : state.list.ingredients[ingredient_id]?.list
+    );
+
 
     const dispatch = useAppDispatch()
     const [amount, setAmount] = useState<string>('0')
@@ -60,7 +67,7 @@ const AddNewUnit = memo(({ingredient_id, recipe_id}:Props) => {
             dispatch(addNewUnit({ ingredient_id, new_unit: newUnit }))
         }else if(pathName === '/list-recipe' && recipe_id){
             setOpen(false)
-            dispatch(newUnitListRecipe({connection_id: id,  ingredient_id, updated_unit:newUnit, _id:recipe_id}))
+            dispatch(newUnitListRecipe({connection_id: id, ingredient_id, updated_unit: newUnit, _id:recipe_id}))
         }
 
     }

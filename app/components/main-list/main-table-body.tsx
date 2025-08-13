@@ -32,8 +32,19 @@ interface Props {
 const MainTableBody = memo(({ props }: { props: Props }) => {
     const { ingredient_id, recipe_id } = props;
 
-    const thisIngredient = useAppSelector(state => state.list.ingredients[ingredient_id])
-    const ingredient_shop = useAppSelector(state => state.list.ingredients[ingredient_id].shop_ingr)
+    const thisIngredient = useAppSelector(state => {
+        if (recipe_id) {
+            return state.listRecipe.ingredients[ingredient_id];
+        }
+        return state.list.ingredients[ingredient_id];
+    });
+
+    const ingredient_shop = useAppSelector(state => {
+        if (recipe_id) {
+            return state.listRecipe.ingredients[ingredient_id]?.shop_ingr ?? false;
+        }
+        return state.list.ingredients[ingredient_id]?.shop_ingr ?? false;
+    });
      
     const isMobile = useMediaQuery("(max-width:800px)");
     const [expandedId, setExpandedId] = useState<string | null>(null);
@@ -54,7 +65,6 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
     }, [recipe_id, thisIngredient.ingredient_id, thisIngredient.unit_ids]);
 
 
-    console.log('main-table-body', contextValues, thisIngredient.unit_ids, thisIngredient)
     if (!thisIngredient) return null;
 
     return (
@@ -167,7 +177,6 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                 }
 
                 <MainButtons ingredient_id={ingredient_id} recipe_id={recipe_id} ingredient_shop={ingredient_shop}></MainButtons>
-                {/* el={thisIngredient} recipe_id={recipe_id}  */}
             
             </TableRow>
 
@@ -177,7 +186,6 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                         sx={[
                             mobileUnitRow, 
                             {opacity: `${thisIngredient.shop_ingr ? 0.4 : 1}`,
-                            // borderBottom: `${expandedId === thisIngredient._id ? '3px solid' : 'none'}`,    
                             }
                                 
                         ]}
@@ -195,8 +203,6 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                             <Collapse in={expandedId === thisIngredient.ingredient_id} timeout={300}>
                                 <Box sx={[
                                     mobileUnitBoxSwiper,
-                                    // {maxHeight: expandedId === thisIngredient._id ? '75px' : '0',//75
-                                    // pb: thisIngredient.units.length === 0 ? '15px' : '0'}
                                 ]}>
                                     <Swiper
                                         navigation={{
@@ -216,21 +222,6 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                         thisIngredient?.unit_ids.length === 0 ?
                                             <EmptyInfo mobileText={'13px'} right={'calc(50% - 70px)'}></EmptyInfo>
                                         :
-                                        // thisIngredient?.unit_ids.map((elem) => (
-                                        //     <SwiperSlide key={elem} className="slide-list-unit"
-                                        //     >
-                                        //         <UnitContext.Provider
-                                        //             key={elem}
-                                        //             value={{
-                                        //                 recipe_id: recipe_id,
-                                        //                 ingredient_id: thisIngredient.ingredient_id,
-                                        //                 unit_id: elem,
-                                        //             }}
-                                        //         >
-                                        //             <Unit/>
-                                        //         </UnitContext.Provider>
-                                        //     </SwiperSlide>
-                                        // ))
                                         contextValues.map((contextValue, index) => (
                                                 <SwiperSlide
                                                     key={contextValue.unit_id}

@@ -294,7 +294,7 @@ export const newUnitListRecipe = createAsyncThunk<NewUnitListRecipeFetchRes, New
             }
             
             const dataList = await response.json()
-
+            console.log('dataListdataListdataListdataList',dataList)
             return dataList;
         } catch (error) {
             console.log(error)
@@ -373,19 +373,6 @@ const listRecipeSlice = createSlice({
         builder
             .addCase(newListRecipe.pending, newListRecipeHandlers.pending)
             .addCase(newListRecipe.rejected, newListRecipeHandlers.rejected)
-            // .addCase(newListRecipe.fulfilled, (state, action: PayloadAction<ListRecipeData, string>) => {
-            //     state.operations.newListRecipe.error = false
-            //     state.operations.newListRecipe.loading = false
-
-            //     const payload = action.payload
-                
-            //     const alreadyExists = state.recipes.some(recipe => recipe._id === payload._id);
-
-            //     if (!alreadyExists) {
-            //         state.recipes.push(payload);
-            //     }
-
-            // })
             .addCase(newListRecipe.fulfilled, (state, action: PayloadAction<ListRecipeData, string>) => {
                 state.operations.newListRecipe.error = false;
                 state.operations.newListRecipe.loading = false;
@@ -401,29 +388,6 @@ const listRecipeSlice = createSlice({
 
             .addCase(preLoaderMain.pending, preLoaderMainHandlers.pending)
             .addCase(preLoaderMain.rejected, preLoaderMainHandlers.rejected)
-            // .addCase(preLoaderMain.fulfilled, (state, action: PayloadAction<PreLoaderFetchRes, string>) => {
-            //     state.operations.preLoaderMain.error = false
-            //     state.operations.preLoaderMain.loading = false
-
-            //     const payload = action.payload
-            //     state.connection_id = payload.connection_id
-
-            //     payload.recipe.forEach((recipe) => {
-            //         if (!state.recipes.some(existingRecipe => existingRecipe._id === recipe._id)) {
-            //             state.recipes.push({
-            //                 _id:recipe._id,
-            //                 recipe_id: recipe.recipe_id,
-            //                 recipe_name: recipe.recipe_name,
-            //                 recipe_media: recipe.recipe_media, 
-            //                 recipe_shop: recipe.recipe_shop,
-            //                 ingredients_list: [] 
-            //             });
-            //         }
-            //     });
-
-                
-            //     state.page = payload.page
-            // })
             .addCase(preLoaderMain.fulfilled, (state, action: PayloadAction<PreLoaderFetchRes, string>) => {
                     state.operations.preLoaderMain.error = false;
                     state.operations.preLoaderMain.loading = false;
@@ -454,25 +418,6 @@ const listRecipeSlice = createSlice({
 
             .addCase(ingredientsListRecipe.pending, ingredientsListRecipeHandlers.pending)
             .addCase(ingredientsListRecipe.rejected, ingredientsListRecipeHandlers.rejected)
-            // .addCase(ingredientsListRecipe.fulfilled, (state, action: PayloadAction<IngrListRecipeFetchRes, string>) => {
-            //     state.operations.ingredientsListRecipe.error = false
-            //     state.operations.ingredientsListRecipe.loading = false
-
-            //     const payload = action.payload;
-            //     state.connection_id = payload.connection_id;
-            
-            //     if (payload.ingredients.length > 0) {
-            //         payload.ingredients.forEach(ingr => {
-            //             const existingRecipeIndex = state.recipes.findIndex(existingRecipe => existingRecipe._id === payload._id);
-            
-            //             if (existingRecipeIndex !== -1) {
-            //                 const existingRecipe = state.recipes[existingRecipeIndex];
-                            
-            //                 existingRecipe.ingredients_list.unshift(ingr);
-            //             }
-            //         });
-            //     } 
-            // })
             .addCase(ingredientsListRecipe.fulfilled, (state, action: PayloadAction<IngrListRecipeFetchRes, string>) => {
                 state.operations.ingredientsListRecipe.error = false;
                 state.operations.ingredientsListRecipe.loading = false;
@@ -480,23 +425,33 @@ const listRecipeSlice = createSlice({
                 const payload = action.payload;
                 state.connection_id = payload.connection_id;
 
-                // payload._id - id рецепта
-                // payload.ingredients - массив новых ингредиентов (ListIngrData[])
-                console.log(payload)
                 const recipe = state.recipes[payload._id];
                 if (!recipe) {
-                    // если рецепт не найден - можно выйти
                     return;
                 }
 
                 payload.ingredients.forEach(ingr => {
-                    // Добавляем или обновляем ингредиент в общем хранилище
-                    state.ingredients[ingr.ingredient_id] = ingr;
-                    
-                    // Если ingredient_id ещё нет в рецепте, добавляем
-                    if (!recipe.ingredient_ids.includes(ingr.ingredient_id)) {
+                    const unitIds: string[] = ingr.units.map(unit => {
+                        state.units[unit._id] = {
+                            unit_id: unit._id,
+                            choice: unit.choice,
+                            amount: unit.amount,
+                            shop_unit: unit.shop_unit
+                        };
+                        return unit._id;
+                    });
 
-                        recipe.ingredient_ids.unshift(ingr.ingredient_id); // добавляем в начало, как было в unshift
+                    state.ingredients[ingr._id] = {
+                        ingredient_id: ingr._id,
+                        name: ingr.name,
+                        media: ingr.media,
+                        shop_ingr: ingr.shop_ingr,
+                        list: ingr.list,
+                        unit_ids: unitIds
+                    };
+
+                    if (!recipe.ingredient_ids.includes(ingr._id)) {
+                        recipe.ingredient_ids.unshift(ingr._id);
                     }
                 });
             })
@@ -505,140 +460,146 @@ const listRecipeSlice = createSlice({
 
 
 
+
             .addCase(shopIngrListRecipe.pending, shopIngrListRecipeHandlers.pending)
             .addCase(shopIngrListRecipe.rejected, shopIngrListRecipeHandlers.rejected)
             .addCase(shopIngrListRecipe.fulfilled, (state, action: PayloadAction<ShopIngrListRecipeFetch, string>) => {
-                state.operations.shopIngrListRecipe.error = false
-                state.operations.shopIngrListRecipe.loading = false
-                
-                const { ingredient_id, shop_ingr, _id } = action.payload;
-                const thisRecipe = state.recipes.find(el => el._id === _id)
+                state.operations.shopIngrListRecipe.error = false;
+                state.operations.shopIngrListRecipe.loading = false;
 
-                if (thisRecipe) {
-                    thisRecipe.ingredients_list.map(el => {
-                        if (el.ingredient_id === ingredient_id) {
-                            el.shop_ingr = shop_ingr
-                        }
-                    })
+                const { ingredient_id, shop_ingr } = action.payload;
+
+                if (state.ingredients[ingredient_id]) {
+                    state.ingredients[ingredient_id].shop_ingr = shop_ingr;
                 }
-
             })
+
 
 
 
             .addCase(deleteIngrRecipeList.pending, deleteIngrRecipeListHandlers.pending)
             .addCase(deleteIngrRecipeList.rejected, deleteIngrRecipeListHandlers.rejected)
             .addCase(deleteIngrRecipeList.fulfilled, (state, action: PayloadAction<DeleteIngrListRecipeFetch, string>) => {
-                state.operations.deleteIngrRecipeList.error = false
-                state.operations.deleteIngrRecipeList.loading = false
-                
+                state.operations.deleteIngrRecipeList.error = false;
+                state.operations.deleteIngrRecipeList.loading = false;
+
                 const { _id, ingredient_id } = action.payload;
-                const recipeIndex = state.recipes.findIndex(recipe => recipe._id === _id);
 
-                if (recipeIndex !== -1) {
-                    const ingredientsList = state.recipes[recipeIndex].ingredients_list.filter((ingredient: ListIngrData) => ingredient._id !== ingredient_id);
-                    state.recipes[recipeIndex].ingredients_list = ingredientsList;
+                const recipe = state.recipes[_id];
+                if (recipe) {
+                    recipe.ingredient_ids = recipe.ingredient_ids.filter(id => id !== ingredient_id);
+
+                    state.ingredients = Object.fromEntries(
+                        Object.entries(state.ingredients).filter(([id]) => id !== ingredient_id)
+                    );
                 }
-
             })
+
 
 
 
             .addCase(shopUnitListRecipe.pending, shopUnitListRecipeHandlers.pending)
             .addCase(shopUnitListRecipe.rejected, shopUnitListRecipeHandlers.rejected)
             .addCase(shopUnitListRecipe.fulfilled, (state, action: PayloadAction<ShopUnitListRecipeFetch, string>) => {
-                state.operations.shopUnitListRecipe.error = false
-                state.operations.shopUnitListRecipe.loading = false
-                
-                const { ingredient_id, unit_id, shop_unit, _id  } = action.payload;
-                const recipe = state.recipes.find(recipe => recipe._id === _id);
+                state.operations.shopUnitListRecipe.error = false;
+                state.operations.shopUnitListRecipe.loading = false;
 
-                if (recipe) {
-                    const ingredient = recipe.ingredients_list.find(ingredient => ingredient.ingredient_id === ingredient_id);
-                    if (ingredient) {
-                        const unit = ingredient.unit_ids.find(unit => unit === unit_id);
-                        if (unit) {
-                            unit.shop_unit = shop_unit;
-                        }
+                const { ingredient_id, unit_id, shop_unit, _id } = action.payload;
+
+                const recipe = state.recipes[_id];
+                if (recipe && recipe.ingredient_ids.includes(ingredient_id)) {
+                    const unit = state.units[unit_id];
+                    if (unit) {
+                        unit.shop_unit = shop_unit;
                     }
                 }
-
             })
+
 
 
 
             .addCase(newAmountListRecipe.pending, newAmountListRecipeHandlers.pending)
             .addCase(newAmountListRecipe.rejected, newAmountListRecipeHandlers.rejected)
             .addCase(newAmountListRecipe.fulfilled, (state, action: PayloadAction<ChangeAmountListRecipeFetch, string>) => {
-                state.operations.newAmountListRecipe.error = false
-                state.operations.newAmountListRecipe.loading = false
-                
-                const { ingredient_id, unit_id, amount, _id } = action.payload;
-                const recipe = state.recipes.find(recipe => recipe._id === _id);
+                state.operations.newAmountListRecipe.error = false;
+                state.operations.newAmountListRecipe.loading = false;
 
-                if (recipe) {
-                    const ingredient = recipe.ingredients_list.find(ingredient => ingredient._id === ingredient_id);
-                    if (ingredient) {
-                        const unit = ingredient.unit_ids.find(unit => unit === unit_id);
-                        if (unit) {
-                            unit.amount = amount;
-                        }
+                const { ingredient_id, unit_id, amount, _id } = action.payload;
+
+                const recipe = state.recipes[_id];
+                if (recipe && recipe.ingredient_ids.includes(ingredient_id)) {
+                    const unit = state.units[unit_id];
+                    if (unit) {
+                        unit.amount = amount;
                     }
                 }
-
             })
+
 
 
             .addCase(newUnitListRecipe.pending, newUnitListRecipeHandlers.pending)
             .addCase(newUnitListRecipe.rejected, newUnitListRecipeHandlers.rejected)
             .addCase(newUnitListRecipe.fulfilled, (state, action: PayloadAction<NewUnitListRecipeFetchRes, string>) => {
-                state.operations.newUnitListRecipe.error = false
-                state.operations.newUnitListRecipe.loading = false
-                
+                state.operations.newUnitListRecipe.error = false;
+                state.operations.newUnitListRecipe.loading = false;
+
                 const { ingredient_id, new_unit, _id } = action.payload;
-                const thisRecipe = state.recipes.find(el => el._id === _id)
 
-                if (thisRecipe) {
-                    thisRecipe.ingredients_list.map(el => {
-                        if (el.ingredient_id === ingredient_id) {
-                            el.unit_ids.push(new_unit.unit_id)
-                        }
-                    })
+                const recipe = state.recipes[_id];
+                if (recipe && recipe.ingredient_ids.includes(ingredient_id)) {
+
+                    const ingredient = state.ingredients[ingredient_id];
+                    if (ingredient && !ingredient.unit_ids.includes(new_unit._id)) {
+                        ingredient.unit_ids.push(new_unit._id);
+                    }
+
+                    state.units[new_unit._id] = {
+                        unit_id: new_unit._id,
+                        choice: new_unit.choice,
+                        amount: new_unit.amount,
+                        shop_unit: new_unit.shop_unit
+                    };
                 }
-
             })
-
+            
 
 
             .addCase(deleteUnitListRecipe.pending, deleteUnitListRecipeHandlers.pending)
             .addCase(deleteUnitListRecipe.rejected, deleteUnitListRecipeHandlers.rejected)
             .addCase(deleteUnitListRecipe.fulfilled, (state, action: PayloadAction<DeleteUnitListRecipeFetch, string>) => {
-                state.operations.deleteUnitListRecipe.error = false
-                state.operations.deleteUnitListRecipe.loading = false
-                
-                const { ingredient_id, connection_id: id, unit_id, _id } = action.payload;
-                const recipe = state.recipes.find(r => r._id === _id);
+                state.operations.deleteUnitListRecipe.error = false;
+                state.operations.deleteUnitListRecipe.loading = false;
 
-                if (recipe) {
-                    const ingredient = recipe.ingredients_list.find(el => el._id === ingredient_id);
+                const { ingredient_id, unit_id, _id } = action.payload;
+
+                const recipe = state.recipes[_id];
+                if (recipe && recipe.ingredient_ids.includes(ingredient_id)) {
+                    const ingredient = state.ingredients[ingredient_id];
                     if (ingredient) {
-                        ingredient.unit_ids = ingredient.unit_ids.filter(unit => unit !== unit_id);
+                        ingredient.unit_ids = ingredient.unit_ids.filter(id => id !== unit_id);
+
+                        state.units = Object.fromEntries(
+                            Object.entries(state.units).filter(([id]) => id !== unit_id)
+                        );
                     }
                 }
-
             })
+
 
 
             .addCase(deleteListRecipe.pending, deleteListRecipeHandlers.pending)
             .addCase(deleteListRecipe.rejected, deleteListRecipeHandlers.rejected)
             .addCase(deleteListRecipe.fulfilled, (state, action: PayloadAction<string>) => {
-                state.operations.deleteListRecipe.error = false
-                state.operations.deleteListRecipe.loading = false
-                
+                state.operations.deleteListRecipe.error = false;
+                state.operations.deleteListRecipe.loading = false;
+
                 const recipe_id = action.payload;
 
-                state.recipes = state.recipes.filter(recipe => recipe._id !== recipe_id);
-            })
+                state.recipes = Object.fromEntries(
+                    Object.entries(state.recipes).filter(([id]) => id !== recipe_id)
+                );
+            });
+
 
 
            

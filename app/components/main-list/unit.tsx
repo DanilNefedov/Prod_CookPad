@@ -8,20 +8,23 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import { Box, Button, IconButton, ListItemText, Menu, TextField, useMediaQuery } from "@mui/material"
 import { evaluate, } from "mathjs"
 import { usePathname } from "next/navigation"
-import { ChangeEvent, memo, useCallback, useEffect, useMemo, useState } from "react"
+import { ChangeEvent, useCallback, useState } from "react"
 import { handleAmountChange } from "../../helpers/input-unit"
-import { UnitBtns } from "./unit-btns"
-import { RootState } from "@/state/store"
-import { shallowEqual } from "react-redux"
+import UnitBtns from "./unit-btns"
 
 
 export function Unit (){
-// export const Unit = memo(() => {
     const { recipe_id, ingredient_id, unit_id } = useUnitContext();
-   
-    const choice = useAppSelector(state => state.list.units[unit_id].choice)
-    const shop_unit = useAppSelector(state => state.list.units[unit_id].shop_unit)
-    const amount = useAppSelector(state => state.list.units[unit_id].amount)
+    
+    const choice = useAppSelector(state =>
+        recipe_id ? state.listRecipe.units[unit_id]?.choice : state.list.units[unit_id]?.choice
+    );
+    const shop_unit = useAppSelector(state =>
+        recipe_id ? state.listRecipe.units[unit_id]?.shop_unit : state.list.units[unit_id]?.shop_unit
+    );
+    const amount = useAppSelector(state =>
+        recipe_id ? state.listRecipe.units[unit_id]?.amount : state.list.units[unit_id]?.amount
+    );
 
     const userStore = useAppSelector(state => state.user);
     const pathName = usePathname();
@@ -79,7 +82,6 @@ export function Unit (){
     }
 
     
-    console.log('unit')
     return (
         <Box 
         key={unit_id}

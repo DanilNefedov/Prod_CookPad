@@ -2,24 +2,28 @@
 
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { usePathname } from "next/navigation";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { create, all, } from 'mathjs'
 import { Alert, Box, Button, Menu, MenuItem, TextField } from "@mui/material";
-import { alertCalc, alertCalcBox, btnCleanInput, btnCleanInputIcon, btnsListUnitHover, calcInput, calcInputIcon, calcIntupBox, containerCalcBtns, containerCalcGrid, menuCalc, unitBtnsImg, unitButton } from "@/app/(main)/(main-list)/style";
+import { alertCalc, alertCalcBox, btnCleanInput, btnCleanInputIcon, calcInput, calcInputIcon, calcIntupBox, containerCalcBtns, containerCalcGrid, menuCalc, unitBtnsImg, unitButton } from "@/app/(main)/(main-list)/style";
 import CalculateIcon from '@mui/icons-material/Calculate';
 import BackspaceIcon from '@mui/icons-material/Backspace';
 import CheckIcon from '@mui/icons-material/Check';
 import { changeAmountFetch } from "@/state/slices/list-slice";
 import { theme } from "@/config/ThemeMUI/theme";
 import { newAmountListRecipe } from "@/state/slices/list-recipe-slice";
-import { UnitsId } from "@/app/(main)/(main-list)/list/types";
 import { wrapCenter } from "@/app/styles";
 import { useUnitContext } from "@/config/unit-context/unit-context";
 
 
-export const CalcUnit = memo(() => {
+const CalcUnit = memo(() => {
     const { recipe_id, ingredient_id, unit_id } = useUnitContext();
-    const amount = useAppSelector(state => state.list.units[unit_id].amount)
+    
+
+    const amount = useAppSelector(state =>
+        recipe_id ? state.listRecipe.units[unit_id]?.amount : state.list.units[unit_id]?.amount
+    );
+
     const [currentValue, setCurrentValue] = useState<string>('')
     const userStore = useAppSelector(state => state.user);
     const connection_id = userStore?.user?.connection_id;
@@ -163,7 +167,6 @@ export const CalcUnit = memo(() => {
 
     }, [currentValue, isParenthesisOpen, amount, handleEqual]);
 
-    console.log(currentValue)
     const updateAmountCalc = useCallback(() => {
         if (amount === null || currentValue === amount.toString()) return
 
@@ -193,7 +196,7 @@ export const CalcUnit = memo(() => {
 
     }, [currentValue, unit_id, pathName, ingredient_id, dispatch, amount, handleEqual, recipe_id]);
 
-    console.log('calc-unit')
+
     return (
         <>
             <Button
@@ -231,14 +234,7 @@ export const CalcUnit = memo(() => {
 
                 <Box
                     component={MenuItem}
-                    sx={{
-                        ...containerCalcGrid,
-                        cursor: 'auto',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 2,
-                        alignItems: 'center'
-                    }}
+                    sx={containerCalcGrid}
                 >
 
                     <Box sx={calcIntupBox}>
@@ -266,14 +262,11 @@ export const CalcUnit = memo(() => {
                                     color='blackRedBtn'
                                     sx={{
                                         width: i === 17 ? '128px' : '64px',
-                                        // backgroundColor: 'primary.dark',
                                         [theme.breakpoints.down('md')]: {
                                             width: i === 17 ? '100px' : '50px',
                                             minWidth: i === 17 ? '100px' : '50px',
-                                            // fontSize: '14px'
                                         }
                                     }}
-                                    // variant="contained"
                                     onClick={() => handlCalc(btn)}
                                 >
                                     {btn}
@@ -293,18 +286,4 @@ export const CalcUnit = memo(() => {
 
 CalcUnit.displayName = "CalcUnit"
 
-// (prevProps, nextProps) => {
-//     const prev = prevProps.props;
-//     const next = nextProps.props;
-
-//     const isRecipeIdEqual =
-//         ('recipe_id' in prev && 'recipe_id' in next)
-//             ? prev.recipe_id === next.recipe_id
-//             : true;
-
-//     return (
-//         prev.id === next.id &&
-//         prev.ingredient_id === next.ingredient_id &&
-//         isRecipeIdEqual
-//     );
-// }
+export default CalcUnit

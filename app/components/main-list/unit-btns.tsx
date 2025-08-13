@@ -2,17 +2,15 @@ import { Button, MenuItem } from "@mui/material";
 import ShoppingBagOutlinedIcon from '@mui/icons-material/ShoppingBagOutlined';
 import { unitButton, unitMenuItem } from "@/app/(main)/(main-list)/style";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { shallowEqual } from "react-redux";
 import { usePathname } from "next/navigation";
-import { changeAmountFetch, deleteUnitIngrFetch, shopUnitUpdate } from "@/state/slices/list-slice";
-import { deleteUnitListRecipe, newAmountListRecipe, shopUnitListRecipe } from "@/state/slices/list-recipe-slice";
-import { memo, useCallback, useState } from "react";
+import { deleteUnitIngrFetch, shopUnitUpdate } from "@/state/slices/list-slice";
+import { deleteUnitListRecipe, shopUnitListRecipe } from "@/state/slices/list-recipe-slice";
+import { memo} from "react";
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
-import { evaluate } from "mathjs";
-import { CalcUnit } from "./calc-unit";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import { useUnitContext } from "@/config/unit-context/unit-context";
+import CalcUnit from "./calc-unit";
 
 
 interface Props {
@@ -24,7 +22,7 @@ interface Props {
     newAmount:string
 }
 
-export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput, isIputOpen, confirmAmount}:Props) => {
+const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput, isIputOpen, confirmAmount}:Props) => {
     const { recipe_id, ingredient_id, unit_id } = useUnitContext();
     
     const userStore = useAppSelector(state => state.user);
@@ -60,10 +58,8 @@ export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput, isIput
     }
     
     
-    console.log('unit-btns')
     const wrap = (node: React.ReactNode) => isInsideMenu ? (
         <MenuItem sx={unitMenuItem}> 
-        {/* onClick={handleClose} */}
             {node}
         </MenuItem>
     ) : (
@@ -132,3 +128,7 @@ export const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput, isIput
 })
 
 
+UnitBtns.displayName = "UnitBtns"
+
+
+export default UnitBtns

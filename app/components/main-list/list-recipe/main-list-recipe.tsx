@@ -5,11 +5,14 @@ import { deleteListRecipe, ingredientsListRecipe, preLoaderMain } from "@/state/
 import { Accordion, AccordionSummary, Box, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { ContentAccordion } from "./content-accordion";
+import ContentAccordion from "./content-accordion";
 import { UXLoading } from "../../ui-helpers/loading";
 import { EmptyInfo } from "../../ui-helpers/empty-info";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { theme } from "@/config/ThemeMUI/theme";
+import { accordion, accordionMediaBox, accordionName, accordionSumm, containerAccordion, deleteRecipeBtn, deleteRecipeIcon, mainContainerList } from "@/app/(main)/(main-list)/list-recipe/styles";
+import { textMaxWidth } from "@/app/styles";
+import { moreButton } from "@/app/(main)/(main-list)/list/styles";
 
 
 
@@ -36,18 +39,13 @@ export function MainListRecipe() {
             dispatch(preLoaderMain({ connection_id, page:pageListRecipe }))
         }
     }, [connection_id, dispatch, pageListRecipe])
-
+ 
 
 
     function getDataRecipe(_id: string) {
-        // const findThisRecipe = listRecipeStore ? listRecipeStore.recipes[_id] : undefined;
+        const findThisRecipe = listRecipeStore ? listRecipeStore[_id] : undefined;
 
-        // The entry in the state was on recipe_id, but it should be on _id, 
-        // since we may have many entries for the same recipes in the list.
-        
-        console.log(listRecipeStore, _id); 
-
-        // if (findThisRecipe && findThisRecipe.ingredient_ids.length <= 0) {
+        if (findThisRecipe && findThisRecipe.ingredient_ids.length <= 0) {
             if (connection_id !== '') {
                 setLoadingRecipeIds(prev => [...prev, _id]);
 
@@ -56,7 +54,7 @@ export function MainListRecipe() {
                         setLoadingRecipeIds(prev => prev.filter(id => id !== _id));
                     });
             }
-        // }
+        }
     }
 
 
@@ -75,7 +73,7 @@ export function MainListRecipe() {
 
     
     return (
-        <Box sx={{ height: '100%', position: 'relative' }}>
+        <Box sx={mainContainerList}>
             {
                 !isPreloadingError && isPreloadingLoading && Object.keys(listRecipeStore).length === 0 ?
                     <UXLoading ></UXLoading>//color:'#1F2128'
@@ -85,58 +83,34 @@ export function MainListRecipe() {
                         :
                         Object.values(listRecipeStore).map(el => (
 
-                            <Box key={el._id} sx={{ display: 'flex', alignItems: 'center', mb: '5px', }}>
+                            <Box key={el._id} sx={containerAccordion}>
                                 <Accordion
                                     expanded={expandedIds.includes(el._id)}
                                     onChange={() => handleToggle(el._id)}
                                     slotProps={{ heading: { component: 'div' } }}
                                     // square={false}  
 
-                                    sx={{
-                                        width: "100%",
-                                        backgroundColor: 'background.default',
-                                        height: 'auto',
-                                        overflow: 'none',
-                                        // mb: '5px',
-                                        '&:first-of-type': { borderTopLeftRadius: '10px', borderTopRightRadius: '10px' },
-                                        '&:last-of-type': { borderBottomLeftRadius: '10px', borderBottomRightRadius: '10px' },
-                                        '&.Mui-expanded': { m: '5px 0 ', },
-                                        '& .MuiButtonBase-root.MuiAccordionSummary-root': { p: '0', justifyContent:'space-between' },
-                                        p: '15px',
-                                        '& .MuiAccordionSummary-content.Mui-expanded': {
-                                            m: '0 0 20px 0'
-                                        }
-
-
-                                    }}>
+                                    sx={accordion}>
                                     <AccordionSummary
                                         component="div"
                                         onClick={() => getDataRecipe(el._id)}
                                         expandIcon={<ExpandMoreIcon sx={{ color: 'text.primary' }} />}
                                         aria-controls={`panel1-content${el._id}`}
                                         id={`panel1-header${el._id}`}
-                                        sx={{
-                                            '& .MuiAccordionSummary-content': {
-                                                alignItems: 'center',
-                                                m: '0',
-                                                maxWidth: '97%'
-                                            },
-
-                                        }}
+                                        sx={accordionSumm}
                                     >
-
                                         {el.recipe_media.type === 'image' ?
                                             <Box
                                                 component='img'
                                                 alt={el.recipe_name}
-                                                sx={{ height: '60px', width: '60px', objectFit: 'cover', borderRadius: '50%' }}
+                                                sx={accordionMediaBox}
                                                 src={el.recipe_media.url as string}
                                                 loading="lazy"
                                             />
                                             :
                                             <Box
                                                 component='video'
-                                                sx={{ height: '60px', objectFit: "cover", width: '60px', borderRadius: '50%' }}
+                                                sx={accordionMediaBox}
                                                 autoPlay
                                                 loop
                                                 muted
@@ -149,15 +123,7 @@ export function MainListRecipe() {
                                             </Box>
                                         }
 
-                                        <Typography sx={{
-                                            m: '0 auto',
-                                            fontSize: '18px',
-                                            maxWidth: "65%",
-                                            overflow: 'hidden',
-                                            whiteSpace: 'nowrap',
-                                            textOverflow: 'ellipsis'
-                                        }}>{el.recipe_name}</Typography>
-
+                                        <Typography sx={[accordionName, textMaxWidth]}>{el.recipe_name}</Typography>
 
                                     </AccordionSummary>
 
@@ -169,16 +135,9 @@ export function MainListRecipe() {
                                     {expandedIds.includes(el._id) ?
                                         <Button
                                             onClick={() => handleDeleteRecipe(el._id)}
-                                            sx={{ position: 'absolute', top: '5px', right: '5px', minWidth: "0", p: '0' }}
+                                            sx={deleteRecipeBtn}
                                         >
-                                            <DeleteIcon sx={{
-                                                width: '22px',
-                                                height: '22px',
-                                                [theme.breakpoints.down('md')]: {
-                                                    width: '18px',
-                                                    height: '18px',
-                                                },
-                                            }}></DeleteIcon>
+                                            <DeleteIcon sx={deleteRecipeIcon}></DeleteIcon>
                                         </Button>
                                         :
                                         null
@@ -195,29 +154,8 @@ export function MainListRecipe() {
                 !isPreloadingLoading && Object.keys(listRecipeStore).length > 0 ? 
                 <Button
                     disabled={pageListRecipe === null ? true : false}
-                    // sx={{
-                    //     ...styleLink, 
-                    //     backgroundColor:"primary.dark",
-                    //     display:'flex',
-                    //     alignItems:'center',
-                    //     width: '150px', 
-                    //     height: '32.5px', 
-                    //     m: '20px auto',
-                    //     color:'white',
-                    //     '@media (hover: hover) and (pointer: fine)': {
-                    //         "&:hover":{
-                    //             backgroundColor:"primary.main",
-                    //         },
-                    //     },
-                    //     [theme.breakpoints.down("md")]: {
-                    //         mt: '7px',
-                    //         mb: '7px',
-                    //         width: '90px'
-                    //     },
-                    //     [theme.breakpoints.down(500)]: {
-                    //         height: '28px'
-                    //     }
-                    // }}
+                    color='blackRedBtn'
+                    sx={moreButton}
                     onClick={() => handleMore()}
                 >More</Button>
                 :

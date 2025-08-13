@@ -12,11 +12,9 @@ import MainTableHeader from '../main-table-header';
 
 export function MainListPage() {
     const dispatch = useAppDispatch()
-    // const ingredients = useAppSelector((state) => state.list.list_ingr);
     const currentPage = useAppSelector((state) => state.list.page_list);
 
     const ingredientsMap = useAppSelector((state) => state.list.ingredients);
-    const unitsMap = useAppSelector((state) => state.list.units);
 
     const isLoading = useAppSelector((state) => state.list.operations.fetchList.loading);
     const id = useAppSelector((state) => state.user.user.connection_id);
@@ -54,30 +52,11 @@ export function MainListPage() {
         });
     }, [sortBy, sortOrder, ingredientsMap]);
 
-    // const sortedList = useMemo(() => {
-    //     if (!sortBy) return ingredients;
-
-    //     return [...ingredients].sort((a, b) => {
-    //         if (sortBy === 'name') {
-    //             return sortOrder === 'asc'
-    //                 ? a.name.localeCompare(b.name)
-    //                 : b.name.localeCompare(a.name);
-    //         } else if (sortBy === 'unit') {
-    //             return sortOrder === 'desc'
-    //                 ? b.units.length - a.units.length
-    //                 : a.units.length - b.units.length;
-    //         }
-    //         return 0;
-    //     });
-    // }, [sortBy, sortOrder, ingredients]);
-
-
     function handleMore() {
         if (id !== '' && currentPage !== null) {
             dispatch(fetchList({ id, page_list: currentPage }));
         }
     }
-
 
     return (
         <>
