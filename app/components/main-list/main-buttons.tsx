@@ -90,7 +90,11 @@ const MainButtons = memo((props: Props) => {
                         onClose={handleClose}
                         slotProps={{
                             root:{
-                                sx:mobileContainerMenuMainBtns
+                                sx:[mobileContainerMenuMainBtns, {
+                                    '& .MuiPaper-root':{
+                                        bgcolor:`${pathName === '/list-recipe' ? 'background.default' : 'background.paper'}`
+                                    }
+                                }]
                             }
                         }}  
                     >
@@ -98,8 +102,11 @@ const MainButtons = memo((props: Props) => {
                         <MenuItem onClick={handleClose} sx={modileMenuMainBtnsItem}>
                             <Button 
                                 onClick={() => toggleShopIngr(ingredient_id, ingredient_shop)} 
-                                sx={[btnsListUnitHover, styleBtnsAdaptiveMenu]}
-                                
+                                sx={[btnsListUnitHover, styleBtnsAdaptiveMenu, 
+                                    {
+                                        bgcolor:`${pathName === '/list-recipe' ? 'background.paper' : 'background.default'}`
+                                    }
+                                ]}
                             >
                                 <ShoppingBagOutlinedIcon /> 
                                 <span>Shop</span>
@@ -112,7 +119,11 @@ const MainButtons = memo((props: Props) => {
                 
 
                         <MenuItem onClick={handleClose} sx={modileMenuMainBtnsItem}>
-                            <Button onClick={() => deleteIngredient(ingredient_id)} sx={[btnsListUnitHover, styleBtnsAdaptiveMenu]}>
+                            <Button onClick={() => deleteIngredient(ingredient_id)} sx={[btnsListUnitHover, styleBtnsAdaptiveMenu,
+                                {
+                                    bgcolor:`${pathName === '/list-recipe' ? 'background.paper' : 'background.default'}`
+                                }
+                            ]}>
                                 <DeleteOutlineOutlinedIcon /> 
                                 <span>Delete</span>
                             </Button>

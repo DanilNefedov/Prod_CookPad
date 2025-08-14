@@ -6,7 +6,7 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { setActiveComment } from "@/state/slices/comments-context";
 import numbro from "numbro";
 import { theme } from "@/config/ThemeMUI/theme";
-import { avatarReply, containerPrimaryReplyText, dataReply, fullTextReply, likesReply, replyContainer, replyReplyBtn } from "@/app/(main)/popular/style";
+import { avatarReply, containerPrimaryReplyText, dataReply, fullTextReply, likesReply, replyContainer, replyReplyBtn } from "@/app/(main)/popular/styles";
 import { Like } from "@/app/(main)/popular/types";
 
 

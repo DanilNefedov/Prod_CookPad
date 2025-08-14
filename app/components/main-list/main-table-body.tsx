@@ -1,6 +1,6 @@
 import { Box, Collapse, ListItemText, TableCell, TableRow, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { memo, useCallback, useMemo, useState } from "react"
-import { adaptiveIngredientImageBox, imgIngrList, ingredientImage, ingredientImageBox, ingredientNameBox, ingredientRow, mainIngrList, mobileUnitBoxSwiper, mobileUnitCell, mobileUnitIcon, mobileUnitInfoBox, mobileUnitRow, mobileUnitText, nameIngredient, unitBox, unitBoxDesktop } from "@/app/(main)/(main-list)/style"
+import { ingredientImage, ingredientImageBox, ingredientNameBox, ingredientRow, mobileUnitBoxSwiper, mobileUnitCell, mobileUnitIcon, mobileUnitInfoBox, mobileUnitRow, mobileUnitText, nameIngredient, unitBox, unitBoxDesktop } from "@/app/(main)/(main-list)/style"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { useAppSelector } from "@/state/hook"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -143,7 +143,15 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                 className="swiper-list-unit"
                                 slidesPerView={'auto'}
                                 modules={[Navigation]}
-                                spaceBetween={10}
+                                // spaceBetween={10}
+                                breakpoints={{
+                                    500: {
+                                        spaceBetween: 10,
+                                    },
+                                    0: {
+                                        spaceBetween: 5,
+                                    }
+                                }}
                                 style={{ 
                                 //    width:'100%'
                                 }}
@@ -203,6 +211,14 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                             <Collapse in={expandedId === thisIngredient.ingredient_id} timeout={300}>
                                 <Box sx={[
                                     mobileUnitBoxSwiper,
+                                    {
+                                        '& .swiper-list-unit': {
+                                            width: `${pathName === '/list-recipe' ? 'calc(100dvw - 155px)' : 'calc(100dvw - 120px)'}`,
+                                            [theme.breakpoints.down(500)]: { 
+                                                width: `${pathName === '/list-recipe' ? 'calc(100dvw - 125px)' : 'calc(100dvw - 110px)'}`,
+                                            }
+                                        }
+                                    }
                                 ]}>
                                     <Swiper
                                         navigation={{
@@ -212,7 +228,14 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                         }}
                                         className="swiper-list-unit adaptive-list-unit-swiper"
                                         modules={[Navigation]}
-                                        spaceBetween={10}
+                                        breakpoints={{
+                                            500: {
+                                                spaceBetween: 10,
+                                            },
+                                            0: {
+                                                spaceBetween: 5,
+                                            }
+                                        }}
                                         slidesPerView={'auto'}
                                         style={{ 
                                             // width:'100%'

@@ -74,6 +74,9 @@ export const accordion = {
     },
     '& .MuiAccordionSummary-content.Mui-expanded': {
         m: '0 0 20px 0'
+    },
+    [theme.breakpoints.down(500)]: {
+        p: '10px',
     }
 }
 
@@ -81,7 +84,11 @@ export const accordionSumm = {
     '& .MuiAccordionSummary-content': {
         alignItems: 'center',
         m: '0',
-        maxWidth: '97%'
+        maxWidth: '97%',
+
+        [theme.breakpoints.down('md')]: {
+            maxWidth: '92%',
+        },
     },
 }
 
@@ -96,9 +103,21 @@ export const accordionName = {
     m: '0 auto',
     fontSize: '18px',
     maxWidth: "65%",
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis'
+    display: '-webkit-box',
+    WebkitBoxOrient: 'vertical',
+    WebkitLineClamp: '2',
+    maxHeight:'52px',
+    textAlign:'center',
+    
+
+    [theme.breakpoints.down('md')]: {
+        fontSize: '18px',
+        whiteSpace: 'normal',
+    },
+    [theme.breakpoints.down(500)]: {
+        fontSize: '16px',
+        maxHeight:'45px'
+    },
 }
 
 export const deleteRecipeBtn = {
@@ -107,14 +126,18 @@ export const deleteRecipeBtn = {
     right: '16px', 
     minWidth: "0", 
     p: '0',
-    bgcolor:'transparent'
+    bgcolor:'transparent',
+
+    [theme.breakpoints.down(500)]: {
+        right: '11px', 
+    },
 }
 
 export const deleteRecipeIcon = {
     width: '25px',
     height: '25px',
-    [theme.breakpoints.down('md')]: {
-        width: '18px',
-        height: '18px',
+    [theme.breakpoints.down(650)]: {
+        width: '23px',
+        height: '20px',
     },
 }

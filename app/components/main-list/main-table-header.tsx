@@ -22,8 +22,8 @@ const MainTableHeader = memo(({ props }: { props: Props }) => {
 
 
     const border = (theme: Theme) => pathName === '/list-recipe' ? {
-        borderRight: `3px solid ${theme.palette.background.default}`,
-        borderBottom: `3px solid ${theme.palette.background.default}`,
+        borderRight: `3px solid ${theme.palette.background.paper}`,
+        borderBottom: `3px solid ${theme.palette.background.paper}`,
     }
     : 
     {

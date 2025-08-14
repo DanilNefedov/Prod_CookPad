@@ -12,10 +12,13 @@ import 'swiper/css/navigation';
 import './styles.css';
 import { InfoAboutContent } from "./info-about-content";
 import {
-    btnOpenInfoMobile, containerActiveInfo, containerSwichBtns, descriptionRecipe, mainBtnsPopular, mainCardContent,
-    mainContainerInfoComments, mainDescriptionRecipe, mainNameRecipe, mobileNameDescriptionContainer, nameRecipe,
+    boxMediaSwiper,
+    boxProgress,
+    btnOpenInfoMobile, containerActiveInfo, containerNameDescription, containerSwichBtns, descriptionRecipe, mainArrowIcon, mainBtnsPopular,
+    mainCardContent,
+    mainContainerInfoComments, mainDescriptionRecipe, mainNameRecipe, nameRecipe,
     viewContentContainer
-} from "@/app/(main)/popular/style";
+} from "@/app/(main)/popular/styles";
 import { Mousewheel, Virtual } from 'swiper/modules'
 import type { Swiper as SwiperType } from 'swiper/types';
 import { theme } from "@/config/ThemeMUI/theme";
@@ -24,6 +27,7 @@ import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { usePingGate } from "@/app/hooks/ping";
 import { initCommentsState } from "@/state/slices/comments-popular-slice";
+import { centerFlexBlock } from "@/app/styles";
 
 
 
@@ -52,7 +56,7 @@ export function MainPopular() {
         dispatch(initCommentsState(configId))
     },[configId, activeVideo, dispatch])
 
-    console.log(popularStore)
+
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (
@@ -131,7 +135,7 @@ export function MainPopular() {
             cooldownRef.current = false;
         }, 1000);
     };
-
+    console.log('main-popular')
     
     return (
         <>
@@ -144,17 +148,19 @@ export function MainPopular() {
                     ){
                         setOpenComment(false);
                     }
-
-
                     // if (openComment) setOpenComment(false);
                 }}
-                sx={(theme) => mainCardContent(theme, openInfo)}
+                sx={[mainCardContent, centerFlexBlock, 
+                    {[theme.breakpoints.down(1030)]: {
+                        pr: openInfo ? '30px' : '0'
+                    }}
+                ]}
             >
                 <Box sx={viewContentContainer} >
 
 
                     {/* FOR MOBILE */}
-                    <Box sx={(theme) => mobileNameDescriptionContainer(theme, expanded)}>
+                    <Box sx={(theme) => containerNameDescription(theme, expanded)}>
 
                         <Typography gutterBottom variant="h5" component="h1" sx={nameRecipe}>
                             {popularStore[activeVideo]?.recipe_name}
@@ -162,15 +168,17 @@ export function MainPopular() {
                         <Typography
                             variant="body2"
                             onClick={() => setExpanded(prev => !prev)}
-                            sx={(theme) => descriptionRecipe(theme, expanded)}
+                            sx={[descriptionRecipe, 
+                                {
+                                    wordBreak: expanded ? 'break-word' : 'break-all',
+                                    whiteSpace: expanded ? 'normal' : 'nowrap',
+                                }
+                            ]}
                         >
                             {popularStore[activeVideo]?.description}
                         </Typography>
-
                     </Box>
                     {/* FOR MOBILE */}
-
-
 
 
                     
@@ -208,12 +216,12 @@ export function MainPopular() {
                     >
                         {popularStore.map((item, index) => (
                             popularStatusLoading && index >= popularStore.length - 1 ?
-                                <Box key={index} style={{ margin: '0 auto', width: '100%', height: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
+                                <Box key={index} style={boxProgress}>
                                     <CircularProgress color="secondary" size="35px" />
                                 </Box>
                                 :
                                 <SwiperSlide key={item.config_id} virtualIndex={index}>
-                                    <Box sx={{ width: '100%', height: '100%', borderRadius: '20px 20px 0 20px' }}>
+                                    <Box sx={boxMediaSwiper}>
                                         <MediaSwiper configId={item.config_id} />
                                         {/* activeVideo={activeVideo} */}
                                     </Box>
@@ -241,7 +249,7 @@ export function MainPopular() {
 
                             <Box sx={containerSwichBtns}>
                                 <Box
-                                    sx={mainBtnsPopular}
+                                    sx={[mainBtnsPopular, centerFlexBlock]}
                                     onClick={() => {
                                         handleCooldown(() => {
                                             if (activeVideo > 0) {
@@ -255,9 +263,9 @@ export function MainPopular() {
                                             }
                                         });
                                     }}
-                                ><KeyboardDoubleArrowUpIcon sx={{ mb: '2px', [theme.breakpoints.down('md')]: { width: "19px", height: '19px' } }}></KeyboardDoubleArrowUpIcon></Box>
+                                ><KeyboardDoubleArrowUpIcon sx={[mainArrowIcon, {mb: '2px'}]}></KeyboardDoubleArrowUpIcon></Box>
                                 <Box
-                                    sx={mainBtnsPopular}
+                                    sx={[mainBtnsPopular, centerFlexBlock]}
                                     onClick={() => {
                                         handleCooldown(() => {
                                             
@@ -274,7 +282,7 @@ export function MainPopular() {
                                             }
                                         });
                                     }}
-                                ><KeyboardDoubleArrowDownIcon sx={{ [theme.breakpoints.down('md')]: { width: "19px", height: '19px' } }}></KeyboardDoubleArrowDownIcon>
+                                ><KeyboardDoubleArrowDownIcon sx={mainArrowIcon}></KeyboardDoubleArrowDownIcon>
                                 </Box>
                             </Box>
                         </Box>
@@ -294,7 +302,8 @@ export function MainPopular() {
                         setOpenInfo(!openInfo)
                         
                     }}
-                    sx={btnOpenInfoMobile}>
+                    sx={btnOpenInfoMobile}
+                >
                     <KeyboardArrowLeftIcon sx={{
                         width: "35px",
                         height: "35px",

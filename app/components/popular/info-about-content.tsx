@@ -7,7 +7,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import { likePopContent, savePopContent } from "@/state/slices/popular-slice";
 import numbro from 'numbro';
 import { theme } from "@/config/ThemeMUI/theme";
-import { authorName, containerBtnsStats, statsBtn, statsBtnMobileIcon, statsRecipe } from "@/app/(main)/popular/style";
+import { authorName, containerBtnsStats, statsBtn, statsBtnMobileIcon, statsRecipe } from "@/app/(main)/popular/styles";
 import { usePingGate } from "@/app/hooks/ping";
 import { PopularAuthorInfo } from "@/app/(main)/popular/types";
 

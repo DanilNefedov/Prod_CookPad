@@ -7,7 +7,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { InputComment } from "./input-comment";
 import { CommentsItem } from "./comments-item";
 import { shallowEqual } from "react-redux";
-import { mainCommentContainer } from "@/app/(main)/popular/style";
+import { mainCommentContainer } from "@/app/(main)/popular/styles";
 import { usePingGate } from "@/app/hooks/ping";
 
 

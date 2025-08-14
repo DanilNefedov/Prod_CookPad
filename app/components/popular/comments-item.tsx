@@ -8,7 +8,7 @@ import { setActiveComment } from "@/state/slices/comments-context";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import numbro from "numbro";
 import { theme } from "@/config/ThemeMUI/theme";
-import { containerAvatarComment, containerCommentItem, containerSecondBlockComm, dataComm, hideBtn, likeComm, moreBtn, repliesOpen, replyComm, textComment } from "@/app/(main)/popular/style";
+import { containerAvatarComment, containerCommentItem, containerSecondBlockComm, dataComm, hideBtn, likeComm, moreBtn, repliesOpen, replyComm, textComment } from "@/app/(main)/popular/styles";
 import { usePingGate } from "@/app/hooks/ping";
 import { UXLoading } from "../ui-helpers/loading";
 import { Like } from "@/app/(main)/popular/types";

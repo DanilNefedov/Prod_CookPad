@@ -1,7 +1,7 @@
 import { Box, Button, TextField } from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import { memo, useState } from "react";
-import { inputComment } from "@/app/(main)/popular/style";
+import { inputComment } from "@/app/(main)/popular/styles";
 import { useAppSelector } from "@/state/hook";
 
 

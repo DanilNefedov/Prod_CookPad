@@ -158,7 +158,8 @@ export function Unit (){
                             root: {
                                 sx: {
                                     '& .MuiPaper-root': {
-                                        borderRadius: '10px'
+                                        borderRadius: '10px',
+                                        backgroundColor: pathName === '/list' ? 'background.paper' : 'background.default'
                                     }
                                 }
                             }
