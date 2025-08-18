@@ -6,8 +6,9 @@ import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { setActiveComment } from "@/state/slices/comments-context";
 import numbro from "numbro";
 import { theme } from "@/config/ThemeMUI/theme";
-import { avatarReply, containerPrimaryReplyText, dataReply, fullTextReply, likesReply, replyContainer, replyReplyBtn } from "@/app/(main)/popular/styles";
+import { arrowBetweenNames, avatarReply, avatarReplyBox, avatarTextReplyBox, commentTime, containerPrimaryReplyText, fullTextReply, likeComm, replyBtnBoxInReply, replyComm, replyContainer } from "@/app/(main)/popular/styles";
 import { Like } from "@/app/(main)/popular/types";
+import { textMaxWidth } from "@/app/styles";
 
 
 
@@ -39,7 +40,7 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
     );  
    
 
-    function likeT() {
+    function handleLikeComment() {
         handleLike({ id_comment, config_id: config_id, liked, reply: true, id_branch })
     }
 
@@ -63,9 +64,9 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
     };
 
     return (
-        <ListItem sx={(theme) => replyContainer(theme, isActive)}>
-            <Box sx={{display:'flex', alignItems:'center', width:'100%', p:'0px'}}>
-                <ListItemAvatar sx={{minWidth:"0", mr:"10px"}}>
+        <ListItem sx={[replyContainer, {borderColor: isActive ? 'text.secondary' : 'transparent'}]}>
+            <Box sx={avatarTextReplyBox}>
+                <ListItemAvatar sx={avatarReplyBox}>
                     <Avatar alt={author_name} src={author_avatar } sx={avatarReply}/>
                 </ListItemAvatar>
                 <ListItemText
@@ -74,28 +75,18 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
                         <Box sx={containerPrimaryReplyText}>
                             <Box
                               component="span"
-                              sx={{
-                                minWidth: 0,
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap',
-                              }}
+                              sx={[textMaxWidth, {minWidth:'0'}]}
                             >
                               {author_name}
                             </Box>
                           
                             {id_parent === id_branch ? null : (
                               <>
-                                <ArrowRightIcon sx={{ flexShrink: 0, [theme.breakpoints.down('md')]:{width:"20px", height:'20px'} }} />
+                                <ArrowRightIcon sx={arrowBetweenNames} />
                           
                                 <Box
                                   component="span"
-                                  sx={{
-                                    minWidth: 0,
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                  }}
+                                  sx={[textMaxWidth, {minWidth:'0'}]}
                                 >
                                   {name_parent}
                                 </Box>
@@ -113,16 +104,16 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
 
 
 
-            <Box sx={{ width: '100%', justifyContent: 'space-between', display: 'flex', mt: '7px' }}>
+            <Box sx={replyBtnBoxInReply}>
                 <Button
                     onClick={handleReply}
-                    sx={(theme) => replyReplyBtn(theme, isActive)}>
+                    sx={[replyComm, {color: isActive ? 'primary.main' : 'text.disabled'}]}>
                     reply
                 </Button>
                
-                <Typography sx={dataReply}>{createdAt}</Typography>
-                <Button sx={likesReply}
-                    onClick={() => likeT()}
+                <Typography sx={commentTime}>{createdAt}</Typography>
+                <Button sx={likeComm}
+                    onClick={() => handleLikeComment()}
                 >
                     {formatCount(Number(likes_count))}
                     <FavoriteIcon sx={{ fontSize: "16px", m: '0 0 3px 3px', color: liked ? "primary.main" : "inherit" }}></FavoriteIcon>

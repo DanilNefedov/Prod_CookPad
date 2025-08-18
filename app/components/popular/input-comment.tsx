@@ -1,7 +1,7 @@
 import { Box, Button, TextField } from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 import { memo, useState } from "react";
-import { inputComment } from "@/app/(main)/popular/styles";
+import { containerInputComments, inputComment, sendCommentBtn } from "@/app/(main)/popular/styles";
 import { useAppSelector } from "@/state/hook";
 
 
@@ -30,7 +30,7 @@ export const InputComment = memo(({ sendComment }: Props) => {
 
 
     return (
-        <Box sx={{ position: 'relative', marginTop: "10px" }}>
+        <Box sx={containerInputComments}>
             <TextField
                 sx={inputComment}
                 placeholder="Type in a comment"
@@ -53,7 +53,7 @@ export const InputComment = memo(({ sendComment }: Props) => {
                     }
                 }}
             />
-            <Button disabled={isReplyLoading || isCommentLoading} onClick={handleSend} sx={{ position: 'absolute', right: '15px', top: 'calc(50% - 19px)', minWidth: '0' }}>
+            <Button disabled={isReplyLoading || isCommentLoading} onClick={handleSend} sx={sendCommentBtn}>
                 <SendIcon />
             </Button>
         </Box>

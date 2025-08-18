@@ -14,9 +14,10 @@ import { InfoAboutContent } from "./info-about-content";
 import {
     boxMediaSwiper,
     boxProgress,
-    btnOpenInfoMobile, containerActiveInfo, containerNameDescription, containerSwichBtns, descriptionRecipe, mainArrowIcon, mainBtnsPopular,
+    btnOpenInfoMobile, commentModileArrow, containerActiveInfo, containerNameDescription, containerSwichBtns, descriptionRecipe, mainArrowIcon, mainBtnsPopular,
     mainCardContent,
-    mainContainerInfoComments, mainDescriptionRecipe, mainNameRecipe, nameRecipe,
+    mainContainerInfoComments, mainDescriptionRecipe, mainNameRecipe,
+    nameRecipeMobile,
     viewContentContainer
 } from "@/app/(main)/popular/styles";
 import { Mousewheel, Virtual } from 'swiper/modules'
@@ -27,7 +28,7 @@ import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { usePingGate } from "@/app/hooks/ping";
 import { initCommentsState } from "@/state/slices/comments-popular-slice";
-import { centerFlexBlock } from "@/app/styles";
+import { centerFlexBlock, textMaxWidth } from "@/app/styles";
 
 
 
@@ -52,9 +53,12 @@ export function MainPopular() {
     const isFetching = useAppSelector(state => state.popular.operations.popularFetch.loading)
     const configId = popularStore[activeVideo]?.config_id;
  
+    
+    
     useEffect(() => {        
         dispatch(initCommentsState(configId))
     },[configId, activeVideo, dispatch])
+    
 
 
     useEffect(() => {
@@ -162,7 +166,7 @@ export function MainPopular() {
                     {/* FOR MOBILE */}
                     <Box sx={(theme) => containerNameDescription(theme, expanded)}>
 
-                        <Typography gutterBottom variant="h5" component="h1" sx={nameRecipe}>
+                        <Typography gutterBottom variant="h5" component="h1" sx={[nameRecipeMobile, textMaxWidth]}>
                             {popularStore[activeVideo]?.recipe_name}
                         </Typography>
                         <Typography
@@ -304,12 +308,9 @@ export function MainPopular() {
                     }}
                     sx={btnOpenInfoMobile}
                 >
-                    <KeyboardArrowLeftIcon sx={{
-                        width: "35px",
-                        height: "35px",
-                        transition: 'transform 0.3s ease-in-out',
-                        transform: openInfo ? 'rotate(180deg)' : 'rotate(0deg)'
-                    }}
+                    <KeyboardArrowLeftIcon sx={[commentModileArrow,
+                    {transform: openInfo ? 'rotate(180deg)' : 'rotate(0deg)'}
+                    ]}
                     ></KeyboardArrowLeftIcon>
                 </Box>
 

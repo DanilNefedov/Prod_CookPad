@@ -1,20 +1,21 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { Box, CircularProgress, List, Typography, } from "@mui/material"
 import { memo, useCallback, useEffect, useRef, useState } from "react"
-import { commVideoFetch, newCommPopular, newReplyComm } from "@/state/slices/comments-popular-slice";
+import { commVideoFetch, initCommentsState, newCommPopular, newReplyComm } from "@/state/slices/comments-popular-slice";
 import { v4 as uuidv4 } from 'uuid';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { InputComment } from "./input-comment";
 import { CommentsItem } from "./comments-item";
 import { shallowEqual } from "react-redux";
-import { mainCommentContainer } from "@/app/(main)/popular/styles";
+import { containerInfiniteScroll, countComments, mainCommentContainer } from "@/app/(main)/popular/styles";
 import { usePingGate } from "@/app/hooks/ping";
+import { columnSpaceBetween } from "@/app/styles";
 
 
 
 interface Props {
     config_id: string,
-    comments: number
+    comments: number,
 }
 
 
@@ -47,7 +48,7 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const firstFetchRef = useRef<boolean>(true);
 
-      
+    
 
     useEffect(() => {
         if (config_id && connection_id && firstFetchRef.current && comments > 0) {
@@ -156,13 +157,10 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
 
 
     return (
-        <Box sx={mainCommentContainer}>
-            <Typography sx={{textAlign:'center', p:'7px 0', fontSize:'14px', color:"text.disabled"}}>Total {comments}</Typography>
+        <Box sx={[mainCommentContainer, columnSpaceBetween]}>
+            <Typography sx={countComments}>Total {comments}</Typography>
 
-            <Box ref={scrollRef} sx={{
-                overflow: 'auto', scrollbarColor: "#353842 #1F2128", pr: '5px', pb: "0",
-                height: "100%"
-            }} id="scrollableTarget">
+            <Box ref={scrollRef} sx={containerInfiniteScroll} id="scrollableTarget">
                 <InfiniteScroll
                     style={{ overflow: 'initial' }}
                     dataLength={commentsData.ids.length}
@@ -170,14 +168,13 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
                     hasMore={!Number.isNaN(commentsData.page) &&
                             commentsData.ids.length < (comments - repliesCount)}
                     loader={
-                        <div style={{ margin: '0 auto', width: '100%', display: "inline-flex", justifyContent: 'center', overflow: "none" }}>
+                        <div className="containerProgress" >
                             <CircularProgress color="secondary" size="35px" />
-
                         </div>
                     }
                     endMessage={
                         <p style={{ textAlign: 'center' }}>
-                            <span style={{ color: '#8E94A4', fontSize: "14px" }}>nothing else</span>
+                            <span className="emptyComments">nothing else</span>
                         </p>
                     }
                     scrollableTarget="scrollableTarget"
@@ -199,14 +196,7 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
                             )
                         })}
                     </List>
-
-
                 </InfiniteScroll>
-
-
-
-
-
             </Box>
 
             <InputComment

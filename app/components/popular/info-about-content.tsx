@@ -7,9 +7,10 @@ import CommentIcon from '@mui/icons-material/Comment';
 import { likePopContent, savePopContent } from "@/state/slices/popular-slice";
 import numbro from 'numbro';
 import { theme } from "@/config/ThemeMUI/theme";
-import { authorName, containerBtnsStats, statsBtn, statsBtnMobileIcon, statsRecipe } from "@/app/(main)/popular/styles";
+import { authorAvatar, authorName, containerBtnsStats, statsBtn, statsRecipe } from "@/app/(main)/popular/styles";
 import { usePingGate } from "@/app/hooks/ping";
 import { PopularAuthorInfo } from "@/app/(main)/popular/types";
+import { columnCenter, textMaxWidth } from "@/app/styles";
 
 
 interface Props {
@@ -81,48 +82,33 @@ export const InfoAboutContent = memo(({ props }: { props: Props }) => {
 
     return (
 
-        <Box sx={statsRecipe}>
-            <Avatar alt="name" src={author.author_img } sx={{ [theme.breakpoints.down('md')]: { width: '35px', height: "35px" } }} />
-            <Typography sx={authorName}>{author.author_name}</Typography>
+        <Box sx={[statsRecipe, columnCenter]}>
+            <Avatar alt="name" src={author.author_img } sx={authorAvatar} />
+            <Typography sx={[authorName, textMaxWidth]}>{author.author_name}</Typography>
 
-            <CardActions sx={containerBtnsStats}>
+            <CardActions sx={[containerBtnsStats, columnCenter]}>
                 <IconButton
                     onClick={() => handleLike()}
-                    sx={statsBtn}
+                    sx={[statsBtn, columnCenter]}
                 >
-                    <FavoriteIcon sx={
-                        [statsBtnMobileIcon, { color: `${liked ? 'primary.main' : 'text.primary'}` }]
-                    }></FavoriteIcon>
+                    <FavoriteIcon sx={{ color: `${liked ? 'primary.main' : 'text.primary'}` }}></FavoriteIcon>
                     <Typography>{likes > 0 ? formatCount(Number(likes)) : 0}</Typography>
                 </IconButton>
 
 
                 <IconButton
                     onClick={toggleComment}
-                    sx={[statsBtn, { m: '10px 0' }]}>
-                    <CommentIcon sx={
-                        [statsBtnMobileIcon, { color: `${openComment ? 'primary.main' : 'text.primary'}` }]
-                    } ></CommentIcon>
-                    <Typography sx={{
-                        [theme.breakpoints.down('md')]: {
-                            fontSize: "14px",
-                        }
-                    }}>{comments > 0 ? formatCount(Number(comments)) : 0}</Typography>
+                    sx={[statsBtn, columnCenter]}>
+                    <CommentIcon sx={{ color: `${openComment ? 'primary.main' : 'text.primary'}`}} ></CommentIcon>
+                    <Typography >{comments > 0 ? formatCount(Number(comments)) : 0}</Typography>
                 </IconButton>
 
                 <IconButton
                     onClick={() => handleSave()}
-                    sx={statsBtn}>
-                    <BookmarkIcon sx={[statsBtnMobileIcon, { color: `${saved ? 'primary.main' : 'text.primary'}`, }]
-                    }></BookmarkIcon>
-                    <Typography sx={{
-                        [theme.breakpoints.down('md')]: {
-                            fontSize: "14px",
-                        }
-                    }}>{saves > 0 ? formatCount(Number(saves)) : 0}</Typography>
+                    sx={[statsBtn, columnCenter]}>
+                    <BookmarkIcon sx={{ color: `${saved ? 'primary.main' : 'text.primary'}`}}></BookmarkIcon>
+                    <Typography >{saves > 0 ? formatCount(Number(saves)) : 0}</Typography>
                 </IconButton>
-
-
 
 
             </CardActions>

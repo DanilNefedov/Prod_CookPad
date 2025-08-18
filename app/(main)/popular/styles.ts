@@ -1,6 +1,6 @@
 import { theme } from "@/config/ThemeMUI/theme";
 import { Theme } from "@mui/material";
-import { SxProps, SystemStyleObject } from "@mui/system";
+import { bgcolor, SxProps, SystemStyleObject } from "@mui/system";
 
 
 
@@ -235,133 +235,21 @@ export const btnOpenInfoMobile = {
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export const nameRecipe = {
-    flexShrink: 0,
-    textOverflow: 'ellipsis',
-    pb: '5px',
-    lineHeight: 'none',
-    mb: '0',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    fontSize: '16px',
-    fontWeight: 'bold',
+export const commentModileArrow = {
+    width: "35px",
+    height: "35px",
+    transition: 'transform 0.3s ease-in-out',
 }
 
-
-
-
-
-
-
-
-
-
-
-
-export const mainNameRecipe = {
-    flexShrink: 0, textOverflow: 'ellipsis', pb: '10px', lineHeight: 'none', mb: '0', whiteSpace: 'nowrap', overflow: 'hidden',
-    [theme.breakpoints.down('md')]: { fontSize: '20px', pb: '5px' },
-    [theme.breakpoints.down(769)]: {
-        display: "none"
-    }
+export const countComments = {
+    textAlign:'center', 
+    p:'7px 0', 
+    fontSize:'14px', 
+    color:"text.disabled"
 }
-
-
-export const mainDescriptionRecipe = {
-    flexShrink: 0, fontSize: "16px", display: 'block', pb: '20px', wordBreak: 'break-all',
-    [theme.breakpoints.down('md')]: { fontSize: '14px', pb: '10px' },
-    [theme.breakpoints.down(769)]: {
-        display: "none"
-    }
-}
-
-
-
-export const containerSlideMediaSwiper = {
-    width: '100%',
-    height: '100%',
-    borderRadius: '20px 20px 0 20px',
-    [theme.breakpoints.down(769)]: {
-        borderRadius: '20px 20px 20px 20px'
-    }
-}
-
-
-export const mediaSwiperElement = {
-    height: '100%',
-    objectFit: 'cover',
-    width: '100%',
-    borderRadius: '20px 20px 0 20px',
-    [theme.breakpoints.down(769)]: {
-        borderRadius: '20px 20px 20px 20px'
-    }
-}
-
 
 export const mainCommentContainer = {
     width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
     flexGrow: '1',
     overflow: 'auto',
     height: "100%",
@@ -370,6 +258,31 @@ export const mainCommentContainer = {
     borderColor: 'text.disabled'
 }
 
+export const containerInfiniteScroll = {
+    overflow: 'auto', 
+    scrollbarColor: `${theme.palette.background.paper} ${theme.palette.background.default}`, 
+    pr: '5px', pb: "0",
+    height: "100%",
+
+    '& .containerProgress':{
+        margin: '0 auto', 
+        width: '100%', 
+        display: "inline-flex", 
+        justifyContent: 'center', 
+        overflow: "none" 
+    },
+
+    '& .emptyComments':{
+        color: 'text.disabled', 
+        fontSize: "14px"
+    }
+
+}
+
+export const containerInputComments = { 
+    position: 'relative', 
+    marginTop: "10px"
+} 
 
 export const inputComment = {
     bgcolor: 'background.paper',
@@ -388,17 +301,257 @@ export const inputComment = {
 
 }
 
+export const sendCommentBtn = { 
+    position: 'absolute', 
+    right: '15px', 
+    top: 'calc(50% - 19px)', 
+    minWidth: '0',
+    padding: '0',
+    width: '35px',
+    height: '38px',
+    bgcolor:'transparent'
+}
 
+export const commentsWrapper = { 
+    mb: '10px', 
+    p: 0, 
+    display: 'block' 
+}
+
+export const containerCommentItem = {
+    bgcolor: 'background.paper',
+    borderRadius: '10px',
+    alignItems: "flex-start",
+    p: '8px 16px',
+    width: "100%",
+    display: 'flex',
+    flexWrap: "wrap",
+    border: '1px solid transparent',
+
+    '&:last-child': {
+        mb: '0'
+    },
+    [theme.breakpoints.down('md')]: {
+        p: '4px 8px'
+    }
+}
+
+export const avatarContainer = {
+    minWidth:"0", 
+    pr:'10px',
+
+    [theme.breakpoints.down('md')]:{
+        pr: '7px'
+    }
+}
+
+export const avatar = {
+    [theme.breakpoints.down('md')]:{
+        width:'30px', 
+        height:"30px"
+    }
+}
+
+export const textComment = {
+    m: "0",
+    width: '65%',
+    '& .MuiTypography-root ': {
+        color: 'text.primary',
+        [theme.breakpoints.down('md')]: {
+            lineHeight: "initial"
+        }
+    },
+    '& .MuiTypography-body1': {
+        mb: '5px',
+        textOverflow: "ellipsis",
+        whiteSpace: 'nowrap',
+        overflow: "hidden",
+        [theme.breakpoints.down('md')]: { 
+            mb: '5px' 
+        }
+    }
+}
+
+export const containerSecondBlockComm = {
+    width: '100%',
+    justifyContent: 'space-between',
+    display: 'flex',
+    mt: '7px',
+    [theme.breakpoints.down('md')]: { 
+        mt: '4px' 
+    }
+}
+
+export const replyComm ={
+    p: '0',
+    fontSize: "14px",
+    textTransform: 'initial',
+    minWidth: "0",
+    backgroundColor: "transparent", 
+
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': { 
+            backgroundColor: "transparent", 
+            color: 'text.primary' 
+        },
+    },
+
+    [theme.breakpoints.down('md')]: { 
+        fontSize: '12px' 
+    }
+}
+
+export const commentTime = {
+    fontSize: '14px',
+    color: 'text.disabled',
+    alignSelf: 'flex-start',
+    [theme.breakpoints.down('md')]: { 
+        fontSize: '12px' 
+    }
+}
+
+
+export const likeComm = {
+    p: '0',
+    fontSize: "14px",
+    textTransform: 'initial',
+    minWidth: "0",
+    color: 'text.disabled',
+    bgcolor:'transparent',
+    alignItems: 'center',  
+
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': { 
+            backgroundColor: "transparent", 
+            color: 'primary.main' 
+        },
+    },
+    [theme.breakpoints.down('md')]: { 
+        fontSize: '12px' 
+    }
+}
+
+export const likeIcon = {
+    fontSize: "16px",
+    m: '0 0 3px 3px'
+}
+
+export const replyBox = {
+    display:'flex', 
+    alignItems:'center',
+    width:'100%',
+    
+    '& .line':{
+        height:'1px', 
+        backgroundColor:'text.disabled',
+        flex:1
+    },
+
+    '& .leftLine':{
+        maxWidth:'10%', 
+    },
+
+    '& .rightLine':{
+        width:'40%', 
+    }
+}
+
+export const repliesOpen = (theme: Theme, count: boolean, openReply: boolean): SystemStyleObject<Theme> => ({
+    whiteSpace: 'nowrap',
+    m: '0 20px',
+    p: '0',
+    fontSize: "14px",
+    textTransform: 'initial',
+    cursor: count ? 'pointer' : 'initial', // > 0
+    minWidth: "0",
+    color: openReply ? 'primary.main' : 'text.disabled',
+    bgcolor:'transparent',
+
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': { 
+            backgroundColor: "transparent", 
+            color: count ? 'text.primary' : 'text.secondary' 
+        }, 
+    },
+    [theme.breakpoints.down('md')]: { 
+        fontSize: '12px' 
+    }
+})
+
+
+export const iconReplyBtn = {
+    transition: 'transform 0.2s ease', 
+    width:'20px',
+    height:'20px'
+}
+
+export const moreHideBox = {
+    maxWidth: "50%", 
+    justifyContent: 'center',
+    m: '0 auto', 
+    display: "flex" 
+}
+
+export const moreHideBtns = {
+    p: '0',
+    fontSize: "14px",
+    textTransform: 'initial',
+    minWidth: "0",
+    color: 'text.disabled',
+    bgcolor:'transparent',
+
+    '@media (hover: hover) and (pointer: fine)': {
+        '&:hover': { 
+            backgroundColor: "transparent", 
+            color: 'text.primary' 
+        },
+    },
+
+    '&.Mui-disabled':{
+        bgcolor:'transparent',
+    }
+}
+
+export const mainNameRecipe = {
+    flexShrink: 0, 
+    textOverflow: 'ellipsis', 
+    pb: '10px', 
+    lineHeight: 'none', 
+    mb: '0', 
+    fontSize:'22px',
+    whiteSpace: 'nowrap', 
+    overflow: 'hidden',
+    [theme.breakpoints.down('md')]: { 
+        fontSize: '20px', 
+        pb: '5px' 
+    },
+    [theme.breakpoints.down(769)]: {
+        display: "none"
+    }
+}
+
+export const mainDescriptionRecipe = {
+    flexShrink: 0, 
+    fontSize: "16px", 
+    display: 'block', 
+    color:'text.disabled',
+    pb: '20px', 
+    wordBreak: 'break-all',
+    [theme.breakpoints.down('md')]: { 
+        fontSize: '14px', 
+        pb: '10px' 
+    },
+    [theme.breakpoints.down(769)]: {
+        display: "none"
+    }
+}
 
 export const statsRecipe = {
     backgroundColor: 'background.default',
     backdropFilter: 'blur(3px)',
     height: '320px',
     borderRadius: '0px 15px 15px 0px',
-    display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
     p: '20px 7px',
     width: '80px',
     [theme.breakpoints.down('md')]: {
@@ -411,12 +564,15 @@ export const statsRecipe = {
     }
 }
 
+export const authorAvatar = { 
+    [theme.breakpoints.down('md')]: { 
+        width: '35px', 
+        height: "35px" 
+    } 
+}
 
 export const authorName = {
     m: '10px 0',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
     width: "70px",
     textAlign: 'center',
     [theme.breakpoints.down('md')]: {
@@ -425,172 +581,30 @@ export const authorName = {
     }
 }
 
-
 export const containerBtnsStats = {
-    display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
+    gap:'20px',
     '&.MuiCardActions-root>:not(style)~:not(style)': {
         ml: 0,
     }
 }
 
-
 export const statsBtn = {
     m: '5px 0',
     color: 'text.primary',
     p: '0',
-    flexDirection: 'column',
-    justifyContent: "center",
-    [theme.breakpoints.down('md')]: { m: '2px 0' }
-}
-
-
-export const statsBtnMobileIcon = {
-    [theme.breakpoints.down('md')]: { width: '20px', height: "20px" }
-}
-
-
-export const containerCommentItem = (theme: Theme, isActive: boolean): SystemStyleObject<Theme> => ({
-    bgcolor: 'background.paper',
-    borderRadius: '10px',
-    alignItems: "flex-start",
-    p: '8px 16px',
-    width: "100%",
-    display: 'flex',
-    flexWrap: "wrap",
-    border: '1px solid transparent',
-    borderColor: isActive ? 'text.secondary' : 'transparent',
-    '&:last-child': {
-        mb: '0'
-    },
     [theme.breakpoints.down('md')]: {
-        p: '4px 8px'
-    }
-})
-
-
-export const containerAvatarComment = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    p: '7px 0',
-    [theme.breakpoints.down('md')]: { p: '4px 0' }
-}
-
-
-
-export const textComment = {
-    m: "0",
-    width: '65%',
-    '& .MuiTypography-root ': {
-        color: 'text.primary',
-        fontSize: '16px', [theme.breakpoints.down('md')]: {
-            fontSize: '14px',
-            lineHeight: "initial"
-        }
-    },
-    '& .MuiTypography-body1': {
-        mb: '5px',
-        textOverflow: "ellipsis",
-        whiteSpace: 'nowrap',
-        overflow: "hidden",
-        [theme.breakpoints.down('md')]: { mb: '5px' }
+        m: '2px 0' 
     }
 }
 
-
-
-export const containerSecondBlockComm = {
-    width: '100%',
-    justifyContent: 'space-between',
-    display: 'flex',
-    mt: '7px',
-    [theme.breakpoints.down('md')]: { mt: '4px' }
+export const loaderReplyBox = {
+    width:'100%', 
+    height:'100%',
+    mt:'5px'
 }
 
-
-
-export const replyComm = (theme: Theme, isActive: boolean): SystemStyleObject<Theme> => ({
-    p: '0',
-    '@media (hover: hover) and (pointer: fine)': {
-        '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
-    },
-    fontSize: "14px",
-    textTransform: 'initial',
-    minWidth: "0",
-    color: isActive ? 'primary.main' : 'text.secondary',
-    [theme.breakpoints.down('md')]: { fontSize: '12px' }
-})
-
-
-export const dataComm = {
-    fontSize: '14px',
-    color: 'text.disabled',
-    alignSelf: 'flex-start',
-    [theme.breakpoints.down('md')]: { fontSize: '12px' }
-}
-
-
-export const likeComm = {
-    p: '0',
-    '@media (hover: hover) and (pointer: fine)': {
-        '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
-    },
-    fontSize: "14px",
-    textTransform: 'initial',
-    minWidth: "0",
-    color: 'text.secondary',
-    alignItems: 'center',
-    [theme.breakpoints.down('md')]: { fontSize: '12px' }
-}
-
-
-export const repliesOpen = (theme: Theme, count: boolean, openReply: boolean): SystemStyleObject<Theme> => ({
-    whiteSpace: 'nowrap',
-    m: '0 20px',
-    p: '0',
-    '@media (hover: hover) and (pointer: fine)': {
-        '&:hover': { backgroundColor: "transparent", color: count ? 'text.primary' : 'text.secondary' }, // >0
-    },
-    fontSize: "14px",
-    textTransform: 'initial',
-    cursor: count ? 'pointer' : 'initial', // > 0
-    minWidth: "0",
-    color: openReply ? 'primary.main' : 'text.secondary',
-    [theme.breakpoints.down('md')]: { fontSize: '12px' }
-})
-
-
-export const moreBtn = {
-    p: '0',
-    '@media (hover: hover) and (pointer: fine)': {
-        '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
-    },
-    fontSize: "14px",
-    textTransform: 'initial',
-    minWidth: "0",
-    color: 'text.secondary',
-    mr: '25px',
-
-}
-
-
-export const hideBtn = {
-    p: '0',
-    '@media (hover: hover) and (pointer: fine)': {
-        '   &:hover': { backgroundColor: "transparent", color: 'text.primary' },
-    },
-    fontSize: "14px",
-    textTransform: 'initial',
-    minWidth: "0",
-    color: 'text.secondary'
-}
-
-
-export const replyContainer = (theme: Theme, isActive: boolean): SystemStyleObject<Theme> => ({
+export const replyContainer = {
     bgcolor: 'background.paper',
     borderRadius: '10px',
     m: '10px 0 ',
@@ -599,20 +613,36 @@ export const replyContainer = (theme: Theme, isActive: boolean): SystemStyleObje
     border: '1px solid transparent',
     maxWidth: "90%",
     lignItems: "flex-start",
-    borderColor: isActive ? 'text.secondary' : 'transparent',
     p: '5px 7px',
+
     '&:last-child': {
         mb: '0px'
     },
-    [theme.breakpoints.down('md')]: { p: '4px 8px' }
+    [theme.breakpoints.down('md')]: { 
+        p: '4px 8px' 
+    }
 
-})
+}
 
+export const avatarTextReplyBox = {
+    display:'flex', 
+    alignItems:'center', 
+    width:'100%', 
+    p:'0px'
+}
+
+export const avatarReplyBox = {
+    minWidth:"0", 
+    mr:"10px"
+}
 
 export const avatarReply = {
     width: "35px",
     height: '35px',
-    [theme.breakpoints.down('md')]: { width: "30px", height: '30px' }
+    [theme.breakpoints.down('md')]: {
+        width: "30px", 
+        height: '30px' 
+    }
 }
 
 export const fullTextReply = {
@@ -621,13 +651,11 @@ export const fullTextReply = {
         maxWidth: '513px',
         color: 'text.primary',
         fontSize: '15px',
-        [theme.breakpoints.down('md')]: { fontSize: "14px" }
     },
     '& .MuiTypography-body1': {
         mb: '5px',
     }
 }
-
 
 export const containerPrimaryReplyText = {
     display: 'flex',
@@ -637,35 +665,65 @@ export const containerPrimaryReplyText = {
     minWidth: 0
 }
 
-
-export const replyReplyBtn = (theme: Theme, isActive: boolean): SystemStyleObject<Theme> => ({
-    p: '0',
-    '@media (hover: hover) and (pointer: fine)': {
-        '&:hover': { backgroundColor: "transparent", color: 'text.primary' },
-    },
-    fontSize: "14px",
-    textTransform: 'initial',
-    minWidth: "0",
-    color: isActive ? 'primary.main' : 'text.secondary',
-    [theme.breakpoints.down('md')]: { fontSize: "12px" }
-})
-
-
-export const dataReply = {
-    fontSize: '14px',
-    color: 'text.disabled',
-    alignSelf: 'flex-start',
-    [theme.breakpoints.down('md')]: { fontSize: "12px" }
+export const arrowBetweenNames = { 
+    flexShrink: 0, 
+    [theme.breakpoints.down('md')]:{
+        width:"20px", 
+        height:'20px'
+    } 
 }
 
-export const likesReply = {
-    p: '0',
-    '@media (hover: hover) and (pointer: fine)': {
-        '&:hover': { backgroundColor: "transparent", color: 'primary.main' },
-    },
-    fontSize: "14px",
-    textTransform: 'initial',
-    minWidth: "0",
-    color: 'text.secondary',
-    [theme.breakpoints.down('md')]: { fontSize: "12px" }
+export const replyBtnBoxInReply = {
+    width: '100%', 
+    justifyContent: 'space-between', 
+    display: 'flex', 
+    mt: '7px'
+}
+
+export const nameRecipeMobile = {
+    flexShrink: 0,
+    pb: '5px',
+    lineHeight: 'none',
+    mb: '0',
+    fontSize: '16px',
+    fontWeight: 'bold',
+}
+
+export const containerSlideMediaSwiper = {
+    width: '100%',
+    height: '100%',
+    borderRadius: '20px 20px 0 20px',
+    position: 'relative',
+
+    [theme.breakpoints.down(769)]: {
+        borderRadius: '20px 20px 20px 20px'
+    }
+}
+
+export const mediaSwiperElement = {
+    height: '100%',
+    objectFit: 'cover',
+    width: '100%',
+    borderRadius: '20px 20px 0 20px',
+    transition: 'opacity 0.3s ease',
+
+    [theme.breakpoints.down(769)]: {
+        borderRadius: '20px 20px 20px 20px'
+    }
+}
+
+export const swiperProgressBox = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    zIndex: 10,
+}
+
+export const containerAvatarComment = {
+    width: '100%',
+    p: '7px 0',
+    [theme.breakpoints.down('md')]: { 
+        p: '4px 0' 
+    }
 }

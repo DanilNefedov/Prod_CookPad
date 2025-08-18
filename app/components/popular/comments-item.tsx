@@ -8,10 +8,11 @@ import { setActiveComment } from "@/state/slices/comments-context";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import numbro from "numbro";
 import { theme } from "@/config/ThemeMUI/theme";
-import { containerAvatarComment, containerCommentItem, containerSecondBlockComm, dataComm, hideBtn, likeComm, moreBtn, repliesOpen, replyComm, textComment } from "@/app/(main)/popular/styles";
+import { avatar, avatarContainer, commentsWrapper, commentTime, containerAvatarComment, containerCommentItem, containerSecondBlockComm, iconReplyBtn, likeComm, likeIcon, loaderReplyBox, moreHideBox, moreHideBtns, repliesOpen, replyBox, replyComm, textComment } from "@/app/(main)/popular/styles";
 import { usePingGate } from "@/app/hooks/ping";
 import { UXLoading } from "../ui-helpers/loading";
 import { Like } from "@/app/(main)/popular/types";
+import { betweenCenter } from "@/app/styles";
 
 
 
@@ -113,21 +114,13 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: Props) =>
 
 
     return (
-        <ListItem sx={{ mb: '10px', p: 0, display: 'block' }}>
-            <Box sx={(theme) => containerCommentItem(theme, isActive)}>
+        <ListItem sx={commentsWrapper}>
+            <Box sx={[containerCommentItem, {borderColor: isActive ? 'text.secondary' : 'transparent'}]}>
 
-                <Box sx={containerAvatarComment}>
-                    <ListItemAvatar sx={{minWidth:"0", pr:'10px',
-                        [theme.breakpoints.down('md')]:{
-                            pr: '7px'
-                        }
-                    }}>
+                <Box sx={[containerAvatarComment, betweenCenter]}>
+                    <ListItemAvatar sx={avatarContainer}>
                         <Avatar alt={commentsData.author_name} src={commentsData.author_avatar } 
-                        sx={{
-                            [theme.breakpoints.down('md')]:{
-                                width:'30px', height:"30px"
-                            }
-                        }}></Avatar>
+                        sx={avatar}></Avatar>
                     </ListItemAvatar>
                     <ListItemText
                         sx={textComment}
@@ -135,7 +128,6 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: Props) =>
                             commentsData.author_name
                         }
                         secondary={
-                            
                             <>
                                 {commentsData.text}
                             </>
@@ -156,21 +148,21 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: Props) =>
                                 {id_comment: id_comment, author_name: commentsData.author_name, id_branch:id_comment}
                             ))
                         }}
-                        sx={(theme) => replyComm(theme, isActive)}>
+                        sx={[replyComm, {color: isActive ? 'primary.main' : 'text.disabled'}]}>
                             reply
                     </Button>
-                    <Typography sx={dataComm}>{commentsData.createdAt}</Typography>
+                    <Typography sx={commentTime}>{commentsData.createdAt}</Typography>
 
-                    <Button sx={likeComm}
+                    <Button sx={likeComm} 
                         onClick={() => handleLike({ id_comment: commentsData.id_comment, config_id, liked: commentsData.liked, reply: false, id_branch: '' })}
                     >
                         {formatCount(Number(commentsData.likes_count))}
-                        <FavoriteIcon sx={{ fontSize: "16px", m: '0 0 3px 3px', color: commentsData.liked ? 'primary.main' : 'inherit' }}></FavoriteIcon>
+                        <FavoriteIcon sx={[likeIcon, {color: commentsData.liked ? 'primary.main' : 'inherit'}]}></FavoriteIcon>
                     </Button>
                 </Box>
 
-                <Box sx={{display:'flex', alignItems:'center', width:'100%'}}>
-                    <hr style={{maxWidth:'10%', height:'1px', backgroundColor:'#8E94A4',flex:1}}/>
+                <Box sx={replyBox}>
+                    <hr className="leftLine line" />
                     <Button
                         onClick={() => {
                             if ((openReply === '' || openReply !== commentsData.id_comment) && commentsData.reply_count > 0) {
@@ -184,19 +176,21 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: Props) =>
                         }}
                         sx={(theme) => repliesOpen(theme, commentsData.reply_count > 0, openReply === commentsData.id_comment)}>
                             { commentsData.reply_count === 0 ? 0 : formatCount(Number(commentsData.reply_count)) } replies 
-                            <KeyboardArrowDownIcon sx={{
+                            <KeyboardArrowDownIcon sx={[iconReplyBtn, {
                                 transform: openReply === commentsData.id_comment ? 'rotate(180deg)' : 'rotate(0deg)',
-                                transition: 'transform 0.2s ease', 
-                            }} width={20} height={20}></KeyboardArrowDownIcon>
+                            }]}></KeyboardArrowDownIcon>
                     </Button>
-                    <hr style={{width:'40%', height:'1px', backgroundColor:'#8E94A4',flex:1}}/>
+                    <hr className="rightLine line"/>
                 </Box>
                 
             </Box>
             <List sx={{display:openReply === commentsData.id_comment ? 'block' : 'none'}}>
                 {openReply === commentsData.id_comment ? (
                     statusReply === "all" ? (
-                        <UXLoading position="static"/>
+                        <Box sx={loaderReplyBox}>
+                            <UXLoading position="static"/>
+                        </Box>
+                        
                     ) : (
                         <>
                             {(repliesData?.ids ?? []).map(replyId => {
@@ -215,19 +209,17 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: Props) =>
                         </>
                     )
                 ) : null}
-
-
             </List>
 
             {
                 openReply === commentsData.id_comment && repliesData?.ids && repliesData?.ids.length > 0 ?
-                    <Box sx={{ maxWidth: "50%", justifyContent: 'center', m: '0 auto', display: "flex" }}>
+                    <Box sx={moreHideBox}>
                         <Button
                             disabled={Number.isNaN(repliesData?.page)}
-                            sx={moreBtn}
+                            sx={[moreHideBtns, {mr: '25px'}]}
                             onClick={() => handleReplies({ id_comment: commentsData.id_comment, more: true })}
                         >more</Button>
-                        <Button sx={hideBtn}
+                        <Button sx={moreHideBtns}
                             onClick={() => {
                                 if (openReply === commentsData.id_comment) {
                                     setOpenReply('')

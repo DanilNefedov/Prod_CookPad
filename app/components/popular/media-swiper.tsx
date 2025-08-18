@@ -7,7 +7,7 @@ import 'swiper/css/navigation';
 
 import './styles.css';
 import { memo, useEffect, useState } from "react";
-import { containerSlideMediaSwiper, mediaSwiperElement } from "@/app/(main)/popular/styles";
+import { containerSlideMediaSwiper, mediaSwiperElement, swiperProgressBox } from "@/app/(main)/popular/styles";
 import { useAppSelector } from "@/state/hook";
 import { shallowEqual } from "react-redux";
 import { RecipeMedia } from "@/app/(main)/types";
@@ -71,16 +71,10 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
             {media.map((elem:RecipeMedia, index) => (
 
                 <SwiperSlide key={elem.media_id} className="slide-popular" virtualIndex={index}>
-                    <Box sx={{ ...containerSlideMediaSwiper, position: 'relative' }}>
+                    <Box sx={containerSlideMediaSwiper}>
                         {(!loaded[elem.media_id]) && (
                             <Box
-                                sx={{
-                                    position: 'absolute',
-                                    top: '50%',
-                                    left: '50%',
-                                    transform: 'translate(-50%, -50%)',
-                                    zIndex: 10,
-                                }}
+                                sx={swiperProgressBox}
                             >
                                 <CircularProgress color="secondary" size="35px" />
                             </Box>
@@ -88,11 +82,9 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
 
                         {elem.media_type === 'image' ? (
                             <CardMedia
-                                sx={{
-                                    ...mediaSwiperElement,
-                                    opacity: loaded[elem.media_id] ? 1 : 0,
-                                    transition: 'opacity 0.3s ease',
-                                }}
+                                sx={[mediaSwiperElement,
+                                    {opacity: loaded[elem.media_id] ? 1 : 0}
+                                ]}
                                 component='img'
                                 src={mediaUrls[elem.media_id]}
                                 loading="lazy"
@@ -100,11 +92,9 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
                             />
                         ) : (
                             <CardMedia
-                                sx={{
-                                    ...mediaSwiperElement,
-                                    opacity: loaded[elem.media_id] ? 1 : 0,
-                                    transition: 'opacity 0.3s ease',
-                                }}
+                                sx={[mediaSwiperElement,
+                                    {opacity: loaded[elem.media_id] ? 1 : 0}
+                                ]}
                                 component='video'
                                 autoPlay
                                 loop
