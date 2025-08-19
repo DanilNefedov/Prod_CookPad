@@ -12,7 +12,7 @@ import { avatar, avatarContainer, commentsWrapper, commentTime, containerAvatarC
     loaderReplyBox, moreHideBox, moreHideBtns, repliesOpen, replyBox, replyComm, 
     textComment } from "@/app/(main)/popular/styles";
 import { usePingGate } from "@/app/hooks/ping";
-import { UXLoading } from "../ui-helpers/Loading";
+import { UXLoading } from "../ui-helpers/UXLoading";
 import { Like } from "@/app/(main)/popular/types";
 import { betweenCenter } from "@/app/styles";
 

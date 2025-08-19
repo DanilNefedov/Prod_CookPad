@@ -4,7 +4,7 @@ import { fetchList, } from '@/state/slices/list-slice';
 import { Button, Table, TableBody, TableCell, TableRow, } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import MainTableBody from '../MainTableBody';
-import { UXLoading } from '../../ui-helpers/Loading';
+import { UXLoading } from '../../ui-helpers/UXLoading';
 import { EmptyInfo } from '../../ui-helpers/EmptyInfo';
 import { containerInfo, moreButton, table, tableBody } from '@/app/(main)/(main-list)/list/styles';
 import MainTableHeader from '../MainTableHeader';

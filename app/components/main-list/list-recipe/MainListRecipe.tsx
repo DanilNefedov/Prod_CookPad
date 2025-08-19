@@ -6,7 +6,7 @@ import { Accordion, AccordionSummary, Box, Button, Typography } from "@mui/mater
 import { useEffect, useState } from "react";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ContentAccordion from "./ContentAccordion";
-import { UXLoading } from "../../ui-helpers/Loading";
+import { UXLoading } from "../../ui-helpers/UXLoading";
 import { EmptyInfo } from "../../ui-helpers/EmptyInfo";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { accordion, accordionMediaBox, accordionName, accordionSumm, 

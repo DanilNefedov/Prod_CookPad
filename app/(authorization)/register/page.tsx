@@ -6,7 +6,7 @@ import Link from "next/link";
 import { registerAndSignIn, uploadFile } from "./function";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { startTransition, useActionState, useState } from "react";
-import { UXLoading } from "@/app/components/ui-helpers/Loading";
+import { UXLoading } from "@/app/components/ui-helpers/UXLoading";
 import { v4 as uuidv4 } from 'uuid';
 import { ModalInfo } from "../ModalInfo";
 import { InputErrorState, RegisterFormData } from "../types";

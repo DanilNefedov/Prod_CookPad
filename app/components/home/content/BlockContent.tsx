@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { fetchRecipes } from "@/state/slices/recipe-slice";
 import { CardContentBlock } from "./CardContentBlock";
 import { Box, Button } from "@mui/material";
-import { UXLoading } from "../../ui-helpers/Loading";
+import { UXLoading } from "../../ui-helpers/UXLoading";
 import { EmptyInfo } from "../../ui-helpers/EmptyInfo";
 import Link from "next/link";
 import { useNavigationState } from "@/config/home-navigation/ContextNavigation";

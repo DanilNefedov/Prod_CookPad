@@ -8,7 +8,7 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { containerLoading, linksAuth, templateHeaderAuth } from "../styles";
 import { ModalInfo } from "../ModalInfo";
 import { centerFlexBlock } from "@/app/styles";
-import { UXLoading } from "@/app/components/ui-helpers/Loading";
+import { UXLoading } from "@/app/components/ui-helpers/UXLoading";
 
 
 
