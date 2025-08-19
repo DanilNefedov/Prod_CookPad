@@ -6,9 +6,9 @@ import { useActionState, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { containerLoading, linksAuth, templateHeaderAuth } from "../styles";
-import { UXLoading } from "@/app/components/ui-helpers/Loading";
 import { ModalInfo } from "../ModalInfo";
 import { centerFlexBlock } from "@/app/styles";
+import { UXLoading } from "@/app/components/ui-helpers/Loading";
 
 
 
