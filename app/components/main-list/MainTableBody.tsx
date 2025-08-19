@@ -160,7 +160,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                     <EmptyInfo></EmptyInfo>
                                 : 
                                 
-                                contextValues.map((contextValue, index) => (
+                                contextValues.map((contextValue,) => (
                                     <SwiperSlide
                                         key={contextValue.unit_id}
                                         className="slide-list-unit"
@@ -244,7 +244,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                         thisIngredient?.unit_ids.length === 0 ?
                                             <EmptyInfo mobileText={'13px'} right={'calc(50% - 70px)'}></EmptyInfo>
                                         :
-                                        contextValues.map((contextValue, index) => (
+                                        contextValues.map((contextValue) => (
                                                 <SwiperSlide
                                                     key={contextValue.unit_id}
                                                     className="slide-list-unit"

@@ -57,6 +57,7 @@ export default function Register() {
       try {
         imageUrl = await uploadFile({ connection_id, image: imageFile });
       } catch (e) {
+        console.log(e)
         fieldErrors.image = true;
       }
     }
@@ -96,7 +97,7 @@ export default function Register() {
         onSubmit={handleSubmit}
       >
         <Box sx={{ color: "error.main", textAlign: "center" }}>
-          {(state.error?.server || state.error?.post) && <>Whoa, something's wrong.<br />Check the data or the connection.</>}
+          {(state.error?.server || state.error?.post) && <>Whoa, something&apos;s wrong.<br />Check the data or the connection.</>}
           {inputErrorState.name && <>Enter the correct name.<br /></>}
           {inputErrorState.image && <>Check your avatar or connection.<br /></>}
           {sizeAvatar && <>Your avatar is not supported.<br /></>}

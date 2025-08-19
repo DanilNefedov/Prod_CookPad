@@ -16,6 +16,7 @@ interface Props {
 export function UXLoading({ color = "secondary", position = "absolute" }: Props) {
     const isMobile = useMediaQuery(theme.breakpoints.down(750));
     const fallbackSize = isMobile ? 28 : 35;
+    console.log(color)
 
     return (
         <Box sx={loadingContainer(position)}>

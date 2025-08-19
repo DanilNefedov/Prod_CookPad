@@ -1,7 +1,7 @@
 // *S - start
 // *E - end
 
-import { ListIngrData, NormalizedData, UnitNoId, UnitsId } from "../list/types"
+import { NormalizedData, UnitNoId } from "../list/types"
 
 
 
@@ -92,8 +92,6 @@ export interface ShopIngrListRecipeFetch extends TemplateIngrListRecipe {
     shop_ingr: boolean
 }
 
-export interface DeleteIngrListRecipeFetch extends TemplateIngrListRecipe{
-}
 
 export interface ShopUnitListRecipeFetch extends TemplateIngrListRecipe{
     unit_id:string,

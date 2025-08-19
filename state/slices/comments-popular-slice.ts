@@ -1,8 +1,8 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { newCommCalc } from "./popular-slice";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
-import { CommentRootState, CommentsData, CommentsFetchReq, CommentsFetchRes, 
-    GetRepliesFetchReq, GetRepliesFetchRes, LikeCommentFetch, NewCommentFetchReq, 
+import { CommentRootState, CommentsFetchReq, CommentsFetchRes, 
+    GetRepliesFetchReq, GetRepliesFetchRes, LikeCommentFetch, CommentsData, 
     NewCommentFetchRes, NewReplyFetch, 
     ReplyData} from "@/app/(main)/popular/types";
 
@@ -87,7 +87,7 @@ export const commVideoFetch = createAsyncThunk<CommentsFetchRes, CommentsFetchRe
     }
 )
 
-export const newCommPopular = createAsyncThunk<NewCommentFetchRes, NewCommentFetchReq, { rejectValue: string }>(
+export const newCommPopular = createAsyncThunk<NewCommentFetchRes, CommentsData, { rejectValue: string }>(
     'commentsPopular/newCommPopular',
     async function (data, { rejectWithValue, dispatch }) {
         try {

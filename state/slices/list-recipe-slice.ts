@@ -1,4 +1,4 @@
-import { ChangeAmountListRecipeFetch, DeleteIngrListRecipeFetch, DeleteListRecipeFetchReq, 
+import { ChangeAmountListRecipeFetch, TemplateIngrListRecipe, DeleteListRecipeFetchReq, 
     DeleteUnitListRecipeFetch, IngrListRecipeFetchReq, IngrListRecipeFetchRes, ListRecipeData, 
     ListRecipeRootState, NewListRecipeFetchReq, NewUnitListRecipeFetchReq, 
     NewUnitListRecipeFetchRes, PreLoaderFetchReq, PreLoaderFetchRes, ShopIngrListRecipeFetch, 
@@ -161,7 +161,7 @@ export const shopIngrListRecipe = createAsyncThunk<ShopIngrListRecipeFetch, Shop
 
 
 
-export const deleteIngrRecipeList = createAsyncThunk<DeleteIngrListRecipeFetch, DeleteIngrListRecipeFetch, { rejectValue: string }>(
+export const deleteIngrRecipeList = createAsyncThunk<TemplateIngrListRecipe, TemplateIngrListRecipe, { rejectValue: string }>(
     'listRecipe/deleteIngrRecipeList',
     async function (data, { rejectWithValue }) {
         try {
@@ -474,7 +474,7 @@ const listRecipeSlice = createSlice({
 
             .addCase(deleteIngrRecipeList.pending, deleteIngrRecipeListHandlers.pending)
             .addCase(deleteIngrRecipeList.rejected, deleteIngrRecipeListHandlers.rejected)
-            .addCase(deleteIngrRecipeList.fulfilled, (state, action: PayloadAction<DeleteIngrListRecipeFetch, string>) => {
+            .addCase(deleteIngrRecipeList.fulfilled, (state, action: PayloadAction<TemplateIngrListRecipe, string>) => {
                 state.operations.deleteIngrRecipeList.error = false;
                 state.operations.deleteIngrRecipeList.loading = false;
 

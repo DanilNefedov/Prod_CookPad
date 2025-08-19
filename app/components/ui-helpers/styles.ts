@@ -16,7 +16,7 @@ export const emptyInfo = (params:LoadingContainer): SxProps<Theme> => (theme) =>
     },
 });
 
-export const loadingContainer = (position:string): SxProps<Theme> => (theme) =>({
+export const loadingContainer = (position:string): SxProps<Theme> => () =>({
     position: position,
     transform: position === 'static' ? 'none' : 'translate(-50%, -50%)',
     top: '50%',

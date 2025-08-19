@@ -144,7 +144,6 @@ export interface NewCommentFetchRes{
     config_id:string
 }
 
-export interface NewCommentFetchReq extends CommentsData {}
 
 export interface LikeCommentFetch {
     id_author:string, 
