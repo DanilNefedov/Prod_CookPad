@@ -1,8 +1,8 @@
 // *S - start
 // *E - end
 
-import { TempalateRecipe } from "@/app/types/types";
 import { Unit } from "../cook/types";
+import { TempalateRecipe } from "../types";
 
 
 

@@ -13,8 +13,9 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import './swiper-styles-media.css';
 import { Navigation } from 'swiper/modules';
-import { actionBtnIcons, actionButtons, containerMediaStep, deleteBtn, errorMedia, helperText, infoMediaStep, mainBtn, swiperArrowsBox } from "@/app/(main)/new-recipe/style";
-import { SwiperStepMedia } from "./swiper-media";
+import { actionBtnIcons, actionButtons, containerMediaStep, deleteBtn, errorMedia, 
+    helperText, infoMediaStep, mainBtn, swiperArrowsBox } from "@/app/(main)/new-recipe/style";
+import { SwiperStepMedia } from "./SwiperMedia";
 import { changeMedia, deleteMediaState, setMainMedia } from "@/state/slices/stepper/media";
 import { updateError } from "@/state/slices/stepper/error-open";
 import { arrowFullTemplate, columnCenter, headerSteps, InputForMedia } from "@/app/styles";

@@ -20,7 +20,7 @@ export async function POST(req: Request) {
         return NextResponse.json({data: newHistory});
 
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return NextResponse.json(
             { message: 'Internal Server Error' },
             { status: 500 }
@@ -74,7 +74,7 @@ export async function GET(request: Request) {
         return NextResponse.json({cook, newCook:null})
 
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return NextResponse.json(
             { error: "An internal error occurred" },
             { status: 500 }
@@ -126,7 +126,7 @@ export async function PATCH(request: Request) {
 
         
     } catch (error) {
-        console.log(error)
+        console.error(error)
         return NextResponse.json(
             { error: "An internal error occurred" },
             { status: 500 }

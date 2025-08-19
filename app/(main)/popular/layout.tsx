@@ -1,4 +1,4 @@
-import { AlertsProvider } from "@/app/components/ui-helpers/alerts-provider";
+import { AlertsProvider } from "@/app/components/ui-helpers/AlertsProvider";
 
 
 

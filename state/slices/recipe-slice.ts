@@ -52,13 +52,6 @@ export const fetchRecipes = createAsyncThunk<{recipes:RecipeData[], page:number 
 )
 
 
-// export interface favoriteDataRecipeT {
-//     connection_id:string, 
-//     recipe_id:string, 
-//     favorite:boolean
-// }
-
-
 export const setFavoriteRecipe = createAsyncThunk<FavoriteRecipeFetch, FavoriteRecipeFetch, {rejectValue: string}> (
     'recipe/setFavoriteRecipe',
     async function (data, {rejectWithValue, dispatch}){

@@ -13,19 +13,9 @@ export type PopularOperationKey =
   
 
 
-// type OperationStatus = {
-//     loading: boolean
-//     error: boolean
-// }
-
-// type OperationState = Record<PopularOperationKey, OperationStatus>
-
 interface PopularState extends PopularRootState {
     operations: OperationState<PopularOperationKey>
 }
-
-// const defaultStatus: OperationStatus = { loading: true, error: false }
-// const loadingStatus: OperationStatus = { loading: false, error: false }
 
 
 //maybe shouldn't add the number of views to the redux.
@@ -225,7 +215,6 @@ const popularSlice = createSlice({
             .addCase(popularFetch.fulfilled, (state, action: PayloadAction<PopularData[], string>) => {
                 state.operations.popularFetch.error = false
                 state.operations.popularFetch.loading = false
-                    // console.log(action.payload)
                 action.payload.map(el => {
                     state.pop_list.push(el)
                 })
@@ -239,7 +228,6 @@ const popularSlice = createSlice({
             .addCase(likePopContent.fulfilled, (state, action: PayloadAction<LikePopFetchRes, string>) => {
                 state.operations.likePopContent.error = false
                 state.operations.likePopContent.loading = false
-                // console.log(action.payload)
                 const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
                 if (thisPop) {
                     thisPop.liked = action.payload.liked
@@ -256,7 +244,6 @@ const popularSlice = createSlice({
             .addCase(savePopContent.fulfilled, (state, action: PayloadAction<SavePopFetchRes, string>) => {
                 state.operations.savePopContent.error = false
                 state.operations.savePopContent.loading = false
-                console.log(action.payload)
                 const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
                 if (thisPop) {
                     thisPop.saved = action.payload.saved

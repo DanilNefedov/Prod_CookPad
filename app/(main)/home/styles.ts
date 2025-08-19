@@ -92,16 +92,20 @@ export function btnLink(page: PageStyles, pathname: string) {
         textTransform: 'initial',
         color: thisPage ? 'text.primary' : 'text.disabled',
         backgroundColor: thisPage ? 'primary.main' : 'background.paper',
+        mb: '20px',
+        lineHeight: '14px',
+        justifyContent: "flex-start",
+        
         '@media (hover: hover) and (pointer: fine)': {
             '&:hover': {
                 color: 'text.primary'
             },
         },
-        mb: '20px',
-        lineHeight: '14px',
-        justifyContent: "flex-start",
+
         [theme.breakpoints.down("md")]: {
-            p:'5px',
+            maxHeight:'45px',
+            height:'45px',
+            p:'5px 5px 5px 2px',
             minWidth:'auto',
             borderRadius:'0 20px 20px 0',
 
@@ -109,6 +113,15 @@ export function btnLink(page: PageStyles, pathname: string) {
                 display:'none'
             }
         },
+    }
+}
+
+export const havigationIcons = {
+    mr:'5px', 
+    [theme.breakpoints.down("md")]: {
+        width:'30px', 
+        height:'35px', 
+        mr:'0'
     }
 }
 

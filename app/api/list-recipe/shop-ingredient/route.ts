@@ -1,4 +1,4 @@
-import { ListIngrData } from "@/app/(main)/(main-list)/list/types";
+import { ListIngrDataFetch } from "@/app/(main)/(main-list)/list-recipe/types";
 import connectDB from "@/app/lib/mongoose";
 import ListRecipe from "@/app/models/list-recipe";
 import { NextResponse } from "next/server";
@@ -42,7 +42,7 @@ export async function PATCH(request: Request) {
         }
 
         const updatedIngredient = updatedDocument.recipe.ingredients_list.find(
-            (ingr:ListIngrData) => ingr._id.toString() === ingredient_id
+            (ingr:ListIngrDataFetch) => ingr._id.toString() === ingredient_id
         );
 
         if (!updatedIngredient) {

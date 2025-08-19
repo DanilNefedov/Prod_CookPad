@@ -25,7 +25,6 @@ export const containerInfo = {
 
 export const tableBody = { 
     overflow: 'auto', 
-    // borderTop: '2px solid rgba(255, 0, 0, 0.12)' 
 }
 
 export const moreButton = {

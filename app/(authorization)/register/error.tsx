@@ -1,6 +1,6 @@
 'use client'
 
-import { ErrorPageContent } from "@/app/components/ui-helpers/error";
+import { ErrorPageContent } from "@/app/components/ui-helpers/Error";
 
 
 

@@ -2,16 +2,15 @@
 import { Container, Paper } from '@mui/material'
 import Box from '@mui/material/Box';
 
-import { LogOut } from './log-out'
-import { BtnLinks } from './btn-links'
-import { AboutUser } from './user-info';
+import { LogOut } from './LogOut'
+import { BtnLinks } from './BtnLinks'
+import { AboutUser } from './UserInfo';
 import HomeIcon from '@mui/icons-material/Home';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import RecommendIcon from '@mui/icons-material/Recommend';
-import { theme } from '@/config/ThemeMUI/theme';
 import { DataPage } from '@/app/(main)/types';
-import { containerButtons, containerExit, containerNavigation, paperNavigation } from '@/app/(main)/home/styles';
+import { containerButtons, containerExit, containerNavigation, havigationIcons, paperNavigation } from '@/app/(main)/home/styles';
 import { columnSpaceBetween } from '@/app/styles';
 
 
@@ -20,22 +19,22 @@ export function NavigationSite() {
         { 
             name: 'Home', 
             path: ['/home', '/cook/:path*' ],
-            icon: <HomeIcon viewBox="0 1 24 24" sx={{mr:'5px'}}/>
+            icon: <HomeIcon viewBox="0 1 24 24" sx={havigationIcons} key={1}/>
         },
         { 
             name: 'Popular',
             path: ['/popular'],
-            icon:<RecommendIcon sx={{mr:'5px'}}/>
+            icon:<RecommendIcon sx={havigationIcons} key={2}/>
         },
         { 
             name: 'New Recipe', 
             path: ['/new-recipe'],
-            icon:<AddCircleIcon sx={{mr:'5px'}}/>
+            icon:<AddCircleIcon sx={havigationIcons} key={3}/>
         },
         { 
             name: 'List', 
             path: ['/list', '/list-recipe'],
-            icon:<ChecklistRtlIcon sx={{mr:'5px'}}/>
+            icon:<ChecklistRtlIcon sx={havigationIcons} key={4}/>
         },
     ];
 

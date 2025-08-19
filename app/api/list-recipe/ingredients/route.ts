@@ -50,7 +50,7 @@ export async function GET(request: Request) {
 
 
     }catch(error){
-        console.log(error)
+        console.error(error)
 
         return NextResponse.json(
             { error: "An internal error occurred" },

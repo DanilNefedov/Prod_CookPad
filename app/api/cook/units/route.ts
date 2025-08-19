@@ -1,4 +1,4 @@
-import { UnitsId } from "@/app/(main)/(main-list)/list/types";
+import { UnitsIdFetch } from "@/app/(main)/(main-list)/list/types";
 import connectDB from "@/app/lib/mongoose"
 import ListIngredients from "@/app/models/list"
 import { NextResponse } from "next/server"
@@ -35,11 +35,11 @@ export async function GET(request: Request) {
         }
         
 
-        const unitFound = document.units.some((el: UnitsId) => el.choice === choice);
+        const unitFound = document.units.some((el: UnitsIdFetch) => el.choice === choice);
 
         return NextResponse.json({
             unit_found: unitFound,
-            units: document.units.map((unit: UnitsId) => ({
+            units: document.units.map((unit: UnitsIdFetch) => ({
                 choice: unit.choice,
                 amount: unit.amount,
                 _id: unit._id

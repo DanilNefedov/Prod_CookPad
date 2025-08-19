@@ -1,0 +1,134 @@
+import { Avatar, Box, Button, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material"
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import { memo, } from "react";
+import { useAppDispatch, useAppSelector } from "@/state/hook";
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import { setActiveComment } from "@/state/slices/comments-context";
+import numbro from "numbro";
+import { arrowBetweenNames, avatarReply, avatarReplyBox, avatarTextReplyBox, commentTime, containerPrimaryReplyText, 
+    fullTextReply, likeComm, replyBtnBoxInReply, replyComm, replyContainer } from "@/app/(main)/popular/styles";
+import { Like } from "@/app/(main)/popular/types";
+import { textMaxWidth } from "@/app/styles";
+
+
+
+interface Props {
+    id_comment_p: string,
+    id_branch_p: string,
+    handleLike: (params: Like) => void
+    config_id: string,
+}
+export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, config_id,}: Props) => {
+    const reply = useAppSelector(state => state.comments.replies[id_branch_p]?.entities[id_comment_p]);
+    const dispatch = useAppDispatch()
+    
+    const {
+        author_avatar,
+        author_name,
+        text,
+        createdAt,
+        name_parent,
+        id_comment,
+        liked,
+        likes_count,
+        id_parent,
+        id_branch,
+    } = reply;
+
+    const isActive = useAppSelector(
+        state => state.commentContext.comment.id_comment === id_comment
+    );  
+   
+
+    function handleLikeComment() {
+        handleLike({ id_comment, config_id: config_id, liked, reply: true, id_branch })
+    }
+
+    function handleReply(){
+        dispatch(setActiveComment(
+            isActive ? {id_comment:'', author_name:'',id_branch:'' }
+            :
+            {id_comment:id_comment, author_name:author_name, id_branch:id_branch_p }
+        ))
+    }
+
+    function formatCount (value: number): string  {
+        if (!value) return '';
+        if (value < 1000) return String(Math.floor(value));
+        return numbro(value).format({
+            average: true,
+            mantissa: 2,
+            trimMantissa: true,
+            spaceSeparated: false,
+        });
+    };
+
+    return (
+        <ListItem sx={[replyContainer, {borderColor: isActive ? 'text.secondary' : 'transparent'}]}>
+            <Box sx={avatarTextReplyBox}>
+                <ListItemAvatar sx={avatarReplyBox}>
+                    <Avatar alt={author_name} src={author_avatar } sx={avatarReply}/>
+                </ListItemAvatar>
+                <ListItemText
+                    sx={fullTextReply}
+                    primary={
+                        <Box sx={containerPrimaryReplyText}>
+                            <Box
+                              component="span"
+                              sx={[textMaxWidth, {minWidth:'0'}]}
+                            >
+                              {author_name}
+                            </Box>
+                          
+                            {id_parent === id_branch ? null : (
+                              <>
+                                <ArrowRightIcon sx={arrowBetweenNames} />
+                          
+                                <Box
+                                  component="span"
+                                  sx={[textMaxWidth, {minWidth:'0'}]}
+                                >
+                                  {name_parent}
+                                </Box>
+                              </>
+                            )}
+                          </Box>
+                    }
+                    secondary={
+                        <>
+                            {text}
+                        </>
+                    }
+                />
+            </Box>
+
+
+
+            <Box sx={replyBtnBoxInReply}>
+                <Button
+                    onClick={handleReply}
+                    sx={[replyComm, {color: isActive ? 'primary.main' : 'text.disabled'}]}>
+                    reply
+                </Button>
+               
+                <Typography sx={commentTime}>{createdAt}</Typography>
+                <Button sx={likeComm}
+                    onClick={() => handleLikeComment()}
+                >
+                    {formatCount(Number(likes_count))}
+                    <FavoriteIcon sx={{ fontSize: "16px", m: '0 0 3px 3px', color: liked ? "primary.main" : "inherit" }}></FavoriteIcon>
+                </Button>
+            </Box>
+        </ListItem>
+    )
+}, (prevProps, nextProps) => {
+
+    return prevProps.id_comment_p === nextProps.id_comment_p &&
+        prevProps.id_branch_p === nextProps.id_branch_p &&
+        prevProps.config_id === nextProps.config_id 
+        
+})
+
+
+
+ReplyComment.displayName = "ReplyComment"

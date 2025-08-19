@@ -93,7 +93,6 @@ export const newIngredientList = createAsyncThunk<NewIngrFetchRes, NewIngrFetchR
     'list/newIngredientList',
     async function (reqData, { rejectWithValue }) {
         try {
-            // console.log(reqData)
             const response = await fetch('/api/list/cook-ingredient', {
                 method: 'POST',
                 headers: {

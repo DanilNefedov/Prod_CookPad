@@ -1,7 +1,7 @@
 import Paper from '@mui/material/Paper';
 import { Box, Container } from "@mui/material";
-import { MainBuildPage } from '@/app/components/new-recipe/main-build-page';
-import { StepperProgress } from '@/app/components/new-recipe/stepper-progress';
+import { MainBuildPage } from '@/app/components/new-recipe/MainBuildPage';
+import { StepperProgress } from '@/app/components/new-recipe/StepperProgress';
 import { centerFlexBlock } from '@/app/styles';
 import { container, form, mainPaper } from './style';
 

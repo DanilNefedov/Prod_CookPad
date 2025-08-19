@@ -1,5 +1,4 @@
 import { theme } from "@/config/ThemeMUI/theme";
-import { styled, SxProps, Theme } from "@mui/material";
 
 
 
@@ -157,4 +156,57 @@ export const cardMedia = {
     height: '100%',
     objectFit: 'cover',
     width:"100%"
+}
+
+
+export const userLertBox = {
+    height:"100dvh",
+    flexDirection:"column",
+    textAlign: "center",
+    px: '2',
+}
+
+export const userAlertHeader = {
+    fontSize:"30px", 
+    pb:'20px', 
+    [theme.breakpoints.down("md")]: {
+        fontSize:'25px'
+    }
+}
+
+export const userAlertSubtitle = {
+    fontSize:"20px", 
+    maxWidth:'520px', 
+    [theme.breakpoints.down("md")]: {
+        fontSize:'16px',  
+        maxWidth:'300px'
+    }
+}
+
+export const globalErrorStack = {
+    maxWidth: '270px',
+    width: '100%',
+    position: 'absolute',
+    bottom: '20px',
+    right: 'calc(50% - 135px)',
+    zIndex: '99999',
+
+    '& .MuiAlert-action':{
+        padding:'0 0 0 5px',
+        color: 'text.primary', 
+    },
+
+    '& .MuiButtonBase-root':{
+        '@media (hover: hover) and (pointer: fine)': {
+            '&:hover': {
+                bgcolor: 'primary.dark',
+            },
+        },
+    }
+}
+
+export const globalErrorAlert = { 
+    bgcolor: 'error.contrast', 
+    color: 'text.primary', 
+    alignItems:'center',
 }

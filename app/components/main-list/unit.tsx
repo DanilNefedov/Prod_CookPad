@@ -1,5 +1,5 @@
-import { iconMenuMainBtns, unitAmountText, unitButton2, unitChoiceText, unitsContainer } from "@/app/(main)/(main-list)/style"
-import { useUnitContext } from "@/config/unit-context/unit-context"
+import { iconMenuMainBtns, unitAmountText, unitButton2, unitChoiceText, unitsContainer } from "@/app/(main)/(main-list)/styles"
+import { useUnitContext } from "@/config/unit-context/UnitContext"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { newAmountListRecipe } from "@/state/slices/list-recipe-slice"
 import { changeAmountFetch } from "@/state/slices/list-slice"
@@ -10,7 +10,7 @@ import { evaluate, } from "mathjs"
 import { usePathname } from "next/navigation"
 import { ChangeEvent, useCallback, useState } from "react"
 import { handleAmountChange } from "../../helpers/input-unit"
-import UnitBtns from "./unit-btns"
+import UnitBtns from "./UnitBtns"
 
 
 export function Unit (){
@@ -57,7 +57,6 @@ export function Unit (){
         if(newAmount === '0') return
 
         const numberAmount = evaluate(newAmount)
-        console.log(numberAmount, newAmount)
 
         if (id !== '' && _id ) {//numberAmount !== thisUnit?.amount
             if (pathName === '/list') {

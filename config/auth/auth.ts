@@ -105,8 +105,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               url: `${process.env.APP_MAIN_URL}/api/user`,
               data: dataUser,
             });
-            const responseData = await response.json();
-            console.log('Successful answer:', responseData.message);
+            // const responseData = await response.json();
+            await response.json();
+            console.log('New user Successful');
           } catch (error) {
             console.error('Error:', error);
           }
@@ -119,8 +120,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 history_links:[]
               },
             });
-            const responseData = await response.json();
-            console.log('Successful answer:', responseData.message);
+            // const responseData = await response.json();
+            await response.json();
+            console.log('User history Links Successful');
           } catch (error) {
             console.error('Error:', error);
           }

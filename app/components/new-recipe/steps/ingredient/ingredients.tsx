@@ -1,13 +1,13 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { Box, Button, Container, Divider, Tooltip, Typography } from "@mui/material"
-import { Autocomplite } from "./autocomplite"
 import InfoIcon from '@mui/icons-material/Info';
 import { addIngredient, deleteIngredient } from "@/state/slices/stepper/ingredients"
 import { IngredientAutocomplite } from "@/app/(main)/new-recipe/types"
-import { addNewIngr, clearBtn, errorIngrText, headerIngredient, ingrdientLine, ingredientBox, 
-    ingredientContainer, ingredientStepContainer, tooltipText } from "@/app/(main)/new-recipe/style";
+import { addNewIngr, clearBtn, errorIngrText, headerIngredient, ingrdientLine, 
+    ingredientBox, ingredientContainer, ingredientStepContainer, tooltipText } from "@/app/(main)/new-recipe/style";
 import { columnCenter, headerSteps } from "@/app/styles";
 import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarning";
+import { Autocomplite } from "./autocomplite";
 
 
 export function Ingredients() {

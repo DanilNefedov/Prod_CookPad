@@ -41,7 +41,7 @@ export async function PATCH(request: Request) {
         return NextResponse.json({unit:updatedDoc.units[updatedDoc.units.length - 1], _id:updatedDoc._id}, { status: 200 });
 
     } catch (error) {
-        console.log(error)
+        console.error(error)
          return NextResponse.json(
             { error: "An internal error occurred" },
             { status: 500 }

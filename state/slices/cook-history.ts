@@ -45,7 +45,6 @@ export const fetchHistoryCook = createAsyncThunk<CookHistoryRootState, HistoryLi
             const {cook, newCook} = await response.json();
 
             if(newCook !== null){
-                // console.log(newCook)
                 dispatch(newCookHistory({ connection_id, history_links:{recipe_id:newCook.recipe_id, recipe_name:newCook.name} }))
             }
             
@@ -76,8 +75,8 @@ export const newCookHistory = createAsyncThunk<NewCookHistoryFetch, NewCookHisto
                 return rejectWithValue('Server Error!');
             }
 
-            const newHeader = await response.json();
-            // console.log(data, newHeader)
+            await response.json();
+            // const newHeader = await response.json();
             return data;
 
         }catch(error){
@@ -173,7 +172,7 @@ const CookHistorySlice = createSlice({
                 state.operations.newCookHistory.loading = false
 
                 const thisLink = state.history_links.find(el => el.recipe_id === action.payload.history_links.recipe_id)
-                // console.log(thisLink, action.payload.history_links)
+
                 if(!thisLink) state.history_links.unshift(action.payload.history_links)
                 
             })

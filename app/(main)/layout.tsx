@@ -1,8 +1,8 @@
 import { Container, Paper } from "@mui/material";
-import { NavigationSite } from "../components/navigation-site/navigation";
-import GlobalErrorProvider from "../../config/client-side-handler/global-error";
-import { UserProvider } from "../../config/user-alert/user-context";
+import GlobalErrorProvider from "../../config/client-side-handler/GlobalError";
+import { UserProvider } from "../../config/user-alert/UserContext";
 import { containerHome, styledPaperHome } from "./home/styles";
+import { NavigationSite } from "../components/navigation-site/navigation";
 
 
 

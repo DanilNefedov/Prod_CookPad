@@ -1,6 +1,6 @@
-import { MainListPage } from "@/app/components/main-list/list/main-page-list";
+import { MainListPage } from "@/app/components/main-list/list/MainPageList";
 import { Box, Paper, TableContainer } from "@mui/material";
-import { mainBox, tableContainer } from "../style";
+import { mainBox, tableContainer } from "../styles";
 
 
 

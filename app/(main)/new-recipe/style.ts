@@ -1,5 +1,5 @@
 import { theme } from "@/config/ThemeMUI/theme";
-import { alpha, styled } from "@mui/material";
+import { alpha } from "@mui/material";
 import { SxProps, Theme } from "@mui/material";
 
 
@@ -14,14 +14,15 @@ export const mainPaper = {
 export const container = {
     width: '100%', 
     maxWidth:'100%', 
-    '&.MuiContainer-root': {
-        paddingLeft: 0,
-        paddingRight: 0,
-    },
     display: "flex",
     flexDirection: "column",
     height: "100dvh",
     padding: "10px 0",
+    
+    '&.MuiContainer-root': {
+        paddingLeft: 0,
+        paddingRight: 0,
+    },
 }
 
 export const form = {
@@ -127,7 +128,7 @@ export const nextBtn = {
 
 export const typeDishInput = {
     "& .MuiSvgIcon-root": {
-        color: "#8E94A4",
+        color: "text.disabled",
     },
     '&&': {
         m: '20px 8px 0',
@@ -172,7 +173,7 @@ export const typeMenu = {
         m:'7px 0',
     },
     '&.MuiMenuItem-root': {
-        color: '#fff',
+        color: 'text.primary',
         '@media (hover: hover) and (pointer: fine)': {
             '&:hover': {
                 backgroundColor: 'background.default',
@@ -180,7 +181,7 @@ export const typeMenu = {
         },
         '&.Mui-selected': {
             backgroundColor: alpha(theme.palette.primary.main, 0.3),
-            color: '#fff',
+            color: 'text.primary',
         },
 
         [theme.breakpoints.down('md')]: {
@@ -196,9 +197,6 @@ export const checkRecommend = {
     ml: '0',
     [theme.breakpoints.down('md')]: {
         margin: '5px 2px',
-        // '& .MuiTypography-root': {
-        // fontSize: '14px',
-        // }
     }
 }
 
@@ -260,9 +258,6 @@ export const timeBtns = {
 
 export const containerMediaStep = { 
     p: 2, 
-    display: 'flex', 
-    justifyContent: 'center', 
-    flexDirection: 'column', 
     [theme.breakpoints.down('md')]: { 
         p: '10px' 
     } 
@@ -451,60 +446,54 @@ export const autocompliteImg = {
     }
 }
 
-export const secondTextInput = {
-    '& .MuiInputBase-root': {
-        backgroundColor: '#1F2128',
-        color: '#fff',
-        paddingTop:'0',
-        paddingBottom:'0',
-        '&.Mui-focused': {
-            backgroundColor: '#1F2128',
-            color: '#fff',
-            '& fieldset': {
-                borderColor: '#fff',
-            },
-        },
-    },
-    '& .MuiInputLabel-root': {
-        color: '#fff',
-        '&.Mui-focused': {
-            color: '#fff',
-        },
-    },
-    '& .MuiOutlinedInput-root': {
+// export const secondTextInput = {
+//     '& .MuiInputBase-root': {
+//         backgroundColor: 'background.default',
+//         color: 'text.primary',
+//         paddingTop:'0',
+//         paddingBottom:'0',
+//         '&.Mui-focused': {
+//             backgroundColor: 'background.default',
+//             color: 'text.primary',
+//             '& fieldset': {
+//                 borderColor: 'text.primary',
+//             },
+//         },
+//     },
+//     '& .MuiInputLabel-root': {
+//         color: 'text.primary',
+//         '&.Mui-focused': {
+//             color: 'text.primary',
+//         },
+//     },
+//     '& .MuiOutlinedInput-root': {
         
-        '& fieldset': {
-            borderColor: '#353842',
-        },
+//         '& fieldset': {
+//             borderColor: 'background.paper',
+//         },
 
-    },
-    '& .MuiInputBase-input':{
-        padding:'5px 15px',
-        height:'none',
-    }
-}
+//     },
+//     '& .MuiInputBase-input':{
+//         padding:'5px 15px',
+//         height:'none',
+//     }
+// }
 
 
 export const autoCompliteItems = {
     flexGrow: '1',
 
     '& .MuiInputBase-root': {
-        // backgroundColor: 'background.default',
         color: 'text.primary',
         paddingTop:'0',
         paddingBottom:'0',
 
         '&.Mui-focused': {
-            // backgroundColor: 'background.default',
             color: 'text.primary',
         },
     },
     '& .MuiInputBase-input': {
         p: '6px 10px 6px',
-        // [theme.breakpoints.down('md')]: {
-        //     fontSize: '14px',
-        //     p: '5px 2px 5px !important'
-        // }
     },
     '& .MuiTextField-root': {
         m: '0',
@@ -522,7 +511,7 @@ export const autoCompliteItems = {
 }
 
 export const autocompliteMenuItem = {
-    color: '#fff', 
+    color: 'text.primary', 
 
     '&.MuiListItem-root.MuiListItem-gutters': {
         minHeight: '38px',
@@ -568,16 +557,11 @@ export const autocompMenuText = {
 export const amoutIngredient = {
     '& .MuiInputBase-input': {
         p: '7.5px 12px 7.5px',
-
-        // [theme.breakpoints.down('md')]: {
-        //     fontSize: '14px',
-        //     p: '5px 10px 5px '
-        // }
     },
     '& .MuiInputLabel-root': {
         top: '-10px',
         '&.Mui-focused': {
-            color: '#fff',
+            color: 'text.primary',
         },
     },
     '& .MuiTextField-root': {
@@ -591,7 +575,7 @@ export const amoutIngredient = {
         }
     },
     '& .MuiButtonBase-root': {
-        color: '#fff',
+        color: 'text.primary',
     },
     width: '17%',
     [theme.breakpoints.down(600)]: {

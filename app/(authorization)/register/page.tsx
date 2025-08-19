@@ -6,9 +6,9 @@ import Link from "next/link";
 import { registerAndSignIn, uploadFile } from "./function";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { startTransition, useActionState, useState } from "react";
-import { UXLoading } from "@/app/components/ui-helpers/loading";
+import { UXLoading } from "@/app/components/ui-helpers/Loading";
 import { v4 as uuidv4 } from 'uuid';
-import { ModalInfo } from "../modal-info";
+import { ModalInfo } from "../ModalInfo";
 import { InputErrorState, RegisterFormData } from "../types";
 import { avatar, containerAvatar, containerLoading, helperTextAvatar, linksAuth, templateHeaderAuth } from "../styles";
 import { centerFlexBlock, InputForMedia } from "@/app/styles";
@@ -185,23 +185,6 @@ export default function Register() {
               name="image"
               sx={InputForMedia}
             />
-            {/* <InputForMedia
-              accept=".jpg,.png,.svg"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-
-                if (file.size > 1024 * 1024) {
-                  setSizeAvatar(true);
-
-                } else {
-                  setSizeAvatar(false);
-                  setAvatarPreview(URL.createObjectURL(file));
-                }
-              }}
-              name="image"
-              type="file"
-            /> */}
           </Button>
         </Box>
 

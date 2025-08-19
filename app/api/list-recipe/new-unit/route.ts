@@ -1,4 +1,4 @@
-import { ListIngrData } from "@/app/(main)/(main-list)/list/types";
+import { ListIngrDataFetch } from "@/app/(main)/(main-list)/list-recipe/types";
 import connectDB from "@/app/lib/mongoose";
 import ListRecipe from "@/app/models/list-recipe";
 import { NextResponse } from "next/server";
@@ -11,8 +11,6 @@ export async function PATCH(request: Request) {
     try{
         const data = await request.json();
         const { connection_id,  ingredient_id, updated_unit, _id } = data;
-
-        console.log(data)
         
         if (!ingredient_id || !connection_id || !_id ) {
             return NextResponse.json(
@@ -42,7 +40,7 @@ export async function PATCH(request: Request) {
         }
 
         const updatedIngredient = updatedRecipe.recipe.ingredients_list.find(
-            (ingr: ListIngrData) => ingr._id.toString() === ingredient_id
+            (ingr: ListIngrDataFetch) => ingr._id.toString() === ingredient_id
         );
 
         if (!updatedIngredient) {
@@ -51,12 +49,6 @@ export async function PATCH(request: Request) {
 
         const new_unit = updatedIngredient.units[updatedIngredient.units.length - 1];
 
-        console.log({
-            connection_id,
-            new_unit,
-            ingredient_id,
-            _id
-        })
         return NextResponse.json({
             connection_id,
             new_unit,
@@ -65,7 +57,7 @@ export async function PATCH(request: Request) {
         });
         
     }catch(error){
-        console.log(error)
+        console.error(error)
         return NextResponse.json(
             { error: "An internal error occurred" },
             { status: 500 }

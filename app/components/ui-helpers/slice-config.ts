@@ -5,7 +5,7 @@ import { ERROR_MESSAGES_COMMENTS, ERROR_MESSAGES_COOK, ERROR_MESSAGES_COOK_HISTO
         SUCCESS_MESSAGES_LIST_RECIPE, SUCCESS_MESSAGES_POPULAR, SUCCESS_MESSAGES_RECIPE, SUCCESS_MESSAGES_USER } from "./dictionaries";
 import { RootState } from "@/state/store";
 import { closeAlertListRecipe, OperationKey } from "@/state/slices/list-recipe-slice";
-import { OperationConfig } from "./status-alert";
+import { OperationConfig } from "./StatusAlert";
 import { closeAlertRecipe, RecipeOperationKey } from "@/state/slices/recipe-slice";
 import { closeAlertUser, UserOperationKey } from "@/state/slices/user-slice";
 import { closeAlertPopular, PopularOperationKey } from "@/state/slices/popular-slice";

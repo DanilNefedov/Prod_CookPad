@@ -24,7 +24,7 @@ function averageCalc({ multiplier, history_length_average }: Avarage): number {
         const totalCount = math.add(history_length_average, math.bignumber(newValuesCount));
 
         const newAverage = math.divide(newSum, totalCount);
-        console.log(newAverage)
+
         return Number(newAverage.toString());
     } else {
         return Number(math.divide(firstSum, math.bignumber(multiplier.length)).toString());

@@ -1,8 +1,8 @@
-import ThemeRegistry from "@/config/ThemeMUI/provider-theme-mui";
+import ThemeRegistry from "@/config/ThemeMUI/ProviderThemeMui";
 import { Roboto } from 'next/font/google'
-import { ProviderAuth } from "@/config/auth/provider-auth";
-import { ProviderStore } from "@/config/state/provider-store";
-import WrapperLayout from "@/config/wrapper/wrapper-layout";
+import { ProviderAuth } from "@/config/auth/ProviderAuth";
+import { ProviderStore } from "@/config/state/ProviderStore";
+import WrapperLayout from "@/config/wrapper/WrapperLayout";
 
 
 const IBM = Roboto({

@@ -40,7 +40,7 @@ export async function PATCH(request: Request) {
         return NextResponse.json({}, { status: 200 });
 
     }catch(error){
-        console.log(error)
+        console.error(error)
         return NextResponse.json(
             { error: "An internal error occurred" },
             { status: 500 }

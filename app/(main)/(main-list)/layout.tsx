@@ -1,6 +1,6 @@
-import { HeaderList } from "@/app/components/main-list/header-list";
+import { HeaderList } from "@/app/components/main-list/HeaderList";
 import { AppBar, Box } from "@mui/material";
-import { contanierLinks } from "./style";
+import { contanierLinks } from "./styles";
 import { centerFlexBlock } from "@/app/styles";
 
 

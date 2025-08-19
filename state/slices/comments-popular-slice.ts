@@ -1,10 +1,10 @@
-import { CommListData, ReplyCommData } from "@/app/types/types";
 import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { newCommCalc } from "./popular-slice";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
-import { CommentRootState, CommentsFetchReq, CommentsFetchRes, 
+import { CommentRootState, CommentsData, CommentsFetchReq, CommentsFetchRes, 
     GetRepliesFetchReq, GetRepliesFetchRes, LikeCommentFetch, NewCommentFetchReq, 
-    NewCommentFetchRes, NewReplyFetch } from "@/app/(main)/popular/types";
+    NewCommentFetchRes, NewReplyFetch, 
+    ReplyData} from "@/app/(main)/popular/types";
 
 
 
@@ -37,11 +37,11 @@ const loadingStatus: CommentsOperationKey[] = [
 
 
 const commentsAdapter = createEntityAdapter({
-    selectId: (comment:CommListData) => comment.id_comment,
+    selectId: (comment:CommentsData) => comment.id_comment,
 });
   
 const repliesAdapter = createEntityAdapter({
-    selectId: (reply:ReplyCommData) => reply.id_comment,
+    selectId: (reply:ReplyData) => reply.id_comment,
 });
 
 
@@ -134,7 +134,7 @@ export const likedComment = createAsyncThunk<LikeCommentFetch, LikeCommentFetch,
             if (!response.ok) return rejectWithValue('Server Error!');
             
             const dataReturn = await response.json()
-            // console.log(data, dataReturn)
+
             return dataReturn.data
 
         } catch (error) {

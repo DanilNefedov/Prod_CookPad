@@ -1,5 +1,4 @@
 import { theme } from "@/config/ThemeMUI/theme";
-import { styled, SxProps, Theme } from "@mui/material"
 
 
 
@@ -182,7 +181,7 @@ export const containerContent = {
 }
 
 export const scrollContainer = {
-    scrollbarColor: "#353842 #1F2128",
+    scrollbarColor: `${theme.palette.background.paper} ${theme.palette.background.default}`,
     height: '100%', 
     overflow: 'auto', 
     [theme.breakpoints.down("md")]: {
@@ -379,16 +378,10 @@ export const headerMenu = {
 
 
 export const menuListItems = {
-    // backgroundColor:'background.paper',
     width:'100%',
     borderRadius:'10px',
     m:'7px auto',
     minHeight:'0',
-    // '@media (hover: hover) and (pointer: fine)': {
-        // '&:hover':{
-            // backgroundColor:'background.paper'
-        // },
-    // },
 }
 
 export const btnListItem = {

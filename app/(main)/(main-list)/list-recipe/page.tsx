@@ -1,4 +1,4 @@
-import { MainListRecipe } from "@/app/components/main-list/list-recipe/main-list-recipe";
+import { MainListRecipe } from "@/app/components/main-list/list-recipe/MainListRecipe";
 import { Box } from "@mui/material";
 import { pageContainer } from "./styles";
 

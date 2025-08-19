@@ -1,6 +1,6 @@
 import { theme } from "@/config/ThemeMUI/theme";
 import { Theme } from "@mui/material";
-import { bgcolor, SxProps, SystemStyleObject } from "@mui/system";
+import { SxProps, SystemStyleObject } from "@mui/system";
 
 
 
@@ -583,19 +583,22 @@ export const authorName = {
 
 export const containerBtnsStats = {
     alignItems: 'center',
-    gap:'20px',
+    flexDirection:'column',
+    justifyContent:'end',
+    p:'0 8px',
+    flex:'1',
+    gap:'12px',
     '&.MuiCardActions-root>:not(style)~:not(style)': {
         ml: 0,
     }
 }
 
 export const statsBtn = {
-    m: '5px 0',
+    width:'auto',
+    height:'auto',
     color: 'text.primary',
     p: '0',
-    [theme.breakpoints.down('md')]: {
-        m: '2px 0' 
-    }
+    
 }
 
 export const loaderReplyBox = {

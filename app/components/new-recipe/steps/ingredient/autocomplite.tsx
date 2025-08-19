@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { Autocomplete, Box, ListItem, TextField, Typography} from "@mui/material";
 import { ChangeEvent, memo, useCallback, useEffect, useRef, } from "react";
-import { MainInput } from "./main-input";
+import { MainInput } from "./MainInput";
 import { choiceUnits, ingredientAmount } from "@/state/slices/stepper/ingredients";
 import { shallowEqual } from "react-redux";
 import { addErrorIngredient, deleteErrorIngredient } from "@/state/slices/stepper/error-open";

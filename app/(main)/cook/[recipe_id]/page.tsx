@@ -1,4 +1,4 @@
-import { ContentCook } from '@/app/components/cook/content-cook'
+import { ContentCook } from '@/app/components/cook/ContentCook'
 
 
 

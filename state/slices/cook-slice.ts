@@ -51,7 +51,6 @@ export const fetchCook = createAsyncThunk<CookFetchRes, CookFetchReq, { rejectVa
             const {dataCook} = data//isInHistory
 
             // if(!isInHistory){
-            //     console.log('2')
             //     dispatch(newCookHistory({ connection_id: id, history_links: { recipe_id, recipe_name: recipeExists ? recipeExists.name : dataCook.name } }))
             // }
 
@@ -87,7 +86,6 @@ export const deleteRecipe = createAsyncThunk<DeleteCookFetch, DeleteCookFetch, {
                 return rejectWithValue('Server Error!');
             }
             // const cookData = await response.json();
-            // console.log(cookData)
 
             return data
 

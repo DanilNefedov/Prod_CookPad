@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { mainBoxCook, } from "./styles";
-import { AlertsProvider } from "@/app/components/ui-helpers/alerts-provider";
-import { CookHeaderController } from "@/app/components/cook/cook-header-controller";
+import { AlertsProvider } from "@/app/components/ui-helpers/AlertsProvider";
+import { CookHeaderController } from "@/app/components/cook/CookHeaderController";
 
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {

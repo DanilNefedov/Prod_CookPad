@@ -3,7 +3,6 @@ import { ChangeAmountListRecipeFetch, DeleteIngrListRecipeFetch, DeleteListRecip
     ListRecipeRootState, NewListRecipeFetchReq, NewUnitListRecipeFetchReq, 
     NewUnitListRecipeFetchRes, PreLoaderFetchReq, PreLoaderFetchRes, ShopIngrListRecipeFetch, 
     ShopUnitListRecipeFetch } from "@/app/(main)/(main-list)/list-recipe/types";
-import { ListIngrData } from "@/app/(main)/(main-list)/list/types";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import { createAsyncThunk, createSlice,  PayloadAction } from "@reduxjs/toolkit";
 
@@ -87,7 +86,6 @@ export const newListRecipe = createAsyncThunk<ListRecipeData, NewListRecipeFetch
     'listRecipe/newListRecipe',
     async function (data, { rejectWithValue }) {
         try {
-            // console.log(data)
             const urlList = `/api/list-recipe`
             const response = await fetch(urlList, {
                 method: 'POST',
@@ -125,7 +123,6 @@ export const ingredientsListRecipe = createAsyncThunk<IngrListRecipeFetchRes, In
             if (!responseList.ok) return rejectWithValue('Server Error!');
             const dataList = await responseList.json()
 
-            // console.log(dataList)
             return dataList
 
         } catch (error) {
@@ -153,7 +150,6 @@ export const shopIngrListRecipe = createAsyncThunk<ShopIngrListRecipeFetch, Shop
             }
             
             const dataList = await response.json()
-            // console.log(dataList)
 
             return dataList;
         } catch (error) {
@@ -211,7 +207,6 @@ export const shopUnitListRecipe = createAsyncThunk<ShopUnitListRecipeFetch, Shop
             }
             
             const dataList = await response.json()
-            // console.log(dataList)
 
             return dataList;
         } catch (error) {
@@ -294,7 +289,7 @@ export const newUnitListRecipe = createAsyncThunk<NewUnitListRecipeFetchRes, New
             }
             
             const dataList = await response.json()
-            console.log('dataListdataListdataListdataList',dataList)
+
             return dataList;
         } catch (error) {
             console.log(error)

@@ -1,4 +1,4 @@
-import { MainPopular } from "@/app/components/popular/main-popular";
+import { MainPopular } from "@/app/components/popular/MainPopular";
 import { theme } from "@/config/ThemeMUI/theme";
 import { Card } from "@mui/material";
 import { pageCard } from "./styles";

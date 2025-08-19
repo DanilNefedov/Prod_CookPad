@@ -1,7 +1,7 @@
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import TabsRenderer from './tabs';
 import { appBar, toolBar } from '@/app/(main)/home/styles';
+import TabsRender from './TabsRender';
 
 
 
@@ -12,7 +12,7 @@ export default function Header() {
     <AppBar component="nav" sx={appBar}>
       <Toolbar disableGutters sx={toolBar}>
         {/* <Box sx={{width:'100%'}}> */}
-          <TabsRenderer />
+          <TabsRender />
         {/* </Box> */}
       </Toolbar>
     </AppBar>
