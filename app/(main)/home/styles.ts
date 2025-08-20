@@ -103,8 +103,8 @@ export function btnLink(page: PageStyles, pathname: string) {
         },
 
         [theme.breakpoints.down("md")]: {
-            maxHeight:'35px',
-            height:'35px',
+            maxHeight:'40px',
+            height:'40px',
             p:'5px 5px 5px 2px',
             minWidth:'auto',
             borderRadius:'0 20px 20px 0',
