@@ -69,7 +69,7 @@ export async function POST(request: Request) {
             recipe_name: newListRecipe.recipe.recipe_name,
             recipe_media: newListRecipe.recipe.recipe_media, 
             recipe_shop: newListRecipe.recipe.recipe_shop,
-            ingredients_list: [] 
+            ingredient_ids: [] 
         }
 
         return NextResponse.json(

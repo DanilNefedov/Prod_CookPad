@@ -1,4 +1,4 @@
-import { iconMenuMainBtns, unitAmountText, unitButton2, unitChoiceText, unitsContainer } from "@/app/(main)/(main-list)/styles"
+import { iconMenuMainBtns, inputAmount, unitAmountText, unitButton2, unitChoiceText, unitsContainer } from "@/app/(main)/(main-list)/styles"
 import { useUnitContext } from "@/config/unit-context/UnitContext"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { newAmountListRecipe } from "@/state/slices/list-recipe-slice"
@@ -53,12 +53,15 @@ export function IngredientUnit (){
 
 
     const confirmAmount = useCallback((_id: string | undefined, ingredientId: string) => {
-        // const numberAmount = amount
-        if(newAmount === '0') return
+        if(newAmount === '0' || newAmount.trim() === '') {
+            setIsIputOpen('')
+            setNewAmount('')
+            return
+        }
 
         const numberAmount = evaluate(newAmount)
 
-        if (id !== '' && _id ) {//numberAmount !== thisUnit?.amount
+        if (id !== '' && _id && numberAmount !== amount) {
             if (pathName === '/list') {
                 dispatch(changeAmountFetch({ ingredient_id: ingredientId, unit_id: _id, amount: numberAmount }));
             } else if (pathName === '/list-recipe' && recipe_id) {
@@ -96,6 +99,7 @@ export function IngredientUnit (){
             { isIputOpen === unit_id ?
                 <Box sx={{ position: 'relative' }}>
                     <TextField
+                        sx={inputAmount}
                         onKeyDown={(e) => {
                             if (['-', '+', 'e'].includes(e.key)) {
                                 e.preventDefault();

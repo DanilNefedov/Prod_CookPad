@@ -13,6 +13,7 @@ import { accordion, accordionMediaBox, accordionName, accordionSumm,
     containerAccordion, deleteRecipeBtn, deleteRecipeIcon, mainContainerList } from "@/app/(main)/(main-list)/list-recipe/styles";
 import { textMaxWidth } from "@/app/styles";
 import { moreButton } from "@/app/(main)/(main-list)/list/styles";
+import { e } from "mathjs";
 
 
 
@@ -20,6 +21,7 @@ import { moreButton } from "@/app/(main)/(main-list)/list/styles";
 export function MainListRecipe() {
     const dispatch = useAppDispatch()
     const listRecipeStore = useAppSelector(state => state.listRecipe.recipes)
+    const queueRecipes = useAppSelector(state => state.listRecipe.queue_recipes)
     const pageListRecipe = useAppSelector(state => state.listRecipe.page)
     const isPreloadingLoading = useAppSelector(state => state.listRecipe.operations.preLoaderMain.loading);    
     const isPreloadingError = useAppSelector(state => state.listRecipe.operations.preLoaderMain.error)
@@ -71,83 +73,85 @@ export function MainListRecipe() {
         }
     }
 
-    
     return (
         <Box sx={mainContainerList}>
             {
                 !isPreloadingError && isPreloadingLoading && Object.keys(listRecipeStore).length === 0 ?
                     <UXLoading ></UXLoading>//color:'#1F2128'
                     :
-                    !isPreloadingLoading && Object.keys(listRecipeStore).length === 0 ?
+                    !isPreloadingLoading && queueRecipes.length === 0 ?
+                    //Object.keys(listRecipeStore)
                         <EmptyInfo></EmptyInfo>
                         :
-                        Object.values(listRecipeStore).map(el => (
+                        queueRecipes.map(id => {
+                            const el = listRecipeStore[id];
 
-                            <Box key={el._id} sx={containerAccordion}>
-                                <Accordion
-                                    expanded={expandedIds.includes(el._id)}
-                                    onChange={() => handleToggle(el._id)}
-                                    slotProps={{ heading: { component: 'div' } }}
-                                    // square={false}  
+                            return (
+                                <Box key={el._id} sx={containerAccordion}>
+                                    <Accordion
+                                        expanded={expandedIds.includes(el._id)}
+                                        onChange={() => handleToggle(el._id)}
+                                        slotProps={{ heading: { component: 'div' } }}
+                                        // square={false}  
 
-                                    sx={accordion}>
-                                    <AccordionSummary
-                                        component="div"
-                                        onClick={() => getDataRecipe(el._id)}
-                                        expandIcon={<ExpandMoreIcon sx={{ color: 'text.primary' }} />}
-                                        aria-controls={`panel1-content${el._id}`}
-                                        id={`panel1-header${el._id}`}
-                                        sx={accordionSumm}
-                                    >
-                                        {el.recipe_media.type === 'image' ?
-                                            <Box
-                                                component='img'
-                                                alt={el.recipe_name}
-                                                sx={accordionMediaBox}
-                                                src={el.recipe_media.url as string}
-                                                loading="lazy"
-                                            />
-                                            :
-                                            <Box
-                                                component='video'
-                                                sx={accordionMediaBox}
-                                                autoPlay
-                                                loop
-                                                muted
-                                                poster={el.recipe_media.url as string}
-                                            >
-                                                <source
+                                        sx={accordion}>
+                                        <AccordionSummary
+                                            component="div"
+                                            onClick={() => getDataRecipe(el._id)}
+                                            expandIcon={<ExpandMoreIcon sx={{ color: 'text.primary' }} />}
+                                            aria-controls={`panel1-content${el._id}`}
+                                            id={`panel1-header${el._id}`}
+                                            sx={accordionSumm}
+                                        >
+                                            {el.recipe_media.type === 'image' ?
+                                                <Box
+                                                    component='img'
+                                                    alt={el.recipe_name}
+                                                    sx={accordionMediaBox}
                                                     src={el.recipe_media.url as string}
-                                                    type="video/mp4"
+                                                    loading="lazy"
                                                 />
-                                            </Box>
-                                        }
+                                                :
+                                                <Box
+                                                    component='video'
+                                                    sx={accordionMediaBox}
+                                                    autoPlay
+                                                    loop
+                                                    muted
+                                                    poster={el.recipe_media.url as string}
+                                                >
+                                                    <source
+                                                        src={el.recipe_media.url as string}
+                                                        type="video/mp4"
+                                                    />
+                                                </Box>
+                                            }
 
-                                        <Typography sx={[accordionName, textMaxWidth]}>{el.recipe_name}</Typography>
+                                            <Typography sx={[accordionName, textMaxWidth]}>{el.recipe_name}</Typography>
 
-                                    </AccordionSummary>
+                                        </AccordionSummary>
+
+                                        
+                                        <ContentAccordion props={{ _id: el._id, status: loadingRecipeIds.includes(el._id) && el.ingredient_ids.length === 0 }} />
 
                                     
-                                    <ContentAccordion props={{ _id: el._id, status: loadingRecipeIds.includes(el._id) && el.ingredient_ids.length === 0 }} />
 
-                                
-
-                                    {expandedIds.includes(el._id) ?
-                                        <Button
-                                            onClick={() => handleDeleteRecipe(el._id)}
-                                            sx={deleteRecipeBtn}
-                                        >
-                                            <DeleteIcon sx={deleteRecipeIcon}></DeleteIcon>
-                                        </Button>
-                                        :
-                                        null
-                                    }
-                                </Accordion>
+                                        {/* {expandedIds.includes(el._id) ? */}
+                                            <Button
+                                                onClick={() => handleDeleteRecipe(id)}
+                                                sx={deleteRecipeBtn}
+                                            >
+                                                <DeleteIcon sx={deleteRecipeIcon}></DeleteIcon>
+                                            </Button>
+                                            {/* :
+                                            null */}
+                                        {/* } */}
+                                    </Accordion>
 
 
-                            </Box>
-
-                        ))
+                                </Box>
+                            )
+                        })
             }
 
             {

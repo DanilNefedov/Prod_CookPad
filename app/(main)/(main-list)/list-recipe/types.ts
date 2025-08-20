@@ -18,8 +18,8 @@ export interface NormalizedRecipeData extends NormalizedData{
 export interface ListRecipeRootState{
     connection_id:string
     page:number | null
-    // recipes:ListRecipeData[]
     recipes: NormalizedRecipeData['recipes'];
+    queue_recipes: string[]
     ingredients: NormalizedRecipeData['ingredients']; 
     units: NormalizedRecipeData['units'];
 }
@@ -34,7 +34,6 @@ export interface ListRecipeData {
     },
     recipe_shop:boolean
     ingredient_ids: string[]
-    // ingredients_list: ListIngrData[]
 }
 
 export interface TemplateIngrListRecipe{

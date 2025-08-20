@@ -1,4 +1,4 @@
-import { btnsListUnitHover, modalContainer, modalInputButton, modalInputButtonsBox, 
+import { bgSlotsNewUnit, btnsListUnitHover, hoverItem, inputAmountNewUnit, inputChoiceNewUnit, modalContainer, modalInputButton, modalInputButtonsBox, 
     modalInputContainer, modalTextNewUnit, styleBtnsAdaptiveMenu } from "@/app/(main)/(main-list)/styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { Autocomplete, Box, Button, ListItem, Modal, TextField, Typography, useMediaQuery } from "@mui/material";
@@ -50,7 +50,11 @@ const AddNewUnit = memo(({ingredient_id, recipe_id}:Props) => {
 
     
     function confirmAmount(ingredient_id: string) {
-        if (id === "") return;
+        if (id === "" || amount.trim() === '' || amount === '0' || unit.trim() === '') {
+            setAmount('0')
+            setUnit('')
+            return
+        };
 
         const numericAmount = evaluate(amount);
 
@@ -60,9 +64,6 @@ const AddNewUnit = memo(({ingredient_id, recipe_id}:Props) => {
             amount: numericAmount,
         }
         
-        setAmount('0')
-        setUnit('')
-
         if (pathName === '/list') {
             setOpen(false)
             dispatch(addNewUnit({ ingredient_id, new_unit: newUnit }))
@@ -70,7 +71,8 @@ const AddNewUnit = memo(({ingredient_id, recipe_id}:Props) => {
             setOpen(false)
             dispatch(newUnitListRecipe({connection_id: id, ingredient_id, updated_unit: newUnit, _id:recipe_id}))
         }
-
+        setAmount('0')
+        setUnit('')
     }
 
     return (
@@ -105,17 +107,15 @@ const AddNewUnit = memo(({ingredient_id, recipe_id}:Props) => {
                             }}
                             value={amount}
                             onChange={(e) => handleAmount(e)}
+                            sx={inputAmountNewUnit}
                         ></TextField>
                         <Autocomplete
                             freeSolo
                             options={ingredient_list}
-                            sx={[autoCompliteItems, weightItemList, 
-                                {'& .MuiInputBase-input': {
-                                    p: '5.5px 10px 9.5px'}
-                                }]}
+                            sx={[autoCompliteItems, inputChoiceNewUnit]}//weightItemList
                             slotProps={{
                                 popper: {
-                                    sx: paperMenu
+                                    sx: [paperMenu, bgSlotsNewUnit]
                                 },
 
                             }}
@@ -124,7 +124,7 @@ const AddNewUnit = memo(({ingredient_id, recipe_id}:Props) => {
                                     <ListItem 
                                     {...props} 
                                     key={option} 
-                                    sx={autocompliteMenuItem}
+                                    sx={[autocompliteMenuItem, hoverItem]}
                                     >
                                         {option}
                                     </ListItem>

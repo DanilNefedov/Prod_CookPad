@@ -319,6 +319,40 @@ export const modalTextNewUnit = {
     fontSize:'18px',
 }
 
+export const inputAmountNewUnit = {
+    maxWidth:'140px',
+    
+    [theme.breakpoints.down('md')]: {
+        mb:'5px',
+    }
+}
+
+export const inputChoiceNewUnit = {
+    maxWidth:'140px',
+    width:'100%',
+    flexGrow:0, 
+
+    '& .MuiInputBase-input': {
+        p: '5.5px 10px 9.5px'
+    }
+}
+
+export const bgSlotsNewUnit = {
+    '& .MuiPaper-root':{
+        bgcolor:'background.default'
+    },
+
+    
+}
+
+export const hoverItem = {
+    '@media (hover: hover) and (pointer: fine)': {
+        '&.MuiListItem-root.MuiListItem-gutters:hover':{
+            bgcolor:'background.paper'
+        }
+    }
+}
+
 export const modalInputContainer = {
     p: '20px 0', 
     
@@ -332,10 +366,11 @@ export const modalInputContainer = {
 export const modalInputButtonsBox = {
     display: 'flex', 
     height:'100%',
+    maxWidth:'140px',
     gap:'5px',
     [theme.breakpoints.down('md')]: {
         width: '100%',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         gap: '25px'
     }
 }
@@ -421,6 +456,27 @@ export const unitChoiceText = {
     }
 }
 
+export const inputAmount ={
+    maxWidth:'140px',
+
+    '& .MuiInputBase-input':{
+        p:'5.5px 14px',
+
+        [theme.breakpoints.down(600)]: {
+            p:'0 14px 2px 14px',
+        }
+    },
+    "& .MuiOutlinedInput-root": {
+        "&.Mui-focused fieldset, .MuiOutlinedInput-notchedOutline": {
+            [theme.breakpoints.down(600)]: {
+                borderWidth:'0 0 1px 0',
+                p:'0 14px 2px 14px',
+                borderRadius:'0px'
+            }
+        }
+    },
+}
+
 export const unitButton = {
     width:'34px',
     height:'34px',
@@ -438,15 +494,15 @@ export const unitButton = {
             }
         }
     },
-    [theme.breakpoints.down(1150)]: {
-        width:'25px',
-        height:'25px',
+    // [theme.breakpoints.down(1150)]: {
+    //     width:'25px',
+    //     height:'25px',
 
-        '& svg': {
-            width:'22px',
-            height:'22px'
-        }
-    }
+    //     '& svg': {
+    //         width:'22px',
+    //         height:'22px'
+    //     }
+    // }
 }
 
 export const unitMenuItem = {

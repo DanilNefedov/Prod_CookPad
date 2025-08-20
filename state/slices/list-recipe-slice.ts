@@ -49,6 +49,7 @@ const initialState: ListRecipeState = {
     connection_id: '',
     page:1,
     recipes: {}, 
+    queue_recipes:[],
     ingredients: {},
     units: {}, 
     operations:createOperations<OperationKey>(
@@ -376,6 +377,7 @@ const listRecipeSlice = createSlice({
 
                 if (!state.recipes[payload._id]) {
                     state.recipes[payload._id] = payload;
+                    state.queue_recipes.unshift(payload._id);
                 }
             })
 
@@ -403,6 +405,8 @@ const listRecipeSlice = createSlice({
                             recipe_shop: recipe.recipe_shop,
                             ingredient_ids: [] 
                         };
+
+                        state.queue_recipes.push(recipe._id);
                     }
                 });
             })
@@ -593,7 +597,10 @@ const listRecipeSlice = createSlice({
                 state.recipes = Object.fromEntries(
                     Object.entries(state.recipes).filter(([id]) => id !== recipe_id)
                 );
+
+                state.queue_recipes = state.queue_recipes.filter(id => id !== recipe_id);
             });
+
 
 
 
