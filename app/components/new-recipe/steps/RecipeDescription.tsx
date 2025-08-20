@@ -14,7 +14,7 @@ import { ChangeEvent, useEffect } from "react";
 
 
 
-export function Description() {
+export function RecipeDescription() {
     const numbStep = 5
 
     const description = useAppSelector((state) => state.descriptionSlice.description);

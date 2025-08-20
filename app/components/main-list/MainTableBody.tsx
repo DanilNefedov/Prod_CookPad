@@ -17,7 +17,7 @@ import { centerFlexBlock, textMaxWidth } from "@/app/styles"
 import { theme } from "@/config/ThemeMUI/theme"
 import UnitContext from "@/config/unit-context/UnitContext"
 import MainButtons from "./MainButtons"
-import { Unit } from "./unit"
+import { IngredientUnit } from "./IngredientUnit"
 
 
 
@@ -167,7 +167,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                         style={{ width: 'auto', maxWidth: '100%' }}
                                     >
                                         <UnitContext.Provider value={contextValue}>
-                                            <Unit />
+                                            <IngredientUnit />
                                         </UnitContext.Provider>
                                     </SwiperSlide>
                                 ))}
@@ -250,7 +250,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                                     className="slide-list-unit"
                                                 >
                                                     <UnitContext.Provider value={contextValue}>
-                                                        <Unit />
+                                                        <IngredientUnit />
                                                     </UnitContext.Provider>
                                                 </SwiperSlide>
                                             )

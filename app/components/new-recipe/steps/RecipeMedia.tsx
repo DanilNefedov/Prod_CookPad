@@ -26,7 +26,7 @@ import { arrowSwiper } from "@/app/(main)/home/styles";
 
 
 
-export function Media() {
+export function RecipeMedia() {
     const numbStep = 3
     const pageState = useAppSelector(state => state.mediaSlice)
     const statusPage = useAppSelector(state => state.statusStepSlice.steps[numbStep])

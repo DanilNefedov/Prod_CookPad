@@ -7,10 +7,10 @@ import { addNewIngr, clearBtn, errorIngrText, headerIngredient, ingrdientLine,
     ingredientBox, ingredientContainer, ingredientStepContainer, tooltipText } from "@/app/(main)/new-recipe/style";
 import { columnCenter, headerSteps } from "@/app/styles";
 import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarning";
-import { Autocomplite } from "./autocomplite";
+import { Autocomplite } from "./Autocompletions";
 
 
-export function Ingredients() {
+export function IngredientConstruction() {
     const numbStep = 4
 
     const stepperState = useAppSelector(state => state.ingredientsSlice)

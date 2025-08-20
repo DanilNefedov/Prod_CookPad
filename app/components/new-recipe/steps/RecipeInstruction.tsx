@@ -7,7 +7,7 @@ import { headerSteps } from '@/app/styles';
 import { textAreaStepper } from '@/app/(main)/new-recipe/style';
 
 
-export function Instruction() {
+export function RecipeInstruction() {
     const numbStep = 6
 
     const instruction = useAppSelector((state) => state.instructionSlice.instruction);    

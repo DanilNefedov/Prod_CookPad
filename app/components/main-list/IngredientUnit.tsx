@@ -13,7 +13,7 @@ import { handleAmountChange } from "../../helpers/input-unit"
 import UnitBtns from "./UnitBtns"
 
 
-export function Unit (){
+export function IngredientUnit (){
     const { recipe_id, ingredient_id, unit_id } = useUnitContext();
     
     const choice = useAppSelector(state =>

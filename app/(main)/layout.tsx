@@ -2,7 +2,7 @@ import { Container, Paper } from "@mui/material";
 import GlobalErrorProvider from "../../config/client-side-handler/GlobalError";
 import { UserProvider } from "../../config/user-alert/UserContext";
 import { containerHome, styledPaperHome } from "./home/styles";
-import { NavigationSite } from "../components/navigation-site/navigation";
+import { NavigationSite } from "../components/navigation-site/NavigationSite";
 
 
 

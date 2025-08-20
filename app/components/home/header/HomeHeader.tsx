@@ -6,7 +6,7 @@ import TabsRender from './TabsRender';
 
 
 
-export default function Header() {
+export default function HomeHeader() {
 
   return (
     <AppBar component="nav" sx={appBar}>

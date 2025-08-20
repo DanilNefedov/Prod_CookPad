@@ -1,9 +1,9 @@
 import { TypeDish } from "./steps/TypeDish";
 import { NameAndTime } from "./steps/NameAndTime";
-import { Media } from "./steps/media";
-import { Ingredients } from "./steps/ingredient/ingredients";
-import { Description } from "./steps/description";
-import { Instruction } from "./steps/instruction";
+import { RecipeMedia } from "./steps/RecipeMedia";
+import { IngredientConstruction } from "./steps/ingredient/IngredientConstruction";
+import { RecipeDescription } from "./steps/RecipeDescription";
+import { RecipeInstruction } from "./steps/RecipeInstruction";
 
 
 
@@ -15,13 +15,13 @@ export function SelectPage({step}:{step:number}){
         case 2:
             return <NameAndTime></NameAndTime>
         case 3: 
-            return <Media></Media>
+            return <RecipeMedia></RecipeMedia>
         case 4:
-            return <Ingredients></Ingredients>
+            return <IngredientConstruction></IngredientConstruction>
         case 5:
-            return <Description></Description>
+            return <RecipeDescription></RecipeDescription>
         case 6:
-            return <Instruction></Instruction>
+            return <RecipeInstruction></RecipeInstruction>
         default:
             return null
     }
