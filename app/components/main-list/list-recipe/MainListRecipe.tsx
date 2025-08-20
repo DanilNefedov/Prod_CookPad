@@ -13,7 +13,6 @@ import { accordion, accordionMediaBox, accordionName, accordionSumm,
     containerAccordion, deleteRecipeBtn, deleteRecipeIcon, mainContainerList } from "@/app/(main)/(main-list)/list-recipe/styles";
 import { textMaxWidth } from "@/app/styles";
 import { moreButton } from "@/app/(main)/(main-list)/list/styles";
-import { e } from "mathjs";
 
 
 

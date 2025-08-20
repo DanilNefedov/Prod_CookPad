@@ -11,7 +11,7 @@ import { addNewUnit } from "@/state/slices/list-slice";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { handleAmountChange } from "../../helpers/input-unit";
 import { newUnitListRecipe } from "@/state/slices/list-recipe-slice";
-import { autoCompliteItems, autocompliteMenuItem, paperMenu, weightItemList } from "@/app/(main)/new-recipe/style";
+import { autoCompliteItems, autocompliteMenuItem, paperMenu } from "@/app/(main)/new-recipe/style";
 import { centerFlexBlock } from "@/app/styles";
 
 interface Props {
