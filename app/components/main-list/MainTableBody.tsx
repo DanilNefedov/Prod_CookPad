@@ -56,6 +56,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
 
 
     const contextValues = useMemo(() => {
+
         return thisIngredient.unit_ids.map((elem) => ({
             recipe_id,
             ingredient_id: thisIngredient.ingredient_id,
@@ -170,7 +171,8 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                             <IngredientUnit />
                                         </UnitContext.Provider>
                                     </SwiperSlide>
-                                ))}
+                                )
+                                )}
                                 
 
                                 <div className={`custom-prev-list-unit ${pathName === '/list-recipe' ? 'list-recipe-disabled-btn' : 'list-disabled-btn'}`}>

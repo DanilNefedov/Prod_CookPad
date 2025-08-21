@@ -13,6 +13,7 @@ import MainTableHeader from '../MainTableHeader';
 export function MainListPage() {
     const dispatch = useAppDispatch()
     const currentPage = useAppSelector((state) => state.list.page_list);
+    const queueIngredints = useAppSelector(state => state.list.queue_ingredients)
 
     const ingredientsMap = useAppSelector((state) => state.list.ingredients);
 
@@ -32,7 +33,9 @@ export function MainListPage() {
 
 
     const sortedList = useMemo(() => {
-        const ingredientArray = Object.values(ingredientsMap);
+        const ingredientArray = queueIngredints
+            .map(id => ingredientsMap[id])
+            .filter(Boolean);
 
         if (!sortBy) return ingredientArray;
 
@@ -50,7 +53,9 @@ export function MainListPage() {
             }
             return 0;
         });
-    }, [sortBy, sortOrder, ingredientsMap]);
+    }, [sortBy, sortOrder, ingredientsMap, queueIngredints]);
+
+
 
     function handleMore() {
         if (id !== '' && currentPage !== null) {
@@ -67,7 +72,7 @@ export function MainListPage() {
                     for now, the component is small.
                 */}
 
-                {isLoading && Object.keys(ingredientsMap).length === 0
+                {isLoading && queueIngredints.length === 0
  ?
                     <TableBody>
                         <TableRow>
@@ -78,7 +83,7 @@ export function MainListPage() {
                     </TableBody>
 
                     :
-                    !isLoading && Object.keys(ingredientsMap).length === 0 ?
+                    !isLoading && queueIngredints.length === 0 ?
 
                         <TableBody>
                             <TableRow>
@@ -99,11 +104,10 @@ export function MainListPage() {
 
                             <TableBody sx={tableBody}>
                                 {sortedList.map((el) => ( 
-                                    <MainTableBody key={el.ingredient_id} props={{
-                                        ingredient_id: el.ingredient_id,
-
-                                    }}>
-                                    </MainTableBody>
+                                    <MainTableBody
+                                        key={el.ingredient_id}
+                                        props={{ ingredient_id: el.ingredient_id }}
+                                    />
                                 ))}
                             </TableBody>
                         </>

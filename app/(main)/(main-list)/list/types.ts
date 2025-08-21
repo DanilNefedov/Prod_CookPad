@@ -24,7 +24,8 @@ export interface NormalizedData {
 export interface ListRootState {
     page_list: number | null,
     connection_id: string,
-    ingredients: NormalizedData['ingredients']; 
+    ingredients: NormalizedData['ingredients'];
+    queue_ingredients:string[],
     units: NormalizedData['units'];
     // list_ingr: ListIngrData[]
 }

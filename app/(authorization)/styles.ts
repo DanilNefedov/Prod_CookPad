@@ -1,3 +1,4 @@
+import { theme } from "@/config/ThemeMUI/theme"
 import { SxProps, Theme } from "@mui/material"
 
 
@@ -17,6 +18,9 @@ export const templateHeaderAuth = {
   fontWeight: "600", 
   padding: "15px 0", 
   fontSize: "1.3rem",
+  [theme.breakpoints.down("md")]: {
+    fontSize: "18px",
+  },
 }
 
 export const containerLoading: SxProps<Theme> = {//serv component

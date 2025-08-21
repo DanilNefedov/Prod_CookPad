@@ -262,10 +262,10 @@ const CalcUnit = memo(() => {
                                     key={i}
                                     color='blackRedBtn'
                                     sx={{
-                                        width: i === 17 ? '128px' : '64px',
+                                        width: i === 17 ? '135px' : '64px',
                                         [theme.breakpoints.down('md')]: {
-                                            width: i === 17 ? '100px' : '50px',
-                                            minWidth: i === 17 ? '100px' : '50px',
+                                            width: i === 17 ? '107px' : '50px',
+                                            minWidth: i === 17 ? '107px' : '50px',
                                         }
                                     }}
                                     onClick={() => handlCalc(btn)}

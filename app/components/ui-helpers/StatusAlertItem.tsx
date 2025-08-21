@@ -3,6 +3,7 @@ import { Alert, Slide, SlideProps } from '@mui/material';
 import { useSnackbar, SnackbarKey } from 'notistack';
 import { useAppDispatch, useAppSelector } from '@/state/hook';
 import { OperationConfig } from './StatusAlert';
+import { globalStatusAler } from './styles';
 
 const SlideTransition = (props: SlideProps) => <Slide {...props} direction="down" />;
 
@@ -37,11 +38,7 @@ export function GlobalStatusNotifierItem({ config }: Props) {
                     content: () => (
                         <Alert
                             severity="info"
-                            sx={{
-                                bgcolor: '#0288D1',
-                                color: 'text.primary',
-                                '& .MuiSvgIcon-root': { fill: 'text.primary' },
-                            }}
+                            sx={[globalStatusAler, {bgcolor: '#0288D1'}]}
                         >
                             {message}
                         </Alert>
@@ -72,11 +69,7 @@ export function GlobalStatusNotifierItem({ config }: Props) {
                         <Alert
                             severity="success"
                             onClose={() => closeSnackbar(snackbarKey)}
-                            sx={{
-                                bgcolor: '#388E3C',
-                                color: 'text.primary',
-                                '& .MuiSvgIcon-root': { fill: 'text.primary' },
-                            }}
+                            sx={[globalStatusAler, {bgcolor: '#388E3C',}]}
                         >
                             {message}
                         </Alert>
@@ -114,11 +107,7 @@ export function GlobalStatusNotifierItem({ config }: Props) {
                                 //  BUT DON'T REMOVE THE FUNCTIONALITY OF THIS DISPATCH.
                                 shownRef.current[operationKey] = false;
                             }}
-                            sx={{
-                                bgcolor: 'error.contrast',
-                                color: 'text.primary',
-                                '& .MuiSvgIcon-root': { fill: 'text.primary' },
-                            }}
+                            sx={[globalStatusAler, {bgcolor: 'error.contrast',}]}
                         >
                             {message}
                         </Alert>

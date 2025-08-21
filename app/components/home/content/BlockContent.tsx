@@ -4,7 +4,7 @@ import { useEffect, useState, } from "react";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { fetchRecipes } from "@/state/slices/recipe-slice";
 import { CardContentBlock } from "./CardContentBlock";
-import { Box, Button } from "@mui/material";
+import { Alert, Box, Button } from "@mui/material";
 import { UXLoading } from "../../ui-helpers/UXLoading";
 import { EmptyInfo } from "../../ui-helpers/EmptyInfo";
 import Link from "next/link";
@@ -65,6 +65,7 @@ export function BlockContent() {
           <UXLoading position="static" />
         </Box>
       )}
+
 
       {!statusMore && nav === 'all' && !status && recipes.length !== 0 && (
         <Box sx={moreButtonContainer}>

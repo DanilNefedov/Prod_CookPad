@@ -94,3 +94,14 @@ export const errorPageIconRefresh = {
     height: '16px', 
     ml: '7px' 
 }
+
+export const globalStatusAler = {
+    alignItems:'center',
+    color: 'text.primary',
+    '& .MuiAlert-icon': { 
+        color: 'text.primary' 
+    },
+    '& .MuiAlert-action':{
+        p:'0 0 0 7px'
+    }
+}

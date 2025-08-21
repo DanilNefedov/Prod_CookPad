@@ -1,4 +1,5 @@
 import { ChangeAmountFetch, DeleteUnitIngrFetch, ListFetchReq, ListFetchRes, 
+    ListIngrDataFetch, 
     ListRootState, 
     NewIngrFetchReq, NewIngrFetchRes, NewUnitFetchReq, NewUnitFetchRes, NewUnitIngrFetchReq,
     NewUnitIngrFetchRes, ShopIngrFetch, ShopUnitFetch, UpdCookUnitFetch } from "@/app/(main)/(main-list)/list/types";
@@ -57,6 +58,7 @@ const initialState: ListState = {
     connection_id: '',
     page_list: 1,
     ingredients:{},
+    queue_ingredients:[],
     units:{},
     operations:createOperations<ListOperationKey>(
         listOperationKeys,
@@ -89,7 +91,7 @@ export const fetchList = createAsyncThunk<ListFetchRes, ListFetchReq, { rejectVa
 )
 
 
-export const newIngredientList = createAsyncThunk<NewIngrFetchRes, NewIngrFetchReq, { rejectValue: string }>(
+export const newIngredientList = createAsyncThunk<ListIngrDataFetch, NewIngrFetchReq, { rejectValue: string }>(
     'list/newIngredientList',
     async function (reqData, { rejectWithValue }) {
         try {
@@ -399,6 +401,10 @@ const listSlice = createSlice({
                         };
                     }
 
+                    if (!state.queue_ingredients.includes(el._id)) {
+                        state.queue_ingredients.push(el._id);
+                    }
+
                     el.units.forEach((unit) => {
                         if (!state.units[unit._id]) {
                             state.units[unit._id] = {
@@ -416,7 +422,7 @@ const listSlice = createSlice({
 
             .addCase(newIngredientList.pending, newIngredientListHandlers.pending)
             .addCase(newIngredientList.rejected, newIngredientListHandlers.rejected)
-            .addCase(newIngredientList.fulfilled, (state, action: PayloadAction<NewIngrFetchRes, string>) => {
+            .addCase(newIngredientList.fulfilled, (state, action: PayloadAction<ListIngrDataFetch, string>) => {
                 state.operations.newIngredientList.error = false;
                 state.operations.newIngredientList.loading = false;
 
@@ -430,12 +436,23 @@ const listSlice = createSlice({
                         media: data.media,
                         shop_ingr: data.shop_ingr,
                         list: data.list,
-                        unit_ids: data.units.map(unit => unit.unit_id),
+                        unit_ids: data.units.map(unit => unit._id),
                     };
 
-                    data.units.forEach(unit => {
-                        state.units[unit.unit_id] = unit;
-                    });
+
+                    if (!state.queue_ingredients.includes(data._id)) {
+                        state.queue_ingredients.unshift(data._id);
+                    }
+
+                   data.units.forEach(({ _id, amount, choice, shop_unit }) => {
+                        state.units[_id] = {
+                            ...state.units[_id],
+                            amount,
+                            choice,
+                            shop_unit,
+                            unit_id: _id,
+                        };
+                    })
                 }
             })
 

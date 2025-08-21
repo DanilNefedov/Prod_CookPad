@@ -84,6 +84,7 @@ export async function POST(request: Request) {
         const filteredData = omit(cloneDeep(newIngredient.toObject()), ["connection_id", "updatedAt", "createdAt", "__v"]);
         // const { connection_id, updatedAt, createdAt, __v, ...filteredData } = newIngredient.toObject();
 
+        
 
         return NextResponse.json(filteredData, { status: 201 });
 

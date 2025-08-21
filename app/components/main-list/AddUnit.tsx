@@ -139,6 +139,7 @@ const AddNewUnit = memo(({ingredient_id, recipe_id}:Props) => {
                                     slotProps={{
                                         inputLabel: {
                                             sx: {
+                                                top:'1px',
                                                 fontSize: '16px',
                                                 lineHeight: '18px',
                                             },
