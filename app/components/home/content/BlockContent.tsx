@@ -4,7 +4,7 @@ import { useEffect, useState, } from "react";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { fetchRecipes } from "@/state/slices/recipe-slice";
 import { CardContentBlock } from "./CardContentBlock";
-import { Alert, Box, Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { UXLoading } from "../../ui-helpers/UXLoading";
 import { EmptyInfo } from "../../ui-helpers/EmptyInfo";
 import Link from "next/link";
