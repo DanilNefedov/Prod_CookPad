@@ -64,7 +64,7 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
     };
 
     return (
-        <ListItem sx={[replyContainer, {borderColor: isActive ? 'text.secondary' : 'transparent'}]}>
+        <ListItem sx={[replyContainer, {borderColor: isActive ? 'text.disabled' : 'transparent'}]}>
             <Box sx={avatarTextReplyBox}>
                 <ListItemAvatar sx={avatarReplyBox}>
                     <Avatar alt={author_name} src={author_avatar } sx={avatarReply}/>

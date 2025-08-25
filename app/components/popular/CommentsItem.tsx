@@ -83,21 +83,24 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: Props) =>
         }
 
     }
+
     const handleLike = useCallback(({ id_comment, config_id, liked, reply, id_branch }: Like) => {
         if (connection_id !== "" && liked !== undefined && !localLikeLoadingRef.current) {
             localLikeLoadingRef.current = true;
-            dispatch(
-                likedComment({
-                    id_author: connection_id,
-                    id_comment,
-                    config_id,
-                    liked,
-                    reply,
-                    id_branch
-                    // id_branch: id_branch ?? "",
-                })
-            ).finally(() => {
-                localLikeLoadingRef.current = false;
+            pingGate(() => {
+                dispatch(
+                    likedComment({
+                        id_author: connection_id,
+                        id_comment,
+                        config_id,
+                        liked,
+                        reply,
+                        id_branch
+                        // id_branch: id_branch ?? "",
+                    })
+                ).finally(() => {
+                    localLikeLoadingRef.current = false;
+                });
             });
         }
     }, [connection_id, dispatch]);
@@ -117,7 +120,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: Props) =>
 
     return (
         <ListItem sx={commentsWrapper}>
-            <Box sx={[containerCommentItem, {borderColor: isActive ? 'text.secondary' : 'transparent'}]}>
+            <Box sx={[containerCommentItem, {borderColor: isActive ? 'text.disabled' : 'transparent'}]}>
 
                 <Box sx={[containerAvatarComment, betweenCenter]}>
                     <ListItemAvatar sx={avatarContainer}>

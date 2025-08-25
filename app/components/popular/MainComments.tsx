@@ -134,9 +134,11 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
                     name_parent: contextComment.author_name,
                     likes_count: 0,
                     text: text.trim(),
-                };
+                }; 
 
-                dispatch(newReplyComm({ data, config_id: config_id }));
+                pingGate(() => {
+                    dispatch(newReplyComm({ data, config_id: config_id }));
+                });
                 setNewReply(prev => [...prev, data.id_comment]);
             } else {
                 const data = {
@@ -150,7 +152,9 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
                     reply_count: 0,
                 };
                 setNewComments(prev => [...prev, data.id_comment]);
-                dispatch(newCommPopular(data));
+                pingGate(() => {
+                    dispatch(newCommPopular(data));
+                });
             }
         }
     }, [connection_id, config_id, dispatch, contextComment, userData]);

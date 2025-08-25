@@ -1,10 +1,7 @@
 import connectDB from "@/app/lib/mongoose";
 import CommentPopular from "@/app/models/comments-popular";
 import LikesComments from "@/app/models/likes-comments";
-import RecipePopularConfig from "@/app/models/popular-config";
-import User from "@/app/models/user";
 import { NextResponse } from "next/server";
-import { categoryUser } from "../../functions";
 import mongoose from "mongoose";
 
 
@@ -12,13 +9,11 @@ import mongoose from "mongoose";
 
 export async function PUT(request: Request) {
     const session = await mongoose.startSession();
-    
     try {
         await connectDB();
         session.startTransaction();
 
-        const dataReq = await request.json();
-        const { id_comment, id_author, config_id, reply, liked,id_branch } = dataReq;
+        const { id_comment, id_author, liked, config_id} = await request.json();
 
         if (!id_comment || !id_author || !config_id) {
             await session.abortTransaction();
@@ -27,6 +22,7 @@ export async function PUT(request: Request) {
                 { status: 400 }
             );
         }
+
 
         const like_doc = await LikesComments.findOne({ id_comment, id_author }).session(session);
         
@@ -69,6 +65,7 @@ export async function PUT(request: Request) {
         }
 
         const update = { $inc: { likes_count: liked ? -1 : 1 } };
+
         const commentUpdate = await CommentPopular.updateOne({ id_comment }, update).session(session);
 
         if (commentUpdate.modifiedCount === 0) {
@@ -79,61 +76,22 @@ export async function PUT(request: Request) {
             );
         }
         
-        const popularData = await RecipePopularConfig.findById(config_id).session(session);
-        if (!popularData) {
-            await session.abortTransaction();
-            return NextResponse.json(
-                { message: 'Popular content not found' },
-                { status: 404 }
-            );
-        }
-
-        const user = await User.findOne({ connection_id: id_author }).session(session);
-        if (!user) {
-            await session.abortTransaction();
-            return NextResponse.json(
-                { message: 'User information not found' },
-                { status: 404 }
-            );
-        }
-
-        const updatedConfig = categoryUser(user.popular_config, liked, 1.1, popularData.categories);
-        if (updatedConfig.length > 0) {
-            const updated = await User.updateOne(
-                { connection_id: id_author },
-                { $set: { popular_config: updatedConfig } },
-                { session }
-            );
-
-            if (updated.modifiedCount === 0) {
-                await session.abortTransaction();
-                return NextResponse.json(
-                    { message: 'Failed to update user config' },
-                    { status: 500 }
-                );
-            }
-        }
-      
-
-        await session.commitTransaction(); 
-
+        await session.commitTransaction();
         return NextResponse.json({ message: 'Success', data: { 
             id_comment, 
             id_author, 
             config_id, 
-            reply, 
-            id_branch,
             liked: !liked 
         }  });
-    } catch (error) {
-        console.error(error);
-        await session.abortTransaction(); 
-        return NextResponse.json(
-            { message: 'Internal Server Error' },
-            { status: 500 }
-        );
+
+    } catch (err) {
+        console.error(err);
+        await session.abortTransaction();
+        return NextResponse.json({ success: false }, { status: 500 });
     } finally {
-        session.endSession(); 
+        session.endSession();
     }
 }
+
+
 

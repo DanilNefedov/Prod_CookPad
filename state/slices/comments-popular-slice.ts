@@ -104,9 +104,23 @@ export const newCommPopular = createAsyncThunk<NewCommentFetchRes, CommentsData,
 
             if (!response.ok) return rejectWithValue('Server Error!');
 
+            const responseConfig = await fetch('/api/popular/comments/config', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    config_id:data.config_id,
+                    id_author:data.id_author
+                }),
+            });
+
+            if (!responseConfig.ok) return rejectWithValue('Server Error!');
+
             const dataReturn = await response.json()
 
             dispatch(newCommCalc({config_id:data.config_id}))
+            
             return dataReturn
 
         } catch (error) {
@@ -121,23 +135,47 @@ export const likedComment = createAsyncThunk<LikeCommentFetch, LikeCommentFetch,
     'commentsPopular/likedComment',
     async function (data, { rejectWithValue }) {
         try {
-            const urlList = data.reply ? '/api/popular/reply/like': `/api/popular/comments/like`
+            const urlList = data.reply ? '/api/popular/reply/like' : '/api/popular/comments/like';
 
             const response = await fetch(urlList, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    id_comment: data.id_comment,
+                    id_author: data.id_author,
+                    config_id: data.config_id,
+                    liked: data.liked,
+                }),
             });
 
             if (!response.ok) return rejectWithValue('Server Error!');
-            
-            const dataReturn = await response.json()
 
-            return dataReturn.data
+            const dataReturn = await response.json();
 
-        } catch (error) {
+            if (!data.reply) {
+                const responseConfig = await fetch('/api/popular/comments/like/popular-config', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_author: data.id_author,
+                        config_id: data.config_id,
+                        liked: dataReturn.data.liked,
+                    }),
+                });
+
+                if (!responseConfig.ok) return rejectWithValue('Server Error!');
+            }
+
+            return {
+                reply: data.reply,
+                id_branch: data.id_branch,
+                id_comment: data.id_comment,
+                id_author: data.id_author,
+                config_id: data.config_id,
+                liked: dataReturn.data.liked,
+            };
+
+        }  catch (error) {
             console.log(error)
             return rejectWithValue('Request failed!');
         }

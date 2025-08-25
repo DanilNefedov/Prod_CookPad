@@ -84,11 +84,8 @@ export async function POST(request: Request) {
         })
 
         const responseData = _.cloneDeep(data);
-        const timeAgo = dayjs(responseData.createdAt).fromNow();
-
-
         responseData.liked = false;
-        responseData.createdAt = timeAgo;
+        responseData.createdAt = dayjs(responseData.createdAt).fromNow()
 
 
         await session.commitTransaction(); 
