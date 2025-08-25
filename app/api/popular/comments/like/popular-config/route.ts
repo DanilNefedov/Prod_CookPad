@@ -11,7 +11,7 @@ import mongoose from "mongoose";
 
 
 
-export async function PUT(request: Request) {
+export async function PATCH(request: Request) {
     const session = await mongoose.startSession();
 
     try {

@@ -154,7 +154,7 @@ export const likedComment = createAsyncThunk<LikeCommentFetch, LikeCommentFetch,
 
             if (!data.reply) {
                 const responseConfig = await fetch('/api/popular/comments/like/popular-config', {
-                    method: 'PUT',
+                    method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         id_author: data.id_author,
