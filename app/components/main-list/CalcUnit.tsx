@@ -46,7 +46,7 @@ const CalcUnit = memo(() => {
     const handleClose = useCallback(() => {
         setAnchorEl(null);
         setCurrentValue('');
-    }, [amount]);
+    }, []);
 
 
     const btnValues = useMemo(() => [
@@ -195,7 +195,7 @@ const CalcUnit = memo(() => {
             dispatch(newAmountListRecipe({ connection_id: connection_id, ingredient_id: ingredient_id, unit_id: unit_id, amount: numericValue, _id: recipe_id }))
         }
 
-    }, [currentValue, unit_id, pathName, ingredient_id, dispatch, amount, handleEqual, recipe_id]);
+    }, [currentValue, unit_id, pathName, ingredient_id, dispatch, amount, handleEqual, recipe_id, connection_id]);
 
 
     return (

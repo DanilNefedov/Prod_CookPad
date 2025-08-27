@@ -307,7 +307,14 @@ export const avatarIngr = {
     height: '40px', 
     borderRadius: '50%', 
     minWidth: '0',
-     m: '0 auto',
+    m: '0 auto',
+    [theme.breakpoints.down("md")]: {
+        width: '30px',
+        height: '30px'
+    }
+}
+
+export const avatarImg = {
     [theme.breakpoints.down("md")]: {
         width: '30px',
         height: '30px'

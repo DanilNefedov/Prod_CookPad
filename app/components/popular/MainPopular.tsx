@@ -143,7 +143,6 @@ export function MainPopular() {
             cooldownRef.current = false;
         }, 1000);
     };
-    console.log('main-popular', popularStore)
     
     return (
         <>

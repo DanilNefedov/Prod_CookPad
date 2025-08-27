@@ -157,7 +157,7 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
                 });
             }
         }
-    }, [connection_id, config_id, dispatch, contextComment, userData]);
+    }, [connection_id, config_id, dispatch, contextComment, userData, pingGate]);
 
 
     return (

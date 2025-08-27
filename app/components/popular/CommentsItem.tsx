@@ -103,7 +103,7 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: Props) =>
                 });
             });
         }
-    }, [connection_id, dispatch]);
+    }, [connection_id, dispatch, pingGate]);
     
 
     function formatCount (value: number): string  {

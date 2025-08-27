@@ -23,7 +23,6 @@ export function AboutUser() {
                     />
                 ) : null} */}
                 <Avatar 
-                    alt={userStore.name}
                     src={userStore.img } 
                     slotProps={{
                         img: {

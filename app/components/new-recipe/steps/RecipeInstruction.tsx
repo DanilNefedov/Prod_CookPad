@@ -19,7 +19,7 @@ export function RecipeInstruction() {
         if(stepStatus.open && instruction.trim().length === 0){
             dispatch(updateError({step:numbStep, error:true}))
         }
-    },[stepStatus.open, instruction.length, dispatch])
+    },[stepStatus.open, instruction, dispatch]);
 
 
     function handleInstruction(e: ChangeEvent<HTMLInputElement>) {

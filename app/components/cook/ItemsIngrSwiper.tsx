@@ -1,9 +1,9 @@
 'use client'
 
 import { MouseEvent, useState } from "react";
-import { Alert, Box, Button, Chip, ListItemAvatar, ListItemText, Menu, 
+import { Alert, Avatar, Box, Button, Chip, ListItemAvatar, ListItemText, Menu, 
     MenuItem, Slide, SlideProps, Stack, Typography } from "@mui/material";
-import { addIcon, avatarIngr, boxOr, buttonList, chipMenu, containerButtons, containerUnit, 
+import { addIcon, avatarImg, avatarIngr, boxOr, buttonList, chipMenu, containerButtons, containerUnit, 
     emptyUnits, headerMenu, menuContainer, menuListItems, nameIngr, scrollItems } from "@/app/(main)/cook/styles";
 import { useAppDispatch } from "@/state/hook";
 import { newIngredientList, newUnitIngredientList, updateCookUnit } from "@/state/slices/list-slice";
@@ -12,6 +12,7 @@ import { useSnackbar } from "notistack";
 import { Ingredients, ReturnData } from "@/app/(main)/cook/types";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { alertMui, hideScroll } from "@/app/styles";
+
 
 interface Props {
     el: Ingredients,
@@ -148,12 +149,16 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
     return (
         <Box sx={{p:'5px'}}>
             <ListItemAvatar sx={avatarIngr}>
-                <img
+                <Avatar
+                    sx={avatarImg}
+                    slotProps={{
+                        img: {
+                            alt: el.name,
+                        },
+                    }}
                     src={el.media !== '' ? el.media : '/images/load-ingr.svg'} 
-                    alt={el.name}
-                    loading="lazy"
                 >
-                </img>
+                </Avatar>
             </ListItemAvatar>
             <ListItemText
                 primary={el.name}
