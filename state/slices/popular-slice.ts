@@ -1,4 +1,4 @@
-import { LikePopFetchReq, LikePopFetchRes, PopularData, PopularFetchReq, PopularRootState, SavePopFetchReq, SavePopFetchRes} from "@/app/(main)/popular/types";
+import { LikePopFetchReq, LikePopFetchRes, PopularData, PopularFetchReq, PopularFetchRes, PopularRootState, SavePopFetchReq, SavePopFetchRes} from "@/app/(main)/popular/types";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -36,7 +36,7 @@ const initialState: PopularState = {
 
 
 
-export const popularFetch = createAsyncThunk<PopularData[], PopularFetchReq, { rejectValue: string }>(
+export const popularFetch = createAsyncThunk<PopularFetchRes, PopularFetchReq, { rejectValue: string }>(
     'popular/popularFetch',
     async function (data, { rejectWithValue }) {
         try {
@@ -45,7 +45,11 @@ export const popularFetch = createAsyncThunk<PopularData[], PopularFetchReq, { r
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify({
+                    connection_id: data.connection_id, 
+                    count: data.count, 
+                    getAllIds: data.getAllIds
+                })
             });
 
             if (!response.ok) return rejectWithValue('Server Error!');
@@ -63,7 +67,10 @@ export const popularFetch = createAsyncThunk<PopularData[], PopularFetchReq, { r
             if (!responseData.ok) return rejectWithValue('Server Error!');
             
             const dataList = await responseData.json()
-            return dataList
+            return {
+                list: dataList,
+                more: data.more   
+            };
 
         } catch (error) {
             console.log(error)
@@ -212,12 +219,25 @@ const popularSlice = createSlice({
         builder
             .addCase(popularFetch.pending, popularFetchHandlers.pending)
             .addCase(popularFetch.rejected, popularFetchHandlers.rejected)
-            .addCase(popularFetch.fulfilled, (state, action: PayloadAction<PopularData[], string>) => {
+            .addCase(popularFetch.fulfilled, (state, action: PayloadAction<PopularFetchRes, string>) => {
                 state.operations.popularFetch.error = false
                 state.operations.popularFetch.loading = false
-                action.payload.map(el => {
-                    state.pop_list.push(el)
-                })
+
+                const {list, more } = action.payload
+                
+
+                if (more) {
+                    list.forEach(el => {
+                        state.pop_list.push(el)
+                    })
+                } else {
+                    list.forEach(el => {
+                        const exists = state.pop_list.some(item => item.config_id === el.config_id);
+                        if (!exists) {
+                            state.pop_list.push(el);
+                        }
+                    });
+                }
 
             })
 

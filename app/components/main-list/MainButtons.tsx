@@ -139,7 +139,9 @@ const MainButtons = memo((props: Props) => {
                 <Box sx={mainButtonsBox}>
                     <Button 
                         onClick={() => toggleShopIngr(ingredient_id, ingredient_shop)} 
-                        sx={btnsListUnitHover}
+                        sx={[btnsListUnitHover,{
+                            bgcolor:`${pathName === '/list-recipe' ? 'background.default' : 'background.paper'}`
+                        }]}
                         color="grayButton"
                     >
                         <ShoppingBagOutlinedIcon />
@@ -149,7 +151,9 @@ const MainButtons = memo((props: Props) => {
 
                     <Button 
                         onClick={() => deleteIngredient(ingredient_id)} 
-                        sx={btnsListUnitHover}
+                        sx={[btnsListUnitHover,{
+                            bgcolor:`${pathName === '/list-recipe' ? 'background.default' : 'background.paper'}`
+                        }]}
                         color="grayButton"
                     >
                         <DeleteOutlineOutlinedIcon />

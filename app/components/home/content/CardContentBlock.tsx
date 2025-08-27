@@ -23,15 +23,11 @@ import { setFavoriteRecipe } from '@/state/slices/recipe-slice';
 import { theme } from '@/config/ThemeMUI/theme';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { newListRecipe } from '@/state/slices/list-recipe-slice';
-import dynamic from 'next/dynamic';
 import { arrowFullTemplate, betweenCenter, centerFlexBlock, favoriteBtnActive, 
     favoriteBtnDesactive, textMaxWidth } from '@/app/styles';
+import SwiperMediaCard from './SwiperMediaCard';
 
 
-const SwiperMediaCard = dynamic(() => import('./SwiperMediaCard'), {
-    ssr: false,
-    loading: () => <div style={{ height: 200 }}>loading...</div>,
-});
 
 
 

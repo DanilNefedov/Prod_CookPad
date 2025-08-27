@@ -78,12 +78,15 @@ export function ContentCook() {
                             nextEl: '.btn-next-cook-media',
                         }}
                     >
-                        {findCook?.media.map((el, index) => (
-                            <SwiperSlide virtualIndex={index} key={el.media_id} className={el.media_type === 'image' ? 'cook-media-main-slide' : 'cook-media-main-slide-video'} >
-                                <SwiperMediaCook props={{ el }}></SwiperMediaCook>
-                            </SwiperSlide>
-
-                        ))}
+                        {findCook?.media
+                            .slice()
+                            .sort((a, b) => Number(b.main) - Number(a.main))
+                            .map((el, index) => (
+                                <SwiperSlide virtualIndex={index} key={el.media_id} className={el.media_type === 'image' ? 'cook-media-main-slide' : 'cook-media-main-slide-video'} >
+                                    <SwiperMediaCook props={{ el }}></SwiperMediaCook>
+                                </SwiperSlide>
+                            )
+                        )}
 
                         <Box className='btn-next-cook-media' sx={arrowFullTemplate}>
                             <ArrowRightIcon viewBox="2 2 20 20" sx={arrowSwiper}></ArrowRightIcon>

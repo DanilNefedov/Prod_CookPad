@@ -22,7 +22,7 @@ const initialState: UserState = {
         provider: '',
         img: '',
         connection_id: '',
-        popular_config: []
+        // popular_config: []
     },
     operations:createOperations<UserOperationKey>(
         ['fetchUser', 'fetchClearUser'],
@@ -121,9 +121,9 @@ const userSlice = createSlice({
                     state.user.img = payload.img;
                     state.user.connection_id = payload.connection_id;
 
-                    payload.popular_config.forEach(el => {
-                        state.user.popular_config.push(el)
-                    })
+                    // payload.popular_config.forEach(el => {
+                    //     state.user.popular_config.push(el)
+                    // })
                   
                 }
             })

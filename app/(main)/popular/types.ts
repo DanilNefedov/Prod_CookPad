@@ -43,11 +43,16 @@ export interface PopularConfig{
 //---------- thunks S----------//
 
 export interface PopularFetchReq {
+    more:boolean
     connection_id: string, 
     count: number, 
     getAllIds:null | string[]
 }
 
+export interface PopularFetchRes {
+    list: PopularData[],
+    more:boolean
+}
 
 export interface LikePopFetchRes {
     config_id: string, 

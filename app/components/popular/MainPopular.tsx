@@ -48,6 +48,7 @@ export function MainPopular() {
     const pingGate = usePingGate()
     const isFetching = useAppSelector(state => state.popular.operations.popularFetch.loading)
     const configId = popularStore[activeVideo]?.config_id;
+    const initialFetchDone = useRef(false);
  
     
     
@@ -75,12 +76,13 @@ export function MainPopular() {
     }, [openComment]);
 
     useEffect(() => {
-        if (!connection_id || errorState || popularStore.length >= 1) return;//|| initialFetchDone.current
+        if (!connection_id || errorState || initialFetchDone.current ) return;//|| initialFetchDone.current
 
         pingGate(() => {
-            dispatch(popularFetch({ connection_id, count: 5, getAllIds: null }))
+            dispatch(popularFetch({ more:false, connection_id, count: 5, getAllIds: null }))
+            initialFetchDone.current = true;
         });
-    }, [connection_id, errorState, popularStore.length, dispatch, pingGate]);
+    }, [connection_id, errorState, dispatch, pingGate]);
 
 
     useEffect(() => {
@@ -99,15 +101,21 @@ export function MainPopular() {
     function handleNewVideo() {
         if (isFetching || errorState) return;
 
-        pingGate(() => {
-            if (connection_id ) {//&& popularStore.pop_list.length >= 5
-                dispatch(popularFetch({
-                    connection_id,
-                    count: 1,
-                    getAllIds: popularStore.map(item => item.config_id)
-                }))
-            } 
-        });
+        const remaining = popularStore.filter(item => !viewedVideos.current.has(item.config_id)).length;
+
+        if (remaining <= 4){
+            pingGate(() => {
+                if (connection_id ) {
+                    dispatch(popularFetch({
+                        more:true,
+                        connection_id,
+                        count: 1,
+                        getAllIds: popularStore.map(item => item.config_id)
+                    }))
+                } 
+            });
+        }
+    
     }
 
 
@@ -273,7 +281,7 @@ export function MainPopular() {
                                                 const newIndex = activeVideo + 1;
                                                 swiperRef.current?.slideTo(newIndex);
                                                 setActiveVideo(newIndex);
-                                                handleNewVideo();
+                                                // handleNewVideo();
                                                 dispatch(updateViews({config_id:popularStore[newIndex].config_id}));
                                             }
 

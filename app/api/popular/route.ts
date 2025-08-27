@@ -118,7 +118,7 @@ export async function POST(request: Request) {
         await connectDB();
 
         const userData = await User.findOne({ connection_id })
-            .select('-_id -__v -createdAt -updatedAt')
+            .select('popular_config');
 
         if (!userData?.popular_config) {
             return NextResponse.json({ message: 'User data not found' }, { status: 404 });

@@ -50,7 +50,7 @@ export async function GET(request: Request) {
       );
     }
     
-    const user = await User.findOne({ connection_id }).select('-password -_id -__v -createdAt -updatedAt');
+    const user = await User.findOne({ connection_id }).select('-password -_id -__v -createdAt -updatedAt -popular_config');
 
     return NextResponse.json({ user: user || null }, { status: 200 });
 

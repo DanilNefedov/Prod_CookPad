@@ -81,7 +81,9 @@ const AddNewUnit = memo(({ingredient_id, recipe_id}:Props) => {
                 onClick={() => { setOpen(true)}} 
                 sx={isSmallScreen ? [btnsListUnitHover, styleBtnsAdaptiveMenu, {
                     bgcolor:`${pathName === '/list-recipe' ? 'background.paper' : 'background.default'}`
-                }] : btnsListUnitHover}
+                }] : [btnsListUnitHover,{
+                    bgcolor:`${pathName === '/list-recipe' ? 'background.default' : 'background.paper'}`
+                }]}
                 color="grayButton"
             >
                 <AddCircleOutlineIcon></AddCircleOutlineIcon>

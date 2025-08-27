@@ -16,14 +16,14 @@ export interface UserData {
     provider: string
     img: string
     connection_id: string
-    popular_config: PopularConfig[]
+    // popular_config: PopularConfig[]
 }
 
-export interface PopularConfig {
-    category_id: string
-    name:string
-    multiplier: number[]
-}
+// export interface PopularConfig {
+//     category_id: string
+//     name:string
+//     multiplier: number[]
+// }
 
 //----------- user E------------//
 
