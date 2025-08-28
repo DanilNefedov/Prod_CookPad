@@ -52,6 +52,13 @@ export const elementHeader = {
     gap:'5px'
 }
 
+export const skeletonContainer = {
+    width: "100%", 
+    display: "flex", 
+    flexDirection: "column", 
+    overflow:'hidden'
+}
+
 export const links = {
     cursor:'pointer',
     width:'80%',

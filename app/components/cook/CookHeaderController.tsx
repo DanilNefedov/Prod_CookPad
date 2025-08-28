@@ -11,6 +11,7 @@ import { Box, useMediaQuery } from "@mui/material";
 import { theme } from "@/config/ThemeMUI/theme";
 import { headerCookContainer, scrollBox, } from "@/app/(main)/cook/styles";
 import { HistoryLinks } from "@/app/(main)/cook/types";
+import { SkeletonList } from "./SkeletonList";
 
 export interface HeaderProps {
     cookHistoryStore: HistoryLinks[];
@@ -22,6 +23,7 @@ export interface HeaderProps {
  
 export function CookHeaderController() {
     const cookHistoryStore = useAppSelector(state => state.cookHistory.history_links);
+    const cookHistoryStatus = useAppSelector(state => state.cookHistory.operations.fetchHistoryCook.loading);
     const userStore = useAppSelector(state => state.user);
     const dispatch = useAppDispatch();
     const router = useRouter();
@@ -80,9 +82,14 @@ export function CookHeaderController() {
         <AdaptiveHeader {...sharedProps} />
         :
         <Box sx={headerCookContainer}>
-            <Box component="ul" sx={scrollBox}>
-                <HeaderCook {...sharedProps} />
-            </Box>
+            {
+                cookHistoryStatus ? 
+                <SkeletonList></SkeletonList> 
+                :
+                <Box component="ul" sx={scrollBox}>
+                    <HeaderCook {...sharedProps} />
+                </Box>
+            }
         </Box>
         
     )

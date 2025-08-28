@@ -5,7 +5,7 @@ import { Alert, Avatar, Box, Button, Chip, ListItemAvatar, ListItemText, Menu,
     MenuItem, Slide, SlideProps, Stack, Typography } from "@mui/material";
 import { addIcon, avatarImg, avatarIngr, boxOr, buttonList, chipMenu, containerButtons, containerUnit, 
     emptyUnits, headerMenu, menuContainer, menuListItems, nameIngr, scrollItems } from "@/app/(main)/cook/styles";
-import { useAppDispatch } from "@/state/hook";
+import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { newIngredientList, newUnitIngredientList, updateCookUnit } from "@/state/slices/list-slice";
 import { add, bignumber, } from "mathjs";
 import { useSnackbar } from "notistack";
@@ -16,7 +16,6 @@ import { alertMui, hideScroll } from "@/app/styles";
 
 interface Props {
     el: Ingredients,
-    id: string
 }
 
 
@@ -24,7 +23,8 @@ const SlideTransition = (props: SlideProps) => <Slide {...props} direction="down
 
 
 export function ItemsIngrSwiper({ props }: { props: Props }) {
-    const { el, id } = props
+    const { el } = props
+    const user_id = useAppSelector(state => state.user.user.connection_id)
     const dispatch = useAppDispatch()
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -36,7 +36,7 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
     const handleClick = async (event: MouseEvent<HTMLElement>) => {
         const choice = el.units.choice
 
-        const url = `/api/cook/units?connection_id=${id}&name=${el.name}&choice=${choice}`
+        const url = `/api/cook/units?connection_id=${user_id}&name=${el.name}&choice=${choice}`
 
         setAnchorEl(event.currentTarget);
 
@@ -93,10 +93,10 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
     
 
     function addNewUnit(el: Ingredients) {
-        if (id !== '') {
+        if (user_id !== '') {
             if (method === 'POST') {
                 const dataUnit = {
-                    connection_id: id,
+                    connection_id: user_id,
                     name: el.name,
                     media: el.media,
                     shop_ingr: false,
@@ -111,7 +111,7 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
 
             } else if (method === 'PATCH') {
                 const dataUnit = {
-                    connection_id: id,
+                    connection_id: user_id,
                     name: el.name,
                     units: {
                         choice: el.units.choice,
@@ -133,10 +133,10 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
         const sum = add(bignumber(el.units.amount), bignumber(elem.amount));
         const newAmount  = Number(sum.toFixed(5));
 
-        if (id !== '') {
+        if (user_id !== '') {
             const data = {
                 name: el.name,
-                connection_id: id,
+                connection_id: user_id,
                 _id: elem._id,
                 amount: newAmount 
             }

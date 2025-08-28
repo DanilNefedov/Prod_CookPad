@@ -58,6 +58,13 @@ export const moreButton = {
     }        
 }
 
+export const skeletonSwiperCook = {
+    bgcolor:'background.paper', 
+    borderRadius:'10px',
+    width:'100%',
+    m:'0 auto'
+}
+
 export const arrowFullTemplate = {
     width:'35px', 
     height:'35px', 
