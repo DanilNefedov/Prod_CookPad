@@ -18,7 +18,7 @@ interface CookState extends CookRootState {
 
 const initialState: CookState = {
     connection_id: '',
-    recipes: [],
+    recipes: {},
     operations:createOperations<CookOperationKey>(
         ['fetchCook', 'deleteRecipe'],
         (key) => {
@@ -35,13 +35,15 @@ export const fetchCook = createAsyncThunk<CookFetchRes, CookFetchReq, { rejectVa
         try {
             
             //to get less data from the database, and also to combine it with the already prepared stack.
-            const state = getState() as RootState
-            const recipeExists = state.recipe.recipes.find(el => el.recipe_id === recipe_id)
+            // const state = getState() as RootState
+            // const recipeExists = state.recipe.recipes.find(el => el.recipe_id === recipe_id)
+            const recipeExists = false
             //to get less data from the database, and also to combine it with the already prepared stack.
 
 
 
-            const url = `/api/cook?connection_id=${id}&recipe=${recipe_id}&recipeExists=${recipeExists ? true : false}`
+            // const url = `/api/cook?connection_id=${id}&recipe=${recipe_id}&recipeExists=${recipeExists ? true : false}`
+            const url = `/api/cook?connection_id=${id}&recipe=${recipe_id}&recipeExists=${recipeExists}`
             const responseCook = await fetch(url);
 
             if (!responseCook.ok) return rejectWithValue('Server Error!');
@@ -56,7 +58,7 @@ export const fetchCook = createAsyncThunk<CookFetchRes, CookFetchReq, { rejectVa
 
             if(recipeExists){
                 const mergedRecipe = merge({}, recipeExists, dataCook);
-            
+
                 return { recipe: mergedRecipe, connection_id: id }
             }else{
                 return { recipe: dataCook, connection_id: id }
@@ -129,10 +131,9 @@ const cookSlice = createSlice({
         setFavoriteCook(state, action: PayloadAction<FavoriteRecipeFetch, string>) {
             const payload = action.payload;
 
-            const findRecipe = state.recipes.find(el => el.recipe_id === payload.recipe_id)
-
-            if (findRecipe) {
-                findRecipe.favorite = !payload.favorite
+            const recipe = state.recipes[payload.recipe_id];
+            if (recipe) {
+                recipe.favorite = !payload.favorite;
             }
         },
 
@@ -156,10 +157,11 @@ const cookSlice = createSlice({
                 if (action.payload) {
                     const payload = action.payload;
                     state.connection_id = payload.connection_id;
-                    
-                    const existingRecipe = state.recipes.find(el => el.recipe_id === payload.recipe.recipe_id);
-                    if (!existingRecipe) {
-                        state.recipes.push(payload.recipe);
+
+                    const recipeId = payload.recipe.recipe_id;
+
+                    if (!state.recipes[recipeId]) {
+                        state.recipes[recipeId] = payload.recipe;
                     }
                 }
             })
@@ -169,11 +171,16 @@ const cookSlice = createSlice({
             .addCase(deleteRecipe.pending, deleteRecipeHandlers.pending)
             .addCase(deleteRecipe.rejected, deleteRecipeHandlers.rejected)
             .addCase(deleteRecipe.fulfilled, (state, action: PayloadAction<DeleteCookFetch, string>) => {
-                state.operations.deleteRecipe.error = false
-                state.operations.deleteRecipe.loading = false
-                // state.name_links = state.name_links.filter(link => link.recipe_id !== action.payload.recipe_id);
-                state.recipes = state.recipes.filter(link => link.recipe_id !== action.payload.recipe_id)
+                state.operations.deleteRecipe.error = false;
+                state.operations.deleteRecipe.loading = false;
+
+                const recipeIdToRemove = action.payload.recipe_id;
+
+                state.recipes = Object.fromEntries(
+                    Object.entries(state.recipes).filter(([key]) => key !== recipeIdToRemove)
+                );
             })
+
     }
 })
 

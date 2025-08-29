@@ -52,6 +52,13 @@ export const elementHeader = {
     gap:'5px'
 }
 
+export const skeletonContainer = {
+    width: "100%", 
+    display: "flex", 
+    flexDirection: "column", 
+    overflow:'hidden'
+}
+
 export const links = {
     cursor:'pointer',
     width:'80%',
@@ -339,6 +346,17 @@ export const containerUnit = {
 export const containerButtons = { 
     display: 'flex', 
     justifyContent: 'center' 
+}
+
+export const skeletonIngredients = {
+    width: '100%', 
+    height: 301, 
+    mt:'10px', 
+    borderRadius:'10px',
+
+    [theme.breakpoints.down("md")]: {
+        height: 269, 
+    }
 }
 
 export const buttonList = {

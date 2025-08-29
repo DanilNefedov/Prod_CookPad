@@ -11,6 +11,7 @@ import { Box, useMediaQuery } from "@mui/material";
 import { theme } from "@/config/ThemeMUI/theme";
 import { headerCookContainer, scrollBox, } from "@/app/(main)/cook/styles";
 import { HistoryLinks } from "@/app/(main)/cook/types";
+import { SkeletonList } from "./SkeletonList";
 
 export interface HeaderProps {
     cookHistoryStore: HistoryLinks[];
@@ -22,7 +23,8 @@ export interface HeaderProps {
  
 export function CookHeaderController() {
     const cookHistoryStore = useAppSelector(state => state.cookHistory.history_links);
-    const userStore = useAppSelector(state => state.user);
+    const cookHistoryStatus = useAppSelector(state => state.cookHistory.operations.fetchHistoryCook.loading);
+    const user_id = useAppSelector(state => state.user.user.connection_id);
     const dispatch = useAppDispatch();
     const router = useRouter();
     const pathName = usePathname();
@@ -36,10 +38,12 @@ export function CookHeaderController() {
     const toggleDrawer = (newOpen: boolean) => () => setOpen(newOpen);
 
     useEffect(() => {
-        if (userStore.user.connection_id !== '') {
-            dispatch(fetchHistoryCook({ connection_id: userStore.user.connection_id, recipe_id }));
+        if(!user_id) return 
+        const alreadyFetched = cookHistoryStore.some(item => item.recipe_id === recipe_id);
+        if (!alreadyFetched) {
+            dispatch(fetchHistoryCook({ connection_id: user_id, recipe_id }));
         }
-    }, [userStore.user.connection_id, dispatch, recipeName, recipe_id]);
+    }, [user_id, dispatch, recipeName, recipe_id]);
 
 
     const handleDeleteRecipe = (recipeId: string) => {
@@ -61,7 +65,7 @@ export function CookHeaderController() {
         }
         
         dispatch(deleteCookHistory({
-            connection_id: userStore.user.connection_id,
+            connection_id: user_id,
             recipe_id:recipeId,
         }));
     };
@@ -80,9 +84,14 @@ export function CookHeaderController() {
         <AdaptiveHeader {...sharedProps} />
         :
         <Box sx={headerCookContainer}>
-            <Box component="ul" sx={scrollBox}>
-                <HeaderCook {...sharedProps} />
-            </Box>
+            {
+                cookHistoryStatus ? 
+                <SkeletonList></SkeletonList> 
+                :
+                <Box component="ul" sx={scrollBox}>
+                    <HeaderCook {...sharedProps} />
+                </Box>
+            }
         </Box>
         
     )

@@ -9,19 +9,19 @@ import { Box } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { memo } from 'react';
-import { Ingredients } from '@/app/(main)/cook/types';
 import { ingredinetsArrow } from '@/app/(main)/cook/styles';
+import { useAppSelector } from '@/state/hook';
 
 interface Props {
-    findCook: Ingredients[] | undefined,
-    id: string
+    recipe_id: string,
 }
 
 
-export const IngredientSwiper = memo(({ props }: { props: Props }) => {
+const IngredientSwiper = memo(({ recipe_id }: Props ) => {
 
-    const { findCook, id } = props;
-    const itemCount = findCook?.length || 0;
+    const cookRecipe = useAppSelector(state => state.cook.recipes[recipe_id])
+    // const findCook = cookStore.find(el => el.recipe_id === recipe_id)
+    const itemCount = cookRecipe.ingredients.length || 0;
 
 
     return (
@@ -74,9 +74,9 @@ export const IngredientSwiper = memo(({ props }: { props: Props }) => {
                 }
             }}
         >
-            {findCook?.map(el => (
+            {cookRecipe.ingredients.map(el => (
                 <SwiperSlide key={el.ingredient_id} className='cook-slide'>
-                    <ItemsIngrSwiper props={{ el, id }}></ItemsIngrSwiper>
+                    <ItemsIngrSwiper props={{ el }}></ItemsIngrSwiper>
                 </SwiperSlide>
             ))}
 
@@ -93,8 +93,10 @@ export const IngredientSwiper = memo(({ props }: { props: Props }) => {
     );
 },
 (prevProps, nextProps) => {
-    return prevProps.props.id === nextProps.props.id
+    return prevProps.recipe_id === nextProps.recipe_id
 })
 
 
 IngredientSwiper.displayName = "IngredientSwiper"
+
+export default IngredientSwiper
