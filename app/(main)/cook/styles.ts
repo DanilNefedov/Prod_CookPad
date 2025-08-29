@@ -348,6 +348,17 @@ export const containerButtons = {
     justifyContent: 'center' 
 }
 
+export const skeletonIngredients = {
+    width: '100%', 
+    height: 301, 
+    mt:'10px', 
+    borderRadius:'10px',
+
+    [theme.breakpoints.down("md")]: {
+        height: 269, 
+    }
+}
+
 export const buttonList = {
     width:'40%',
     p:'2px 7px',

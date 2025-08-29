@@ -11,7 +11,8 @@ import { TempalateRecipe } from "../types";
 
 export interface CookRootState {
     connection_id:string
-    recipes:CookRecipe[]
+    recipes:Record<string, CookRecipe>;
+    // recipes:CookRecipe[]
 }
 
 export interface CookRecipe extends TempalateRecipe{

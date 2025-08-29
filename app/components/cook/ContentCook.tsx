@@ -1,7 +1,7 @@
 "use client"
 
 import { containerContent, containerIngr, containerSwiperInfo, descriptionInstruction, instruction,
-     mediaContainer, scrollContainer, secondHeader, swiperContainer} from "@/app/(main)/cook/styles";
+     mediaContainer, scrollContainer, secondHeader, skeletonIngredients, swiperContainer} from "@/app/(main)/cook/styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { Box, Skeleton, Typography } from "@mui/material";
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -21,36 +21,43 @@ import SwiperMediaCook from "./SwiperMedia";
 import dynamic from "next/dynamic";
 import ActionInfoRecipe from "./ActionInfoRecipe";
 
-const IngredientSwiper = dynamic(() => import("./IngredientSwiper"), { ssr: false });
+const IngredientSwiper = dynamic(() => import("./IngredientSwiper"), { 
+    ssr: false ,
+    loading: () => (
+        <Skeleton 
+        variant="rectangular" 
+        sx={skeletonIngredients} 
+        />
+    ),
+});
 
 
 
 
 
 export function ContentCook() {
-
-    const dispatch = useAppDispatch()
-    const cookStore = useAppSelector(state => state.cook.recipes)
-    const user_id = useAppSelector(state => state.user.user.connection_id)
-    const recipeStatus = useAppSelector(state => state.cook.operations.fetchCook.loading)
-
     const pathName = usePathname()
-
     const segments = pathName.split("/");
     const recipe_id = segments[2];
 
-    const findCook = cookStore.find(el => el.recipe_id === recipe_id)
+    const dispatch = useAppDispatch()
+    const cookRecipe = useAppSelector(state => state.cook.recipes[recipe_id])
+    const user_id = useAppSelector(state => state.user.user.connection_id)
+    const recipeStatus = useAppSelector(state => state.cook.operations.fetchCook.loading)
 
+    
+
+    // const findCook = cookStore.find(el => el.recipe_id === recipe_id)
 
     useEffect(() => {
-        if (!findCook && user_id !== '') {
-            dispatch(fetchCook({ id:user_id, recipe_id }))
+        if (!user_id) return; 
+        if (!cookRecipe) {
+            dispatch(fetchCook({ id: user_id, recipe_id }));
         }
+    }, [recipe_id, cookRecipe, user_id, dispatch]);
 
-    }, [recipe_id, dispatch, findCook, user_id]);
 
 
-  
     return (
         <Box sx={containerContent}>
             <Box sx={scrollContainer}>
@@ -69,7 +76,7 @@ export function ContentCook() {
                                 nextEl: '.btn-next-cook-media',
                             }}
                         >
-                            {findCook?.media
+                            {cookRecipe?.media
                                 .slice()
                                 .sort((a, b) => Number(b.main) - Number(a.main))
                                 .map((el, index) => (
@@ -95,16 +102,27 @@ export function ContentCook() {
                 <Box sx={containerIngr}>
                     <Typography variant="h3" sx={secondHeader}>Ingredients</Typography>
                     <Box sx={swiperContainer}>
+
             
                         {
-                        findCook?.ingredients && findCook?.ingredients.length > 0 &&
-                        (<IngredientSwiper recipe_id={recipe_id}></IngredientSwiper>)
+                            cookRecipe?.ingredients && cookRecipe?.ingredients.length > 0 ?
+                            (<IngredientSwiper recipe_id={recipe_id}></IngredientSwiper>)
+                            :
+                            <Skeleton variant="rectangular" sx={skeletonIngredients}/>
                         }
                         
                     </Box>
                     <Box>
                         <Typography variant="h3" sx={secondHeader}>Instruction</Typography>
-                        <Typography variant="body1" sx={[descriptionInstruction, instruction]}>{findCook?.instruction}</Typography>
+                        <Typography variant="body1" sx={[descriptionInstruction, instruction]}>
+
+                            {recipeStatus ? 
+                                <Skeleton variant="text" height={80}></Skeleton>
+                                :
+                                <>{cookRecipe?.instruction}</>
+                            }
+                            
+                        </Typography>
                     </Box>
                 </Box>
             </Box>

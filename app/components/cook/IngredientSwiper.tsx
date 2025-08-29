@@ -19,9 +19,9 @@ interface Props {
 
 const IngredientSwiper = memo(({ recipe_id }: Props ) => {
 
-    const cookStore = useAppSelector(state => state.cook.recipes)
-    const findCook = cookStore.find(el => el.recipe_id === recipe_id)
-    const itemCount = findCook?.ingredients.length || 0;
+    const cookRecipe = useAppSelector(state => state.cook.recipes[recipe_id])
+    // const findCook = cookStore.find(el => el.recipe_id === recipe_id)
+    const itemCount = cookRecipe.ingredients.length || 0;
 
 
     return (
@@ -74,7 +74,7 @@ const IngredientSwiper = memo(({ recipe_id }: Props ) => {
                 }
             }}
         >
-            {findCook?.ingredients.map(el => (
+            {cookRecipe.ingredients.map(el => (
                 <SwiperSlide key={el.ingredient_id} className='cook-slide'>
                     <ItemsIngrSwiper props={{ el }}></ItemsIngrSwiper>
                 </SwiperSlide>
