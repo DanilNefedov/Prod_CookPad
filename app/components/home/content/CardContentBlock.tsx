@@ -2,7 +2,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Box, CardHeader, Collapse, Menu, MenuItem, useMediaQuery } from "@mui/material";
+import { Box, Collapse, Menu, MenuItem, useMediaQuery } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Link from "next/link";
