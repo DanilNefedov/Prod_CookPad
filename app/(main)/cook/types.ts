@@ -1,7 +1,7 @@
 // *S - start
 // *E - end
 
-import { TempalateRecipe } from "../types";
+import { RecipeMedia } from "../types";
 
 
 
@@ -15,7 +15,20 @@ export interface CookRootState {
     // recipes:CookRecipe[]
 }
 
-export interface CookRecipe extends TempalateRecipe{
+export interface TempalateRecipeCook {
+    recipe_id:string 
+    name:string
+    time: {
+        hours:string
+        minutes:string 
+    }
+    media:RecipeMedia[]
+    recipe_type:string
+    description: string
+    favorite:boolean
+}
+
+export interface CookRecipe extends TempalateRecipeCook{
     instruction:string,
     sorting:string[],
     ingredients:Ingredients[]

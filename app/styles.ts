@@ -89,10 +89,6 @@ export const favoriteBtnActive ={
             color: 'error.light',
         },
     },
-    [theme.breakpoints.down("md")]: {
-        height:'20px',
-        width:'20px'
-    }, 
 }
 
 export const favoriteBtnDesactive = { 
@@ -103,10 +99,6 @@ export const favoriteBtnDesactive = {
             color: 'primary.main',
         },
     },
-    [theme.breakpoints.down("md")]: {
-        height:'20px',
-        width:'20px'
-    }, 
 }
 
 export const hideScroll = {

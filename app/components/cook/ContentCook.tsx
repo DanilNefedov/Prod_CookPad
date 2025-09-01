@@ -46,9 +46,6 @@ export function ContentCook() {
     const recipeStatus = useAppSelector(state => state.cook.operations.fetchCook.loading)
 
     
-
-    // const findCook = cookStore.find(el => el.recipe_id === recipe_id)
-
     useEffect(() => {
         if (!user_id) return; 
         if (!cookRecipe) {
