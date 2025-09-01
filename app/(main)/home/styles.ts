@@ -12,7 +12,7 @@ export const styledPaperHome = {
     [theme.breakpoints.down("md")]: {
         width: "calc(100% - 60px)",
     },
-    [theme.breakpoints.down(500)]: {
+    [theme.breakpoints.down(800)]: {
         width: "calc(100% - 45px)",
     }
 }
@@ -243,17 +243,19 @@ export const mainCard = {
     width: '32%',
     backgroundColor: 'background.default',
     mb: '20px',
+    alignItems: "stretch",
+    maxHeight:'450px',
+    height:'100%',
+    position:'relative',
     borderRadius: '0',
+
     '&:nth-child(1)': {
         borderRadius: '20px 0 0 0',
     },
     '&:nth-child(3)': {
         borderRadius: '0 20px 0 0',
     },
-    alignItems: "stretch",
-    maxHeight:'450px',
-    height:'100%',
-    position:'relative',
+
     [theme.breakpoints.down(710)]: {
         maxHeight:'350px',
         width: '48%',
@@ -289,29 +291,25 @@ export const contentPostionAbsolute = {
 
 export const headerCard = {
     padding: 0, 
-    maxWidth: "70%", 
+    maxWidth: "100%", 
+    textAlign:'center',
+    overflow: 'hidden',
     '& .MuiCardHeader-content':{
         width:'100%'
     }, 
-    [theme.breakpoints.down(500)]: {
-        maxWidth: "57%"
+    [theme.breakpoints.down(800)]: {
+        textAlign:'start' as const,
+        mb:'0'
     }
 }
 
-export const headerCardTitle = {
-    // fontSize:'inherit',
-    textTransform: 'capitalize',
-    width:'100%',
-    
-}
+export function headerMove(ellipsisEnabled:boolean) {
 
-export const timeIcon = {
-    fontSize: "20px",
-    height: '20px',
-    mr: '3px',
-    [theme.breakpoints.down("md")]: {
-        height: '17px',
-    },
+    return {
+        transition: 'all 0.3s ease',
+        whiteSpace: ellipsisEnabled ? 'nowrap' : 'normal',
+        textOverflow: ellipsisEnabled ? 'ellipsis' : 'unset',
+    }
 }
 
 export const arrowSwiper = {
@@ -326,17 +324,6 @@ export const cardBottom = {
     } 
 }
 
-export const typeRecipeText = {
-    mb:'0', 
-    color: 'text.lightGray',
-    lineHeight: 'inherit',
-    [theme.breakpoints.down("md")]: {
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis"
-    },
-}
-
 export const descriptionText = {
     pb: '8px',
     m: '0',
@@ -346,14 +333,48 @@ export const descriptionText = {
    
 }
 
-export const mobileMenu = {
-    color: 'text.disabled', 
+export const desktopBotInfo = {
+    display: 'flex', 
+    justifyContent: 'space-between', 
+    mt:'5px'
+}
+
+export const containerMobileMenu = {
     position:'absolute', 
-    top:'30px', 
-    right:'9px', 
+    top:'2px', 
+    right:'7px',
+    borderRadius:'50%',
+    p:'2px',
+    zIndex:'1000',
+
+    [theme.breakpoints.down(500)]: {
+        top:'1px',
+    }     
+}
+
+export const boxTypeRecipe = {
+    position:'absolute', 
+    zIndex:'1000', 
+    top:'0', 
+    left:'0', 
+    width:'100%',
+    backgroundColor:'common.cardBlack7',
+    p:'5px 10px',
+}
+
+export const typeRecipe = {
+    width:'calc(100% - 24px)',
+          
+    [theme.breakpoints.down(500)]: {
+        fontSize:'12px',
+    },
+}
+
+export const mobileMenu = {
+    color: 'text.primary', 
     width:'20px', 
     height:'20px', 
-    padding:'0'
+    padding:'0',
 }
 
 export const containerMenu = {
@@ -375,7 +396,6 @@ export const cookBtn = {
     backgroundColor: '#4F5362', 
     color: 'text.primary', 
     textTransform: 'initial', 
-    // fontSize: '15px', 
     '@media (hover: hover) and (pointer: fine)': {
         "&:hover": { 
             backgroundColor: 'primary.main', 
@@ -383,8 +403,7 @@ export const cookBtn = {
         },
     },
     [theme.breakpoints.down("md")]: {
-        // fontSize: '12px', 
-        padding: '2px 5px',
+        padding: '2px 10px',
         minWidth:'50px'
     },
     [theme.breakpoints.down(500)]: {
@@ -398,24 +417,17 @@ export const media = {
     width: '100%' 
 }
 
-export function transitionBlock(ellipsisEnabled:boolean) {
+export const mobileBottomInfo = {
+    
+    display:'flex',
+    justifyContent:'center',
 
-    return {
-        overflow: 'hidden',
-        transition: 'opacity 0.3s ease, max-height 0.3s ease',
-        opacity: ellipsisEnabled ? 1 : 0,
-        maxHeight: ellipsisEnabled ? '150px' : 0,
-    }
-}
-
-export function transitionDescription(ellipsisEnabled:boolean) {
-
-    return {
-        maxWidth: ellipsisEnabled ? '80%' : '100%',
-        transition: 'all 0.3s ease',
-        whiteSpace: ellipsisEnabled ? 'nowrap' : 'normal',
-        textOverflow: ellipsisEnabled ? 'ellipsis' : 'unset',
-    }
+    [theme.breakpoints.down(800)]: {
+        justifyContent:'space-between',
+        alignItems:'center',
+    },
+    
+    
 }
 
 

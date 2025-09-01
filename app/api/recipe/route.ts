@@ -75,7 +75,7 @@ export async function GET(request: Request) {
 
     const recipes = await Recipe.find({ connection_id })
       .sort({ createdAt: -1 })
-      .select("recipe_id name time media recipe_type description favorite sorting -_id")
+      .select("recipe_id name media recipe_type favorite sorting -_id")
       .skip(skip)
       .limit(limit)
       .lean();

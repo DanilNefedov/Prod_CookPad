@@ -31,38 +31,21 @@ const initialState: CookState = {
 
 export const fetchCook = createAsyncThunk<CookFetchRes, CookFetchReq, { rejectValue: string }>(
     'cook/fetchCook',
-    async function ({ id, recipe_id }, { rejectWithValue, getState }) {
+    async function ({ id, recipe_id }, { rejectWithValue }) {
         try {
-            
-            //to get less data from the database, and also to combine it with the already prepared stack.
-            // const state = getState() as RootState
-            // const recipeExists = state.recipe.recipes.find(el => el.recipe_id === recipe_id)
-            const recipeExists = false
-            //to get less data from the database, and also to combine it with the already prepared stack.
 
+            const url = `/api/cook?connection_id=${id}&recipe=${recipe_id}`
 
-
-            // const url = `/api/cook?connection_id=${id}&recipe=${recipe_id}&recipeExists=${recipeExists ? true : false}`
-            const url = `/api/cook?connection_id=${id}&recipe=${recipe_id}&recipeExists=${recipeExists}`
             const responseCook = await fetch(url);
 
             if (!responseCook.ok) return rejectWithValue('Server Error!');
 
             const data = await responseCook.json()
 
-            const {dataCook} = data//isInHistory
+            const {dataCook} = data
 
-            // if(!isInHistory){
-            //     dispatch(newCookHistory({ connection_id: id, history_links: { recipe_id, recipe_name: recipeExists ? recipeExists.name : dataCook.name } }))
-            // }
 
-            if(recipeExists){
-                const mergedRecipe = merge({}, recipeExists, dataCook);
-
-                return { recipe: mergedRecipe, connection_id: id }
-            }else{
-                return { recipe: dataCook, connection_id: id }
-            }
+            return { recipe: dataCook, connection_id: id }
 
         } catch (error) {
             console.error(error)

@@ -2,14 +2,14 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Box, CardHeader, Collapse, Menu, MenuItem, useMediaQuery } from "@mui/material";
+import { Box, Collapse, Menu, MenuItem, useMediaQuery } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import AvTimerIcon from '@mui/icons-material/AvTimer';
 import Link from "next/link";
-import { arrowSwiper, cardBottom, containerMenu, contentPostionAbsolute, 
-    cookBtn, descriptionText, headerCard, headerCardTitle, mainCard, mobileButtons, 
-    mobileMenu, timeIcon, transitionBlock, transitionDescription, typeRecipeText } from "@/app/(main)/home/styles";
+import { arrowSwiper, boxTypeRecipe, cardBottom, containerMenu, containerMobileMenu, contentPostionAbsolute, 
+    cookBtn, desktopBotInfo, headerCard, headerMove, mainCard, mobileBottomInfo, mobileButtons, 
+    mobileMenu, 
+    typeRecipe} from "@/app/(main)/home/styles";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -20,11 +20,9 @@ import { Navigation, Virtual } from 'swiper/modules';
 import { memo, useState } from "react";
 import { useAppDispatch, useAppSelector } from '@/state/hook';
 import { setFavoriteRecipe } from '@/state/slices/recipe-slice';
-import { theme } from '@/config/ThemeMUI/theme';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { newListRecipe } from '@/state/slices/list-recipe-slice';
-import { arrowFullTemplate, betweenCenter, centerFlexBlock, favoriteBtnActive, 
-    favoriteBtnDesactive, textMaxWidth } from '@/app/styles';
+import { arrowFullTemplate, favoriteBtnActive, favoriteBtnDesactive, textMaxWidth } from '@/app/styles';
 import SwiperMediaCard from './SwiperMediaCard';
 
 
@@ -52,11 +50,10 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
     );
 
     const dispatch = useAppDispatch();
-    const isMobile = useMediaQuery('(max-width:499px)');
+    const isMobile = useMediaQuery('(max-width:799px)');
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openAdaptive = Boolean(anchorEl);
-    const [expanded, setExpanded] = useState(false);
     const [ellipsisEnabled, setEllipsisEnabled] = useState(true);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -85,39 +82,53 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
         }
     }
 
+    console.log(recipe)
 
     return (
         <Card sx={mainCard}>
-            <CardContent sx={contentPostionAbsolute}>
-                <Box sx={betweenCenter}>
-                    <CardHeader
-                        title={recipe?.name}
-                        sx={headerCard}
-                        slotProps={{
-                            title: {
-                                sx: [textMaxWidth, headerCardTitle],
-                            },
+            <Box sx={boxTypeRecipe}>
+                <Typography component="p" sx={[textMaxWidth,typeRecipe]}>
+                    {recipe?.recipe_type}
+                </Typography>
+            </Box>
+
+            {isMobile && 
+                <Box sx={containerMobileMenu}>
+                    <IconButton
+                        aria-label="more"
+                        id="long-button"
+                        aria-controls={openAdaptive ? 'long-menu' : undefined}
+                        aria-expanded={openAdaptive ? 'true' : undefined}
+                        aria-haspopup="true"
+                        onClick={handleClick}
+                        sx={mobileMenu}
+                    >
+                        <MoreVertIcon sx={{ width: '100%', height: '100%' }} viewBox='1 1 22 22'/>
+                    </IconButton>
+                    <Menu
+                        id="long-menu"
+                        MenuListProps={{
+                            'aria-labelledby': 'long-button',
                         }}
-                    />
+                        anchorEl={anchorEl}
+                        open={openAdaptive}
+                        onClose={handleCloseAdaptive}
+                        sx={containerMenu}
+                    >
+                        <MenuItem onClick={handleCloseAdaptive} sx={mobileButtons}>
+                            <Button href={`/cook/${recipe_id}`} component={Link} sx={cookBtn}>Cook</Button>
+                        </MenuItem>
 
-                    <Box sx={centerFlexBlock}>
-                        <AvTimerIcon sx={timeIcon} />
-                        <Typography
-                            variant="body2"
-                            sx={{
-                                fontSize:'14px',
-                                [theme.breakpoints.down("md")]: {
-                                    fontSize: '12px'
-                                },
-                            }}
-                        >
-                            {`${recipe?.time.hours === '' ? '00' : recipe?.time.hours}:${recipe?.time.minutes === '' ? '00' : recipe?.time.minutes}h`}
-                        </Typography>
-                    </Box>
+                        <MenuItem onClick={handleCloseAdaptive} sx={mobileButtons}>
+                            <Button onClick={() => addToList()} sx={cookBtn}>To List</Button>
+                        </MenuItem>
+
+                    </Menu>
                 </Box>
-            </CardContent>
+                    
+            }
 
-            <Swiper
+            <Swiper 
                 modules={[Navigation, Virtual]}
                 virtual
                 slidesPerView={1}
@@ -152,81 +163,45 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
 
 
             <CardContent sx={[contentPostionAbsolute, cardBottom,]}>
-                <Box sx={[betweenCenter, transitionBlock(ellipsisEnabled)]}>
-                    <Typography gutterBottom component="p" sx={typeRecipeText}>
-                        {"type: " + recipe?.recipe_type}
-                    </Typography>
-                    <IconButton
-                        sx={{ padding: '0' }}
-                        aria-label="add to favorites"
-                        onClick={() => handlerFavorite(recipe_id, recipe?.favorite)}
-                    >
-                        {recipe?.favorite ? <FavoriteIcon sx={favoriteBtnActive} /> : <FavoriteIcon sx={favoriteBtnDesactive} />}
-                    </IconButton>
-                </Box>
-                <Box>
-                    <Collapse in={expanded} collapsedSize={24} timeout={400}
-                        onEntering={() => setEllipsisEnabled(false)}
-                        onExited={() => setEllipsisEnabled(true)}
-                    >
-                        <Typography
-                            onClick={() => setExpanded(prev => !prev)}
-                            gutterBottom
-                            sx={[
-                                descriptionText,
-                                transitionDescription(ellipsisEnabled)
-                            ]}
+                <Box sx={[mobileBottomInfo, {gap:ellipsisEnabled ? '7px' : 0}]}>
+                    <Collapse in={!ellipsisEnabled} collapsedSize={isMobile ? 21 : 24} timeout={400}>
+                        <Typography 
+                            onClick={() => setEllipsisEnabled(prev => !prev)}
+                            gutterBottom 
+                            component="h2" 
+                            sx={[headerCard, headerMove(ellipsisEnabled)]}
                         >
-                            {recipe?.description}
+                            {recipe?.name}
                         </Typography>
                     </Collapse>
+                    
 
+                        {isMobile && 
+                            <IconButton
+                                sx={[{ padding: '0', display:ellipsisEnabled ? 'block' : 'none' },]}
+                                aria-label="add to favorites"
+                                onClick={() => handlerFavorite(recipe_id, recipe?.favorite)}
+                            >
+                                <FavoriteIcon sx={recipe?.favorite ? favoriteBtnActive : favoriteBtnDesactive} />
+                            </IconButton>
+                        }
                 </Box>
-
-
-                {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}> */}
-                {isMobile ? <>
-                    <IconButton
-                        aria-label="more"
-                        id="long-button"
-                        aria-controls={openAdaptive ? 'long-menu' : undefined}
-                        aria-expanded={openAdaptive ? 'true' : undefined}
-                        aria-haspopup="true"
-                        onClick={handleClick}
-                        sx={[mobileMenu,
-                            transitionBlock(ellipsisEnabled)
-                        ]}
-                    >
-                        <MoreVertIcon sx={{ width: '100%', height: '100%' }} viewBox='1 1 22 22'/>
-                    </IconButton>
-                    <Menu
-                        id="long-menu"
-                        MenuListProps={{
-                            'aria-labelledby': 'long-button',
-                        }}
-                        anchorEl={anchorEl}
-                        open={openAdaptive}
-                        onClose={handleCloseAdaptive}
-                        sx={containerMenu}
-                    >
-                        <MenuItem onClick={handleCloseAdaptive} sx={mobileButtons}>
-                            <Button href={`/cook/${recipe_id}`} component={Link} sx={cookBtn}>Cook</Button>
-                        </MenuItem>
-
-                        <MenuItem onClick={handleCloseAdaptive} sx={mobileButtons}>
-                            <Button onClick={() => addToList()} sx={cookBtn}>To List</Button>
-                        </MenuItem>
-
-                    </Menu>
-                </>
-                    :
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', mt:'5px' }}>
+            
+                {!isMobile &&
+                    <Box sx={desktopBotInfo}>
                         <Button
                             component={Link}
                             href={`/cook/${recipe_id}?name=${recipe?.name}`}
                             sx={cookBtn}
                         >Cook</Button>
-                        <Button onClick={() => addToList()} sx={cookBtn}>To List</Button>
+                        <Button onClick={() => addToList()} sx={[cookBtn,{mr:isMobile ? '0' : '24px'}]}>To List</Button>
+                        <IconButton
+                            sx={{ padding: '0' }}
+                            aria-label="add to favorites"
+                            onClick={() => handlerFavorite(recipe_id, recipe?.favorite)}
+                        >
+                            <FavoriteIcon sx={recipe?.favorite ? favoriteBtnActive : favoriteBtnDesactive} />
+                        </IconButton>
 
                     </Box>
                 }
