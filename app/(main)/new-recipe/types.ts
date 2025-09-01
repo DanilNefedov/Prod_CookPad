@@ -1,8 +1,7 @@
 // *S - start
 // *E - end
 
-import { Unit } from "../cook/types";
-import { TempalateRecipe } from "../types";
+import { TempalateRecipeCook, Unit } from "../cook/types";
 
 
 
@@ -59,7 +58,7 @@ export type SaveFormResult = {
     message?: string | null;
 } | null;
 
-export interface NewDataRecipe extends TempalateRecipe{
+export interface NewDataRecipe extends TempalateRecipeCook{
     connection_id: string,
     instruction:string,
     sorting:string[],
