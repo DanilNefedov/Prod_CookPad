@@ -14,6 +14,10 @@ export const styledPaperHome = {
     },
     [theme.breakpoints.down(800)]: {
         width: "calc(100% - 45px)",
+    },
+    [theme.breakpoints.down(600)]: {
+        width: "100%",
+        borderRadius: '0',
     }
 }
 
@@ -27,11 +31,15 @@ export const containerHome = {
         pl: "10px",
         pr: '10px'
     },
+
+    [theme.breakpoints.down(600)]: {
+        height: 'calc(100dvh - 45px)',
+    }
 }
 
 //------- navigation site -------//
 
-export const paperNavigation: SxProps<Theme> = {
+export const paperNavigation = {
     backgroundColor: 'background.default',
     // flexGrow: 0,
     borderRadius: '0',
@@ -81,6 +89,11 @@ export const containerButtons = {
     flexDirection:'column', 
     [theme.breakpoints.down("md")]: {
         display:'block'
+    },
+    [theme.breakpoints.down("sm")]: {
+        display:'flex',
+        flexDirection:'initial',
+        gap:'18px'
     }
 }
 
@@ -113,6 +126,18 @@ export function btnLink(page: PageStyles, pathname: string) {
                 display:'none'
             }
         },
+
+        [theme.breakpoints.down("sm")]: {
+            borderRadius:'20px 20px 0px 0px',
+            p:'0',
+            bgcolor:'transparent',
+            transiton:'transform .2s',
+
+            '& svg':{
+                transform: thisPage ? 'scale(1.2)' : 'scale(1)',
+                color: thisPage ? 'primary.main' : 'text.disabled'
+            }
+        },
     }
 }
 
@@ -121,6 +146,12 @@ export const havigationIcons = {
     [theme.breakpoints.down("md")]: {
         width:'30px', 
         height:'35px', 
+        mr:'0'
+    },
+
+    [theme.breakpoints.down("sm")]: {
+        width:'30px', 
+        height:'30px', 
         mr:'0'
     }
 }
@@ -135,7 +166,12 @@ export const containerExit = {
     justifyContent:'center',
     [theme.breakpoints.down("md")]: {
         justifyContent:'flex-start'
-    }
+    },
+
+    [theme.breakpoints.down("sm")]: {
+        alignItems:'end',
+        maxHeight: '40px',
+    },
 }
 
 export const exitButton = {
@@ -157,12 +193,25 @@ export const exitButton = {
             display:'none'
         }
     },
+    [theme.breakpoints.down("sm")]: {
+        p:'0',
+        bgcolor:'transparent',
+        borderRadius:'0',
+        width:'35px',
+        height:'40px',
+        alignItems:'flex-start',
+        // mb:'5px'
+    },
 }
 
 export const exitIcon = {
     mr:'5px',  
     [theme.breakpoints.down("md")]: {
         mr:'0'
+    },
+    [theme.breakpoints.down("sm")]: {
+        width:'30px',
+        height:'30px'
     },
 }
 
@@ -213,6 +262,9 @@ export const mainContent = {
     scrollbarWidth: 'none',
     '&::-webkit-scrollbar': {
         display: 'none' 
+    },
+    [theme.breakpoints.down('sm')]: {
+       mb: '0',
     }
 }
 
@@ -224,6 +276,10 @@ export const mainContainer = {
     borderRadius: '20px',
     gap:'2%',
     alignContent:'flex-start',
+
+    [theme.breakpoints.down('sm')]: {
+        justifyContent:'space-between'
+    }
 }
 
 export const linkEmptyPage = {
@@ -256,6 +312,14 @@ export const mainCard = {
         borderRadius: '0 20px 0 0',
     },
 
+    [theme.breakpoints.down(1250)]: {
+        maxHeight:'425px',
+    },
+
+    [theme.breakpoints.down('md')]: {
+        maxHeight:'400px',
+    },
+
     [theme.breakpoints.down(710)]: {
         maxHeight:'350px',
         width: '48%',
@@ -270,9 +334,9 @@ export const mainCard = {
             borderRadius: '0 0 0 0',
         },
     },
-    [theme.breakpoints.down(500)]: {
+    [theme.breakpoints.down('sm')]: {
         maxHeight:'300px',
-        width: '48.5%',
+        width: '49%',
     }
 }
 
@@ -341,14 +405,14 @@ export const desktopBotInfo = {
 
 export const containerMobileMenu = {
     position:'absolute', 
-    top:'2px', 
+    top:'1px', 
     right:'7px',
     borderRadius:'50%',
     p:'2px',
     zIndex:'1000',
 
     [theme.breakpoints.down(500)]: {
-        top:'1px',
+        top:'0',
     }     
 }
 

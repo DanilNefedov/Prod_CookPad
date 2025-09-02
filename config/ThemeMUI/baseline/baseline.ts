@@ -130,7 +130,12 @@ const baseline: Components<Theme>['MuiCssBaseline'] = {
         '.wrapper': {
             display: 'flex',
             height: '100dvh',
+
+            '@media (max-width: 599px)': {
+                flexDirection:'column-reverse'
+            },
         },
+        
         
     },
 }
