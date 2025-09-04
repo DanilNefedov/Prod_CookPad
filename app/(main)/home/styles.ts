@@ -1,5 +1,4 @@
 import { theme } from "@/config/ThemeMUI/theme"
-import { SxProps, Theme } from "@mui/material"
 import { PageStyles } from "./types"
 
 //: SxProps<Theme> = (theme) => ({  : SxProps<Theme> = {
@@ -27,10 +26,10 @@ export const containerHome = {
     flexDirection: 'column',
     justifyContent: 'center',
     position: 'relative',
-    [theme.breakpoints.down("md")]: {
-        pl: "10px",
-        pr: '10px'
-    },
+    // [theme.breakpoints.down("md")]: {
+    //     pl: "10px",
+    //     pr: '10px'
+    // },
 
     [theme.breakpoints.down(600)]: {
         height: 'calc(100dvh - 45px)',
@@ -278,7 +277,14 @@ export const mainContainer = {
     alignContent:'flex-start',
 
     [theme.breakpoints.down('sm')]: {
-        justifyContent:'space-between'
+        justifyContent:'space-between',
+
+        '&::after':{
+            content: '""',
+            display:'block',
+            width:'100%',
+            height:'60px',
+        }
     }
 }
 

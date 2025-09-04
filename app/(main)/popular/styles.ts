@@ -1,6 +1,6 @@
 import { theme } from "@/config/ThemeMUI/theme";
 import { Theme } from "@mui/material";
-import { SxProps, SystemStyleObject } from "@mui/system";
+import { height, SxProps, SystemStyleObject } from "@mui/system";
 
 
 
@@ -25,6 +25,10 @@ export const pageCard: (theme: Theme) => SxProps<Theme> = (theme) => ({
     [theme.breakpoints.down(769)]: {
         flexDirection: "column",
     },
+    [theme.breakpoints.down("sm")]: {
+        backgroundColor:'background.default',
+        borderRadius:'0'
+    },
 });
 
 export const mainCardContent = {
@@ -36,26 +40,33 @@ export const mainCardContent = {
     backgroundColor: 'background.paper',
     borderRadius: '20px',
     alignSelf: "center",
-    height: 'calc(100dvh)',
-    width: 'calc((100vh - 40px) * (9 / 16))',
+    height: 'calc(100dvh - 45px)',
+    // width: 'calc((100vh - 40px) * (9 / 16))',
+    width: 'calc((100dvh - 40px) * (9 / 16))',
     py: '20px',
 
     [theme.breakpoints.down(769)]: {
         p: '0',
         m: '0 auto',
         maxWidth: '100%'
-    }
+    },
+
+   
 }
 
 export const viewContentContainer = {
     width: "100%",
-    aspectRatio: "9 / 16",
+    height:'100%',
+    // aspectRatio: "9 / 16",
     backgroundColor: "background.default",
     borderRadius: '20px 20px 0 20px',
     position: 'relative',
     [theme.breakpoints.down(769)]: {
         borderRadius: '20px 20px 20px 20px'
-    }
+    },
+    [theme.breakpoints.down("sm")]: {
+        backgroundColor:'background.paper',
+    },
 }
 
 export const containerNameDescription = (theme: Theme, expanded: boolean): SystemStyleObject<Theme> => ({

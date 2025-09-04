@@ -1,8 +1,9 @@
-import { Container, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import GlobalErrorProvider from "../../config/client-side-handler/GlobalError";
 import { UserProvider } from "../../config/user-alert/UserContext";
-import { containerHome, styledPaperHome } from "./home/styles";
+import { styledPaperHome } from "./home/styles";
 import { NavigationSite } from "../components/navigation-site/NavigationSite";
+import DynamicContainer from "@/config/wrapper/DynamicContainer";
 
 
 
@@ -15,11 +16,14 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
     <GlobalErrorProvider>
       <NavigationSite></NavigationSite>
       <Paper sx={styledPaperHome}>
-        <Container maxWidth={false} sx={containerHome}>
+        <DynamicContainer>
           <UserProvider>
             {children}
           </UserProvider>
-        </Container>
+        </DynamicContainer>
+        {/* <Container maxWidth={false} sx={containerHome}> */}
+          
+        {/* </Container> */}
       </Paper>
     </GlobalErrorProvider>
   )

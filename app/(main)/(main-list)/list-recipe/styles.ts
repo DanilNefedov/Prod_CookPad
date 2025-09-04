@@ -4,8 +4,19 @@ import { theme } from "@/config/ThemeMUI/theme"
 
 
 export const pageContainer = { 
-    height: 'calc(100dvh - 80px)', 
-    overflowY: 'auto' 
+    height: 'calc(100dvh - 86px)', 
+    overflowY: 'auto', 
+
+    scrollbarWidth: 'none',
+    msOverflowStyle: 'none',
+
+    '&::-webkit-scrollbar': {
+        display: 'none'
+    },
+
+    [theme.breakpoints.down('sm')]:{
+        height: 'calc(100dvh - 116px)', 
+    }
 }
 
 export const accordionMain = { 
@@ -43,7 +54,14 @@ export const accorionCell = {
 
 export const mainContainerList = { 
     height: '100%', 
-    position: 'relative' 
+    position: 'relative',
+
+    '&::after':{
+        content:'""',
+        display:'block',
+        width:'100%',
+        height:'40px'
+    }
 }
 
 export const containerAccordion = { 

@@ -215,8 +215,8 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                     {
                                         '& .swiper-list-unit': {
                                             width: `${pathName === '/list-recipe' ? 'calc(100dvw - 155px)' : 'calc(100dvw - 120px)'}`,
-                                            [theme.breakpoints.down(500)]: { 
-                                                width: `${pathName === '/list-recipe' ? 'calc(100dvw - 125px)' : 'calc(100dvw - 110px)'}`,
+                                            [theme.breakpoints.down('sm')]: { 
+                                                width: `${pathName === '/list-recipe' ? 'calc(100dvw - 85px)' : 'calc(100dvw - 65px)'}`,
                                             }
                                         }
                                     }
@@ -230,7 +230,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                         className="swiper-list-unit adaptive-list-unit-swiper"
                                         modules={[Navigation]}
                                         breakpoints={{
-                                            500: {
+                                            600: {
                                                 spaceBetween: 10,
                                             },
                                             0: {

@@ -5,7 +5,6 @@ import { theme } from "@/config/ThemeMUI/theme";
 export const mainBoxCook = {
     display: 'flex',
     height: 'calc(100dvh - 20px)',
-    m: '10px 0',
     
     [theme.breakpoints.down("md")]: {
         flexDirection:'column',
@@ -91,18 +90,20 @@ export const adaptiveHeaderContainer ={
     overscrollBehavior: "contain",
     overflow:'auto',
     m: '0 auto',
+
     '& .PrivateSwipeArea-root': {
         width: 'calc(100% - 60px)',
         right: '0',
         left: 'initial',
         overscrollBehavior: "contain",
         overflow:'auto',
-        [theme.breakpoints.down(500)]: {
-            width: 'calc(100% - 45px)',
-        },
         background: 'linear-gradient(to right, rgba(21,22,26, 0.02), rgba(21,22,26, 0.6), rgba(21,22,26, 0.02))',
         borderBottomLeftRadius: "50% 100%",
         borderBottomRightRadius: " 50% 100%",
+        
+        [theme.breakpoints.down('sm')]: {
+            width: '100%',
+        },
 
     },
     '.MuiDrawer-root > .MuiPaper-root': {
@@ -116,7 +117,7 @@ export const adaptiveHeaderContainer ={
 export const pullerContainer = {
     position: 'fixed',
     top: '15px',
-    left: '50%',
+    left: 'calc(50% + 4.5px)',
     width: 45,
     height: 8,
     zIndex: 1200,
@@ -124,6 +125,10 @@ export const pullerContainer = {
     alignItems: 'flex-end',
     justifyContent: 'center',
     pointerEvents: 'none',
+
+    [theme.breakpoints.down('sm')]: {
+        left: 'calc(50% - 23.5px)',
+    },
 }
 
 export const drawer = {
@@ -184,7 +189,12 @@ export const containerContent = {
             width: '0px',
             height: '0px',
         },
+    },
+
+    [theme.breakpoints.down("sm")]: {
+        mb:'20px'
     }
+
 }
 
 export const scrollContainer = {

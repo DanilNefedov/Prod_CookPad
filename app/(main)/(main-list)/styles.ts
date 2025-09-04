@@ -28,22 +28,33 @@ export const headerLink = {
 }
 
 export const mainBox = { 
-    height: 'calc(100dvh - 85px)', 
-    position: 'relative' 
+    height: 'calc(100dvh - 86px)', 
+    position: 'relative',
+
+    [theme.breakpoints.down('sm')]:{
+        height: 'calc(100dvh - 116px)', 
+    }
 }
 
 export const tableContainer = { 
     height: '100%',
+    borderRadius:'10px 10px 0 0 ',
+    backgroundColor: "background.paper", 
+    boxShadow: 'none', 
+    overflow:'auto',
+    scrollbarWidth: 'none',
+    msOverflowStyle: 'none', 
+
+    '&::-webkit-scrollbar': { 
+        display: 'none'
+    },
+    
     '&:firstChild': {
         m: '0 0 15px 0'
     },
     '&:lastChild': {
         mb: '0'
     },
-    borderRadius:'10px',
-    backgroundColor: "background.paper", 
-    boxShadow: 'none', 
-    overflow:'hidden' 
 }
 
 export const tableHeader = {
@@ -215,17 +226,12 @@ export const mobileUnitBoxSwiper = {
     transition: 'max-height 300ms ease',
 
     '& .slide-list-unit': { 
-        // maxWidth: '100%',
         width:'auto',
     }, 
     '& .swiper-list-unit': {
         position: 'static',
         margin: '0 auto 15px',
-        width: 'calc(100dvw - 155px)',
-
-        [theme.breakpoints.down(500)]: { 
-            width: 'calc(100dvw - 125px)',
-        }
+    
     },
 }
 
