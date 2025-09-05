@@ -221,7 +221,7 @@ export const mainContainerInfoComments = (theme: Theme, openInfo: boolean, openC
         mr: '0',
         width: 'calc((100vh - 40px) * (9 / 16))',
         maxWidth: 'calc(100% + 2px)',
-        bottom: openComment ? '0%' : "-100%",
+        bottom: openComment ? '0%' : "-110%",
         p: '20px ',
         position: 'absolute',
         zIndex: '400',
