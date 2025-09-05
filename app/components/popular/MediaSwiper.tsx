@@ -76,7 +76,7 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
                             <Box
                                 sx={swiperProgressBox}
                             >
-                                <CircularProgress color="secondary" size="35px" />
+                                <CircularProgress color="primary" size="35px" />
                             </Box>
                         )}
 

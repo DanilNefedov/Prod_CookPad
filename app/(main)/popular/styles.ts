@@ -66,6 +66,7 @@ export const viewContentContainer = {
     },
     [theme.breakpoints.down("sm")]: {
         backgroundColor:'background.paper',
+        borderRadius:'0'
     },
 }
 
@@ -89,7 +90,10 @@ export const containerNameDescription = (theme: Theme, expanded: boolean): Syste
     borderRadius: '0px 0 0px 20px',
     [theme.breakpoints.down(769)]: {
         display: 'block'
-    }
+    },
+    [theme.breakpoints.down("sm")]: {
+        borderRadius:'0'
+    },
 })
 
 export const descriptionRecipe = {
@@ -225,6 +229,11 @@ export const mainContainerInfoComments = (theme: Theme, openInfo: boolean, openC
         maxHeight: '60%',
         minHeight: '60%',
         height: '100%',
+    },
+    [theme.breakpoints.down('sm')]: {
+        width:'100%',
+        maxWidth:'100%',
+        backgroundColor: "background.paper",
     }
 })
 
@@ -299,6 +308,8 @@ export const inputComment = {
     bgcolor: 'background.paper',
     width: '100%',
     overflow: 'hidden',
+    borderRadius: '10px',
+
     '& .MuiInputBase-root': {
         p: '9px 52px 9px 7px',
         "&:after": {
@@ -308,8 +319,11 @@ export const inputComment = {
             fontSize: '15px'
         }
     },
-    borderRadius: '10px',
-
+    
+    [theme.breakpoints.down('sm')]: {
+        
+        backgroundColor: "background.default",
+    }
 }
 
 export const sendCommentBtn = { 
@@ -326,7 +340,8 @@ export const sendCommentBtn = {
 export const commentsWrapper = { 
     mb: '10px', 
     p: 0, 
-    display: 'block' 
+    display: 'block',
+
 }
 
 export const containerCommentItem = {
@@ -344,6 +359,10 @@ export const containerCommentItem = {
     },
     [theme.breakpoints.down('md')]: {
         p: '4px 8px'
+    },
+
+    [theme.breakpoints.down('sm')]: {
+        bgcolor:'background.default'
     }
 }
 
@@ -634,6 +653,9 @@ export const replyContainer = {
     },
     [theme.breakpoints.down('md')]: { 
         p: '4px 8px' 
+    },
+    [theme.breakpoints.down('sm')]: {
+        bgcolor:'background.default'
     }
 
 }
@@ -723,6 +745,10 @@ export const mediaSwiperElement = {
 
     [theme.breakpoints.down(769)]: {
         borderRadius: '20px 20px 20px 20px'
+    },
+
+    [theme.breakpoints.down('sm')]: {
+        borderRadius: '0'
     }
 }
 

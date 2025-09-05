@@ -173,7 +173,7 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
                             commentsData.ids.length < (comments - repliesCount)}
                     loader={
                         <div className="containerProgress" >
-                            <CircularProgress color="secondary" size="35px" />
+                            <CircularProgress color="primary" size="35px" />
                         </div>
                     }
                     endMessage={
