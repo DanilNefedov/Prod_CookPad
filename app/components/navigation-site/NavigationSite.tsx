@@ -11,7 +11,6 @@ import RecommendIcon from '@mui/icons-material/Recommend';
 import { DataPage } from '@/app/(main)/types';
 import { containerButtons, containerExit, containerNavigation, havigationIcons, paperNavigation } from '@/app/(main)/home/styles';
 import { columnSpaceBetween } from '@/app/styles';
-import { MobileNavigation } from './MobileNavigation';
 
 
 export function NavigationSite() {

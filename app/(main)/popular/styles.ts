@@ -1,6 +1,6 @@
 import { theme } from "@/config/ThemeMUI/theme";
 import { Theme } from "@mui/material";
-import { height, SxProps, SystemStyleObject } from "@mui/system";
+import { SxProps, SystemStyleObject } from "@mui/system";
 
 
 
