@@ -39,15 +39,9 @@ interface Props {
 
 export const CardContentBlock = memo(({ props }: { props: Props }) => {
     const { recipe_id, id } = props
-    const recipe = useAppSelector((state) =>
-        state.recipe.recipes.find((el) => el.recipe_id === recipe_id)
-    );
-    const isFavoriteLoading = useAppSelector(
-        (state) => state.recipe.operations.setFavoriteRecipe.loading
-    );
-    const isListLoading = useAppSelector(
-        (state) => state.listRecipe.operations.newListRecipe.loading
-    );
+    const recipe = useAppSelector((state) => state.recipe.recipes.find((el) => el.recipe_id === recipe_id));
+    const isFavoriteLoading = useAppSelector((state) => state.recipe.operations.setFavoriteRecipe.loading);
+    const isListLoading = useAppSelector((state) => state.listRecipe.operations.newListRecipe.loading);
 
     const dispatch = useAppDispatch();
     const isMobile = useMediaQuery('(max-width:799px)');
@@ -82,7 +76,6 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
         }
     }
 
-    console.log(recipe)
 
     return (
         <Card sx={mainCard}>

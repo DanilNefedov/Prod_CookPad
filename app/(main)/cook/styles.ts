@@ -154,6 +154,7 @@ export const headerItem = {
     },
 }
 
+
 //-------- header --------//
 
 
@@ -243,17 +244,35 @@ export const mediaContainer = {
 }
 
 export const containerInfo = {
-    maxWidth: "464px", 
     width: '100%', 
     pr: '20px', 
+    
+    [theme.breakpoints.down("md")]: {
+        pr: '5px',
+        mt: '20px'
+    },
+}
+
+export const actionInfoBox = {
+    width:"100%", 
+    maxWidth: "464px",
+    gap:'20px',
     [theme.breakpoints.between(900, 1100)]: {
       maxWidth: "100%",
     },
     [theme.breakpoints.down("md")]: {
         maxWidth: "100%",
-        pr: '5px',
-        mt: '20px'
-    },
+    }
+}
+
+export const actionBtns = {
+    maxWidth:'80px', 
+    width:'100%',
+
+    [theme.breakpoints.down("md")]: {
+        p:'5px 13px',
+        maxWidth:'75px',
+    }
 }
 
 export const nameRecipe = {

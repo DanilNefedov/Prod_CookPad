@@ -7,7 +7,7 @@ import { CookHeaderController } from "@/app/components/cook/CookHeaderController
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
 
     return (
-        <AlertsProvider sliceKeys={['cookHistory', 'cook', 'recipe', 'list']}> 
+        <AlertsProvider sliceKeys={['cookHistory', 'cook', 'recipe', 'list', 'listRecipe']}> 
             <Box sx={mainBoxCook}>
                 
                 <CookHeaderController></CookHeaderController>
