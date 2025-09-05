@@ -73,10 +73,8 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
                 <SwiperSlide key={elem.media_id} className="slide-popular" virtualIndex={index}>
                     <Box sx={containerSlideMediaSwiper}>
                         {(!loaded[elem.media_id]) && (
-                            <Box
-                                sx={swiperProgressBox}
-                            >
-                                <CircularProgress color="secondary" size="35px" />
+                            <Box sx={swiperProgressBox}>
+                                <CircularProgress color="primary" size="35px" />
                             </Box>
                         )}
 

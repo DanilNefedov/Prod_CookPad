@@ -16,7 +16,7 @@ export const container = {
     maxWidth:'100%', 
     display: "flex",
     flexDirection: "column",
-    height: "100dvh",
+    height: "calc(100dvh - 45px)",
     padding: "10px 0",
     
     '&.MuiContainer-root': {
@@ -34,7 +34,7 @@ export const form = {
     flexDirection: 'column',
     mt: '20px',
     width: '100%',
-    maxHeight:'84dvh',
+    maxHeight: "calc(84dvh - 45px)",
 }
 
 export const containerProgress = { 

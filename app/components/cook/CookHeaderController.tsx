@@ -31,7 +31,6 @@ export function CookHeaderController() {
     const searchParams = useSearchParams();
     const recipe_id = pathName.split("/")[2];
     const recipeName = searchParams.get("name") ?? '';
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const [open, setOpen] = useState(false);
 
@@ -80,19 +79,21 @@ export function CookHeaderController() {
 
 
     return (
-        isMobile ? 
-        <AdaptiveHeader {...sharedProps} />
-        :
-        <Box sx={headerCookContainer}>
-            {
-                cookHistoryStatus ? 
-                <SkeletonList></SkeletonList> 
-                :
-                <Box component="ul" sx={scrollBox}>
-                    <HeaderCook {...sharedProps} />
-                </Box>
-            }
-        </Box>
-        
+
+        <>
+            <AdaptiveHeader {...sharedProps} />
+            
+            <Box sx={[headerCookContainer, {display: { xs: 'none', md: 'flex' }}]}>
+                {
+                    cookHistoryStatus ? 
+                    <SkeletonList></SkeletonList> 
+                    :
+                    <Box component="ul" sx={scrollBox}>
+                        <HeaderCook {...sharedProps} />
+                    </Box>
+                }
+            </Box>
+        </>
+
     )
 }

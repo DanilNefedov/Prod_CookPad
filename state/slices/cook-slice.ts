@@ -33,9 +33,7 @@ export const fetchCook = createAsyncThunk<CookFetchRes, CookFetchReq, { rejectVa
     'cook/fetchCook',
     async function ({ id, recipe_id }, { rejectWithValue }) {
         try {
-
             const url = `/api/cook?connection_id=${id}&recipe=${recipe_id}`
-
             const responseCook = await fetch(url);
 
             if (!responseCook.ok) return rejectWithValue('Server Error!');
@@ -43,7 +41,6 @@ export const fetchCook = createAsyncThunk<CookFetchRes, CookFetchReq, { rejectVa
             const data = await responseCook.json()
 
             const {dataCook} = data
-
 
             return { recipe: dataCook, connection_id: id }
 

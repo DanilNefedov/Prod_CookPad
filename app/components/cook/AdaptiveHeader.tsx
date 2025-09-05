@@ -17,7 +17,6 @@ const Puller = styled('div')(({ theme }) => ({
     backgroundColor: grey[300],
     borderRadius: 3,
     position: 'absolute',
-    left: 'calc(50% - 22.5px)',
     pointerEvents: 'auto', 
     top: '0',
     ...theme.applyStyles('dark', {
@@ -34,7 +33,8 @@ export function AdaptiveHeader({cookHistoryStore, recipe_id, open, toggleDrawer,
 
 
     return (
-        <Box ref={boxRef} sx={adaptiveHeaderContainer}>
+    
+        <Box ref={boxRef} sx={[adaptiveHeaderContainer, {display: { xs: 'block', md: 'none' }}]}>
             <Box
                 onClick={toggleDrawer(true)}
                 sx={pullerContainer}
