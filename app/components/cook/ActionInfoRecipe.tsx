@@ -59,7 +59,7 @@ const ActionInfoRecipe = memo(({recipe_id}:Props ) => {
                 {/* <Typography variant="h2" sx={[textMaxWidth, nameRecipe]}>
                     <SkeletonInfo loading={recipeStatus}>{cookRecipe?.name}</SkeletonInfo>
                 </Typography> */}
-                <Name name={cookRecipe?.name} isEditing={isEditing}></Name>
+                <Name recipe_id={recipe_id} isEditing={isEditing}></Name>
             
                 <Typography variant="body1" sx={{display:'flex'}}>
                     Type: <SkeletonInfo loading={recipeStatus}>{cookRecipe?.recipe_type}</SkeletonInfo>
@@ -81,7 +81,7 @@ const ActionInfoRecipe = memo(({recipe_id}:Props ) => {
 
             <Box sx={betweenCenter}>
                 <Button color="grayButton" sx={actionBtns} onClick={addToList}>To List</Button>
-                <Button color="grayButton" sx={actionBtns} onClick={handleEdit}>Edit</Button>
+                <Button color={isEditing ? 'blackRedBtn' :"grayButton"} sx={actionBtns} onClick={handleEdit}>{isEditing ? 'Accept' : 'Edit'}</Button>
                 <IconButton sx={{ padding: '0', mr:'20px' }} aria-label="add to favorites" onClick={() => handleFavorite({ recipe_id: cookRecipe?.recipe_id })}>
                     <FavoriteIcon sx={cookRecipe?.favorite ? favoriteBtnActive : favoriteBtnDesactive} />
                 </IconButton>

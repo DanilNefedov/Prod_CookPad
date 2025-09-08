@@ -1,70 +1,53 @@
 import { Box, TextField, Typography } from "@mui/material";
 import { SkeletonInfo } from "../SkeletonInfo";
 import { textMaxWidth } from "@/app/styles";
-import { nameRecipe } from "@/app/(main)/cook/styles";
-import { useAppSelector } from "@/state/hook";
-import { memo, useState } from "react";
+import { editNameBox, editNameInput, nameRecipe } from "@/app/(main)/cook/styles";
+import { useAppDispatch, useAppSelector } from "@/state/hook";
+import { memo } from "react";
+import { changeName } from "@/state/slices/cook-slice";
 
 
 
 interface Props {
-    name:string
+    recipe_id:string
     isEditing:boolean
 }
 
 
 
-const Name = memo(({name, isEditing}:Props) => {
+const Name = memo(({recipe_id, isEditing}:Props) => {
     const recipeStatus = useAppSelector(state => state.cook.operations.fetchCook.loading)
-    const [localName, setLocalName] = useState('');
+    const recipeName = useAppSelector(state => state.cook.recipes[recipe_id]?.name)
+    const modifiedName = useAppSelector(state => state.cook.modified.name)
+    const dispatch = useAppDispatch()
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setLocalName(e.target.value);
+        dispatch(changeName({recipe_id, name:e.target.value}))
     };
-    console.log(name, localName)
+
+    // console.log(recipeName, modifiedName)
 
     return(
         isEditing ? (
-            <Box sx={{display:'flex', justifyContent:'center', height: '38px'}}>
+            <Box sx={editNameBox}>
                 <TextField
                     variant="outlined"
-                    value={localName === '' ? name : localName}
+                    value={modifiedName === '' ? recipeName : modifiedName}
                     onChange={handleChange}
                     size="small"
-                    sx={[textMaxWidth, {
-                        height: '37px',
-                        '& .MuiOutlinedInput-root': {
-                            height: '100%',
-                            fontSize: '2rem',
-                            lineHeight: '37px',
-                            boxSizing: 'border-box',
-                            '& .MuiOutlinedInput-notchedOutline': {
-                                borderWidth: '0 0 1px 0',
-                                borderRadius: 0,
-                            },
-                            '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                                borderWidth: '0 0 2px 0',
-                            },
-                        },
-                        '& .MuiInputBase-input': {
-                            height: '100%',
-                            padding: 0,
-                            textAlign: 'center',
-                            boxSizing: 'border-box',
-                        },
-                    }]}
+                    sx={[textMaxWidth, editNameInput]}
                 />
             </Box>
             
         ) : (
             <Typography variant="h2" sx={[textMaxWidth, nameRecipe]}>
-                <SkeletonInfo loading={recipeStatus}>{name}</SkeletonInfo>
+                <SkeletonInfo loading={recipeStatus}>{recipeName}</SkeletonInfo>
             </Typography>
         )
     )
 }, (prevProps, nextProps) => {
     return prevProps.isEditing === nextProps.isEditing && 
-    prevProps.name === nextProps.name 
+    prevProps.recipe_id === nextProps.recipe_id 
 })
 
 Name.displayName = "Name"

@@ -53,7 +53,7 @@ const IngredientSwiper = memo(({ recipe_id }: Props ) => {
                         ? { rows: 2, fill: 'column' } : itemCount === 3 ? { rows: 2, fill: 'column' } : undefined,
 
                 },
-                450: {
+                320: {
                     slidesPerView: itemCount === 1 ? 1 : itemCount === 2 ? 1 : itemCount === 3 ? 2 : 2,
                     grid: itemCount === 2
                         ? { rows: 2, fill: 'column' }
@@ -61,7 +61,7 @@ const IngredientSwiper = memo(({ recipe_id }: Props ) => {
                             ? { rows: 2, fill: 'column' }
                             : { rows: 2, fill: 'column' },
                 },
-                600: {
+                500: {
                     slidesPerView: itemCount === 1 ? 1 : itemCount === 2 ? 1 : itemCount === 3 ? 2 : 3,
                     grid:
                         itemCount === 3

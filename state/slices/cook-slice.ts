@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../store";
-import { merge } from 'lodash';
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
-import { CookFetchReq, CookFetchRes, CookRootState, DeleteCookFetch } from "@/app/(main)/cook/types";
+import { ChangeName, CookFetchReq, CookFetchRes, CookRootState, DeleteCookFetch } from "@/app/(main)/cook/types";
 import { FavoriteRecipeFetch } from "@/app/(main)/types";
 
 
@@ -19,6 +17,16 @@ interface CookState extends CookRootState {
 const initialState: CookState = {
     connection_id: '',
     recipes: {},
+    modified:{
+        name:'',
+        time: {
+            hours:'',
+            minutes:'' ,
+        },
+        recipe_type:'',
+        description: '',
+        instruction:'',
+    },
     operations:createOperations<CookOperationKey>(
         ['fetchCook', 'deleteRecipe'],
         (key) => {
@@ -104,7 +112,18 @@ const cookSlice = createSlice({
         // updateStatus(state, action: PayloadAction<string, string>) {
         //     state.name_status = action.payload
         // },
+        
         deleteCookRecipe(state, action: PayloadAction<string, string>){
+
+        },
+
+        changeName(state, action: PayloadAction<ChangeName, string>){
+
+            const recipe = state.recipes[action.payload.recipe_id];
+
+            if (recipe) {
+                recipe.name = action.payload.name;
+            }
 
         },
 
@@ -164,7 +183,7 @@ const cookSlice = createSlice({
     }
 })
 
-export const { setFavoriteCook, closeAlertCook } = cookSlice.actions
+export const { setFavoriteCook, closeAlertCook, changeName } = cookSlice.actions
 
 
 export default cookSlice.reducer

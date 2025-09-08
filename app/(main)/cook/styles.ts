@@ -279,7 +279,7 @@ export const nameRecipe = {
     textAlign:"center",
     fontSize:'2rem',
     [theme.breakpoints.down("md")]: {
-        fontSize: '18px'
+        fontSize: '22px'
     },
 }
 
@@ -511,5 +511,47 @@ export const scrollItems = {
     overflow:'auto',
 
 }
+
+export const editNameBox = {
+    display:'flex', 
+    justifyContent:'center', 
+    height: '38px',
+    [theme.breakpoints.down("md")]: {
+        height: '26px'
+    },
+}
+
+export const editNameInput = {
+    height: '37px',
+    '& .MuiOutlinedInput-root': {
+        height: '100%',
+        fontSize: '2rem',
+        lineHeight: '37px',
+        boxSizing: 'border-box',
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '0 0 1px 0',
+            borderRadius: 0,
+        },
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '0 0 2px 0',
+        },
+
+        [theme.breakpoints.down("md")]: {
+            fontSize: '22px',
+            lineHeight: '22px',
+        },
+    },
+    '& .MuiInputBase-input': {
+        height: '100%',
+        padding: 0,
+        textAlign: 'center',
+        boxSizing: 'border-box',
+    },
+    
+    [theme.breakpoints.down("md")]: {
+        height: '26px'
+    },
+}
+
 
 //-------- main content --------//

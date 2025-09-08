@@ -12,7 +12,19 @@ import { RecipeMedia } from "../types";
 export interface CookRootState {
     connection_id:string
     recipes:Record<string, CookRecipe>;
+    modified:Modified
     // recipes:CookRecipe[]
+}
+
+export interface Modified {
+    name:string,
+    time: {
+        hours:string
+        minutes:string 
+    },
+    recipe_type:string
+    description: string
+    instruction:string
 }
 
 export interface TempalateRecipeCook {
@@ -62,6 +74,11 @@ export interface CookFetchReq {
 export interface DeleteCookFetch{
     connection_id: string, 
     recipe_id: string
+}
+
+export interface ChangeName {
+    recipe_id:string
+    name:string
 }
 
 //---------- thunks E----------//
