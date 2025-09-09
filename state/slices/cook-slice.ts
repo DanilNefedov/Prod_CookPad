@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
-import { ChangeName, CookFetchReq, CookFetchRes, CookRootState, DeleteCookFetch } from "@/app/(main)/cook/types";
+import { ChangeDescription, ChangeInstruction, ChangeName, ChangeType, CookFetchReq, 
+    CookFetchRes, CookRootState, DeleteCookFetch } from "@/app/(main)/cook/types";
 import { FavoriteRecipeFetch } from "@/app/(main)/types";
 
 
@@ -127,6 +128,36 @@ const cookSlice = createSlice({
 
         },
 
+        changeType(state, action: PayloadAction<ChangeType, string>){
+
+            const recipe = state.recipes[action.payload.recipe_id];
+
+            if (recipe) {
+                recipe.recipe_type = action.payload.type;
+            }
+
+        },
+
+        changeDescription(state, action: PayloadAction<ChangeDescription, string>){
+
+            const recipe = state.recipes[action.payload.recipe_id];
+
+            if (recipe) {
+                recipe.description = action.payload.description;
+            }
+
+        },
+
+        changeInstruction(state, action: PayloadAction<ChangeInstruction, string>){
+
+            const recipe = state.recipes[action.payload.recipe_id];
+
+            if (recipe) {
+                recipe.instruction = action.payload.instruction;
+            }
+
+        },
+
         setFavoriteCook(state, action: PayloadAction<FavoriteRecipeFetch, string>) {
             const payload = action.payload;
 
@@ -183,7 +214,7 @@ const cookSlice = createSlice({
     }
 })
 
-export const { setFavoriteCook, closeAlertCook, changeName } = cookSlice.actions
+export const { setFavoriteCook, closeAlertCook, changeName, changeType, changeDescription, changeInstruction } = cookSlice.actions
 
 
 export default cookSlice.reducer

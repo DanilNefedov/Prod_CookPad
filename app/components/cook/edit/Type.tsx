@@ -1,14 +1,15 @@
-import { Box, Typography } from "@mui/material";
+import { MenuItem, TextField, Typography } from "@mui/material";
 import { SkeletonInfo } from "../SkeletonInfo";
-import { memo } from "react";
+import { ChangeEvent, memo } from "react";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { editNameBox } from "@/app/(main)/cook/styles";
+import { changeType } from "@/state/slices/cook-slice";
+import { changeTypeInput, changeTypeItems } from "@/app/(main)/cook/styles";
 
 
 
 interface Props {
     recipe_id:string 
-    isEditing:string
+    isEditing:boolean
 }
 
 
@@ -38,21 +39,44 @@ const Type = memo(({recipe_id, isEditing}:Props) => {
    
     ];
 
+    function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+        dispatch(changeType({recipe_id, type:e.target.value}))
+    }
+
 
 
 
     return(
-        isEditing ? (
-            <Box sx={editNameBox}>
-                
-            
-            </Box>
-            
-        ) : (
-            <Typography variant="body1" sx={{display:'flex'}}>
-                Type: <SkeletonInfo loading={recipeStatus}>{recipeType}</SkeletonInfo>
-            </Typography>
-        )
+        <Typography component="span" variant="body1" sx={{display:'flex', mt:'7px'}}>
+            Type:
+            {
+                isEditing ? 
+                <TextField
+                    onChange={e => { handleChange(e) }}
+                    id="outlined-select-currency"
+                    select
+                    value={modifiedType === '' ? recipeType : modifiedType}
+                    sx={changeTypeInput}
+                    slotProps={{
+                        select: {
+                            MenuProps: {
+                                PaperProps: {
+                                    sx: changeTypeItems
+                                },
+                            },
+                        },
+                    }}
+                >
+                    {types.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                        </MenuItem>
+                    ))}
+                </TextField>
+                :
+                <SkeletonInfo loading={recipeStatus}> {recipeType}</SkeletonInfo>
+            }
+        </Typography>
     )
 }, (prevProps, nextProps) => {
     return prevProps.isEditing === nextProps.isEditing && 

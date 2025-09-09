@@ -81,6 +81,21 @@ export interface ChangeName {
     name:string
 }
 
+export interface ChangeType { 
+    recipe_id:string
+    type:string
+}
+
+export interface ChangeDescription {
+    recipe_id:string
+    description:string
+}
+
+export interface ChangeInstruction {
+    recipe_id:string
+    instruction:string
+}
+
 //---------- thunks E----------//
 
 //------- cook history S-------//

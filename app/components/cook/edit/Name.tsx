@@ -3,7 +3,7 @@ import { SkeletonInfo } from "../SkeletonInfo";
 import { textMaxWidth } from "@/app/styles";
 import { editNameBox, editNameInput, nameRecipe } from "@/app/(main)/cook/styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { memo } from "react";
+import { ChangeEvent, memo } from "react";
 import { changeName } from "@/state/slices/cook-slice";
 
 
@@ -21,12 +21,18 @@ const Name = memo(({recipe_id, isEditing}:Props) => {
     const modifiedName = useAppSelector(state => state.cook.modified.name)
     const dispatch = useAppDispatch()
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        dispatch(changeName({recipe_id, name:e.target.value}))
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+    
+        if (value.length > 150) {
+            return; 
+        }
+
+        dispatch(changeName({recipe_id, name:value}))
     };
 
     // console.log(recipeName, modifiedName)
-
+    console.log('Name')
     return(
         isEditing ? (
             <Box sx={editNameBox}>

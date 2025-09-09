@@ -553,5 +553,34 @@ export const editNameInput = {
     },
 }
 
+export const changeTypeInput = {
+    '& .MuiSelect-select':{
+        p:'0 32px 1px 15px'
+    },
+    '& .MuiOutlinedInput-notchedOutline':{
+        borderWidth:'0 0 1px 0',
+        borderRadius:'0'
+    },
+    '& .MuiOutlinedInput-root': {
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '0 0 2px 0',
+        },
+    }
+}
+
+export const changeTypeItems = {
+    borderRadius:'10px',
+    '& .Mui-selected':{
+        bgcolor: 'primary.dark',
+    },
+    '& .MuiButtonBase-root:hover':{
+        '@media (hover: hover) and (pointer: fine)': {
+            '&:hover': {
+                bgcolor:'primary.main'
+            },
+        },
+    }
+}
+
 
 //-------- main content --------//
