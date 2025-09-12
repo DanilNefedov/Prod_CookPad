@@ -582,5 +582,20 @@ export const changeTypeItems = {
     }
 }
 
+export const changeTimeInput = {
+    maxWidth:'100px',
+    '& .MuiInputBase-input':{
+        p:'0 12px 2px 12px'
+    },
+    '& .MuiOutlinedInput-notchedOutline':{
+        borderWidth:'0 0 1px 0',
+        borderRadius:'0'
+    },
+    '& .MuiOutlinedInput-root': {
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '0 0 2px 0',
+        },
+    }
+}
 
 //-------- main content --------//

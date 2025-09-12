@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import { CookHistoryRootState, DeleteCookHistoryFetch, HistoryLinksFetchReq, NewCookHistoryFetch } from "@/app/(main)/cook/types";
+import { RootState } from "../store";
 
 
 
@@ -56,6 +57,48 @@ export const fetchHistoryCook = createAsyncThunk<CookHistoryRootState, HistoryLi
         }
     }
 )
+
+
+
+export const changeHistory = createAsyncThunk<void, {recipe_id:string, user_id:string}, {rejectValue: string}>(
+    'cook-history/changeHistory',
+    async function ({recipe_id, user_id}, {rejectWithValue, getState}){
+        try{
+
+            const state = getState() as RootState;
+            const modified = state.cook.modified.name
+
+            const data = {
+                name:modified,
+                user_id,
+                recipe_id
+            }
+
+            const response = await fetch(`/api/cook/history/modify`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                return rejectWithValue('Server Error!');
+            }
+
+            const res = await response.json();
+
+            console.log(res)
+            // const newHeader = await response.json();
+            // return data;
+
+        }catch(error){
+            console.error(error)
+            return rejectWithValue('Request failed!');
+        }
+    }
+)
+
 
 
 

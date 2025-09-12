@@ -1,3 +1,7 @@
+
+
+
+
 import { Box } from "@mui/material";
 import { mainBoxCook, } from "./styles";
 import { AlertsProvider } from "@/app/components/ui-helpers/AlertsProvider";
@@ -8,12 +12,12 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
 
     return (
         <AlertsProvider sliceKeys={['cookHistory', 'cook', 'recipe', 'list', 'listRecipe']}> 
+            
             <Box sx={mainBoxCook}>
-                
                 <CookHeaderController></CookHeaderController>
-                
                 {children}
             </Box>
+
         </AlertsProvider>
 
     )

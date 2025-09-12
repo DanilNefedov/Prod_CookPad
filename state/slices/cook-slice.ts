@@ -1,14 +1,17 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
-import { ChangeDescription, ChangeInstruction, ChangeName, ChangeType, CookFetchReq, 
-    CookFetchRes, CookRootState, DeleteCookFetch } from "@/app/(main)/cook/types";
+import { ChangeDescription, ChangeHours, ChangeInstruction, ChangeMinutes, ChangeName, ChangeTypeSorting, CookFetchReq, 
+    CookFetchRes, CookRootState, DeleteCookFetch, 
+    Modified} from "@/app/(main)/cook/types";
 import { FavoriteRecipeFetch } from "@/app/(main)/types";
+import { RootState } from "../store";
 
 
 
 export type CookOperationKey =
   | 'fetchCook'
   | 'deleteRecipe'
+  | 'changeNewInfo'
 
 
 interface CookState extends CookRootState {
@@ -27,9 +30,10 @@ const initialState: CookState = {
         recipe_type:'',
         description: '',
         instruction:'',
+        sorting:[]
     },
     operations:createOperations<CookOperationKey>(
-        ['fetchCook', 'deleteRecipe'],
+        ['fetchCook', 'deleteRecipe', 'changeNewInfo'],
         (key) => {
             return createOperationStatus();
         }
@@ -59,6 +63,42 @@ export const fetchCook = createAsyncThunk<CookFetchRes, CookFetchReq, { rejectVa
         }
     }
 )
+
+
+
+export const changeNewInfo = createAsyncThunk<{resData:Modified, recipe_id:string}, {recipe_id:string}, { rejectValue: string }>(
+    'cook/changeNewInfo',
+    async function ({recipe_id}, { rejectWithValue, getState  }) {
+        try {
+            
+            const state = getState() as RootState;
+            const modified = state.cook.modified
+
+            const url = '/api/cook/modify'
+            const data = {
+                recipe_id,
+                modified
+            }
+            console.log(data)
+            const response = await fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const resData = await response.json()
+            console.log(resData)
+            return {resData, recipe_id}
+
+        } catch (error) {
+            console.error(error)
+            return rejectWithValue('Request failed!');
+        }
+    }
+)
+
 
 
 export const deleteRecipe = createAsyncThunk<DeleteCookFetch, DeleteCookFetch, { rejectValue: string }>(
@@ -102,6 +142,7 @@ const createReducerHandlers = <T extends keyof CookState['operations']>(operatio
 
 const fetchCookHandlers = createReducerHandlers('fetchCook');
 const deleteRecipeHandlers = createReducerHandlers('deleteRecipe');
+const changeNewInfoHandlers = createReducerHandlers('changeNewInfo');
 
   
 
@@ -123,17 +164,18 @@ const cookSlice = createSlice({
             const recipe = state.recipes[action.payload.recipe_id];
 
             if (recipe) {
-                recipe.name = action.payload.name;
+                state.modified.name = action.payload.name;
             }
 
         },
 
-        changeType(state, action: PayloadAction<ChangeType, string>){
+        changeType(state, action: PayloadAction<ChangeTypeSorting, string>){
 
             const recipe = state.recipes[action.payload.recipe_id];
 
             if (recipe) {
-                recipe.recipe_type = action.payload.type;
+                state.modified.recipe_type = action.payload.type;
+                state.modified.sorting = action.payload.sorting
             }
 
         },
@@ -143,7 +185,7 @@ const cookSlice = createSlice({
             const recipe = state.recipes[action.payload.recipe_id];
 
             if (recipe) {
-                recipe.description = action.payload.description;
+                state.modified.description = action.payload.description;
             }
 
         },
@@ -153,9 +195,25 @@ const cookSlice = createSlice({
             const recipe = state.recipes[action.payload.recipe_id];
 
             if (recipe) {
-                recipe.instruction = action.payload.instruction;
+                state.modified.instruction = action.payload.instruction;
             }
 
+        },
+
+        changeHours(state, action: PayloadAction<ChangeHours, string>){
+            const recipe = state.recipes[action.payload.recipe_id];
+
+            if (recipe) {
+                state.modified.time.hours = action.payload.hours;
+            }
+        },
+        
+        changeMinutes(state, action: PayloadAction<ChangeMinutes, string>){
+            const recipe = state.recipes[action.payload.recipe_id];
+
+            if (recipe) {
+                state.modified.time.minutes = action.payload.minutes;
+            }
         },
 
         setFavoriteCook(state, action: PayloadAction<FavoriteRecipeFetch, string>) {
@@ -198,6 +256,30 @@ const cookSlice = createSlice({
 
 
 
+            .addCase(changeNewInfo.pending, changeNewInfoHandlers.pending)
+            .addCase(changeNewInfo.rejected, changeNewInfoHandlers.rejected)
+            .addCase(changeNewInfo.fulfilled, (state, action: PayloadAction<{resData:Modified, recipe_id:string}, string>) => {
+                state.operations.deleteRecipe.error = false;
+                state.operations.deleteRecipe.loading = false;
+
+                const { name, description, instruction, recipe_type, time, sorting } = action.payload.resData;
+    
+                const recipe_id = action.payload.recipe_id;
+
+                const recipe = state.recipes[recipe_id];
+                if (!recipe) return;
+
+                if (name !== undefined) recipe.name = name;
+                if (description !== undefined) recipe.description = description;
+                if (instruction !== undefined) recipe.instruction = instruction;
+                if (recipe_type !== undefined) recipe.recipe_type = recipe_type;
+                if (time !== undefined) recipe.time = time;
+                if (sorting !== undefined && Array.isArray(sorting)) recipe.sorting = sorting;
+                
+            })
+
+
+
             .addCase(deleteRecipe.pending, deleteRecipeHandlers.pending)
             .addCase(deleteRecipe.rejected, deleteRecipeHandlers.rejected)
             .addCase(deleteRecipe.fulfilled, (state, action: PayloadAction<DeleteCookFetch, string>) => {
@@ -214,7 +296,7 @@ const cookSlice = createSlice({
     }
 })
 
-export const { setFavoriteCook, closeAlertCook, changeName, changeType, changeDescription, changeInstruction } = cookSlice.actions
+export const { setFavoriteCook, closeAlertCook, changeName, changeType, changeDescription, changeInstruction,changeHours, changeMinutes } = cookSlice.actions
 
 
 export default cookSlice.reducer

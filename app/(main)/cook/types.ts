@@ -24,7 +24,20 @@ export interface Modified {
     },
     recipe_type:string
     description: string
-    instruction:string
+    instruction:string,
+    sorting:string[]
+}
+
+export interface ModifiedRoute {
+    name?:string,
+    time?: {
+        hours?:string
+        minutes?:string 
+    },
+    recipe_type?:string
+    description?: string
+    instruction?:string,
+    sorting?:string[]
 }
 
 export interface TempalateRecipeCook {
@@ -81,9 +94,10 @@ export interface ChangeName {
     name:string
 }
 
-export interface ChangeType { 
+export interface ChangeTypeSorting { 
     recipe_id:string
-    type:string
+    type:string,
+    sorting:string[]
 }
 
 export interface ChangeDescription {
@@ -94,6 +108,16 @@ export interface ChangeDescription {
 export interface ChangeInstruction {
     recipe_id:string
     instruction:string
+}
+
+export interface ChangeHours{
+    recipe_id:string
+    hours:string
+}
+
+export interface ChangeMinutes{
+    recipe_id:string
+    minutes:string
 }
 
 //---------- thunks E----------//

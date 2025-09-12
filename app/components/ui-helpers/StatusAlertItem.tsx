@@ -69,7 +69,7 @@ export function GlobalStatusNotifierItem({ config }: Props) {
                         <Alert
                             severity="success"
                             onClose={() => closeSnackbar(snackbarKey)}
-                            sx={[globalStatusAler, {bgcolor: '#388E3C',}]}
+                            sx={[globalStatusAler, {bgcolor: '#388E3C'}]}
                         >
                             {message}
                         </Alert>
@@ -107,7 +107,7 @@ export function GlobalStatusNotifierItem({ config }: Props) {
                                 //  BUT DON'T REMOVE THE FUNCTIONALITY OF THIS DISPATCH.
                                 shownRef.current[operationKey] = false;
                             }}
-                            sx={[globalStatusAler, {bgcolor: 'error.contrast',}]}
+                            sx={[globalStatusAler, {bgcolor: 'error.contrast'}]}
                         >
                             {message}
                         </Alert>

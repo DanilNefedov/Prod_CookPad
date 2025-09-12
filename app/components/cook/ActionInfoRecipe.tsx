@@ -10,6 +10,8 @@ import { newListRecipe } from "@/state/slices/list-recipe-slice";
 import Name from "./edit/Name";
 import Type from "./edit/Type";
 import Description from "./edit/Description";
+import Time from "./edit/Time";
+import { changeNewInfo } from "@/state/slices/cook-slice";
 
 
 
@@ -47,6 +49,9 @@ const ActionInfoRecipe = memo(({recipe_id, isEditing, handleEdit}:Props ) => {
         }
     }
 
+   
+    
+
     console.log('ActionInfoRecipe')
     return(
         <Box sx={[columnSpaceBetween, actionInfoBox]}>
@@ -58,9 +63,7 @@ const ActionInfoRecipe = memo(({recipe_id, isEditing, handleEdit}:Props ) => {
             
                 <Box sx={containerTime}>
 
-                    <Typography sx={{display:'flex', flexGrow:1}}>
-                        {/* Time: <SkeletonInfo loading={recipeStatus}>{cookRecipe?.time.hours}h : {cookRecipe?.time.minutes}m</SkeletonInfo> */}
-                    </Typography>
+                    <Time recipe_id={recipe_id} isEditing={isEditing}></Time>
 
                 </Box>
                 

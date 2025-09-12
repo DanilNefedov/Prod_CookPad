@@ -16,7 +16,9 @@ interface Props {
 const Type = memo(({recipe_id, isEditing}:Props) => {
     const recipeStatus = useAppSelector(state => state.cook.operations.fetchCook.loading)
     const recipeType = useAppSelector(state => state.cook.recipes[recipe_id]?.recipe_type)
+    const recipeSorting = useAppSelector(state => state.cook.recipes[recipe_id]?.sorting)
     const modifiedType = useAppSelector(state => state.cook.modified.recipe_type)
+    const sort = useAppSelector(state => state.cook.modified.sorting)
     const dispatch = useAppDispatch()
 
     const types = [
@@ -40,7 +42,14 @@ const Type = memo(({recipe_id, isEditing}:Props) => {
     ];
 
     function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        dispatch(changeType({recipe_id, type:e.target.value}))
+        const value = e.target.value
+
+        const newSorting = recipeSorting.map(item =>
+            item === recipeType ? value.toLowerCase() : item
+        );
+
+        console.log(newSorting, recipeSorting, sort)
+        dispatch(changeType({recipe_id, type:e.target.value, sorting:newSorting}))
     }
 
 

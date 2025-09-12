@@ -8,14 +8,17 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/grid';
 import './styles.css';
-import { useCallback, useEffect, useState } from "react";
-import { fetchCook } from "@/state/slices/cook-slice";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { changeNewInfo, fetchCook } from "@/state/slices/cook-slice";
 import { usePathname } from "next/navigation";
 import { skeletonSwiperCook } from "@/app/styles";
 import SwiperMediaCook from "./SwiperMedia";
 import dynamic from "next/dynamic";
 import ActionInfoRecipe from "./ActionInfoRecipe";
 import Instruction from "./edit/Instruction";
+import { useStore } from "react-redux";
+import { RootState } from "@/state/store";
+import { changeHistory } from "@/state/slices/cook-history";
 
 const IngredientSwiper = dynamic(() => import("./IngredientSwiper"), { 
     ssr: false ,
@@ -52,9 +55,17 @@ export function ContentCook() {
     }, [recipe_id, hasCookRecipe, user_id, dispatch]);
 
 
-    const handleEdit = useCallback(() => {
+
+    const handleEdit = () => {
+        if(isEditing){
+            
+            // console.log(currentRecipe)
+            dispatch(changeNewInfo({recipe_id}))
+            dispatch(changeHistory({recipe_id, user_id}))
+        }
         setIsEditing(prev => !prev);
-    }, [isEditing]);
+    };
+
 
     console.log('ContentCook')
     return (
@@ -74,7 +85,7 @@ export function ContentCook() {
 
                 <Box sx={containerIngr}>
                     <Typography variant="h3" sx={secondHeader}>Ingredients</Typography>
-                    <Box sx={swiperContainer}>
+                    <Box sx={swiperContainer}> 
                         {
                             recipeIngredients?.length > 0 ?
                             (<IngredientSwiper recipe_id={recipe_id}></IngredientSwiper>)
