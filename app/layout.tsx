@@ -2,7 +2,7 @@ import { Roboto } from 'next/font/google'
 import { ProviderAuth } from "@/config/auth/ProviderAuth";
 import { ProviderStore } from "@/config/state/ProviderStore";
 import WrapperLayout from "@/config/wrapper/WrapperLayout";
-import ThemeProviderClient from "@/config/ThemeMUI/ThemeProviderClient";
+import ThemeRegistry from '@/config/ThemeMUI/ProviderThemeMui';
 
 const IBM = Roboto({
   weight: ['400', '700'],
@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="en">
       <body suppressHydrationWarning={true} className={IBM.className}>
-        <ThemeProviderClient>
+        <ThemeRegistry options={{ key: "mui" }}>
           <ProviderStore>
             <ProviderAuth>
               <WrapperLayout>
@@ -53,7 +53,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               </WrapperLayout>
             </ProviderAuth>
           </ProviderStore>
-        </ThemeProviderClient>
+        </ThemeRegistry>
       </body>
     </html>
   );

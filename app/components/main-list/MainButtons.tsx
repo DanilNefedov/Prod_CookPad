@@ -1,6 +1,7 @@
-import { Box, Button, IconButton, Menu, MenuItem, TableCell } from "@mui/material";
+'use client';
+
+import { Box, Button, IconButton, Menu, MenuItem, TableCell, useMediaQuery } from "@mui/material";
 import { memo, MouseEvent, useState } from "react";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { btnsListUnitHover, iconMenuMainBtns, mainButtonsBox, mainButtonsCell, 
     mobileContainerMenuMainBtns, mobileMenuMainBtns, modileMenuMainBtnsItem, 
@@ -27,7 +28,7 @@ const MainButtons = memo((props: Props) => {
     const userStore = useAppSelector(state => state.user)
     const id = userStore?.user?.connection_id
     const pathName = usePathname()
-    const isSmallScreen = useMediaQuery("(max-width:1150px)");
+    const isMobile = useMediaQuery("(max-width:1150px)");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
    
 
@@ -35,6 +36,7 @@ const MainButtons = memo((props: Props) => {
     const open = Boolean(anchorEl);
 
 
+    
     const handleClick = (event: MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -72,7 +74,7 @@ const MainButtons = memo((props: Props) => {
     return (
         <TableCell className="ignore-toggle" sx={mainButtonsCell}>
 
-            {isSmallScreen ? (
+            {isMobile ? (
                 <>
                     <IconButton
                         id="demo-positioned-button"

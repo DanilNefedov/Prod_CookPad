@@ -1,9 +1,10 @@
+'use client';
+
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Box, Collapse, Menu, MenuItem } from "@mui/material";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { Box, Collapse, Menu, MenuItem, useMediaQuery } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Link from "next/link";

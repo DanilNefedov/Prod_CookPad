@@ -1,3 +1,5 @@
+'use client';
+
 import { iconMenuMainBtns, inputAmount, unitAmountText, unitButton2, unitChoiceText, unitsContainer } from "@/app/(main)/(main-list)/styles"
 import { useUnitContext } from "@/config/unit-context/UnitContext"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
@@ -5,11 +7,10 @@ import { newAmountListRecipe } from "@/state/slices/list-recipe-slice"
 import { changeAmountFetch } from "@/state/slices/list-slice"
 import CheckIcon from '@mui/icons-material/Check'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
-import { Box, Button, IconButton, ListItemText, Menu, TextField } from "@mui/material"
+import { Box, Button, IconButton, ListItemText, Menu, TextField, useMediaQuery } from "@mui/material"
 import { evaluate, } from "mathjs"
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { usePathname } from "next/navigation"
-import { ChangeEvent, useCallback, useState } from "react"
+import { ChangeEvent, useCallback, useEffect, useState } from "react"
 import { handleAmountChange } from "../../helpers/input-unit"
 import UnitBtns from "./UnitBtns"
 

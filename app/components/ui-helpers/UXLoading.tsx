@@ -1,9 +1,7 @@
 'use client'
 
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, useMediaQuery } from "@mui/material";
 import { loadingContainer } from "./styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { theme } from "@/config/ThemeMUI/theme";
 
 
 
@@ -15,7 +13,9 @@ interface Props {
 }
 
 export function UXLoading({  position = "absolute" }: Props) {//color = "secondary",
-    const isMobile = useMediaQuery(theme.breakpoints.down(750));
+    const isMobile = useMediaQuery('(max-width:750px)');
+
+   
     const fallbackSize = isMobile ? 28 : 35;
 
     return (

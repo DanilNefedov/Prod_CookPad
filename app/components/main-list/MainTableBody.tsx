@@ -1,9 +1,10 @@
-import { Box, Collapse, ListItemText, TableCell, TableRow, Tooltip, Typography } from "@mui/material"
+'use client';
+
+import { Box, Collapse, ListItemText, TableCell, TableRow, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { memo, useMemo, useState } from "react"
 import { ingredientImage, ingredientImageBox, ingredientNameBox, ingredientRow, mobileUnitBoxSwiper, mobileUnitCell, 
     mobileUnitIcon, mobileUnitInfoBox, mobileUnitRow, mobileUnitText, nameIngredient, unitBox, unitBoxDesktop } from "@/app/(main)/(main-list)/styles"
 import { Swiper, SwiperSlide } from "swiper/react"
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { useAppSelector } from "@/state/hook"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import 'swiper/css';
@@ -50,7 +51,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const pathName = usePathname()
 
-
+    
     const handleToggle = (id: string) => {
         setExpandedId((prevId) => (prevId === id ? null : id));
     }
@@ -58,7 +59,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
 
     const contextValues = useMemo(() => {
 
-        return thisIngredient.unit_ids.map((elem) => ({
+        return thisIngredient.unit_ids.map((elem) => ({ 
             recipe_id,
             ingredient_id: thisIngredient.ingredient_id,
             unit_id: elem,
