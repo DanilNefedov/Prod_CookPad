@@ -154,6 +154,7 @@ export const headerItem = {
     },
 }
 
+
 //-------- header --------//
 
 
@@ -232,35 +233,54 @@ export const skeletonMedia = {
     width:'100%', 
     height:'100%', 
     maxWidth: "465px", 
-    aspectRatio:" 4 / 5"
+    aspectRatio:" 4 / 5",
 }
 
 export const mediaContainer = {
     width:'100%',
     height:'100%',
     aspectRatio:'4/5',
-    maxWidth:'465px'
+    maxWidth:'465px',
+    bgcolor: "background.paper",
 }
 
 export const containerInfo = {
-    maxWidth: "464px", 
     width: '100%', 
     pr: '20px', 
+    
+    [theme.breakpoints.down("md")]: {
+        pr: '5px',
+        mt: '20px'
+    },
+}
+
+export const actionInfoBox = {
+    width:"100%", 
+    maxWidth: "464px",
+    gap:'20px',
     [theme.breakpoints.between(900, 1100)]: {
       maxWidth: "100%",
     },
     [theme.breakpoints.down("md")]: {
         maxWidth: "100%",
-        pr: '5px',
-        mt: '20px'
-    },
+    }
+}
+
+export const actionBtns = {
+    maxWidth:'80px', 
+    width:'100%',
+
+    [theme.breakpoints.down("md")]: {
+        p:'5px 13px',
+        maxWidth:'75px',
+    }
 }
 
 export const nameRecipe = {
     textAlign:"center",
     fontSize:'2rem',
     [theme.breakpoints.down("md")]: {
-        fontSize: '18px'
+        fontSize: '22px'
     },
 }
 
@@ -491,6 +511,92 @@ export const scrollItems = {
     maxHeight:'145px',
     overflow:'auto',
 
+}
+
+export const editNameBox = {
+    display:'flex', 
+    justifyContent:'center', 
+    height: '38px',
+    [theme.breakpoints.down("md")]: {
+        height: '26px'
+    },
+}
+
+export const editNameInput = {
+    height: '37px',
+    '& .MuiOutlinedInput-root': {
+        height: '100%',
+        fontSize: '2rem',
+        lineHeight: '37px',
+        boxSizing: 'border-box',
+        '& .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '0 0 1px 0',
+            borderRadius: 0,
+        },
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '0 0 2px 0',
+        },
+
+        [theme.breakpoints.down("md")]: {
+            fontSize: '22px',
+            lineHeight: '22px',
+        },
+    },
+    '& .MuiInputBase-input': {
+        height: '100%',
+        padding: 0,
+        textAlign: 'center',
+        boxSizing: 'border-box',
+    },
+    
+    [theme.breakpoints.down("md")]: {
+        height: '26px'
+    },
+}
+
+export const changeTypeInput = {
+    '& .MuiSelect-select':{
+        p:'0 32px 1px 15px'
+    },
+    '& .MuiOutlinedInput-notchedOutline':{
+        borderWidth:'0 0 1px 0',
+        borderRadius:'0'
+    },
+    '& .MuiOutlinedInput-root': {
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '0 0 2px 0',
+        },
+    }
+}
+
+export const changeTypeItems = {
+    borderRadius:'10px',
+    '& .Mui-selected':{
+        bgcolor: 'primary.dark',
+    },
+    '& .MuiButtonBase-root:hover':{
+        '@media (hover: hover) and (pointer: fine)': {
+            '&:hover': {
+                bgcolor:'primary.main'
+            },
+        },
+    }
+}
+
+export const changeTimeInput = {
+    maxWidth:'100px',
+    '& .MuiInputBase-input':{
+        p:'0 12px 2px 12px'
+    },
+    '& .MuiOutlinedInput-notchedOutline':{
+        borderWidth:'0 0 1px 0',
+        borderRadius:'0'
+    },
+    '& .MuiOutlinedInput-root': {
+        '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderWidth: '0 0 2px 0',
+        },
+    }
 }
 
 //-------- main content --------//

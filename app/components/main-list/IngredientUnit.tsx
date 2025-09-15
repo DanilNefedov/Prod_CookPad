@@ -1,3 +1,5 @@
+'use client';
+
 import { iconMenuMainBtns, inputAmount, unitAmountText, unitButton2, unitChoiceText, unitsContainer } from "@/app/(main)/(main-list)/styles"
 import { useUnitContext } from "@/config/unit-context/UnitContext"
 import { useAppDispatch, useAppSelector } from "@/state/hook"

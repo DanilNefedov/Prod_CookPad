@@ -11,10 +11,10 @@
   "dependencies": {
     "@babel/runtime": "^7.27.0",
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@mui/icons-material": "^6.4.0",
-    "@mui/material": "^6.4.0",
-    "@mui/styled-engine-sc": "^6.4.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^6.5.0",
+    "@mui/material": "^6.5.0",
+    "@mui/styled-engine-sc": "^7.3.2",
     "@next/bundle-analyzer": "^15.4.0-canary.51",
     "@reduxjs/toolkit": "^2.6.1",
     "bcryptjs": "^3.0.2",
@@ -32,7 +32,7 @@
     "react-dom": "^19.0.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-redux": "^9.2.0",
-    "styled-components": "^6.1.14",
+    "styled-components": "^6.1.19",
     "swiper": "^11.2.1",
     "uuid": "^11.0.5"
   },

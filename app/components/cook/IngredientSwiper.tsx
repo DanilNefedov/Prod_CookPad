@@ -19,9 +19,9 @@ interface Props {
 
 const IngredientSwiper = memo(({ recipe_id }: Props ) => {
 
-    const cookRecipe = useAppSelector(state => state.cook.recipes[recipe_id])
+    const recipeIngredients = useAppSelector(state => state.cook.recipes[recipe_id].ingredients)
     // const findCook = cookStore.find(el => el.recipe_id === recipe_id)
-    const itemCount = cookRecipe.ingredients.length || 0;
+    const itemCount = recipeIngredients.length || 0;
 
 
     return (
@@ -53,7 +53,7 @@ const IngredientSwiper = memo(({ recipe_id }: Props ) => {
                         ? { rows: 2, fill: 'column' } : itemCount === 3 ? { rows: 2, fill: 'column' } : undefined,
 
                 },
-                450: {
+                320: {
                     slidesPerView: itemCount === 1 ? 1 : itemCount === 2 ? 1 : itemCount === 3 ? 2 : 2,
                     grid: itemCount === 2
                         ? { rows: 2, fill: 'column' }
@@ -61,7 +61,7 @@ const IngredientSwiper = memo(({ recipe_id }: Props ) => {
                             ? { rows: 2, fill: 'column' }
                             : { rows: 2, fill: 'column' },
                 },
-                600: {
+                500: {
                     slidesPerView: itemCount === 1 ? 1 : itemCount === 2 ? 1 : itemCount === 3 ? 2 : 3,
                     grid:
                         itemCount === 3
@@ -74,7 +74,7 @@ const IngredientSwiper = memo(({ recipe_id }: Props ) => {
                 }
             }}
         >
-            {cookRecipe.ingredients.map(el => (
+            {recipeIngredients.map(el => (
                 <SwiperSlide key={el.ingredient_id} className='cook-slide'>
                     <ItemsIngrSwiper props={{ el }}></ItemsIngrSwiper>
                 </SwiperSlide>

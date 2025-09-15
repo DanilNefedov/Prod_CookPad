@@ -1,4 +1,5 @@
-import { LikePopFetchReq, LikePopFetchRes, PopularFetchReq, PopularFetchRes, PopularRootState, SavePopFetchReq, SavePopFetchRes} from "@/app/(main)/popular/types";
+import { LikePopFetchReq, LikePopFetchRes, PopularFetchReq, PopularFetchRes, 
+    PopularRootState, SavePopFetchReq, SavePopFetchRes} from "@/app/(main)/popular/types";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 

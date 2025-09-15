@@ -1,12 +1,12 @@
 'use client'
 
-import { Button } from '@mui/material'
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '@/state/hook';
 import { RESET_APP } from '@/state/store';
 import { signOut } from 'next-auth/react';
 import { exitButton, exitIcon } from '@/app/(main)/home/styles';
+import { Button } from '@mui/material';
 
 export function LogOut() {
     const dispatch = useAppDispatch()

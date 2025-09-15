@@ -1,6 +1,5 @@
 import { Container, Paper } from '@mui/material'
 import Box from '@mui/material/Box';
-
 import { LogOut } from './LogOut'
 import { BtnLinks } from './BtnLinks'
 import { AboutUser } from './UserInfo';
@@ -9,7 +8,8 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ChecklistRtlIcon from '@mui/icons-material/ChecklistRtl';
 import RecommendIcon from '@mui/icons-material/Recommend';
 import { DataPage } from '@/app/(main)/types';
-import { containerButtons, containerExit, containerNavigation, havigationIcons, paperNavigation } from '@/app/(main)/home/styles';
+import { containerButtons, containerExit, containerNavigation, havigationIcons, 
+    mobileNavigationBox, mobileNavigationContainer, paperNavigation } from '@/app/(main)/home/styles';
 import { columnSpaceBetween } from '@/app/styles';
 
 
@@ -41,14 +41,8 @@ export function NavigationSite() {
     return (
 
         <>
-            <Box sx={{
-                height:'100%', 
-                maxHeight:'45px', 
-                bgcolor:'background.default', 
-                width:'100%',
-                display: { xs: 'block', sm: 'none' }
-            }}>
-                <Container disableGutters sx={{display:'flex', p:'5px 10px 0', width:'100%', justifyContent:'space-between'}}>
+            <Box sx={mobileNavigationBox}>
+                <Container disableGutters sx={mobileNavigationContainer}>
                     
                     <Box sx={containerExit}>
                         <LogOut></LogOut>

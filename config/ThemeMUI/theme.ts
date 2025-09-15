@@ -47,7 +47,7 @@ export const theme = createTheme({
       cardBlack7:'rgba(31,33,40, 0.7)',
       black46:'rgba(0, 0, 0, 0.46)',
       border:'#696d78'
-    }
+    },
   },
   shape: {
     borderRadius: 20,

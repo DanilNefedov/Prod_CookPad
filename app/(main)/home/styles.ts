@@ -160,6 +160,21 @@ function matchPath(pagePaths: string, pathname: string): boolean {
     return regexPath.test(pathname);   
 }
 
+export const mobileNavigationBox = {
+    height:'100%', 
+    maxHeight:'45px', 
+    bgcolor:'background.default', 
+    width:'100%',
+    display: { xs: 'block', sm: 'none' }    
+}
+
+export const mobileNavigationContainer = {
+    display:'flex', 
+    p:'5px 10px 0', 
+    width:'100%', 
+    justifyContent:'space-between'
+}
+
 export const containerExit = {
     display:'flex', 
     justifyContent:'center',
@@ -411,7 +426,6 @@ export const desktopBotInfo = {
 
 export const containerMobileMenu = {
     position:'absolute', 
-
     top:'1px', 
     right:'7px',
     borderRadius:'50%',
@@ -476,6 +490,10 @@ export const cookBtn = {
     [theme.breakpoints.down("md")]: {
         padding: '2px 10px',
         minWidth:'50px'
+    },
+    [theme.breakpoints.down(800)]: {
+        width:'100%',
+        borderRadius:'10px',
     },
     [theme.breakpoints.down(500)]: {
         borderRadius:'10px',

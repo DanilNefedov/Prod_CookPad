@@ -1,9 +1,8 @@
-import ThemeRegistry from "@/config/ThemeMUI/ProviderThemeMui";
 import { Roboto } from 'next/font/google'
 import { ProviderAuth } from "@/config/auth/ProviderAuth";
 import { ProviderStore } from "@/config/state/ProviderStore";
 import WrapperLayout from "@/config/wrapper/WrapperLayout";
-
+import ThemeRegistry from '@/config/ThemeMUI/ProviderThemeMui';
 
 const IBM = Roboto({
   weight: ['400', '700'],
@@ -41,13 +40,12 @@ export const metadata = {
 
 
 
-
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
-  
+
   return (
     <html lang="en">
       <body suppressHydrationWarning={true} className={IBM.className}>
-        <ThemeRegistry options={{ key: 'mui' }}>
+        <ThemeRegistry options={{ key: "mui" }}>
           <ProviderStore>
             <ProviderAuth>
               <WrapperLayout>

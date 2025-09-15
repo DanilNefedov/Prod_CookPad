@@ -1,3 +1,5 @@
+'use client';
+
 import { Box, Collapse, ListItemText, TableCell, TableRow, Tooltip, Typography, useMediaQuery } from "@mui/material"
 import { memo, useMemo, useState } from "react"
 import { ingredientImage, ingredientImageBox, ingredientNameBox, ingredientRow, mobileUnitBoxSwiper, mobileUnitCell, 
@@ -49,7 +51,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
     const [expandedId, setExpandedId] = useState<string | null>(null);
     const pathName = usePathname()
 
-
+    
     const handleToggle = (id: string) => {
         setExpandedId((prevId) => (prevId === id ? null : id));
     }
@@ -57,7 +59,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
 
     const contextValues = useMemo(() => {
 
-        return thisIngredient.unit_ids.map((elem) => ({
+        return thisIngredient.unit_ids.map((elem) => ({ 
             recipe_id,
             ingredient_id: thisIngredient.ingredient_id,
             unit_id: elem,

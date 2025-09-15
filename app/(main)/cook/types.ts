@@ -12,7 +12,32 @@ import { RecipeMedia } from "../types";
 export interface CookRootState {
     connection_id:string
     recipes:Record<string, CookRecipe>;
+    modified:Modified
     // recipes:CookRecipe[]
+}
+
+export interface Modified {
+    name:string,
+    time: {
+        hours:string
+        minutes:string 
+    },
+    recipe_type:string
+    description: string
+    instruction:string,
+    sorting:string[]
+}
+
+export interface ModifiedRoute {
+    name?:string,
+    time?: {
+        hours?:string
+        minutes?:string 
+    },
+    recipe_type?:string
+    description?: string
+    instruction?:string,
+    sorting?:string[]
 }
 
 export interface TempalateRecipeCook {
@@ -64,6 +89,47 @@ export interface DeleteCookFetch{
     recipe_id: string
 }
 
+export interface ChangeName {
+    recipe_id:string
+    name:string
+}
+
+export interface ChangeTypeSorting { 
+    recipe_id:string
+    type:string,
+    sorting:string[]
+}
+
+export interface ChangeDescription {
+    recipe_id:string
+    description:string
+}
+
+export interface ChangeInstruction {
+    recipe_id:string
+    instruction:string
+}
+
+export interface ChangeHours{
+    recipe_id:string
+    hours:string
+}
+
+export interface ChangeMinutes{
+    recipe_id:string
+    minutes:string
+}
+
+export interface ChangeInfoFetchRes {
+    resData:Modified, 
+    recipe_id:string
+}
+
+export interface ChangeInfoFetchReq {
+    recipe_id:string, 
+    user_id:string
+}
+
 //---------- thunks E----------//
 
 //------- cook history S-------//
@@ -95,6 +161,17 @@ export interface NewCookHistoryFetch{
 export interface DeleteCookHistoryFetch{
     connection_id:string, 
     recipe_id:string
+}
+
+export interface ChangeHistoryFetchReq{
+    recipe_id:string, 
+    user_id:string, 
+    name:string
+}
+
+export interface ChangeHistoryFetchRes{
+    recipe_id:string, 
+    name:string
 }
 
 //---------- thunks E----------//

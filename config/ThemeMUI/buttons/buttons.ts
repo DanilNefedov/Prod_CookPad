@@ -5,10 +5,8 @@ import { Components, Theme } from "@mui/material";
 
 const buttons: Components<Theme>['MuiButton'] = {
     defaultProps: {
-        disableElevation: true,
-        variant: 'contained',
         size: 'medium',
-    },
+    }, 
     styleOverrides: {
         root: {
             borderRadius: 15,
