@@ -233,14 +233,15 @@ export const skeletonMedia = {
     width:'100%', 
     height:'100%', 
     maxWidth: "465px", 
-    aspectRatio:" 4 / 5"
+    aspectRatio:" 4 / 5",
 }
 
 export const mediaContainer = {
     width:'100%',
     height:'100%',
     aspectRatio:'4/5',
-    maxWidth:'465px'
+    maxWidth:'465px',
+    bgcolor: "background.paper",
 }
 
 export const containerInfo = {

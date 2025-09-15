@@ -18,7 +18,6 @@ const Type = memo(({recipe_id, isEditing}:Props) => {
     const recipeType = useAppSelector(state => state.cook.recipes[recipe_id]?.recipe_type)
     const recipeSorting = useAppSelector(state => state.cook.recipes[recipe_id]?.sorting)
     const modifiedType = useAppSelector(state => state.cook.modified.recipe_type)
-    const sort = useAppSelector(state => state.cook.modified.sorting)
     const dispatch = useAppDispatch()
 
     const types = [

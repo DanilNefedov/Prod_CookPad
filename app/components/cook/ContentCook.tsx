@@ -56,13 +56,11 @@ export function ContentCook() {
     const handleEdit = () => {
         if(isEditing){
             dispatch(changeNewInfo({recipe_id, user_id}))
-            // dispatch(changeHistory({recipe_id, user_id}))
         }
         setIsEditing(prev => !prev);
     };
 
 
-    console.log('ContentCook')
     return (
         <Box sx={containerContent}>
             <Box sx={scrollContainer}>
