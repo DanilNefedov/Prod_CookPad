@@ -31,8 +31,6 @@ const Name = memo(({recipe_id, isEditing}:Props) => {
         dispatch(changeName({recipe_id, name:value}))
     };
 
-    // console.log(recipeName, modifiedName)
-    console.log('Name')
     return(
         isEditing ? (
             <Box sx={editNameBox}>

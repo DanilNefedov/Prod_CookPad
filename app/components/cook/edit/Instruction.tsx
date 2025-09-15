@@ -31,7 +31,6 @@ const Instruction = memo(({recipe_id, isEditing}:Props) => {
         dispatch(changeInstruction({recipe_id, instruction:value}))
     }
 
-    console.log('Instruction')
     return(
         <Typography component='span' variant="body1" sx={[descriptionInstruction, instruction]}>
 

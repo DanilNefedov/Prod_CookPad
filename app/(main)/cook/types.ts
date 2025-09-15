@@ -120,6 +120,16 @@ export interface ChangeMinutes{
     minutes:string
 }
 
+export interface ChangeInfoFetchRes {
+    resData:Modified, 
+    recipe_id:string
+}
+
+export interface ChangeInfoFetchReq {
+    recipe_id:string, 
+    user_id:string
+}
+
 //---------- thunks E----------//
 
 //------- cook history S-------//
@@ -151,6 +161,17 @@ export interface NewCookHistoryFetch{
 export interface DeleteCookHistoryFetch{
     connection_id:string, 
     recipe_id:string
+}
+
+export interface ChangeHistoryFetchReq{
+    recipe_id:string, 
+    user_id:string, 
+    name:string
+}
+
+export interface ChangeHistoryFetchRes{
+    recipe_id:string, 
+    name:string
 }
 
 //---------- thunks E----------//

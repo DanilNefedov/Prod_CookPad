@@ -1,17 +1,15 @@
-import { actionBtns, actionInfoBox, containerInfo, containerTime, descriptionInstruction, nameRecipe } from "@/app/(main)/cook/styles";
-import { betweenCenter, columnSpaceBetween, favoriteBtnActive, favoriteBtnDesactive, textMaxWidth } from "@/app/styles";
-import { Box, Button, IconButton, Typography } from "@mui/material";
+import { actionBtns, actionInfoBox, containerInfo, containerTime } from "@/app/(main)/cook/styles";
+import { betweenCenter, columnSpaceBetween, favoriteBtnActive, favoriteBtnDesactive } from "@/app/styles";
+import { Box, Button, IconButton } from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { setFavoriteRecipe } from "@/state/slices/recipe-slice";
-import { memo, useState } from "react";
-import { SkeletonInfo } from "./SkeletonInfo";
+import { memo } from "react";
 import { newListRecipe } from "@/state/slices/list-recipe-slice";
 import Name from "./edit/Name";
 import Type from "./edit/Type";
 import Description from "./edit/Description";
 import Time from "./edit/Time";
-import { changeNewInfo } from "@/state/slices/cook-slice";
 
 
 
@@ -25,7 +23,6 @@ interface Props {
 
 const ActionInfoRecipe = memo(({recipe_id, isEditing, handleEdit}:Props ) => {
     const favoriteStatus = useAppSelector(state => state.recipe.operations.setFavoriteRecipe.loading)
-    // const recipeStatus = useAppSelector(state => state.cook.operations.fetchCook.loading)
     const favoriteRecipe = useAppSelector(state => state.cook.recipes[recipe_id]?.favorite)
     const user_id = useAppSelector(state => state.user.user.connection_id)
     const isListLoading = useAppSelector((state) => state.listRecipe.operations.newListRecipe.loading)
@@ -52,7 +49,6 @@ const ActionInfoRecipe = memo(({recipe_id, isEditing, handleEdit}:Props ) => {
    
     
 
-    console.log('ActionInfoRecipe')
     return(
         <Box sx={[columnSpaceBetween, actionInfoBox]}>
             <Box sx={containerInfo}>

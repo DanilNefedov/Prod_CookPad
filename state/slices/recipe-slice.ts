@@ -141,6 +141,15 @@ const recipeSlice = createSlice({
                 state.operations[key].error = false
                 state.operations[key].loading = false
             }
+        },
+
+        changeNameRecipe(state, action:PayloadAction<{recipe_id:string, name:string}>){
+
+            const thisRecipe = state.recipes.find(el => el.recipe_id === action.payload.recipe_id)
+
+            if(thisRecipe){
+                thisRecipe.name = action.payload.name
+            }
         }
     },
     extraReducers: (builder) => {
@@ -212,6 +221,6 @@ const recipeSlice = createSlice({
            
     }
 })
-export const { resetStateRecipes, closeAlertRecipe } = recipeSlice.actions;
+export const { resetStateRecipes, closeAlertRecipe, changeNameRecipe } = recipeSlice.actions;
 
 export default recipeSlice.reducer

@@ -30,7 +30,9 @@ export async function PATCH(request: Request) {
         const updateFields: ModifiedRoute = {};
 
         if (modified.name) updateFields.name = modified.name;
-        if (modified.time) updateFields.time = modified.time;
+        if (modified.time && (modified.time.hours?.trim() || modified.time.minutes?.trim())) {
+            updateFields.time = modified.time;
+        }
         if (modified.description) updateFields.description = modified.description;
         if (modified.instruction) updateFields.instruction = modified.instruction;
         if (modified.recipe_type) updateFields.recipe_type = modified.recipe_type;
@@ -38,12 +40,12 @@ export async function PATCH(request: Request) {
 
 
             
-        const result = await Recipe.updateOne(
+        await Recipe.updateOne(
             { recipe_id },
             { $set: updateFields }
         );
 
-        console.log(updateFields)
+        // console.log(updateFields)
 
         return NextResponse.json(updateFields);
     

@@ -8,7 +8,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/grid';
 import './styles.css';
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { changeNewInfo, fetchCook } from "@/state/slices/cook-slice";
 import { usePathname } from "next/navigation";
 import { skeletonSwiperCook } from "@/app/styles";
@@ -16,9 +16,6 @@ import SwiperMediaCook from "./SwiperMedia";
 import dynamic from "next/dynamic";
 import ActionInfoRecipe from "./ActionInfoRecipe";
 import Instruction from "./edit/Instruction";
-import { useStore } from "react-redux";
-import { RootState } from "@/state/store";
-import { changeHistory } from "@/state/slices/cook-history";
 
 const IngredientSwiper = dynamic(() => import("./IngredientSwiper"), { 
     ssr: false ,
@@ -58,10 +55,8 @@ export function ContentCook() {
 
     const handleEdit = () => {
         if(isEditing){
-            
-            // console.log(currentRecipe)
-            dispatch(changeNewInfo({recipe_id}))
-            dispatch(changeHistory({recipe_id, user_id}))
+            dispatch(changeNewInfo({recipe_id, user_id}))
+            // dispatch(changeHistory({recipe_id, user_id}))
         }
         setIsEditing(prev => !prev);
     };

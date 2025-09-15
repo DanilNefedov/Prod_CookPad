@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
-import { ChangeDescription, ChangeHours, ChangeInstruction, ChangeMinutes, ChangeName, ChangeTypeSorting, CookFetchReq, 
-    CookFetchRes, CookRootState, DeleteCookFetch, 
-    Modified} from "@/app/(main)/cook/types";
+import { ChangeDescription, ChangeHours, ChangeInfoFetchReq, ChangeInfoFetchRes, ChangeInstruction, 
+    ChangeMinutes, ChangeName, ChangeTypeSorting, CookFetchReq, CookFetchRes, CookRootState, DeleteCookFetch, } from "@/app/(main)/cook/types";
 import { FavoriteRecipeFetch } from "@/app/(main)/types";
 import { RootState } from "../store";
+import { changeHistory } from "./cook-history";
+import { changeNameRecipe } from "./recipe-slice";
 
 
 
@@ -66,9 +67,9 @@ export const fetchCook = createAsyncThunk<CookFetchRes, CookFetchReq, { rejectVa
 
 
 
-export const changeNewInfo = createAsyncThunk<{resData:Modified, recipe_id:string}, {recipe_id:string}, { rejectValue: string }>(
+export const changeNewInfo = createAsyncThunk<ChangeInfoFetchRes, ChangeInfoFetchReq, { rejectValue: string }>(
     'cook/changeNewInfo',
-    async function ({recipe_id}, { rejectWithValue, getState  }) {
+    async function ({recipe_id, user_id}, { rejectWithValue, getState, dispatch  }) {
         try {
             
             const state = getState() as RootState;
@@ -79,7 +80,7 @@ export const changeNewInfo = createAsyncThunk<{resData:Modified, recipe_id:strin
                 recipe_id,
                 modified
             }
-            console.log(data)
+
             const response = await fetch(url, {
                 method: 'PATCH',
                 headers: {
@@ -88,8 +89,17 @@ export const changeNewInfo = createAsyncThunk<{resData:Modified, recipe_id:strin
                 body: JSON.stringify(data),
             });
 
+            if (!response.ok) {
+                return rejectWithValue('Request failed!');
+            }
+
             const resData = await response.json()
-            console.log(resData)
+
+            if (modified.name.trim() !== '') {
+                dispatch(changeHistory({ recipe_id, user_id, name:resData.name}));
+                dispatch(changeNameRecipe({recipe_id, name:resData.name}))
+            }
+
             return {resData, recipe_id}
 
         } catch (error) {
@@ -258,7 +268,7 @@ const cookSlice = createSlice({
 
             .addCase(changeNewInfo.pending, changeNewInfoHandlers.pending)
             .addCase(changeNewInfo.rejected, changeNewInfoHandlers.rejected)
-            .addCase(changeNewInfo.fulfilled, (state, action: PayloadAction<{resData:Modified, recipe_id:string}, string>) => {
+            .addCase(changeNewInfo.fulfilled, (state, action: PayloadAction<ChangeInfoFetchRes, string>) => {
                 state.operations.deleteRecipe.error = false;
                 state.operations.deleteRecipe.loading = false;
 
@@ -273,7 +283,9 @@ const cookSlice = createSlice({
                 if (description !== undefined) recipe.description = description;
                 if (instruction !== undefined) recipe.instruction = instruction;
                 if (recipe_type !== undefined) recipe.recipe_type = recipe_type;
-                if (time !== undefined) recipe.time = time;
+                if (time !== undefined && (time.hours?.trim() || time.minutes?.trim())) {
+                    recipe.time = time;
+                }
                 if (sorting !== undefined && Array.isArray(sorting)) recipe.sorting = sorting;
                 
             })

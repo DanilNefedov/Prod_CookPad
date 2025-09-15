@@ -32,7 +32,6 @@ const Description = memo(({recipe_id, isEditing}:Props) => {
         dispatch(changeDescription({recipe_id, description:value}))
     }
 
-    console.log('description')
 
     return(
         <Typography component='span' sx={[descriptionInstruction, {display:'flex'}]} variant="body1">

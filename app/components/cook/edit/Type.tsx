@@ -48,7 +48,6 @@ const Type = memo(({recipe_id, isEditing}:Props) => {
             item === recipeType ? value.toLowerCase() : item
         );
 
-        console.log(newSorting, recipeSorting, sort)
         dispatch(changeType({recipe_id, type:e.target.value, sorting:newSorting}))
     }
 

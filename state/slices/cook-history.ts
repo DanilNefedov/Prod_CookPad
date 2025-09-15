@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
-import { CookHistoryRootState, DeleteCookHistoryFetch, HistoryLinksFetchReq, NewCookHistoryFetch } from "@/app/(main)/cook/types";
-import { RootState } from "../store";
+import { ChangeHistoryFetchReq, ChangeHistoryFetchRes, CookHistoryRootState, DeleteCookHistoryFetch, 
+    HistoryLinksFetchReq, NewCookHistoryFetch } from "@/app/(main)/cook/types";
 
 
 
@@ -9,6 +9,7 @@ export type CookHistoryOperationKey =
   | 'fetchHistoryCook'
   | 'newCookHistory'
   | 'deleteCookHistory'
+  | 'changeHistory'
 
 
 interface CookHistoryState extends CookHistoryRootState {
@@ -20,7 +21,7 @@ const initialState:CookHistoryState = {
     connection_id: '',
     history_links:[],
     operations:createOperations<CookHistoryOperationKey>(
-        ['fetchHistoryCook', 'newCookHistory', 'deleteCookHistory'],
+        ['fetchHistoryCook', 'newCookHistory', 'deleteCookHistory', 'changeHistory'],
         (key) => {
             if (key === 'deleteCookHistory') {
                 return createOperationStatus(false);
@@ -60,16 +61,12 @@ export const fetchHistoryCook = createAsyncThunk<CookHistoryRootState, HistoryLi
 
 
 
-export const changeHistory = createAsyncThunk<void, {recipe_id:string, user_id:string}, {rejectValue: string}>(
+export const changeHistory = createAsyncThunk<ChangeHistoryFetchRes, ChangeHistoryFetchReq, {rejectValue: string}>(
     'cook-history/changeHistory',
-    async function ({recipe_id, user_id}, {rejectWithValue, getState}){
+    async function ({recipe_id, user_id, name}, {rejectWithValue}){
         try{
-
-            const state = getState() as RootState;
-            const modified = state.cook.modified.name
-
             const data = {
-                name:modified,
+                name,
                 user_id,
                 recipe_id
             }
@@ -88,9 +85,7 @@ export const changeHistory = createAsyncThunk<void, {recipe_id:string, user_id:s
 
             const res = await response.json();
 
-            console.log(res)
-            // const newHeader = await response.json();
-            // return data;
+            return res
 
         }catch(error){
             console.error(error)
@@ -171,7 +166,7 @@ const createReducerHandlers = <T extends keyof CookHistoryState['operations']>(o
 const fetchHistoryCookHandlers = createReducerHandlers('fetchHistoryCook');
 const newCookHistoryHandlers = createReducerHandlers('newCookHistory');
 const deleteCookHistoryHandlers = createReducerHandlers('deleteCookHistory');
-
+const changeHistoryHandlers = createReducerHandlers('changeHistory');
 
 
 const CookHistorySlice = createSlice({
@@ -219,6 +214,21 @@ const CookHistorySlice = createSlice({
                 if(!thisLink) state.history_links.unshift(action.payload.history_links)
                 
             })
+
+            .addCase(changeHistory.pending, changeHistoryHandlers.pending)
+            .addCase(changeHistory.rejected, changeHistoryHandlers.rejected)
+            .addCase(changeHistory.fulfilled, (state, action: PayloadAction<ChangeHistoryFetchRes, string>) => {
+                state.operations.newCookHistory.error = false
+                state.operations.newCookHistory.loading = false
+
+                const thisLink = state.history_links.find(el => el.recipe_id === action.payload.recipe_id)
+
+                if(thisLink) {
+                    thisLink.recipe_name = action.payload.name
+                }
+                
+            })
+            
 
 
 
