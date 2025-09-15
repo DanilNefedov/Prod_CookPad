@@ -16,7 +16,7 @@ export function HeaderList({props}:{props:Props}) {
     return (
         <Button
             component={Link}
-            color={props.url === pathname ? 'primary' : 'grayButton'}
+            color={props.url === pathname ? 'blackRedBtn' : 'grayButton'}
             href={props.url}
             sx={headerLink}
         >
