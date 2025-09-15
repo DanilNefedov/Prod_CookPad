@@ -1,7 +1,8 @@
 'use client'
 
-import { Box, CircularProgress, useMediaQuery } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { loadingContainer } from "./styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { theme } from "@/config/ThemeMUI/theme";
 
 

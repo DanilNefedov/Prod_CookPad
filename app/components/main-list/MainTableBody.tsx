@@ -1,8 +1,9 @@
-import { Box, Collapse, ListItemText, TableCell, TableRow, Tooltip, Typography, useMediaQuery } from "@mui/material"
+import { Box, Collapse, ListItemText, TableCell, TableRow, Tooltip, Typography } from "@mui/material"
 import { memo, useMemo, useState } from "react"
 import { ingredientImage, ingredientImageBox, ingredientNameBox, ingredientRow, mobileUnitBoxSwiper, mobileUnitCell, 
     mobileUnitIcon, mobileUnitInfoBox, mobileUnitRow, mobileUnitText, nameIngredient, unitBox, unitBoxDesktop } from "@/app/(main)/(main-list)/styles"
 import { Swiper, SwiperSlide } from "swiper/react"
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useAppSelector } from "@/state/hook"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import 'swiper/css';
