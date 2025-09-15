@@ -10,7 +10,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import { Box, Button, IconButton, ListItemText, Menu, TextField, useMediaQuery } from "@mui/material"
 import { evaluate, } from "mathjs"
 import { usePathname } from "next/navigation"
-import { ChangeEvent, useCallback, useEffect, useState } from "react"
+import { ChangeEvent, useCallback, useState } from "react"
 import { handleAmountChange } from "../../helpers/input-unit"
 import UnitBtns from "./UnitBtns"
 
