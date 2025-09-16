@@ -19,7 +19,6 @@ interface Props {
 const SwiperMediaCook = memo(({ recipe_id }: Props ) => {
     const recipeMedia = useAppSelector(state => state.cook.recipes[recipe_id]?.media)
 
-
     return (
         <Swiper
             modules={[Navigation, Virtual]}
@@ -31,8 +30,7 @@ const SwiperMediaCook = memo(({ recipe_id }: Props ) => {
                 nextEl: '.btn-next-cook-media',
             }}
         >
-            {recipeMedia
-                .slice()
+            {recipeMedia?.slice()
                 .sort((a, b) => Number(b.main) - Number(a.main))
                 .map((el, index) => (
                     <SwiperSlide virtualIndex={index} key={el.media_id} className={el.media_type === 'image' ? 'cook-media-main-slide' : 'cook-media-main-slide-video'} >
