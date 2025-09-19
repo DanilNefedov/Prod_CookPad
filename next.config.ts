@@ -9,6 +9,11 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 const nextConfig: NextConfig = {
   /* config options here */
   // reactStrictMode: false, //turn on for vercel deploy
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '20mb',
+    },
+  },
   images: {
     domains: ['lh3.googleusercontent.com'],
   },
