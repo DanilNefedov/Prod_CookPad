@@ -2,6 +2,9 @@ import { media } from "@/app/(main)/home/styles";
 import { RecipeMedia } from "@/app/(main)/types";
 import { Box, CardMedia, Skeleton } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
+import { CldImage } from "next-cloudinary";
+import { getCloudinary } from "@/app/lib/cloudinary";
+import { CldVideoPlayer } from 'next-cloudinary';
 
 
 
@@ -9,13 +12,16 @@ import { useEffect, useRef, useState } from "react";
 interface Props {
     el: RecipeMedia,
     name: string,
+    priority:boolean
+
 }
 
 export default function SwiperMediaCard({ props }: { props: Props }) {
-    const { el, name, } = props;
+    const { el, name, priority } = props;
     const ref = useRef<HTMLDivElement | null>(null);
     const [isVisible, setIsVisible] = useState(false);
 
+    console.log(el)
     useEffect(() => {
         const observer = new IntersectionObserver(
         entries => {
@@ -41,26 +47,38 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
 
 
     return (
-        <Box ref={ref} style={{ width: '100%', height: '100%' }}>
+        <Box ref={ref} style={{ width: '100%', height: '100%', position:'relative' }}>
             {el.media_type === 'image' ? (
-                <CardMedia
-                    component="img"
+                <CldImage
                     alt={name}
-                    sx={media}
-                    src={el.media_url as string}
-                    loading="lazy"
+                    style={{ objectFit: "cover" }}
+                    format="auto"
+                    sizes="100%"
+                    quality="auto"
+                    src={el.media_url as string} 
+                    loading={priority ? "eager" : "lazy"}
+                    priority={priority}
+                    fill
                 />
             ) : isVisible ? (
-                <CardMedia
-                    component='video'
-                    sx={media}
-                    autoPlay
+                <CldVideoPlayer
+                    autoPlay='true'
                     loop
                     muted
-                    poster={el.media_url as string}
+                    width="600"
+                    height="500"
+                    quality="auto"
+                    src={el.media_url as string}
+                    transformation={{
+            
+                        format:'auto',
+                        crop: 'fill',
+                        gravity: 'auto',
+                        
+                    }}
                 >
-                    <source src={el.media_url as string} type="video/mp4" />
-                </CardMedia>
+                    
+                </CldVideoPlayer>
             ) : (
                 <Skeleton variant="rectangular" sx={media}/>
             )}

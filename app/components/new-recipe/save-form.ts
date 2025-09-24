@@ -48,9 +48,9 @@ async function uploadFile(data: DataType): Promise<string>{
 
         const result = await cloudinaryResponse.json();
 
-        console.log(result.quality_analysis)
+        console.log(result)
 
-        return result.secure_url;
+        return result;
 
       
     } catch (error) {
@@ -128,6 +128,7 @@ export async function saveForm(
             };
         });
  
+        console.log(mediaArray)
 
         // const data: NewDataRecipe = {
         //     connection_id: userId,

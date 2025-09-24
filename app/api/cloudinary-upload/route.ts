@@ -44,8 +44,12 @@ export async function POST(req: Request) {
             uploadStream.end(buffer);
         });
 
+        const { public_id } = uploaded;
+
+        // const baseUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/${resource_type}/upload`;
+
         
-        return NextResponse.json(uploaded);
+        return NextResponse.json(public_id);
 
 
     } catch (error) {

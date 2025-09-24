@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
   // reactStrictMode: false, //turn on for vercel deploy
   experimental: {
     serverActions: {
-      bodySizeLimit: '20mb',
+      bodySizeLimit: '10mb',
     },
   },
   images: {
