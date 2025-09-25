@@ -139,7 +139,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                 {recipe?.media
                     .slice()
                     .sort((a, b) => Number(b.main) - Number(a.main))
-                    .map((el, index) => (
+                    .map((el, index) => ( 
                         <SwiperSlide key={el.media_id} className="media-main-slide" virtualIndex={index}>
                             <SwiperMediaCard props={{ el, name: recipe?.name, priority: index === 0 }} />
                         </SwiperSlide>

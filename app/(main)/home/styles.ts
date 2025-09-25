@@ -288,7 +288,7 @@ export const mainContainer = {
     display: 'flex',
     flexWrap: 'wrap', 
     borderRadius: '20px',
-    gap:'2%',
+    gap:'14px',
     alignContent:'flex-start',
 
     [theme.breakpoints.down('sm')]: {
@@ -317,19 +317,20 @@ export const moreButtonContainer = {
 }
 
 export const mainCard = {
-    width: '32%',
+    width: 'calc(27% - (15px * 3))',
+    aspectRatio:'9/11',
     backgroundColor: 'background.default',
-    mb: '20px',
+    // mb: '20px',
     alignItems: "stretch",
-    maxHeight:'450px',
-    height:'100%',
+    // maxHeight:'450px',
+    // height:'100%',
     position:'relative',
     borderRadius: '0',
 
     '&:nth-child(1)': {
         borderRadius: '20px 0 0 0',
     },
-    '&:nth-child(3)': {
+    '&:nth-child(4)': {
         borderRadius: '0 20px 0 0',
     },
 

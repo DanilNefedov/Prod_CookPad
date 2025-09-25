@@ -26,7 +26,7 @@ async function uploadFile(data: DataType): Promise<string>{
         }
 
         const blob = await response.blob();
-        console.log(response, blob)
+        // console.log(response, blob)
 
         const formData = new FormData();
         formData.append("file", blob, media_id);
@@ -48,7 +48,7 @@ async function uploadFile(data: DataType): Promise<string>{
 
         const result = await cloudinaryResponse.json();
 
-        console.log(result)
+        // console.log(result)
 
         return result;
 
@@ -128,148 +128,148 @@ export async function saveForm(
             };
         });
  
-        console.log(mediaArray)
+        // console.log(mediaArray)
 
-        // const data: NewDataRecipe = {
-        //     connection_id: userId,
-        //     recipe_id: idRecipe,
-        //     name: stepNameTime.name.value.trim(),
-        //     time: { hours: stepNameTime.time.hours, minutes: stepNameTime.time.minutes },
-        //     media: mediaArray || [],
-        //     recipe_type: stepTypeRecommendation.type_recipe,
-        //     description: stepDescription.description.trim(),
-        //     sorting: [stepTypeRecommendation.type_recipe.toLowerCase()],
-        //     instruction: stepInstruction.instruction.trim(),
-        //     ingredients: ingredientsCopy,
-        //     favorite: false
-        // };
+        const data: NewDataRecipe = {
+            connection_id: userId,
+            recipe_id: idRecipe,
+            name: stepNameTime.name.value.trim(),
+            time: { hours: stepNameTime.time.hours, minutes: stepNameTime.time.minutes },
+            media: mediaArray || [],
+            recipe_type: stepTypeRecommendation.type_recipe,
+            description: stepDescription.description.trim(),
+            sorting: [stepTypeRecommendation.type_recipe.toLowerCase()],
+            instruction: stepInstruction.instruction.trim(),
+            ingredients: ingredientsCopy,
+            favorite: false
+        };
 
-        // if (stepTypeRecommendation.recommendation) {
-        //     const ingredientNames = ingredientsCopy.map((el: IngredientAutocomplite) => el.name);
+        if (stepTypeRecommendation.recommendation) {
+            const ingredientNames = ingredientsCopy.map((el: IngredientAutocomplite) => el.name);
 
-        //     const mediaF = mediaArray.length / 10;
-        //     const descrF = stepDescription.description.trim().length < 100 ? stepDescription.description.trim().length / 100 : 1;
-        //     const instF = stepInstruction.instruction.trim().length < 250 ? stepInstruction.instruction.trim().length / 250 : 1;
-        //     const nameF = stepNameTime.name.value.trim() !== '' ? 1 : 0;
-        //     const timeF = stepNameTime.time.hours !== '' && stepNameTime.time.minutes !== '' ? 1 : 0;
-        //     const typeF = stepTypeRecommendation.type_recipe !== '' ? 1 : 0;
-        //     const ingrF = ingredientsCopy.length >= 1 ? 1 : 0;
+            const mediaF = mediaArray.length / 10;
+            const descrF = stepDescription.description.trim().length < 100 ? stepDescription.description.trim().length / 100 : 1;
+            const instF = stepInstruction.instruction.trim().length < 250 ? stepInstruction.instruction.trim().length / 250 : 1;
+            const nameF = stepNameTime.name.value.trim() !== '' ? 1 : 0;
+            const timeF = stepNameTime.time.hours !== '' && stepNameTime.time.minutes !== '' ? 1 : 0;
+            const typeF = stepTypeRecommendation.type_recipe !== '' ? 1 : 0;
+            const ingrF = ingredientsCopy.length >= 1 ? 1 : 0;
 
-        //     const newDataRecomm = {
-        //         fully: parseFloat(((mediaF + descrF + instF + nameF + timeF + typeF + ingrF) / 7).toFixed(16)),
-        //         likes: 0,
-        //         views: 0,
-        //         saves: 0,
-        //         comments: 0,
-        //         categories: _.filter([
-        //             userName,
-        //             stepTypeRecommendation.type_recipe,
-        //             ...ingredientNames
-        //         ], (item) => item !== null),
-        //         creator: null
-        //     };
+            const newDataRecomm = {
+                fully: parseFloat(((mediaF + descrF + instF + nameF + timeF + typeF + ingrF) / 7).toFixed(16)),
+                likes: 0,
+                views: 0,
+                saves: 0,
+                comments: 0,
+                categories: _.filter([
+                    userName,
+                    stepTypeRecommendation.type_recipe,
+                    ...ingredientNames
+                ], (item) => item !== null),
+                creator: null
+            };
 
-        //     interface fetchIngredients {
-        //         name: string,
-        //         unit: string,
-        //         new_ingredient: boolean
-        //     }
+            interface fetchIngredients {
+                name: string,
+                unit: string,
+                new_ingredient: boolean
+            }
             
-        //     const ingredientsData: fetchIngredients[] = ingredientsWithValues.map(el => ({
-        //         name: el.name,
-        //         unit: 'list' in el.units && el.units.choice ? el.units.choice : '',
-        //         new_ingredient: el.new_ingredient ?? false
-        //     }));
+            const ingredientsData: fetchIngredients[] = ingredientsWithValues.map(el => ({
+                name: el.name,
+                unit: 'list' in el.units && el.units.choice ? el.units.choice : '',
+                new_ingredient: el.new_ingredient ?? false
+            }));
 
-        //     try {
-        //         const response = await fetch('/api/ingredients', {
-        //             method: 'PATCH',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //             },
-        //             body: JSON.stringify(ingredientsData)
-        //         });
+            try {
+                const response = await fetch('/api/ingredients', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(ingredientsData)
+                });
                 
-        //         if (!response.ok) {
-        //             throw new Error(`Failed to update ingredients: ${response.statusText}`);
-        //         }
+                if (!response.ok) {
+                    throw new Error(`Failed to update ingredients: ${response.statusText}`);
+                }
                 
-        //         const result = await response.json();
+                const result = await response.json();
 
-        //         if (result.body && result.body.length > 0) {
-        //             const newIngredientResponse = await fetch('/api/ingredients', {
-        //                 method: 'POST',
-        //                 headers: {
-        //                     'Content-Type': 'application/json',
-        //                 },
-        //                 body: JSON.stringify(result.body)
-        //             });
+                if (result.body && result.body.length > 0) {
+                    const newIngredientResponse = await fetch('/api/ingredients', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(result.body)
+                    });
                     
-        //             if (!newIngredientResponse.ok) {
-        //                 throw new Error(`Failed to create new ingredients: ${newIngredientResponse.statusText}`);
-        //             }
-        //         }
+                    if (!newIngredientResponse.ok) {
+                        throw new Error(`Failed to create new ingredients: ${newIngredientResponse.statusText}`);
+                    }
+                }
 
-        //         const recipeResponse = await fetch(`/api/recipe`, {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //             },
-        //             body: JSON.stringify({
-        //                 recipeData: data,
-        //                 recomData: newDataRecomm
-        //             }),
-        //         });
+                const recipeResponse = await fetch(`/api/recipe`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        recipeData: data,
+                        recomData: newDataRecomm
+                    }),
+                });
 
-        //         if (!recipeResponse.ok) {
-        //             throw new Error(`Failed to save recipe: ${recipeResponse.statusText}`);
-        //         }
+                if (!recipeResponse.ok) {
+                    throw new Error(`Failed to save recipe: ${recipeResponse.statusText}`);
+                }
 
-        //         // const recipeData = await recipeResponse.json();
-        //         await recipeResponse.json();
-        //         // console.log('Recipe saved successfully:', recipeData);
-        //         dispatch(resetAllState());
-        //         dispatch(resetStateRecipes());
+                // const recipeData = await recipeResponse.json();
+                await recipeResponse.json();
+                // console.log('Recipe saved successfully:', recipeData);
+                dispatch(resetAllState());
+                dispatch(resetStateRecipes());
                 
-        //         return null;
-        //     } catch (error) {
-        //         console.error('Error in recommendation flow:', error);
-        //         return { 
-        //             error, 
-        //             message: error instanceof Error ? error.message : 'Error processing ingredients or saving recipe' 
-        //         };
-        //     }
-        // } else {
-        //     try {
-        //         const response = await fetch(`/api/recipe`, {
-        //             method: 'POST',
-        //             headers: {
-        //                 'Content-Type': 'application/json',
-        //             },
-        //             body: JSON.stringify({
-        //                 recipeData: data,
-        //                 recomData: null
-        //             }),
-        //         });
+                return null;
+            } catch (error) {
+                console.error('Error in recommendation flow:', error);
+                return { 
+                    error, 
+                    message: error instanceof Error ? error.message : 'Error processing ingredients or saving recipe' 
+                };
+            }
+        } else {
+            try {
+                const response = await fetch(`/api/recipe`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        recipeData: data,
+                        recomData: null
+                    }),
+                });
 
-        //         if (!response.ok) {
-        //             throw new Error(`Failed to save recipe: ${response.statusText}`);
-        //         }
-        //         await response.json();
-        //         // const recipeData = await response.json();
-        //         // console.log('Recipe saved successfully:', recipeData);
-        //         dispatch(resetAllState());
-        //         dispatch(resetStateRecipes());
+                if (!response.ok) {
+                    throw new Error(`Failed to save recipe: ${response.statusText}`);
+                }
+                await response.json();
+                // const recipeData = await response.json();
+                // console.log('Recipe saved successfully:', recipeData);
+                dispatch(resetAllState());
+                dispatch(resetStateRecipes());
                 
-        //         return null;
-        //     } catch (error) {
-        //         console.error('Error in non-recommendation flow:', error);
-        //         return { 
-        //             error, 
-        //             message: error instanceof Error ? error.message : 'Error when creating a recipe' 
-        //         };
-        //     }
-        // }
+                return null;
+            } catch (error) {
+                console.error('Error in non-recommendation flow:', error);
+                return { 
+                    error, 
+                    message: error instanceof Error ? error.message : 'Error when creating a recipe' 
+                };
+            }
+        }
     } catch (error) {
         console.error('Error in saveForm:', error);
         return { 
