@@ -1,4 +1,5 @@
 import { getCloudinary } from "@/app/lib/cloudinary";
+import { UploadApiResponse } from "cloudinary";
 import { NextResponse } from "next/server";
 
 
@@ -27,7 +28,7 @@ export async function POST(req: Request) {
         const arrayBuffer = await file.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
-        const uploaded = await new Promise<any>((resolve, reject) => {
+        const uploaded = await new Promise<UploadApiResponse>((resolve, reject) => {
             const uploadStream = cloudinary.uploader.upload_stream(
                 {
                     folder,
@@ -37,7 +38,7 @@ export async function POST(req: Request) {
                 },
                 (error, result) => {
                     if (error) reject(error);
-                    else resolve(result);
+                    else resolve(result as UploadApiResponse);
                 }
             );
 
@@ -45,8 +46,6 @@ export async function POST(req: Request) {
         });
 
         const { public_id } = uploaded;
-
-        // const baseUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/${resource_type}/upload`;
 
         
         return NextResponse.json(public_id);
