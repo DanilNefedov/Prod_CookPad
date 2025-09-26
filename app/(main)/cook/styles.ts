@@ -242,6 +242,7 @@ export const mediaContainer = {
     aspectRatio:'4/5',
     maxWidth:'465px',
     bgcolor: "background.paper",
+    position:'relative',
 }
 
 export const containerInfo = {

@@ -317,7 +317,7 @@ export const moreButtonContainer = {
 }
 
 export const mainCard = {
-    width: 'calc(27% - (15px * 3))',
+    width: 'calc(25% - 11px)',
     aspectRatio:'9/11',
     backgroundColor: 'background.default',
     // mb: '20px',
@@ -334,17 +334,27 @@ export const mainCard = {
         borderRadius: '0 20px 0 0',
     },
 
-    [theme.breakpoints.down(1250)]: {
-        maxHeight:'425px',
+    [theme.breakpoints.down(1350)]: {
+        width: 'calc(33.33% - 11px)',
+
+        '&:nth-child(1)': {
+            borderRadius: '10px 0 0 0',
+        },
+        '&:nth-child(3)': {
+            borderRadius: '0 10px 0 0',
+        },
+        '&:nth-child(4)': {
+            borderRadius: '0',
+        },
     },
 
-    [theme.breakpoints.down('md')]: {
-        maxHeight:'400px',
-    },
+    // [theme.breakpoints.down('md')]: {
+    //     maxHeight:'400px',
+    // },
 
-    [theme.breakpoints.down(710)]: {
-        maxHeight:'350px',
-        width: '48%',
+    [theme.breakpoints.down(850)]: {
+        // maxHeight:'350px',
+        width: 'calc(50% - 8px)',
         mb:"0",
         '&:nth-child(1)': {
             borderRadius: '10px 0 0 0',
@@ -356,9 +366,10 @@ export const mainCard = {
             borderRadius: '0 0 0 0',
         },
     },
-    [theme.breakpoints.down('sm')]: {
-        maxHeight:'300px',
-        width: '49%',
+    [theme.breakpoints.down(500)]: {
+        aspectRatio:'9/16',
+        // maxHeight:'300px',
+        // width: '49%',
     }
 }
 
@@ -518,6 +529,47 @@ export const mobileBottomInfo = {
     },
     
     
+}
+
+export const boxSlides = {
+    width: '100%', 
+    height: '100%', 
+    position:'relative'
+}
+
+export const videoContainer = {
+    width:'100%',
+    height:'100%',
+    display:'flex',
+    maxWidth:'100%',
+    
+    '& .cld-video-player.cld-fluid': {
+        maxWidth: '100%',
+        width: '100%',
+        height:'100%',
+        overflow: 'hidden',
+        position: 'relative',
+        // borderRadius: '20px 20px 0 20px',
+
+        // [theme.breakpoints.down(769)]: {
+        //     borderRadius: '20px 20px 20px 20px'
+        // },
+
+        // [theme.breakpoints.down('sm')]: {
+        //     borderRadius: '0'
+        // }
+    },
+    '& video':{
+        maxWidth:'100%',
+        left: 0,
+        position: 'absolute',
+        top: 0,
+        height: '100%',
+        width: '100%',
+        display: 'block',
+        bgcolor:"black",
+        objectFit:'cover'
+    }
 }
 
 

@@ -1,10 +1,10 @@
-import { media } from "@/app/(main)/home/styles";
+import { boxSlides, media, videoContainer } from "@/app/(main)/home/styles";
 import { RecipeMedia } from "@/app/(main)/types";
-import { Box, CardMedia, Skeleton } from "@mui/material";
+import { Box, Skeleton, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { CldImage } from "next-cloudinary";
-import { getCloudinary } from "@/app/lib/cloudinary";
 import { CldVideoPlayer } from 'next-cloudinary';
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -19,9 +19,11 @@ interface Props {
 export default function SwiperMediaCard({ props }: { props: Props }) {
     const { el, name, priority } = props;
     const ref = useRef<HTMLDivElement | null>(null);
+    const uniqueId = uuidv4();
     const [isVisible, setIsVisible] = useState(false);
+    const isSmallScreen = useMediaQuery('(max-width:499px)');
 
-    console.log(el)
+
     useEffect(() => {
         const observer = new IntersectionObserver(
             entries => {
@@ -47,7 +49,7 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
 
 
     return (
-        <Box ref={ref} style={{ width: '100%', height: '100%', }}>
+        <Box ref={ref} sx={boxSlides}>
             {el.media_type === 'image' ? (
                 <CldImage
                     alt={name}
@@ -59,59 +61,24 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
                     loading={priority ? "eager" : "lazy"}
                     priority={priority}
                     fill
+                    id={uniqueId}
                 />
             ) : isVisible ? (
 
-                // <Box
-                //     sx={{
-                //         width: "100%",
-                //         height: "100%",
-                //         aspectRatio: "16 / 9",
-                //         maxHeight: "450px",
-                //         display: 'flex', 
-                //         maxWidth: '100%', 
-                //         alignItems: 'center',
-                //         overflow: "hidden",
-                //         position:"relative",
-
-                //         '& .cld-video-player':{
-                //             width: '100% !important',
-                //             height: '100% !important',
-                //             maxHeight: '100% !important',
-                //         }
-                //     }}
-                // >
-                <Box sx={{
-                    width:'100%',
-                    height:'100%',
-                    display:'flex',
-                    maxWidth:'100%',
-                    '& .cld-video-player.cld-fluid': {
-                        maxWidth: '100%',
-                        width: '100%',
-                        height:'100%',
-                        overflow: 'hidden',
-                        position: 'relative',
-                    },
-                    '& video':{
-                        maxWidth:'100%',
-                        left: 0,
-                        position: 'absolute',
-                        top: 0,
-                        height: '100%',
-                        width: '100%',
-                        display: 'block',
-                        // verticalAlign: 'middle',
-                        bgcolor:"black",
-                        objectFit:'cover'
-                    }
-                }}> 
+                <Box 
+                    sx={videoContainer}
+                > 
                     <CldVideoPlayer
                         src={el.media_url as string}
-                        // aspectRatio:'9/13',
                         width={900}
-                        height={1300}
-                        // id="default"
+                        height={isSmallScreen ? 1600 : 1100}
+                        autoPlay={true}
+                        autoplay={true}
+                        playsinline={true}
+                        muted
+                        loop
+                        controls={false}
+                        id={uniqueId}
                     />
                 </Box>
             ) : (
