@@ -1,47 +1,34 @@
-import { Box, CardMedia, CircularProgress } from "@mui/material";
+import { Box } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Virtual } from 'swiper/modules';
-
+import { v4 as uuidv4 } from 'uuid';
 import 'swiper/css';
 import 'swiper/css/navigation';
-
 import './styles.css';
-import { memo, useEffect, useState } from "react";
-import { containerSlideMediaSwiper, mediaSwiperElement, swiperProgressBox } from "@/app/(main)/popular/styles";
+import { memo,} from "react";
+import { boxImg, containerSlideMediaSwiper, mediaSwiperElement } from "@/app/(main)/popular/styles";
 import { useAppSelector } from "@/state/hook";
 import { shallowEqual } from "react-redux";
-import { RecipeMedia } from "@/app/(main)/types";
+import { CldImage, CldVideoPlayer } from "next-cloudinary";
+import { videoContainer } from "@/app/(main)/home/styles";
+import { RecipeMediaId } from "@/app/(main)/popular/types";
 
 
 
 
 export const MediaSwiper = memo(({ configId }: { configId: string }) => {
-    const [loaded, setLoaded] = useState<Record<string, boolean>>({});
-    
-    //Add a unique timestamp to URLs to bypass browser cache when downloading media
-    const [mediaUrls, setMediaUrls] = useState<Record<string, string>>({});
-    const [activeIndex, setActiveIndex] = useState(0);
-
-
     const media = useAppSelector(
         state => {
             const item = state.popular.pop_list.find(item => item.config_id === configId);
             return item?.recipe_media || [];
         },
-        shallowEqual
-    );
+    shallowEqual);
 
-
-    //Add a unique timestamp to URLs to bypass browser cache when downloading media
-    useEffect(() => {
-        const newUrls: Record<string, string> = {};
-        media.forEach((elem) => {
-            const uniqueUrl = `${elem.media_url}&t=${elem.media_id}`;
-            newUrls[elem.media_id] = uniqueUrl;
-        });
-        setMediaUrls(newUrls);
-    }, [media]);
-
+    const recipeName = useAppSelector(state => {
+            const item = state.popular.pop_list.find(item => item.config_id === configId);
+            return item?.recipe_name || [];
+        },
+    shallowEqual)
 
    
     return (
@@ -58,8 +45,6 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
                     : false
             }
             className="swiper-popular"
-            onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
-            // slidesPerView={'auto'}
             modules={media.length > 1 ? [Pagination, Virtual] : [Virtual]}
             spaceBetween={2}
             slidesPerView={1}
@@ -68,49 +53,53 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
                 position: 'relative',
             }}
         >
-            {media.map((elem:RecipeMedia, index) => (
+            {media.map((elem:RecipeMediaId, index) => {
+                const uniqueId = uuidv4();
+                return (
 
                 <SwiperSlide key={elem.media_id} className="slide-popular" virtualIndex={index}>
                     <Box sx={containerSlideMediaSwiper}>
-                        {(!loaded[elem.media_id]) && (
-                            <Box sx={swiperProgressBox}>
-                                <CircularProgress color="primary" size="35px" />
-                            </Box>
-                        )}
-
+                       
                         {elem.media_type === 'image' ? (
-                            <CardMedia
-                                sx={[mediaSwiperElement,
-                                    {opacity: loaded[elem.media_id] ? 1 : 0}
-                                ]}
-                                component='img'
-                                src={mediaUrls[elem.media_id]}
-                                loading="lazy"
-                                onLoad={() => setLoaded(prev => ({ ...prev, [elem.media_id]: true }))}
-                            />
+                        
+                            <Box sx={{...boxImg, '& img':mediaSwiperElement}}> 
+                                <CldImage
+                                    alt={recipeName as string}
+                                    format="auto"
+                                    id={uniqueId}
+                                    sizes="100%"
+                                    quality="auto"
+                                    src={elem.media_url as string}
+                                    loading={index === 0 ? "eager" : "lazy"}
+                                    priority={index === 0}
+                                    fill
+                                />
+                            </Box>
+                            
                         ) : (
-                            <CardMedia
-                                sx={[mediaSwiperElement,
-                                    {opacity: loaded[elem.media_id] ? 1 : 0}
-                                ]}
-                                component='video'
-                                autoPlay
-                                loop
-                                muted
-                                poster={mediaUrls[elem.media_id]}
-                                onCanPlayThrough={() => setLoaded(prev => ({ ...prev, [elem.media_id]: true }))}
-                            >
-                                {(Math.abs(activeIndex - index) <= 1) && (
-                                    <source
-                                        src={mediaUrls[elem.media_id]}
-                                        type="video/mp4"
-                                    />
-                                )}
-                            </CardMedia>
+                            <Box 
+                                sx={videoContainer}
+                            > 
+                                <CldVideoPlayer
+                                    
+                                    src={elem.media_url as string}
+                                    id={uniqueId}
+                                    width={900}
+                                    height={1100}
+                                    autoPlay={true}
+                                    autoplay={true}
+                                    playsinline={true}
+                                    muted
+                                    loop
+                                    controls={false}
+                                />
+                            </Box>
                         )}
                     </Box>
                 </SwiperSlide>
             )
+            }
+            
 
             )}
         </Swiper>

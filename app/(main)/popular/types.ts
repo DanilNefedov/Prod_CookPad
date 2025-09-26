@@ -16,7 +16,7 @@ export interface PopularData {
     author_info:PopularAuthorInfo
     description:string,
     recipe_name:string,
-    recipe_media:RecipeMedia[],
+    recipe_media:RecipeMediaId[],
     liked:boolean,
     likes:number,
     views:number,
@@ -39,6 +39,12 @@ export interface PopularConfig{
     comments:number,
     categories:string[],
 }
+
+export interface RecipeMediaId extends RecipeMedia {
+    _id:string
+}
+
+
 
 //---------- thunks S----------//
 

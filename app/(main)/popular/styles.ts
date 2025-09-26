@@ -736,12 +736,9 @@ export const containerSlideMediaSwiper = {
     }
 }
 
-export const mediaSwiperElement = {
-    height: '100%',
+export const mediaSwiperElement = {    
     objectFit: 'cover',
-    width: '100%',
     borderRadius: '20px 20px 0 20px',
-    transition: 'opacity 0.3s ease',
 
     [theme.breakpoints.down(769)]: {
         borderRadius: '20px 20px 20px 20px'
@@ -750,6 +747,12 @@ export const mediaSwiperElement = {
     [theme.breakpoints.down('sm')]: {
         borderRadius: '0'
     }
+}
+
+export const boxImg = {
+    position:"relative", 
+    height:"100%", 
+    width:'100%',
 }
 
 export const swiperProgressBox = {

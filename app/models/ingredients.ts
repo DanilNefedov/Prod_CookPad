@@ -12,6 +12,10 @@ const IngredientsSchema = new Schema(
             type: BigInt,
             required: true
         },
+        media:{
+            type: String,
+            required: true
+        },
         units: {
             type: [String],
             required: true

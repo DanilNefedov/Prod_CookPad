@@ -1,7 +1,10 @@
-import { media } from "@/app/(main)/home/styles";
+import { boxSlides, media, videoContainer } from "@/app/(main)/home/styles";
 import { RecipeMedia } from "@/app/(main)/types";
-import { Box, CardMedia, Skeleton } from "@mui/material";
+import { Box, Skeleton, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
+import { CldImage } from "next-cloudinary";
+import { CldVideoPlayer } from 'next-cloudinary';
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -9,30 +12,35 @@ import { useEffect, useRef, useState } from "react";
 interface Props {
     el: RecipeMedia,
     name: string,
+    priority: boolean
+
 }
 
 export default function SwiperMediaCard({ props }: { props: Props }) {
-    const { el, name, } = props;
+    const { el, name, priority } = props;
     const ref = useRef<HTMLDivElement | null>(null);
+    const uniqueId = uuidv4();
     const [isVisible, setIsVisible] = useState(false);
+    const isSmallScreen = useMediaQuery('(max-width:499px)');
+
 
     useEffect(() => {
         const observer = new IntersectionObserver(
-        entries => {
-            entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                setIsVisible(true);
-                observer.disconnect();
+            entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        setIsVisible(true);
+                        observer.disconnect();
+                    }
+                });
+            },
+            {
+                rootMargin: '100px',
             }
-            });
-        },
-        {
-            rootMargin: '100px',
-        }
         );
 
         if (ref.current) {
-        observer.observe(ref.current);
+            observer.observe(ref.current);
         }
 
         return () => observer.disconnect();
@@ -41,28 +49,40 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
 
 
     return (
-        <Box ref={ref} style={{ width: '100%', height: '100%' }}>
+        <Box ref={ref} sx={boxSlides}>
             {el.media_type === 'image' ? (
-                <CardMedia
-                    component="img"
+                <CldImage
                     alt={name}
-                    sx={media}
+                    style={{ objectFit: "cover" }}
+                    format="auto"
+                    sizes="100%"
+                    quality="auto"
                     src={el.media_url as string}
-                    loading="lazy"
+                    loading={priority ? "eager" : "lazy"}
+                    priority={priority}
+                    fill
+                    id={uniqueId}
                 />
             ) : isVisible ? (
-                <CardMedia
-                    component='video'
-                    sx={media}
-                    autoPlay
-                    loop
-                    muted
-                    poster={el.media_url as string}
-                >
-                    <source src={el.media_url as string} type="video/mp4" />
-                </CardMedia>
+
+                <Box 
+                    sx={videoContainer}
+                > 
+                    <CldVideoPlayer
+                        src={el.media_url as string}
+                        width={900}
+                        height={isSmallScreen ? 1600 : 1100}
+                        autoPlay={true}
+                        autoplay={true}
+                        playsinline={true}
+                        muted
+                        loop
+                        controls={false}
+                        id={uniqueId}
+                    />
+                </Box>
             ) : (
-                <Skeleton variant="rectangular" sx={media}/>
+                <Skeleton variant="rectangular" sx={media} />
             )}
         </Box>
     )

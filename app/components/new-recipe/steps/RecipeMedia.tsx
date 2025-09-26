@@ -25,7 +25,6 @@ import { arrowSwiper } from "@/app/(main)/home/styles";
 
 
 
-
 export function RecipeMedia() {
     const numbStep = 3
     const pageState = useAppSelector(state => state.mediaSlice)
@@ -73,7 +72,7 @@ export function RecipeMedia() {
         // }
     }
 
-    return (
+       return (
         <>
             <Typography variant="h6" component="h2" sx={headerSteps}>Select media</Typography>
             <Box sx={[containerMediaStep, columnCenter]}>
@@ -91,6 +90,7 @@ export function RecipeMedia() {
                         sx={InputForMedia}
                     />
                 </Button>
+                
                 <Typography 
                     sx={[
                         {display: statusPage.open && statusPage.error_status.value ? 'block' : 'none',},

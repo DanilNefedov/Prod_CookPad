@@ -46,6 +46,8 @@ export interface RecipeMedia {
     media_type:string
 }
 
+
+
 //---------- thunks S----------//
 
 export interface FavoriteRecipeFetch {

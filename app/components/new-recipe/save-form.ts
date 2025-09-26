@@ -1,6 +1,4 @@
-import { storage } from "@/firebase";
 import { AppDispatch } from "@/state/store";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { v4 as uuidv4 } from 'uuid';
 import _ from "lodash";
 import { resetStateRecipes } from "@/state/slices/recipe-slice";
@@ -16,46 +14,45 @@ import { Unit } from "@/app/(main)/cook/types";
 
 
 
-async function uploadFile(data: DataType): Promise<string> {
+async function uploadFile(data: DataType): Promise<string>{ 
     const { id, idRecipe, media_id, media_url } = data;
+    
 
     try {
         const response = await fetch(media_url);
+
         if (!response.ok) {
             throw new Error(`Failed to fetch media: ${response.statusText}`);
         }
-        
+
         const blob = await response.blob();
-        
-        const storageRef = ref(storage, `recipes/${id}/${idRecipe}/${media_id}`);
-        const uploadTask = uploadBytesResumable(storageRef, blob);
-        
-        return new Promise((resolve, reject) => {
-            uploadTask.on(
-                'state_changed',
-                (snapshot) => {
-                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                    console.log('Upload is ' + progress + '% done');
-                },
-                (error) => {
-                    console.error('Upload failed:', error);
-                    reject(new Error(`Upload failed: ${error.message || 'Unknown error'}`));
-                },
-                async () => {
-                    try {
-                        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                        resolve(downloadURL);
-                    } catch (error) {
-                        console.error('Error getting download URL:', error);
-                        reject(new Error(`Failed to get download URL: ${error instanceof Error ? error.message : 'Unknown error'}`));
-                    }
-                }
-            );
-            
-            setTimeout(() => {
-                reject(new Error('Upload timed out. Please check your network connection.'));
-            }, 60000); // 60s. timeout
+        // console.log(response, blob)
+
+        const formData = new FormData();
+        formData.append("file", blob, media_id);
+        formData.append("id", id);
+        formData.append("idRecipe", idRecipe);
+        formData.append("media_id", media_id);
+
+        const cloudinaryResponse = await fetch("/api/cloudinary-upload", {
+            method: "POST",
+            body: formData,
         });
+        
+
+        if (!cloudinaryResponse.ok) {
+            const errorResult = await cloudinaryResponse.json();
+            throw new Error(errorResult.error?.message || 'Cloudinary upload failed');
+        }
+
+
+        const result = await cloudinaryResponse.json();
+
+        // console.log(result)
+
+        return result;
+
+      
     } catch (error) {
         console.error('Error in uploadFile:', error);
         throw new Error(`Media upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -73,7 +70,7 @@ export async function saveForm(
     userId: string,
     userName: string,
     dispatch: AppDispatch
-): Promise<SaveFormResult> {
+):Promise<SaveFormResult> {
     const idRecipe = uuidv4();
 
 
@@ -131,6 +128,8 @@ export async function saveForm(
             };
         });
  
+        // console.log(mediaArray)
+
         const data: NewDataRecipe = {
             connection_id: userId,
             recipe_id: idRecipe,
