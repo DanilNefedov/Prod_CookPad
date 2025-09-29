@@ -542,6 +542,7 @@ export const videoContainer = {
     height:'100%',
     display:'flex',
     maxWidth:'100%',
+
     
     '& .cld-video-player.cld-fluid': {
         maxWidth: '100%',
@@ -549,15 +550,7 @@ export const videoContainer = {
         height:'100%',
         overflow: 'hidden',
         position: 'relative',
-        // borderRadius: '20px 20px 0 20px',
-
-        // [theme.breakpoints.down(769)]: {
-        //     borderRadius: '20px 20px 20px 20px'
-        // },
-
-        // [theme.breakpoints.down('sm')]: {
-        //     borderRadius: '0'
-        // }
+    
     },
     '& video':{
         maxWidth:'100%',
@@ -568,7 +561,12 @@ export const videoContainer = {
         width: '100%',
         display: 'block',
         bgcolor:"black",
-        objectFit:'cover'
+        objectFit:'cover',
+
+    },
+
+    '& .vjs-poster, & .vjs-control-bar, & .vjs-loading-spinner, & .vjs-error-display, & .vjs-big-play-button':{
+        display:'none'
     }
 }
 

@@ -4,7 +4,6 @@ import { Box, Skeleton, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { CldImage } from "next-cloudinary";
 import { CldVideoPlayer } from 'next-cloudinary';
-import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -19,7 +18,6 @@ interface Props {
 export default function SwiperMediaCard({ props }: { props: Props }) {
     const { el, name, priority } = props;
     const ref = useRef<HTMLDivElement | null>(null);
-    const uniqueId = uuidv4();
     const [isVisible, setIsVisible] = useState(false);
     const isSmallScreen = useMediaQuery('(max-width:499px)');
 
@@ -61,7 +59,7 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
                     loading={priority ? "eager" : "lazy"}
                     priority={priority}
                     fill
-                    id={uniqueId}
+                    // id={uniqueId}
                 />
             ) : isVisible ? (
 
@@ -78,7 +76,7 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
                         muted
                         loop
                         controls={false}
-                        id={uniqueId}
+                        // id={uniqueId}
                     />
                 </Box>
             ) : (

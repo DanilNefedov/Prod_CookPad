@@ -209,3 +209,17 @@ export const globalErrorAlert = {
     color: 'text.primary', 
     alignItems:'center',
 }
+
+export const videoBorder = {
+    '& video':{
+        borderRadius: '20px 20px 0 20px',
+
+        [theme.breakpoints.down(769)]: {
+            borderRadius: '20px 20px 20px 20px'
+        },
+
+        [theme.breakpoints.down('sm')]: {
+            borderRadius: '0'
+        }
+    }
+}
