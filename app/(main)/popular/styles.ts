@@ -22,7 +22,7 @@ export const pageCard: (theme: Theme) => SxProps<Theme> = (theme) => ({
     [theme.breakpoints.down("md")]: {
         justifyContent: "space-between",
     },
-    [theme.breakpoints.down(769)]: {
+    [theme.breakpoints.down(600)]: {
         flexDirection: "column",
     },
     [theme.breakpoints.down("sm")]: {

@@ -1,7 +1,6 @@
 import { Box } from "@mui/material";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Virtual } from 'swiper/modules';
-import { v4 as uuidv4 } from 'uuid';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import './styles.css';
@@ -12,6 +11,7 @@ import { shallowEqual } from "react-redux";
 import { CldImage, CldVideoPlayer } from "next-cloudinary";
 import { videoContainer } from "@/app/(main)/home/styles";
 import { RecipeMediaId } from "@/app/(main)/popular/types";
+import { videoBorder } from "@/app/styles";
 
 
 
@@ -54,8 +54,7 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
             }}
         >
             {media.map((elem:RecipeMediaId, index) => {
-                const uniqueId = uuidv4();
-                return (
+                 return (
 
                 <SwiperSlide key={elem.media_id} className="slide-popular" virtualIndex={index}>
                     <Box sx={containerSlideMediaSwiper}>
@@ -66,7 +65,7 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
                                 <CldImage
                                     alt={recipeName as string}
                                     format="auto"
-                                    id={uniqueId}
+
                                     sizes="100%"
                                     quality="auto"
                                     src={elem.media_url as string}
@@ -78,14 +77,12 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
                             
                         ) : (
                             <Box 
-                                sx={videoContainer}
+                                sx={[videoContainer, videoBorder]}
                             > 
                                 <CldVideoPlayer
-                                    
                                     src={elem.media_url as string}
-                                    id={uniqueId}
                                     width={900}
-                                    height={1100}
+                                    height={1485}
                                     autoPlay={true}
                                     autoplay={true}
                                     playsinline={true}

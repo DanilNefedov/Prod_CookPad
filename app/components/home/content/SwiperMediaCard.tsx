@@ -4,7 +4,10 @@ import { Box, Skeleton, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { CldImage } from "next-cloudinary";
 import { CldVideoPlayer } from 'next-cloudinary';
+<<<<<<< HEAD
 import { v4 as uuidv4 } from 'uuid';
+=======
+>>>>>>> dev-page
 
 
 
@@ -61,7 +64,6 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
                     loading={priority ? "eager" : "lazy"}
                     priority={priority}
                     fill
-                    id={uniqueId}
                 />
             ) : isVisible ? (
 
@@ -78,8 +80,7 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
                         muted
                         loop
                         controls={false}
-                        id={uniqueId}
-                    />
+                        />
                 </Box>
             ) : (
                 <Skeleton variant="rectangular" sx={media} />
