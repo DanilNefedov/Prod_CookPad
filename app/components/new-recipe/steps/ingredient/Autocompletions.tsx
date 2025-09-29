@@ -8,9 +8,12 @@ import { addErrorIngredient, deleteErrorIngredient } from "@/state/slices/steppe
 import { handleAmountChange } from "@/app/helpers/input-unit";
 import { amoutIngredient, autocompliteImg, autoCompliteItems, autocompliteMenuItem, 
     autocompMenuBox, autocompMenuContainer, autocompMenuText, boxAutocompliteImg, 
+    boxImgCloudinary, 
     paperMenu, weightItemList } from "@/app/(main)/new-recipe/style";
 import { textMaxWidth } from "@/app/styles";
 import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarning";
+import { CldImage } from "next-cloudinary";
+import { theme } from "@/config/ThemeMUI/theme";
 
 
 interface Props {
@@ -83,14 +86,33 @@ export const Autocomplite = memo(({ingredientId}: Props) => {
     }, [ingredient.name, ingredientId, dispatch]);
     //Dependency error ingredient.units. Rewrite the redux with more obvious data types
 
-
+ 
     return (
         <>
             <Box sx={boxAutocompliteImg}>
-                <Box sx={autocompliteImg} component="img"
-                    src={ingredient.media !== '' ? ingredient.media : 'images/load-ingr.svg'} alt={ingredient.name}
-                    loading="lazy">
-                </Box>
+                {
+                    ingredient.media !== '' ?
+                    <Box sx={boxImgCloudinary}>
+                        <CldImage
+                            alt={ingredient.name}
+                            format="auto"
+                            sizes="100%"
+                            quality="auto"
+                            src={ingredient.media}
+                            fill
+                        >
+                        </CldImage>
+                    </Box>
+                    :
+                    <Box 
+                        sx={autocompliteImg} 
+                        component="img"
+                        src={ingredient.media !== '' ? ingredient.media : 'images/load-ingr.svg'} 
+                        alt={ingredient.name}
+                        loading="lazy">
+                    </Box>
+                }
+               
             </Box>
 
             <MainInput 

@@ -431,6 +431,16 @@ export const boxAutocompliteImg = (theme: Theme) => ({
     },//5.5px 4px 8.5px 5px
 });
 
+export const boxImgCloudinary = {
+    width: '100%', 
+    height: '100%',
+    position:'relative',
+    
+    '& img':{
+        p:'5px'
+    }
+}
+
 export const mainInputAutocomplite = {
     [theme.breakpoints.down('md')]: {
         p:'5.5px 4px 8.5px 5px'
