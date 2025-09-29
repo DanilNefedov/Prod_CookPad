@@ -4,10 +4,7 @@ import { Box, Skeleton, useMediaQuery } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { CldImage } from "next-cloudinary";
 import { CldVideoPlayer } from 'next-cloudinary';
-<<<<<<< HEAD
 import { v4 as uuidv4 } from 'uuid';
-=======
->>>>>>> dev-page
 
 
 
