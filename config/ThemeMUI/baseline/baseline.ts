@@ -136,6 +136,10 @@ const baseline: Components<Theme>['MuiCssBaseline'] = {
                 flexDirection:'column-reverse'
             },
         },
+
+        '.cld-video-player, .my-custom-video':{
+            fontFamily: '"Roboto", sans-serif !important',
+        }
         
         
     },

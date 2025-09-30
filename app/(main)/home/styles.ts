@@ -542,13 +542,13 @@ export const videoContainer = {
     height:'100%',
     display:'flex',
     maxWidth:'100%',
-
     '& .cld-video-player.cld-fluid': {
         maxWidth: '100%',
         width: '100%',
         height:'100%',
         overflow: 'hidden',
         position: 'relative',
+    
     },
     '& video':{
         maxWidth:'100%',

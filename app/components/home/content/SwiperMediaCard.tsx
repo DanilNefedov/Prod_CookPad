@@ -49,12 +49,13 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
     return (
         <Box ref={ref} sx={boxSlides}>
             {el.media_type === 'image' ? (
-
                 <Box sx={{ position: "relative", aspectRatio: "9/16", width: "100%" }}>
                     <CldImage
                         alt={name}
                         src={el.media_url as string}
                         fill
+                        crop="fill"
+                        gravity="auto"
                         style={{ objectFit: "cover" }}
                         format="auto"
                         quality="auto"
@@ -78,6 +79,7 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
                         muted
                         loop
                         controls={false}
+                        className="my-custom-video"
                     />
                 </Box>
             ) : (
