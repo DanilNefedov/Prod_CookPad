@@ -13,6 +13,7 @@ import { accordion, accordionMediaBox, accordionName, accordionSumm,
     containerAccordion, deleteRecipeBtn, deleteRecipeIcon, mainContainerList } from "@/app/(main)/(main-list)/list-recipe/styles";
 import { textMaxWidth } from "@/app/styles";
 import { moreButton } from "@/app/(main)/(main-list)/list/styles";
+import { CldImage } from "next-cloudinary";
 
 
 
@@ -103,24 +104,32 @@ export function MainListRecipe() {
                                             sx={accordionSumm}
                                         >
                                             {el.recipe_media.type === 'image' ?
-                                                <Box
-                                                    component='img'
-                                                    alt={el.recipe_name}
-                                                    sx={accordionMediaBox}
-                                                    src={el.recipe_media.url as string}
-                                                    loading="lazy"
-                                                />
+                                                <Box sx={[accordionMediaBox, {position:'relative'}]}>
+                                                    <CldImage
+                                                        alt={el.recipe_name}
+                                                        src={el.recipe_media.url as string}
+                                                        style={{borderRadius:'50%'}}
+                                                        width={60}
+                                                        height={60}
+                                                        quality="auto"
+                                                        dpr="auto"
+                                                        crop="fill"
+                                                        gravity="auto"
+                                                    >
+                                                    </CldImage>
+                                                </Box>
                                                 :
+                                                
                                                 <Box
                                                     component='video'
                                                     sx={accordionMediaBox}
                                                     autoPlay
                                                     loop
                                                     muted
-                                                    poster={el.recipe_media.url as string}
+                                                    poster={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/w_60,h_60,c_fill/${el.recipe_media.url as string}.jpg`}
                                                 >
                                                     <source
-                                                        src={el.recipe_media.url as string}
+                                                        src={`https://res.cloudinary.com/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload/w_60,h_60,c_fill/${el.recipe_media.url as string}.mp4`}
                                                         type="video/mp4"
                                                     />
                                                 </Box>

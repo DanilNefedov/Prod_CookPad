@@ -20,6 +20,7 @@ import { theme } from "@/config/ThemeMUI/theme"
 import UnitContext from "@/config/unit-context/UnitContext"
 import MainButtons from "./MainButtons"
 import { IngredientUnit } from "./IngredientUnit"
+import { CldImage } from "next-cloudinary";
 
 
 
@@ -86,12 +87,30 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                     sx={[ingredientImageBox, ]}
                 >
                     <Box sx={[centerFlexBlock, ]}>
-                        <Box 
-                            component={'img'} 
-                            src={thisIngredient.media !== '' ? thisIngredient.media : '/images/load-ingr.svg'} 
-                            alt={thisIngredient.name} 
-                            sx={ingredientImage}
-                        ></Box>
+                    
+                        {
+                            thisIngredient.media !== '' ?
+                            <Box sx={[ingredientImage,{position:'relative'}]}>
+                                <CldImage
+                                    alt={thisIngredient.name}
+                                    src={thisIngredient.media}
+                                    width={45}
+                                    height={45}
+                                    quality="auto"
+                                    dpr="auto"
+                                    crop="fill"
+                                    gravity="auto"
+                                >
+                                </CldImage>
+                            </Box>
+                            :
+                            <Box 
+                                component={'img'} 
+                                src={'/images/load-ingr.svg'} 
+                                alt={thisIngredient.name} 
+                                sx={ingredientImage}
+                            ></Box>
+                        }
                     </Box>
                 </TableCell>
                 <TableCell 

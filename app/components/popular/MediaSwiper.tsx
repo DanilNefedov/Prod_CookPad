@@ -54,8 +54,7 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
             }}
         >
             {media.map((elem:RecipeMediaId, index) => {
-                 return (
-
+                return (
                 <SwiperSlide key={elem.media_id} className="slide-popular" virtualIndex={index}>
                     <Box sx={containerSlideMediaSwiper}>
                        
@@ -65,7 +64,6 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
                                 <CldImage
                                     alt={recipeName as string}
                                     format="auto"
-
                                     sizes="100%"
                                     quality="auto"
                                     src={elem.media_url as string}

@@ -549,7 +549,6 @@ export const videoContainer = {
         height:'100%',
         overflow: 'hidden',
         position: 'relative',
-
     },
     '& video':{
         maxWidth:'100%',
