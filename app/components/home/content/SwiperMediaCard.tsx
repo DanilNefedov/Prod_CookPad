@@ -49,18 +49,19 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
     return (
         <Box ref={ref} sx={boxSlides}>
             {el.media_type === 'image' ? (
-                <CldImage
-                    alt={name}
-                    style={{ objectFit: "cover" }}
-                    format="auto"
-                    sizes="100%"
-                    quality="auto"
-                    src={el.media_url as string}
-                    loading={priority ? "eager" : "lazy"}
-                    priority={priority}
-                    fill
-                    // id={uniqueId}
-                />
+                <Box sx={{ position: "relative", aspectRatio: "9/16", width: "100%" }}>
+                    <CldImage
+                        alt={name}
+                        src={el.media_url as string}
+                        fill
+                        style={{ objectFit: "cover" }}
+                        format="auto"
+                        quality="auto"
+                        sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        dpr="auto"
+                        priority={priority}
+                    />
+                </Box>
             ) : isVisible ? (
 
                 <Box 

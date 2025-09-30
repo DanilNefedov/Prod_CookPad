@@ -534,7 +534,6 @@ export const mobileBottomInfo = {
 export const boxSlides = {
     width: '100%', 
     height: '100%', 
-    position:'relative'
 }
 
 export const videoContainer = {

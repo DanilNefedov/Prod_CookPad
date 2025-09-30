@@ -13,7 +13,6 @@ import { amoutIngredient, autocompliteImg, autoCompliteItems, autocompliteMenuIt
 import { textMaxWidth } from "@/app/styles";
 import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarning";
 import { CldImage } from "next-cloudinary";
-import { theme } from "@/config/ThemeMUI/theme";
 
 
 interface Props {
@@ -95,7 +94,7 @@ export const Autocomplite = memo(({ingredientId}: Props) => {
                     <Box sx={boxImgCloudinary}>
                         <CldImage
                             alt={ingredient.name}
-                            format="auto"
+                            // format="auto"
                             sizes="100%"
                             quality="auto"
                             src={ingredient.media}
