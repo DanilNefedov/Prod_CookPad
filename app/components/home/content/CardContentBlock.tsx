@@ -78,7 +78,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
         }
     }
 
-
+ 
     return (
         <Card sx={mainCard}>
             <Box sx={boxTypeRecipe}>

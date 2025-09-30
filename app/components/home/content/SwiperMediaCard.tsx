@@ -77,7 +77,6 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
                         muted
                         loop
                         controls={false}
-                        // id={uniqueId}
                     />
                 </Box>
             ) : (
@@ -85,4 +84,4 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
             )}
         </Box>
     )
-}
+} 
