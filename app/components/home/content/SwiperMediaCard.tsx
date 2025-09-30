@@ -54,6 +54,8 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
                         alt={name}
                         src={el.media_url as string}
                         fill
+                        crop="fill"
+                        gravity="auto"
                         style={{ objectFit: "cover" }}
                         format="auto"
                         quality="auto"
@@ -77,6 +79,7 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
                         muted
                         loop
                         controls={false}
+                        className="my-custom-video"
                     />
                 </Box>
             ) : (
