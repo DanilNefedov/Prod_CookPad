@@ -14,7 +14,7 @@ import { moreButton } from "@/app/styles";
 
 
 export function BlockContent() {
-  
+
   const dispatch = useAppDispatch();
   const recipes = useAppSelector(state => state.recipe.recipes);
   const page = useAppSelector(state => state.recipe.page);
@@ -26,20 +26,28 @@ export function BlockContent() {
 
 
   useEffect(() => {
-      if (id !== '' && recipes.length === 0 && page === 1) {
-        dispatch(fetchRecipes({ id, page}))
-      }
-  }, [id, dispatch, page, recipes.length]); 
-  
+    if (id !== '' && recipes.length === 0 && page === 1) {
+      dispatch(fetchRecipes({ id, page }))
+    }
+  }, [id, dispatch, page, recipes.length]);
+
 
   const filteredRecipes = recipes.filter(recipe => recipe.sorting.includes(nav.toLowerCase()));
- 
+
+
 
   return (
     <>
-      {status && recipes.length === 0 && (
-        <UXLoading />
-      )}
+      {status && recipes.length === 0 && (Array.from({ length: 12 }).map((_, idx) => (
+        <CardContentBlock
+          key={`skeleton-${idx}`}
+          props={{
+            recipe_id: '',
+            id,
+            isSkeleton: true,
+          }}
+        />
+      )))}
       {!status && recipes.length === 0 && (
         <>
           <EmptyInfo />
@@ -53,12 +61,12 @@ export function BlockContent() {
           </Button>
         </>
       )}
-     
-      {recipes.length > 0 && (
-        (nav === 'all' ? recipes : filteredRecipes).map(({ recipe_id }) => (
-          <CardContentBlock key={recipe_id} props={{ recipe_id, id }} />
-        ))
-      )}
+
+      {recipes.length > 0 && (nav === 'all' ? recipes : filteredRecipes).map(({ recipe_id }) => (
+        <CardContentBlock key={recipe_id} props={{ recipe_id, id, isSkeleton: false, }} />
+      ))}
+
+      
 
       {statusMore && nav === 'all' && (
         <Box sx={{ width: '100%' }}>

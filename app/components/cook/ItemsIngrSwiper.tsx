@@ -12,6 +12,7 @@ import { useSnackbar } from "notistack";
 import { Ingredients, ReturnData } from "@/app/(main)/cook/types";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { alertMui, hideScroll } from "@/app/styles";
+import { CldImage } from "next-cloudinary";
 
 
 interface Props {
@@ -149,16 +150,31 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
     return (
         <Box sx={{p:'5px'}}>
             <ListItemAvatar sx={avatarIngr}>
-                <Avatar
-                    sx={avatarImg}
-                    slotProps={{
-                        img: {
-                            alt: el.name,
-                        },
-                    }}
-                    src={el.media !== '' ? el.media : '/images/load-ingr.svg'} 
-                >
-                </Avatar>
+                {
+                    el.media !== '' ? 
+                    <Box sx={{position:'relative'}}>
+                        <CldImage
+                            alt={el.name}
+                            src={el.media}
+                            width={45}
+                            height={45}
+                            quality="auto"
+                            dpr="auto"
+                            crop="fill"
+                            gravity="auto"
+                        >
+                        </CldImage>
+                    </Box>
+                    :
+                    <Box 
+                        component={'img'} 
+                        src={'/images/load-ingr.svg'} 
+                        alt={el.media} 
+                        sx={avatarImg}
+                    ></Box>
+                    
+                }
+                
             </ListItemAvatar>
             <ListItemText
                 primary={el.name}
