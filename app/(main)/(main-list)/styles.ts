@@ -147,6 +147,16 @@ export const ingredientImage = {
     } 
 }
 
+export const skeletonImg = {
+    height: '45px',
+    width:'45px',
+    borderRadius:'50%',
+    [theme.breakpoints.down('md')]: {
+        width:'35px',
+        height:'35px'
+    }   
+}
+
 export const ingredientNameBox = {
     maxWidth: '150px',
     width: '150px',

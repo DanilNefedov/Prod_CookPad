@@ -8,6 +8,8 @@ import { UXLoading } from '../../ui-helpers/UXLoading';
 import { EmptyInfo } from '../../ui-helpers/EmptyInfo';
 import { containerInfo, moreButton, table, tableBody } from '@/app/(main)/(main-list)/list/styles';
 import MainTableHeader from '../MainTableHeader';
+import { SkeletonTable } from './SkeletonTable';
+import { SkeletonHeader } from './SkeletonHeader';
 
 
 export function MainListPage() {
@@ -63,6 +65,21 @@ export function MainListPage() {
         }
     }
 
+    const skeletonDataMemo = useMemo(() => [
+        { count: 3, widths: [312, 287, 250] },
+        { count: 7, widths: [300, 270, 310, 280, 330, 290, 260] },
+        { count: 1, widths: [320] },
+        { count: 10, widths: [250, 260, 270, 280, 290, 300, 310, 320, 330, 340] },
+        { count: 4, widths: [300, 310, 320, 330] },
+        { count: 6, widths: [290, 300, 310, 320, 330, 340] },
+        { count: 2, widths: [280, 300] },
+        { count: 5, widths: [260, 270, 280, 290, 300] },
+        { count: 8, widths: [250, 260, 270, 280, 290, 300, 310, 320] },
+        { count: 9, widths: [260, 270, 280, 290, 300, 310, 320, 330, 340] },
+        { count: 3, widths: [300, 310, 320] },
+        { count: 7, widths: [250, 260, 270, 280, 290, 300, 310] },
+    ], []);
+
     return (
         <>
             <Table sx={table} stickyHeader aria-label="sticky table">
@@ -73,15 +90,18 @@ export function MainListPage() {
                 */}
 
                 {isLoading && queueIngredints.length === 0
- ?
-                    <TableBody>
-                        <TableRow>
-                            <TableCell sx={containerInfo}>
-                                <UXLoading ></UXLoading>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-
+                    ?
+                    <>
+                        <SkeletonHeader></SkeletonHeader>
+                        {skeletonDataMemo.map((block, idx) => (
+                            <SkeletonTable
+                                key={idx}
+                                count={block.count}
+                                widths={block.widths}
+                            />
+                        ))}
+                    </>
+                    
                     :
                     !isLoading && queueIngredints.length === 0 ?
 
@@ -106,7 +126,7 @@ export function MainListPage() {
                                 {sortedList.map((el) => ( 
                                     <MainTableBody
                                         key={el.ingredient_id}
-                                        props={{ ingredient_id: el.ingredient_id }}
+                                        props={{ ingredient_id: el.ingredient_id}}
                                     />
                                 ))}
                             </TableBody>
