@@ -58,8 +58,8 @@ export default function SwiperMediaCard({ props }: { props: Props }) {
                         gravity="auto"
                         style={{ objectFit: "cover" }}
                         format="auto"
-                        quality="auto"
-                        sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        quality="auto:eco"
+                        sizes="100%"
                         dpr="auto"
                         priority={priority}
                     />

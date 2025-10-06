@@ -40,5 +40,41 @@ export const moreButton = {
     }
 }
 
+export const skeletonTableRow = {
+    backgroundColor: 'background.default',
+    borderRadius: '15px',
+    height:'60px', 
+
+    '& .MuiTableCell-root': {
+        borderBottom: '5px solid',
+        borderColor: 'background.paper',
+
+        "@media (max-width:800px)": {
+            borderBottom: `3px solid`,
+            borderColor: 'background.paper',
+        }, 
+    },
+}
+
+export const skeletonBoxUnits = { 
+    display: "none",
+    gap: "10px",
+    overflow: "hidden",
+    "@media (min-width:800px)": {
+        display: "flex",
+    }, 
+}
+
+export const skeletonMainBtns = { 
+    width: '40px', 
+    height: '40px', 
+    borderRadius: '50%' 
+}
 
 
+export const skeletonBoxMainBtns = {
+    display: "none",
+    "@media (min-width:1150px)": {
+        display: "flex",
+    }, 
+}

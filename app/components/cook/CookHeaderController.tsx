@@ -35,13 +35,16 @@ export function CookHeaderController() {
 
     const toggleDrawer = (newOpen: boolean) => () => setOpen(newOpen);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
     useEffect(() => {
+        /* eslint-disable react-hooks/exhaustive-deps */
         if(!user_id) return 
         const alreadyFetched = cookHistoryStore.some(item => item.recipe_id === recipe_id);
         if (!alreadyFetched) {
             dispatch(fetchHistoryCook({ connection_id: user_id, recipe_id }));
         }
+        /* eslint-enable react-hooks/exhaustive-deps */
+
     }, [user_id, dispatch, recipeName, recipe_id]);
 
 

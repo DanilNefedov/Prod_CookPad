@@ -28,11 +28,12 @@ import { CldImage } from "next-cloudinary";
 
 interface Props {
     ingredient_id: string,
-    recipe_id?: string
+    recipe_id?: string,
+    priority:boolean
 }
 
 const MainTableBody = memo(({ props }: { props: Props }) => {
-    const { ingredient_id, recipe_id } = props;
+    const { ingredient_id, recipe_id, priority } = props;
 
     const thisIngredient = useAppSelector(state => {
         if (recipe_id) {
@@ -100,6 +101,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
                                     dpr="auto"
                                     crop="fill"
                                     gravity="auto"
+                                    priority={priority}
                                 >
                                 </CldImage>
                             </Box>

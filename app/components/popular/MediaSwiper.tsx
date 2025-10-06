@@ -80,7 +80,7 @@ export const MediaSwiper = memo(({ configId }: { configId: string }) => {
                                 <CldVideoPlayer
                                     src={elem.media_url as string}
                                     width={900}
-                                    height={1485}
+                                    height={1400}
                                     autoPlay={true}
                                     autoplay={true}
                                     playsinline={true}

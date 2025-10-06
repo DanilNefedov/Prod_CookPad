@@ -4,7 +4,7 @@ import { linksBar } from '@/app/(main)/home/styles';
 import { TabObject } from '@/app/(main)/home/types';
 import { useNavigationState } from '@/config/home-navigation/ContextNavigation';
 import { useAppSelector } from '@/state/hook';
-import { Tab, Tabs } from '@mui/material';
+import { Skeleton, Tab, Tabs } from '@mui/material';
 import NextLink from 'next/link';
 import { useEffect, useMemo } from 'react';
 
@@ -12,8 +12,9 @@ import { useEffect, useMemo } from 'react';
 
 
 export default function TabsRender() {
-  const recipeStore = useAppSelector((state) => state.recipe);
-  const renderedNavigation = recipeStore.recipes.map((recipe) => ({
+  const recipeStore = useAppSelector((state) => state.recipe.recipes);
+  const recipesStatus = useAppSelector((state) => state.recipe.operations.fetchRecipes); 
+  const renderedNavigation = recipeStore.map((recipe) => ({
     sorting: recipe.sorting,
     _id: recipe.recipe_id,
   }));  
@@ -21,6 +22,14 @@ export default function TabsRender() {
   const { handlerNavigation, nav } = useNavigationState();
 
   const tabObjects: TabObject[] = useMemo(() => {
+
+    if (recipesStatus.loading && renderedNavigation.length === 0) {
+      return Array.from({ length: 6 }, (_, idx) => ({
+        key: `skeleton-${idx}`,
+        label: '',
+      }));
+    }
+
     const uniqueTabsSet = new Set<string>();
 
     return renderedNavigation
@@ -38,7 +47,7 @@ export default function TabsRender() {
           })
       )
       .sort((a, b) => a.label.localeCompare(b.label));
-  }, [renderedNavigation]);
+  }, [renderedNavigation, recipesStatus.loading]);
 
   const tabKeys: string[] = useMemo(
     () => ['all', ...tabObjects.map((obj) => obj.key)],
@@ -85,17 +94,31 @@ export default function TabsRender() {
         onClick={() => handlerNavigation('all')}
       />
 
-      {tabObjects.map(({ key, label }) => (
-        <Tab
-          key={key}
-          label={label}
-          sx={linksBar}
-          component={NextLink}
-          href="#"
-          value={key}
-          onClick={() => handlerNavigation(key)}
-        />
-      ))}
+      {tabObjects.map(({ key, label }) => {
+        if (key.startsWith('skeleton')) {
+          return (
+            <Tab
+              key={key}
+              label={<Skeleton component={'a'} variant="text" sx={[linksBar, {width:'100%', mr:'0'}]} />}
+              sx={[linksBar, {p:'0', width:'75px'}]}
+              disabled
+            />
+          );
+        }
+
+        return (
+          <Tab
+            key={key}
+            label={label}
+            sx={linksBar}
+            component={NextLink}
+            href="#"
+            value={key}
+            onClick={() => handlerNavigation(key)}
+          />
+        );
+      })}
+
     </Tabs>
   );
 }
