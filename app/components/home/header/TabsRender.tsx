@@ -23,7 +23,7 @@ export default function TabsRender() {
 
   const tabObjects: TabObject[] = useMemo(() => {
 
-    if (recipesStatus.loading) {
+    if (recipesStatus.loading && renderedNavigation.length === 0) {
       return Array.from({ length: 6 }, (_, idx) => ({
         key: `skeleton-${idx}`,
         label: '',
@@ -47,7 +47,7 @@ export default function TabsRender() {
           })
       )
       .sort((a, b) => a.label.localeCompare(b.label));
-  }, [renderedNavigation]);
+  }, [renderedNavigation, recipesStatus.loading]);
 
   const tabKeys: string[] = useMemo(
     () => ['all', ...tabObjects.map((obj) => obj.key)],
