@@ -74,7 +74,8 @@ const ContentAccordion = memo(({ props }: { props: Props }) => {
                         sortedList && sortedList.map(el => (
                             <MainTableBody key={el.ingredient_id} props={{
                                 ingredient_id:el.ingredient_id,
-                                recipe_id:_id
+                                recipe_id:_id,
+                                priority:false
                             }}></MainTableBody>
                         ))
                     }

@@ -159,3 +159,30 @@ export const deleteRecipeIcon = {
         height: '20px',
     },
 }
+
+export const skeletonBox = {
+    bgcolor:"background.default", 
+    width:'100%', 
+    height:'100%', 
+    borderRadius:'10px', 
+    mb:'5px',
+    p:'15px',
+    display:'flex',
+    alignItems:'center',
+    [theme.breakpoints.down(500)]: {
+        p:'10px'
+    }
+}
+
+export const skeletonImg = {
+    width:'60px', 
+    height:'60px', 
+    borderRadius:'50%'
+}
+
+export const skeletonName = {
+    maxWidth:'65%', 
+    height:'35px', 
+    width:'150px',
+    m:'0 auto'
+}

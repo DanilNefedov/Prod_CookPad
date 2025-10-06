@@ -14,6 +14,7 @@ import { accordion, accordionMediaBox, accordionName, accordionSumm,
 import { textMaxWidth } from "@/app/styles";
 import { moreButton } from "@/app/(main)/(main-list)/list/styles";
 import { CldImage } from "next-cloudinary";
+import { SkeletonList } from "./SkeletonList";
 
 
 
@@ -77,7 +78,7 @@ export function MainListRecipe() {
         <Box sx={mainContainerList}>
             {
                 !isPreloadingError && isPreloadingLoading && Object.keys(listRecipeStore).length === 0 ?
-                    <UXLoading ></UXLoading>//color:'#1F2128'
+                    <SkeletonList></SkeletonList>
                     :
                     !isPreloadingLoading && queueRecipes.length === 0 ?
                     //Object.keys(listRecipeStore)
@@ -144,16 +145,14 @@ export function MainListRecipe() {
 
                                     
 
-                                        {/* {expandedIds.includes(el._id) ? */}
-                                            <Button
-                                                onClick={() => handleDeleteRecipe(id)}
-                                                sx={deleteRecipeBtn}
-                                            >
-                                                <DeleteIcon sx={deleteRecipeIcon}></DeleteIcon>
-                                            </Button>
-                                            {/* :
-                                            null */}
-                                        {/* } */}
+                                     
+                                        <Button
+                                            onClick={() => handleDeleteRecipe(id)}
+                                            sx={deleteRecipeBtn}
+                                        >
+                                            <DeleteIcon sx={deleteRecipeIcon}></DeleteIcon>
+                                        </Button>
+                                            
                                     </Accordion>
 
 

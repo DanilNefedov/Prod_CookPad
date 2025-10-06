@@ -18,7 +18,6 @@ export function SkeletonHeader() {
                 }
             }]}>
                 <TableCell sx={{
-
                     [theme.breakpoints.down('md')]: {
                         '&.MuiTableCell-root': {
                             p: '10px 5px 5px',

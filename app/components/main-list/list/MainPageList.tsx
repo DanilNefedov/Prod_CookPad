@@ -123,10 +123,10 @@ export function MainListPage() {
 
 
                             <TableBody sx={tableBody}>
-                                {sortedList.map((el) => ( 
+                                {sortedList.map((el, indx) => ( 
                                     <MainTableBody
                                         key={el.ingredient_id}
-                                        props={{ ingredient_id: el.ingredient_id}}
+                                        props={{ ingredient_id: el.ingredient_id, priority:indx === 0}} 
                                     />
                                 ))}
                             </TableBody>
