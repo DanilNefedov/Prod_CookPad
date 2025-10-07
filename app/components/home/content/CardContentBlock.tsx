@@ -33,7 +33,7 @@ import SwiperMediaCard from './SwiperMediaCard';
 
 
 
-interface Props { 
+interface Props {
     recipe_id: string,
     id: string,
     isSkeleton: boolean
@@ -67,7 +67,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
 
 
     const handlerFavorite = (recipe_id: string, favorite: boolean | undefined): void => {
-        if (isFavoriteLoading ) return
+        if (isFavoriteLoading) return
 
         if (recipe_id && id !== '' && favorite !== undefined) {
             const data = { recipe_id, favorite }
@@ -89,7 +89,11 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
             <Box sx={boxTypeRecipe}>
                 {
                     isSkeleton ?
-                        <Skeleton variant='text'></Skeleton>
+                        <Skeleton variant='text' sx={{
+                            '@media (max-width:800px)': {
+                                width: 'calc(100% - 24px)'
+                            }
+                        }}></Skeleton>
                         :
                         <Typography component="p" sx={[textMaxWidth, typeRecipe]}>
                             {recipe?.recipe_type}
@@ -98,45 +102,45 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
 
             </Box>
 
-            {isMobile &&
-                <Box sx={containerMobileMenu}>
-                    <IconButton
-                        aria-label="more"
-                        id="long-button"
-                        aria-controls={openAdaptive ? 'long-menu' : undefined}
-                        aria-expanded={openAdaptive ? 'true' : undefined}
-                        aria-haspopup="true"
-                        onClick={handleClick}
-                        sx={mobileMenu}
-                    >
-                        <MoreVertIcon sx={{ width: '100%', height: '100%' }} viewBox='1 1 22 22' />
-                    </IconButton>
-                    <Menu
-                        id="long-menu"
-                        // MenuListProps={{
-                        //     'aria-labelledby': 'long-button',
-                        // }}
-                        anchorEl={anchorEl}
-                        open={openAdaptive}
-                        onClose={handleCloseAdaptive}
-                        sx={containerMenu}
-                    >
-                        <MenuItem onClick={handleCloseAdaptive} sx={mobileButtons}>
-                            <Button disabled={isSkeleton} href={`/cook/${recipe_id}`} component={Link} sx={cookBtn}>Cook</Button>
-                        </MenuItem>
 
-                        <MenuItem onClick={handleCloseAdaptive} sx={mobileButtons}>
-                            <Button disabled={isSkeleton} onClick={() => addToList()} sx={cookBtn}>To List</Button>
-                        </MenuItem>
+            <Box sx={[containerMobileMenu]}>
+                <IconButton
+                    aria-label="more"
+                    id="long-button"
+                    aria-controls={openAdaptive ? 'long-menu' : undefined}
+                    aria-expanded={openAdaptive ? 'true' : undefined}
+                    aria-haspopup="true"
+                    onClick={handleClick}
+                    sx={mobileMenu}
+                >
+                    <MoreVertIcon sx={{ width: '100%', height: '100%' }} viewBox='1 1 22 22' />
+                </IconButton>
+                <Menu
+                    id="long-menu"
+                    // MenuListProps={{
+                    //     'aria-labelledby': 'long-button',
+                    // }}
+                    anchorEl={anchorEl}
+                    open={openAdaptive}
+                    onClose={handleCloseAdaptive}
+                    sx={containerMenu}
+                >
+                    <MenuItem onClick={handleCloseAdaptive} sx={mobileButtons}>
+                        <Button disabled={isSkeleton} href={`/cook/${recipe_id}`} component={Link} sx={cookBtn}>Cook</Button>
+                    </MenuItem>
 
-                    </Menu>
-                </Box>
+                    <MenuItem onClick={handleCloseAdaptive} sx={mobileButtons}>
+                        <Button disabled={isSkeleton} onClick={() => addToList()} sx={cookBtn}>To List</Button>
+                    </MenuItem>
 
-            }
+                </Menu>
+            </Box>
+
+
 
             {
                 isSkeleton ?
-                    <Skeleton variant='rectangular' sx={{width:'100%', height:'100%'}}></Skeleton>
+                    <Skeleton variant='rectangular' sx={{ width: '100%', height: '100%' }}></Skeleton>
                     :
                     <Swiper
                         modules={[Navigation, Virtual]}
@@ -177,11 +181,11 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
 
             <CardContent sx={[contentPostionAbsolute, cardBottom,]}>
                 <Box sx={[mobileBottomInfo, { gap: ellipsisEnabled ? '7px' : 0 }]}>
-                    
 
-                        {
-                            isSkeleton ? 
-                            <Skeleton variant='text' sx={{width:'100%'}}></Skeleton> 
+
+                    {
+                        isSkeleton ?
+                            <Skeleton variant='text' sx={{ width: '100%' }}></Skeleton>
                             :
                             <Collapse in={!ellipsisEnabled} collapsedSize={isMobile ? 21 : 24} timeout={400}>
                                 <Typography
@@ -193,9 +197,9 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                                     {recipe?.name}
                                 </Typography>
                             </Collapse>
-                        }
-                        
-                    
+                    }
+
+
 
 
                     {isMobile &&
@@ -209,29 +213,29 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                     }
                 </Box>
 
-                {!isMobile &&
-                    <Box sx={desktopBotInfo}>
-                        <Button
-                            disabled={isSkeleton}
-                            component={Link}
-                            href={`/cook/${recipe_id}?name=${recipe?.name}`}
-                            sx={cookBtn}
-                        >Cook</Button>
-                        <Button 
-                            disabled={isSkeleton} 
-                            onClick={() => addToList()} 
-                            sx={[cookBtn, { mr: isMobile ? '0' : '24px' }]}
-                        >To List</Button>
-                        <IconButton
-                            sx={{ padding: '0' }}
-                            aria-label="add to favorites"
-                            onClick={() => handlerFavorite(recipe_id, recipe?.favorite)}
-                        >
-                            <FavoriteIcon sx={recipe?.favorite ? favoriteBtnActive : favoriteBtnDesactive} />
-                        </IconButton>
 
-                    </Box>
-                }
+                <Box sx={[desktopBotInfo]}>
+                    <Button
+                        disabled={isSkeleton}
+                        component={Link}
+                        href={`/cook/${recipe_id}?name=${recipe?.name}`}
+                        sx={cookBtn}
+                    >Cook</Button>
+                    <Button
+                        disabled={isSkeleton}
+                        onClick={() => addToList()}
+                        sx={[cookBtn, { mr: isMobile ? '0' : '24px' }]}
+                    >To List</Button>
+                    <IconButton
+                        sx={{ padding: '0' }}
+                        aria-label="add to favorites"
+                        onClick={() => handlerFavorite(recipe_id, recipe?.favorite)}
+                    >
+                        <FavoriteIcon sx={recipe?.favorite ? favoriteBtnActive : favoriteBtnDesactive} />
+                    </IconButton>
+
+                </Box>
+
 
             </CardContent>
         </Card>
@@ -240,6 +244,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
     return prevProps.props.id === nextProps.props.id &&
         prevProps.props.recipe_id === nextProps.props.recipe_id
 });
+
 
 
 CardContentBlock.displayName = "CardContentBlock"

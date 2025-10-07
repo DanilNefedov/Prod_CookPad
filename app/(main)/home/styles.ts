@@ -431,10 +431,15 @@ export const descriptionText = {
 }
 
 export const desktopBotInfo = {
-    display: 'flex', 
     justifyContent: 'space-between', 
-    mt:'5px'
+    mt:'5px',
+    display: 'none',
+
+    [theme.breakpoints.up(800)]: {
+        display: 'flex', 
+    },
 }
+
 
 export const containerMobileMenu = {
     position:'absolute', 
@@ -443,6 +448,11 @@ export const containerMobileMenu = {
     borderRadius:'50%',
     p:'2px',
     zIndex:'1000',
+    display: 'none',
+
+    [theme.breakpoints.down(800)]:  {
+        display: 'block',
+    },
 
     [theme.breakpoints.down(500)]: {
         top:'0',
