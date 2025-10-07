@@ -10,6 +10,7 @@ import { containerInfo, moreButton, table, tableBody } from '@/app/(main)/(main-
 import MainTableHeader from '../MainTableHeader';
 import { SkeletonTable } from './SkeletonTable';
 import { SkeletonHeader } from './SkeletonHeader';
+import { AddNewIngredient } from './AddNewIngredient';
 
 
 export function MainListPage() {
@@ -135,6 +136,7 @@ export function MainListPage() {
 
             </Table>
 
+            <AddNewIngredient></AddNewIngredient>
 
             {
                 !isLoading && Object.keys(ingredientsMap).length > 0 ?

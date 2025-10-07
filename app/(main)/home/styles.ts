@@ -443,7 +443,7 @@ export const desktopBotInfo = {
 
 export const containerMobileMenu = {
     position:'absolute', 
-    top:'1px', 
+    top:'1.5px', 
     right:'7px',
     borderRadius:'50%',
     p:'2px',
@@ -454,9 +454,9 @@ export const containerMobileMenu = {
         display: 'block',
     },
 
-    [theme.breakpoints.down(500)]: {
-        top:'0',
-    }     
+    // [theme.breakpoints.down(500)]: {
+    //     top:'0',
+    // }     
 }
 
 export const boxTypeRecipe = {
