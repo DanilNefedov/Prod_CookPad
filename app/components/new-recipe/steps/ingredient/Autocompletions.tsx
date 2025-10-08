@@ -16,7 +16,7 @@ import { CldImage } from "next-cloudinary";
 
 
 interface Props {
-    ingredientId: string;
+    ingredientId: string; 
 }
 
 export const Autocomplite = memo(({ingredientId}: Props) => {
@@ -117,6 +117,7 @@ export const Autocomplite = memo(({ingredientId}: Props) => {
             <MainInput 
                 ingredient={ingredient}
                 handleInputChange={handleInputChange}
+                page='form'
             ></MainInput>
 
             

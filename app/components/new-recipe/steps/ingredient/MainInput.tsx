@@ -5,6 +5,7 @@ import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarni
 import { fetchLocationSuggestions } from "@/app/services/autocomplite";
 import { textMaxWidth } from "@/app/styles";
 import { useAppDispatch } from "@/state/hook";
+import { choiceAutoIngredient } from "@/state/slices/list-form";
 import { choiceAutocomplite } from "@/state/slices/stepper/ingredients";
 import { Autocomplete, Box, debounce, ListItem, TextField, Typography } from "@mui/material";
 import { memo, useEffect, useMemo, useState } from "react";
@@ -13,10 +14,11 @@ import { memo, useEffect, useMemo, useState } from "react";
 interface Props {
     ingredient: IngredientAutocomplite, 
     handleInputChange: (newInputValue: string) => void, 
+    page:'form' | 'list' | 'recipe'
 }
 
 
-export const MainInput = memo(({ ingredient, handleInputChange }: Props) => {
+export const MainInput = memo(({ ingredient, handleInputChange, page }: Props) => {
     const numbStep = 4
     const [options, setOptions] = useState<IngredientAutocomplite[]>([]);
     const [value, setValue] = useState<IngredientAutocomplite | null>(ingredient);
@@ -76,10 +78,63 @@ export const MainInput = memo(({ ingredient, handleInputChange }: Props) => {
     }, [value, inputValue, fetch, dispatch, ingredient.ingredient_id]);
 
 
+    function handleChange(newValue: IngredientAutocomplite | string | null){
+        if (typeof newValue === 'string') {
+            const newIngredient = {
+                ingredient_id: ingredient.ingredient_id,
+                name: newValue.trim(),
+                new_ingredient: true,
+                media: '',
+                units: ['kg', 'g', 'ml', 'l'],
+            };
+            setValue(newIngredient);
+            setOptions([newIngredient, ...options]);
+            if(page === 'form'){
+                dispatch(
+                    choiceAutocomplite(newIngredient)
+                );
+            }
+
+            if(page === 'list'){
+                dispatch(choiceAutoIngredient(newIngredient))
+            }
+            
+            handleInputChange(newIngredient.name)
+            // dispatch(updateError({ step: numbStep, error: false }));
+        } else {
+            setOptions(newValue ? [newValue, ...options] : options);
+            setValue(newValue);
+            if(page === 'form'){
+                dispatch(
+                    choiceAutocomplite({
+                        ingredient_id: ingredient.ingredient_id,
+                        name: newValue?.name.trim() || '',
+                        new_ingredient: newValue?.new_ingredient || false, // maybe only need to change it to false
+                        media: newValue?.media || '',
+                        units: newValue?.units as string[] || [],
+                        // check_open_link: newValue?.ingredient_id || ''
+                    })
+                );
+            }
+            if(page === 'list'){
+                dispatch(choiceAutoIngredient({
+                    ingredient_id: ingredient.ingredient_id,
+                    name: newValue?.name.trim() || '',
+                    new_ingredient: newValue?.new_ingredient || false, // maybe only need to change it to false
+                    media: newValue?.media || '',
+                    units: newValue?.units as string[] || [],
+                    // check_open_link: newValue?.ingredient_id || ''
+                }))
+            }
+            handleInputChange(newValue?.name.trim() || '')
+            // dispatch(updateError({ step: numbStep, error: false }));
+        }
+    }
+
 
     return (
         <Autocomplete
-            id="ingredient"
+            // id="ingredient"
             sx={autoCompliteItems}
             getOptionLabel={(option) => (typeof option === 'string' ? option : option.name)}
             filterOptions={(x) => x}
@@ -95,39 +150,7 @@ export const MainInput = memo(({ ingredient, handleInputChange }: Props) => {
             freeSolo
             value={value}
             noOptionsText="No ingredients"
-            onChange={(event, newValue: IngredientAutocomplite | string | null) => {
-                if (typeof newValue === 'string') {
-                    const newIngredient = {
-                        ingredient_id: ingredient.ingredient_id,
-                        name: newValue.trim(),
-                        new_ingredient: true,
-                        media: '',
-                        units: ['kg', 'g', 'ml', 'l'],
-                    };
-                    setValue(newIngredient);
-                    setOptions([newIngredient, ...options]);
-                    dispatch(
-                        choiceAutocomplite(newIngredient)
-                    );
-                    handleInputChange(newIngredient.name)
-                    // dispatch(updateError({ step: numbStep, error: false }));
-                } else {
-                    setOptions(newValue ? [newValue, ...options] : options);
-                    setValue(newValue);
-                    dispatch(
-                        choiceAutocomplite({
-                            ingredient_id: ingredient.ingredient_id,
-                            name: newValue?.name.trim() || '',
-                            new_ingredient: newValue?.new_ingredient || false, // maybe only need to change it to false
-                            media: newValue?.media || '',
-                            units: newValue?.units as string[] || [],
-                            // check_open_link: newValue?.ingredient_id || ''
-                        })
-                    );
-                    handleInputChange(newValue?.name.trim() || '')
-                    // dispatch(updateError({ step: numbStep, error: false }));
-                }
-            }}
+            onChange={(event, newValue: IngredientAutocomplite | string | null) => handleChange(newValue)}
             onInputChange={(event, newInputValue) => {
                 setInputValue(newInputValue)
             }}
@@ -169,7 +192,8 @@ export const MainInput = memo(({ ingredient, handleInputChange }: Props) => {
     )
 }, (prevProps, nextProps) => {
     return prevProps.ingredient.ingredient_id === nextProps.ingredient.ingredient_id &&
-    prevProps.ingredient.name === nextProps.ingredient.name 
+    prevProps.ingredient.name === nextProps.ingredient.name &&
+    prevProps.page === nextProps.page
 })
 
 

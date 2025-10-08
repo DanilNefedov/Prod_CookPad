@@ -2,6 +2,8 @@ import { Box, Button, Fab, Modal, Popover, SpeedDial, SpeedDialAction, Typograph
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import { useRef, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
+import { NewIngredientItem } from "./NewIngredientItem";
+import { useAppSelector } from "@/state/hook";
 
 
 
@@ -9,6 +11,7 @@ export function AddNewIngredient() {
     const [open, setOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const fabRef = useRef<HTMLButtonElement>(null);
+    const ingredientsForm = useAppSelector(state => state.newIngredient.ingredients)
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -18,7 +21,6 @@ export function AddNewIngredient() {
     const handleClose = () => setOpen(false);
 
     // const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
 
 
 
@@ -28,23 +30,35 @@ export function AddNewIngredient() {
                 <AddIcon />
             </Fab>
             <Popover
-                id={id}
-                open={open}
+                id={open ? 'simple-popover' : undefined}
+                open={true}//open
                 anchorEl={anchorEl}
                 onClose={handleClose}
                 anchorOrigin={{
-                    vertical: 'top', // верх кнопки
-                    horizontal: 'center',
+                    vertical: 'top',
+                    horizontal: 'left',
                 }}
                 transformOrigin={{
-                    vertical: 'bottom', // низ поповера привязан к верх кнопки
-                    horizontal: 'center',
+                    vertical: 'bottom',
+                    horizontal: 'left',
                 }}
-                PaperProps={{
-                    sx: { mt: -8 }, // поднимаем над кнопкой, можно подогнать под размер FAB
-                }}
+                
             >
-                <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+                <Box sx={{
+                    // maxWidth:'400px',
+                    // width:'100%',
+                    // height:'100%',
+                    // maxHeight:'1000px',
+                    bgcolor:'background.paper',
+                    p:'20px 10px'
+                }}>
+                    {ingredientsForm.map(el =>(
+                        <NewIngredientItem key={el.ingredient_id} ingredient_id={el.ingredient_id}></NewIngredientItem>
+                    ))}
+                    
+                </Box>
+
+                <Button color="blackRedBtn">Add ingredient</Button>
             </Popover>
         </Box>
 

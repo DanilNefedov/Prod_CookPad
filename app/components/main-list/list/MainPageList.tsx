@@ -10,7 +10,7 @@ import { containerInfo, moreButton, table, tableBody } from '@/app/(main)/(main-
 import MainTableHeader from '../MainTableHeader';
 import { SkeletonTable } from './SkeletonTable';
 import { SkeletonHeader } from './SkeletonHeader';
-import { AddNewIngredient } from './AddNewIngredient';
+import { AddNewIngredient } from './new-ingr-window/AddNewIngredient';
 
 
 export function MainListPage() {

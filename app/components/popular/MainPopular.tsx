@@ -22,7 +22,7 @@ import { theme } from "@/config/ThemeMUI/theme";
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import { usePingGate } from "@/app/hooks/ping";
+import { usePingGate } from "@/app/hooks/usePing";
 import { initCommentsState } from "@/state/slices/comments-popular-slice";
 import { centerFlexBlock, textMaxWidth } from "@/app/styles";
 
