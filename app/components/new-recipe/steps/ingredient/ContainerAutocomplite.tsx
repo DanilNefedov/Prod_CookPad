@@ -1,0 +1,128 @@
+import { useAppDispatch, useAppSelector } from "@/state/hook";
+import { Autocomplite } from "./Autocompletions";
+import { shallowEqual } from "react-redux";
+import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarning";
+import { ChangeEvent, memo, useCallback, useEffect, useMemo, useRef } from "react";
+import { choiceUnits, ingredientAmount } from "@/state/slices/stepper/ingredients";
+import { handleAmountChange } from "@/app/helpers/input-unit";
+import { addErrorIngredient, deleteErrorIngredient } from "@/state/slices/stepper/error-open";
+import { Unit } from "@/app/(main)/cook/types";
+import { selectIngredientsWithAtLeastOneFilled } from "@/state/selectors/stepper-autocomp-error";
+
+
+
+interface Props {
+    ingredientId: string;
+}
+
+export const ContainerAutocomplite = memo(({ ingredientId }: Props) => {
+    // const numbStep = 4
+
+    const ingredient = useAppSelector((state) => {
+        const found = state.ingredientsSlice.ingredients.find((ingr) => ingr.ingredient_id === ingredientId);
+        if (!found) throw new Error(`Ingredient with id ${ingredientId} not found`);
+        return found;
+    }, shallowEqual);
+
+
+    const showMinOneFilledWarning = useAppSelector((state) => 
+        !selectIngredientsWithAtLeastOneFilled(state, 4)
+    );
+
+    
+    const dispatch = useAppDispatch();
+    const inputValue = useRef<string>('');
+
+    const handleInputChange = useCallback((newInputValue: string) => {
+        inputValue.current = newInputValue;
+    }, []);
+
+
+
+    const changeAmount = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const newValue = e.target.value;
+        console.log(newValue)
+        const resValue = handleAmountChange(newValue)
+
+        console.log(resValue)
+        dispatch(
+            ingredientAmount({
+                ingredient_id: ingredient.ingredient_id,
+                amount: parseFloat(resValue),
+            })
+        );
+    }, [dispatch, ingredient.ingredient_id]);
+
+    
+
+
+    const isDisabled = useMemo(() => {
+        const units = ingredient.units as Unit | string[];
+
+        if (Array.isArray(units)) {
+            return units.length > 0;
+        }
+
+        const hasUnits = inputValue.current !== '' && units.amount !== 0;
+        return !hasUnits && units.list.length === 0;
+    }, [ingredient.units]);
+
+
+
+    const changeUnits = useCallback((newValue: string) => {
+        dispatch(choiceUnits({ ingredient_id: ingredient.ingredient_id, choice: newValue }));
+    }, [dispatch, ingredient.ingredient_id]);
+    
+
+
+    //Dependency error ingredient.units. Rewrite the redux with more obvious data types
+    // useEffect(() => {
+    //     if (!Array.isArray(ingredient.units) && 'amount' in ingredient.units) {
+    //         const isNameEmpty = inputValue.current === '' && ingredient.name === '';
+    //         const isAmountEmpty = ingredient.units.amount === 0;
+    //         const isChoiceEmpty = ingredient.units.choice === '';
+
+    //         const emptyCount = [isNameEmpty, isAmountEmpty, isChoiceEmpty].filter(Boolean).length;
+
+    //         if (emptyCount > 0 && emptyCount < 3) {
+    //             dispatch(addErrorIngredient(ingredientId));
+    //         } else {
+    //             dispatch(deleteErrorIngredient(ingredientId));
+    //         }
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [ingredient.name, ingredientId, dispatch]);
+    //Dependency error ingredient.units. Rewrite the redux with more obvious data types
+
+
+
+    const controller = useMemo(
+        () => ({
+            ingredient,
+            // showWarning:showMinOneFilledWarning,
+            isDisabled,
+            handlers: {
+                handleInputChange,
+                handleAmountChange: changeAmount,
+                handleUnitsChange:changeUnits,
+            },
+        }),
+        [isDisabled, handleInputChange, ingredient, changeAmount, changeUnits]//ingredient showMinOneFilledWarning, changeAmount, changeUnits
+    );
+
+    console.log('container')
+    return (
+        <Autocomplite
+            showWarning={showMinOneFilledWarning}
+            ingredientId={ingredientId}
+            controller={controller}
+
+        ></Autocomplite>
+    )
+
+}, (prevProps, nextProps) => {
+    return prevProps.ingredientId === nextProps.ingredientId
+})
+
+
+ContainerAutocomplite.displayName = "ContainerAutocomplite"
