@@ -1,5 +1,7 @@
-import { autoCompliteItems, autocompliteMenuItem, autocompMenuBox, 
-    autocompMenuContainer, autocompMenuText, paperMenu } from "@/app/(main)/new-recipe/style";
+import {
+    autoCompliteItems, autocompliteMenuItem, autocompMenuBox,
+    autocompMenuContainer, autocompMenuText, paperMenu
+} from "@/app/(main)/new-recipe/style";
 import { CallbackIngrAutocomplite, IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
 import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarning";
 import { fetchLocationSuggestions } from "@/app/services/autocomplite";
@@ -8,129 +10,147 @@ import { useAppDispatch } from "@/state/hook";
 import { choiceAutoIngredient } from "@/state/slices/list-form";
 import { choiceAutocomplite } from "@/state/slices/stepper/ingredients";
 import { Autocomplete, Box, debounce, ListItem, TextField, Typography } from "@mui/material";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState, Dispatch, SetStateAction } from "react";
 
 
-interface Props {
-    ingredient: IngredientAutocomplite, 
-    handleInputChange: (newInputValue: string) => void, 
-    page:'form' | 'list' | 'recipe'
+interface Controller {
+    options:IngredientAutocomplite[],
+    value:IngredientAutocomplite | null,
+    handlers: {
+        handleChange: (newValue: string | IngredientAutocomplite | null) => void,
+        setInputValue:Dispatch<SetStateAction<string>>
+    },
 }
 
+interface Props {
+    controller:Controller, 
+    showWarning:boolean
+}
 
-export const MainInput = memo(({ ingredient, handleInputChange, page }: Props) => {
-    const numbStep = 4
-    const [options, setOptions] = useState<IngredientAutocomplite[]>([]);
-    const [value, setValue] = useState<IngredientAutocomplite | null>(ingredient);
-    const [inputValue, setInputValue] = useState<string>('');
-    const showMinOneFilledWarning = useShowMinOneFilledWarning(numbStep);
+// interface Props {
+//     ingredient: IngredientAutocomplite,
+//     handleInputChange: (newInputValue: string) => void,
+//     page: 'form' | 'list' | 'recipe'
+// }
 
-    const dispatch = useAppDispatch();
+export const MainInput = memo(({ controller, showWarning }: Props) => {
+// export const MainInput = memo(({ page, ingredient, handleInputChange }: Props) => {
+    const {handlers, options, value} = controller
+    const {handleChange, setInputValue} = handlers
 
+    // const numbStep = 4
+    // const [options, setOptions] = useState<IngredientAutocomplite[]>([]);
+    // const [value, setValue] = useState<IngredientAutocomplite | null>(ingredient);
+    // const [inputValue, setInputValue] = useState<string>('');
+    // const showMinOneFilledWarning = useShowMinOneFilledWarning(numbStep);
 
-
-    const fetch = useMemo(
-        () =>
-            debounce(
-                async (request: { input: string }, callback: (results: CallbackIngrAutocomplite[]) => void) => {
-                    try {
-                        if (request.input?.trim().length > 1) {
-                            const response = await fetchLocationSuggestions(request.input);
-                            callback(response);
-                        }
-                    } catch (error) {
-                        console.error(error);
-                        callback([]);
-                    }
-                },
-                400
-            ),
-        []
-    );
+    // const dispatch = useAppDispatch();
 
 
-    useEffect(() => {
-        let active = true;
 
-        if (inputValue === '') {
-            setOptions(value ? [value] : []);
-            return undefined;
-        }
-
-        fetch({ input: inputValue }, async (results) => {
-            if (active) {
-                const newOptions = results.map((el) => {
-                    return {
-                        ingredient_id: el._id,
-                        name: el.name,
-                        new_ingredient: false,
-                        units: el.units,
-                        media: el.media,
-                    };
-                });
-                setOptions(value ? [value, ...newOptions] : newOptions);
-            }
-        });
-
-        return () => {
-            active = false;
-        };
-    }, [value, inputValue, fetch, dispatch, ingredient.ingredient_id]);
+    // const fetch = useMemo(
+    //     () =>
+    //         debounce(
+    //             async (request: { input: string }, callback: (results: CallbackIngrAutocomplite[]) => void) => {
+    //                 try {
+    //                     if (request.input?.trim().length > 1) {
+    //                         const response = await fetchLocationSuggestions(request.input);
+    //                         callback(response);
+    //                     }
+    //                 } catch (error) {
+    //                     console.error(error);
+    //                     callback([]);
+    //                 }
+    //             },
+    //             400
+    //         ),
+    //     []
+    // );
 
 
-    function handleChange(newValue: IngredientAutocomplite | string | null){
-        if (typeof newValue === 'string') {
-            const newIngredient = {
-                ingredient_id: ingredient.ingredient_id,
-                name: newValue.trim(),
-                new_ingredient: true,
-                media: '',
-                units: ['kg', 'g', 'ml', 'l'],
-            };
-            setValue(newIngredient);
-            setOptions([newIngredient, ...options]);
-            if(page === 'form'){
-                dispatch(
-                    choiceAutocomplite(newIngredient)
-                );
-            }
+    // useEffect(() => {
+    //     let active = true;
 
-            if(page === 'list'){
-                dispatch(choiceAutoIngredient(newIngredient))
-            }
-            
-            handleInputChange(newIngredient.name)
-            // dispatch(updateError({ step: numbStep, error: false }));
-        } else {
-            setOptions(newValue ? [newValue, ...options] : options);
-            setValue(newValue);
-            if(page === 'form'){
-                dispatch(
-                    choiceAutocomplite({
-                        ingredient_id: ingredient.ingredient_id,
-                        name: newValue?.name.trim() || '',
-                        new_ingredient: newValue?.new_ingredient || false, // maybe only need to change it to false
-                        media: newValue?.media || '',
-                        units: newValue?.units as string[] || [],
-                        // check_open_link: newValue?.ingredient_id || ''
-                    })
-                );
-            }
-            if(page === 'list'){
-                dispatch(choiceAutoIngredient({
-                    ingredient_id: ingredient.ingredient_id,
-                    name: newValue?.name.trim() || '',
-                    new_ingredient: newValue?.new_ingredient || false, // maybe only need to change it to false
-                    media: newValue?.media || '',
-                    units: newValue?.units as string[] || [],
-                    // check_open_link: newValue?.ingredient_id || ''
-                }))
-            }
-            handleInputChange(newValue?.name.trim() || '')
-            // dispatch(updateError({ step: numbStep, error: false }));
-        }
-    }
+    //     if (inputValue === '') {
+    //         setOptions(value ? [value] : []);
+    //         return undefined;
+    //     }
 
+    //     fetch({ input: inputValue }, async (results) => {
+    //         if (active) {
+    //             const newOptions = results.map((el) => {
+    //                 return {
+    //                     ingredient_id: el._id,
+    //                     name: el.name,
+    //                     new_ingredient: false,
+    //                     units: el.units,
+    //                     media: el.media,
+    //                 };
+    //             });
+    //             setOptions(value ? [value, ...newOptions] : newOptions);
+    //         }
+    //     });
+
+    //     return () => {
+    //         active = false;
+    //     };
+    // }, [value, inputValue, fetch, dispatch, ingredient.ingredient_id]);
+
+
+    // function handleChange(newValue: IngredientAutocomplite | string | null) {
+    //     if (typeof newValue === 'string') {
+    //         const newIngredient = {
+    //             ingredient_id: ingredient.ingredient_id,
+    //             name: newValue.trim(),
+    //             new_ingredient: true,
+    //             media: '',
+    //             units: ['kg', 'g', 'ml', 'l'],
+    //         };
+    //         setValue(newIngredient);
+    //         setOptions([newIngredient, ...options]);
+    //         if (page === 'form') { 
+    //             dispatch(
+    //                 choiceAutocomplite(newIngredient)
+    //             );
+    //         }
+
+    //         if (page === 'list') {
+    //             dispatch(choiceAutoIngredient(newIngredient))
+    //         }
+
+    //         handleInputChange(newIngredient.name)
+    //         // dispatch(updateError({ step: numbStep, error: false }));
+    //     } else {
+    //         setOptions(newValue ? [newValue, ...options] : options);
+    //         setValue(newValue);
+    //         if (page === 'form') {
+    //             dispatch(
+    //                 choiceAutocomplite({
+    //                     ingredient_id: ingredient.ingredient_id,
+    //                     name: newValue?.name.trim() || '',
+    //                     new_ingredient: newValue?.new_ingredient || false, // maybe only need to change it to false
+    //                     media: newValue?.media || '',
+    //                     units: newValue?.units as string[] || [],
+    //                     // check_open_link: newValue?.ingredient_id || ''
+    //                 })
+    //             );
+    //         }
+    //         if (page === 'list') {
+    //             dispatch(choiceAutoIngredient({
+    //                 ingredient_id: ingredient.ingredient_id,
+    //                 name: newValue?.name.trim() || '',
+    //                 new_ingredient: newValue?.new_ingredient || false, // maybe only need to change it to false
+    //                 media: newValue?.media || '',
+    //                 units: newValue?.units as string[] || [],
+    //                 // check_open_link: newValue?.ingredient_id || ''
+    //             }))
+    //         }
+    //         handleInputChange(newValue?.name.trim() || '')
+    //         // dispatch(updateError({ step: numbStep, error: false }));
+    //     }
+    // }
+
+    console.log('MainInput')
 
     return (
         <Autocomplete
@@ -154,17 +174,17 @@ export const MainInput = memo(({ ingredient, handleInputChange, page }: Props) =
             onInputChange={(event, newInputValue) => {
                 setInputValue(newInputValue)
             }}
-            renderInput={(params) => 
-                <TextField  
-                    {...params}  
-                    placeholder="Add an ingredient" 
-                    fullWidth 
+            renderInput={(params) =>
+                <TextField
+                    {...params}
+                    placeholder="Add an ingredient"
+                    fullWidth
                     // sx={mainInputAutocomplite}
-                    error={showMinOneFilledWarning ? true : false}
+                    error={showWarning}
                     slotProps={{
                         htmlInput: {
                             ...params.inputProps,
-                            maxLength:50
+                            maxLength: 50
                         },
                     }}
                 />
@@ -190,11 +210,13 @@ export const MainInput = memo(({ ingredient, handleInputChange, page }: Props) =
             )}
         />
     )
-}, (prevProps, nextProps) => {
-    return prevProps.ingredient.ingredient_id === nextProps.ingredient.ingredient_id &&
-    prevProps.ingredient.name === nextProps.ingredient.name &&
-    prevProps.page === nextProps.page
-})
+},(prevProps, nextProps) => {
+        return prevProps.showWarning === nextProps.showWarning &&
+        prevProps.controller.value === nextProps.controller.value &&
+        prevProps.controller.options.length === nextProps.controller.options.length
+        // prevProps.page === nextProps.page
+    }
+)
 
 
 

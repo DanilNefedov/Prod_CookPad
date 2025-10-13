@@ -69,8 +69,8 @@ const initialState: NewIngredientState = {
 
 
 
-const newIngredient = createSlice({
-    name: 'newIngredient',
+const newListIngredient = createSlice({
+    name: 'newListIngredient',
     initialState,
     reducers: {
         choiceAutoIngredient(state, action: PayloadAction<Autocompite>) {
@@ -112,7 +112,7 @@ const newIngredient = createSlice({
 
 
 
-export const { choiceAutoIngredient, amountNewIngredient, choiceUnit } = newIngredient.actions
+export const { choiceAutoIngredient, amountNewIngredient, choiceUnit } = newListIngredient.actions
 
     
-export default newIngredient.reducer
+export default newListIngredient.reducer

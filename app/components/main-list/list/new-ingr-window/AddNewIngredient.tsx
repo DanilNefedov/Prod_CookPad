@@ -11,7 +11,7 @@ export function AddNewIngredient() {
     const [open, setOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const fabRef = useRef<HTMLButtonElement>(null);
-    const ingredientsForm = useAppSelector(state => state.newIngredient.ingredients)
+    const ingredientsForm = useAppSelector(state => state.newListIngredient.ingredients)
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);

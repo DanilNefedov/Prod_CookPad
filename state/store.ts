@@ -16,7 +16,7 @@ import mediaSlice from './slices/stepper/media'
 import ingredientsSlice from './slices/stepper/ingredients'
 import descriptionSlice from './slices/stepper/description'
 import instructionSlice from './slices/stepper/instruction'
-import newIngredient from './slices/list-form'
+import newListIngredient from './slices/list-form'
 
 
 export const RESET_APP = 'RESET_APP';
@@ -40,7 +40,7 @@ const appReducer = combineReducers({
     ingredientsSlice:ingredientsSlice,
     descriptionSlice:descriptionSlice,
     instructionSlice:instructionSlice,
-    newIngredient:newIngredient
+    newListIngredient:newListIngredient
 });
 
 const rootReducer = (state: ReturnType<typeof appReducer> | undefined, action: any) => {

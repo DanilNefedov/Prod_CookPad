@@ -8,6 +8,8 @@ import { amountNewIngredient, choiceAutoIngredient, choiceUnit } from "@/state/s
 import { Autocomplete, Box, Button, ListItem, TextField, Typography } from "@mui/material";
 import { CldImage } from "next-cloudinary";
 import { ChangeEvent, useCallback, useRef } from "react";
+import { ContainerIngredient } from "./ContainerIngredient";
+import { shallowEqual } from "react-redux";
 
 
 
@@ -18,47 +20,51 @@ import { ChangeEvent, useCallback, useRef } from "react";
 
 
 export function NewIngredientItem({ingredient_id}:{ingredient_id:string}){
-    const ingredient = useAppSelector(state => state.newIngredient.ingredients.find(el => el.ingredient_id === ingredient_id))
-    const inputValue = useRef<string>('');
-    const showMinOneFilledWarning = useShowMinOneFilledWarning(4);
-    const dispatch = useAppDispatch();
+    const ingredient = useAppSelector((state) => {
+        const found = state.newListIngredient.ingredients.find((ingr) => ingr.ingredient_id === ingredient_id);
+        if (!found) throw new Error(`Ingredient with id ${ingredient_id} not found`);
+        return found;
+    }, shallowEqual);
+    // const inputValue = useRef<string>('');
+    // const showMinOneFilledWarning = useShowMinOneFilledWarning(4);
+    // const dispatch = useAppDispatch();
 
 
 
-    const handleInputChange = useCallback((newInputValue: string) => {
-        inputValue.current = newInputValue;
-    }, []);
+    // const handleInputChange = useCallback((newInputValue: string) => {
+    //     inputValue.current = newInputValue;
+    // }, []);
     
 
-    function isDisabled() {
-        if (Array.isArray(ingredient?.units)) {
-            return ingredient.units.length > 0;
-        }
+    // function isDisabled() {
+    //     if (Array.isArray(ingredient?.units)) {
+    //         return ingredient.units.length > 0;
+    //     }
 
-        const hasUnits = inputValue.current !== '' && ingredient?.units.amount !== 0;
-        return !hasUnits && ingredient?.units.list.length === 0;
-    }
+    //     const hasUnits = inputValue.current !== '' && ingredient?.units.amount !== 0;
+    //     return !hasUnits && ingredient?.units.list.length === 0;
+    // }
 
-    function changeAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        if(!ingredient) return
+    // function changeAmount(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    //     if(!ingredient) return
 
-        const newValue = e.target.value;
-        const resValue = handleAmountChange(newValue)
+    //     const newValue = e.target.value;
+    //     const resValue = handleAmountChange(newValue)
         
-        dispatch(
-            amountNewIngredient({
-                ingredient_id: ingredient.ingredient_id,
-                amount: parseFloat(resValue),
-            })
-        );
-    }
+    //     dispatch(
+    //         amountNewIngredient({
+    //             ingredient_id: ingredient.ingredient_id,
+    //             amount: parseFloat(resValue),
+    //         })
+    //     );
+    // }
 
-    function cahngeUnits(newValue: string) {
-        if(!ingredient) return
-        dispatch(choiceUnit({ ingredient_id: ingredient.ingredient_id, choice: newValue }));
-    }
+    // function cahngeUnits(newValue: string) {
+    //     if(!ingredient) return
+    //     dispatch(choiceUnit({ ingredient_id: ingredient.ingredient_id, choice: newValue }));
+    
 
-    console.log(ingredient, inputValue)
+    // console.log(ingredient, inputValue)
 
     return(
         <Box sx={{
@@ -92,15 +98,20 @@ export function NewIngredientItem({ingredient_id}:{ingredient_id:string}){
                 }
             </Box>
 
-            {ingredient &&
+            {/* {ingredient &&
                 <MainInput 
                     ingredient={ingredient}
                     handleInputChange={handleInputChange}
                     page='list'
                 ></MainInput>
-            }
+            } */}
 
-            <TextField
+
+            <ContainerIngredient
+                ingredient={ingredient}
+            ></ContainerIngredient>
+
+            {/* <TextField
                 disabled={isDisabled()}
                 error={showMinOneFilledWarning ? true : false}
                 id="outlined-basic"
@@ -166,7 +177,7 @@ export function NewIngredientItem({ingredient_id}:{ingredient_id:string}){
     
                 )}
                 sx={[autoCompliteItems, weightItemList]}
-            />
+            /> */}
             
 
         </Box>

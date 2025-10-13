@@ -1,13 +1,12 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { Autocomplite } from "./Autocompletions";
 import { shallowEqual } from "react-redux";
-import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarning";
 import { ChangeEvent, memo, useCallback, useEffect, useMemo, useRef } from "react";
 import { choiceUnits, ingredientAmount } from "@/state/slices/stepper/ingredients";
 import { handleAmountChange } from "@/app/helpers/input-unit";
-import { addErrorIngredient, deleteErrorIngredient } from "@/state/slices/stepper/error-open";
 import { Unit } from "@/app/(main)/cook/types";
-import { selectIngredientsWithAtLeastOneFilled } from "@/state/selectors/stepper-autocomp-error";
+import { addErrorIngredient, deleteErrorIngredient } from "@/state/slices/stepper/error-open";
+import { selectShowMinOneFilledWarning } from "@/state/selectors/stepper-autocomp-error";
 
 
 
@@ -16,7 +15,7 @@ interface Props {
 }
 
 export const ContainerAutocomplite = memo(({ ingredientId }: Props) => {
-    // const numbStep = 4
+    const numbStep = 4
 
     const ingredient = useAppSelector((state) => {
         const found = state.ingredientsSlice.ingredients.find((ingr) => ingr.ingredient_id === ingredientId);
@@ -26,25 +25,24 @@ export const ContainerAutocomplite = memo(({ ingredientId }: Props) => {
 
 
     const showMinOneFilledWarning = useAppSelector((state) => 
-        !selectIngredientsWithAtLeastOneFilled(state, 4)
+        selectShowMinOneFilledWarning(state, numbStep)
     );
 
     
     const dispatch = useAppDispatch();
-    const inputValue = useRef<string>('');
+    // const inputValue = useRef<string>('');
 
-    const handleInputChange = useCallback((newInputValue: string) => {
-        inputValue.current = newInputValue;
-    }, []);
+    // const handleInputChange = useCallback((newInputValue: string) => {
+    //     inputValue.current = newInputValue;
+    // }, []);
 
 
 
     const changeAmount = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const newValue = e.target.value;
-        console.log(newValue)
+
         const resValue = handleAmountChange(newValue)
 
-        console.log(resValue)
         dispatch(
             ingredientAmount({
                 ingredient_id: ingredient.ingredient_id,
@@ -63,7 +61,7 @@ export const ContainerAutocomplite = memo(({ ingredientId }: Props) => {
             return units.length > 0;
         }
 
-        const hasUnits = inputValue.current !== '' && units.amount !== 0;
+        const hasUnits = ingredient.name !== '' && units.amount !== 0;
         return !hasUnits && units.list.length === 0;
     }, [ingredient.units]);
 
@@ -75,10 +73,11 @@ export const ContainerAutocomplite = memo(({ ingredientId }: Props) => {
     
 
 
+    //It should work with these. But it works without them too.
     //Dependency error ingredient.units. Rewrite the redux with more obvious data types
     // useEffect(() => {
     //     if (!Array.isArray(ingredient.units) && 'amount' in ingredient.units) {
-    //         const isNameEmpty = inputValue.current === '' && ingredient.name === '';
+    //         const isNameEmpty = ingredient.name === '';
     //         const isAmountEmpty = ingredient.units.amount === 0;
     //         const isChoiceEmpty = ingredient.units.choice === '';
 
@@ -95,22 +94,20 @@ export const ContainerAutocomplite = memo(({ ingredientId }: Props) => {
     //Dependency error ingredient.units. Rewrite the redux with more obvious data types
 
 
-
     const controller = useMemo(
         () => ({
             ingredient,
             // showWarning:showMinOneFilledWarning,
             isDisabled,
             handlers: {
-                handleInputChange,
+                // handleInputChange,
                 handleAmountChange: changeAmount,
                 handleUnitsChange:changeUnits,
             },
         }),
-        [isDisabled, handleInputChange, ingredient, changeAmount, changeUnits]//ingredient showMinOneFilledWarning, changeAmount, changeUnits
+        [isDisabled, , ingredient, changeAmount, changeUnits]//handleInputChange
     );
 
-    console.log('container')
     return (
         <Autocomplite
             showWarning={showMinOneFilledWarning}
