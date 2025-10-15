@@ -1,37 +1,29 @@
 import { CallbackIngrAutocomplite, IngredientAutocomplite } from "@/app/(main)/new-recipe/types"
-import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarning"
-import { fetchLocationSuggestions } from "@/app/services/autocomplite"
-import { useAppDispatch, useAppSelector } from "@/state/hook"
-import { choiceAutoIngredient } from "@/state/slices/list-form"
-import { choiceAutocomplite } from "@/state/slices/stepper/ingredients"
-import { debounce } from "@mui/material"
+import { MainInput } from "@/app/components/new-recipe/steps/ingredient/MainInput";
+import { fetchLocationSuggestions } from "@/app/services/autocomplite";
+import { useAppDispatch } from "@/state/hook";
+import { choiceAutoIngredient } from "@/state/slices/list-form";
+import { debounce } from "@mui/material";
 import { memo, useCallback, useEffect, useMemo, useState } from "react"
-import { MainInput } from "./MainInput"
-import { selectShowMinOneFilledWarning } from "@/state/selectors/stepper-autocomp-error"
-
 
 
 
 
 interface Props {
     ingredient: IngredientAutocomplite,
-    // handleInputChange: (newInputValue: string) => void,
-    // page: 'form' | 'list' | 'recipe'
 }
 
 
-export const ContainerMainInput = memo(({ ingredient }: Props) => {//handleInputChange
-    const numbStep = 4
+
+
+export const ContainerListMainInput = memo(({ ingredient }: Props) => {
+
     const [options, setOptions] = useState<IngredientAutocomplite[]>([]);
     const [value, setValue] = useState<IngredientAutocomplite | null>(ingredient);
     const [inputValue, setInputValue] = useState<string>('');
     // const showMinOneFilledWarning = false //useShowMinOneFilledWarning(numbStep);
 
     const dispatch = useAppDispatch();
-
-    const showMinOneFilledWarning = useAppSelector((state) => 
-        selectShowMinOneFilledWarning(state, numbStep)
-    );
 
 
     const fetch = useMemo(
@@ -83,6 +75,8 @@ export const ContainerMainInput = memo(({ ingredient }: Props) => {//handleInput
     }, [value, inputValue, fetch, dispatch, ingredient.ingredient_id]);
 
 
+
+
     const handleChange = useCallback((newValue: IngredientAutocomplite | string | null) => {
         if (typeof newValue === 'string') {
             const newIngredient = {
@@ -94,39 +88,28 @@ export const ContainerMainInput = memo(({ ingredient }: Props) => {//handleInput
             };
             setValue(newIngredient);
             setOptions([newIngredient, ...options]);
-            dispatch(
-                choiceAutocomplite(newIngredient)
-            );
-        
 
-            
+            dispatch(choiceAutoIngredient(newIngredient))
 
-            // handleInputChange(newIngredient.name)
-            // dispatch(updateError({ step: numbStep, error: false }));
+
+
         } else {
             setOptions(newValue ? [newValue, ...options] : options);
             setValue(newValue);
-            
-            dispatch(
-                choiceAutocomplite({
-                    ingredient_id: ingredient.ingredient_id,
-                    name: newValue?.name.trim() || '',
-                    new_ingredient: newValue?.new_ingredient || false, // maybe only need to change it to false
-                    media: newValue?.media || '',
-                    units: newValue?.units as string[] || [],
-                    // check_open_link: newValue?.ingredient_id || ''
-                })
-            );
-            
-            
-            // handleInputChange(newValue?.name.trim() || '')
-            // dispatch(updateError({ step: numbStep, error: false }));
-        }
-    },
-        [dispatch, ingredient.ingredient_id, options]
-    );
 
-    console.log('container main input')
+            dispatch(choiceAutoIngredient({
+                ingredient_id: ingredient.ingredient_id,
+                name: newValue?.name.trim() || '',
+                new_ingredient: newValue?.new_ingredient || false, // maybe only need to change it to false
+                media: newValue?.media || '',
+                units: newValue?.units as string[] || [],
+                // check_open_link: newValue?.ingredient_id || ''
+            }))
+
+
+        }
+    },[dispatch, ingredient.ingredient_id, options]);
+
 
     const controller = useMemo(
         () => ({
@@ -140,21 +123,19 @@ export const ContainerMainInput = memo(({ ingredient }: Props) => {//handleInput
         [options.length, value?.name]
     );
 
-
     return (
-
         <MainInput 
             controller={controller}
-            showWarning={showMinOneFilledWarning}
+            // showWarning={showMinOneFilledWarning}
         ></MainInput>
     )
 
-},(prevProps, nextProps) => {
+}, (prevProps, nextProps) => {
     return prevProps.ingredient.ingredient_id === nextProps.ingredient.ingredient_id &&
-    prevProps.ingredient.name === nextProps.ingredient.name
+        prevProps.ingredient.name === nextProps.ingredient.name
     // prevProps.page === nextProps.page
 })
 
 
 
-ContainerMainInput.displayName = "ContainerMainInput"
+ContainerListMainInput.displayName = "ContainerListMainInput"

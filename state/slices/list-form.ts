@@ -104,7 +104,28 @@ const newListIngredient = createSlice({
                     findIngr.units.choice = action.payload.choice;
                 }
             }
-        }
+        },
+        newIngredient(state) {
+            const newIngredient = {
+                ingredient_id: uuidv4(),
+                name: '',
+                new_ingredient:false,
+                media: '',
+                units: { choice: '', amount: 0, list: [] },
+            };
+
+            state.ingredients.push(newIngredient);
+        },
+        removeIngredient(state, action: PayloadAction<{ ingredient_id: string }>) {
+            const indexToDelete = state.ingredients.findIndex(
+                (ingredient) => ingredient.ingredient_id === action.payload.ingredient_id
+            );
+
+            if (indexToDelete !== -1) {
+                state.ingredients.splice(indexToDelete, 1);
+            }
+            
+        },
     },
     extraReducers: (builder) => {
     }
@@ -112,7 +133,7 @@ const newListIngredient = createSlice({
 
 
 
-export const { choiceAutoIngredient, amountNewIngredient, choiceUnit } = newListIngredient.actions
+export const { choiceAutoIngredient, amountNewIngredient, choiceUnit, newIngredient, removeIngredient } = newListIngredient.actions
 
     
 export default newListIngredient.reducer

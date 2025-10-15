@@ -105,7 +105,7 @@ export const ContainerAutocomplite = memo(({ ingredientId }: Props) => {
                 handleUnitsChange:changeUnits,
             },
         }),
-        [isDisabled, , ingredient, changeAmount, changeUnits]//handleInputChange
+        [isDisabled, ingredient, changeAmount, changeUnits]//handleInputChange
     );
 
     return (
@@ -113,6 +113,7 @@ export const ContainerAutocomplite = memo(({ ingredientId }: Props) => {
             showWarning={showMinOneFilledWarning}
             ingredientId={ingredientId}
             controller={controller}
+            page="form"
 
         ></Autocomplite>
     )

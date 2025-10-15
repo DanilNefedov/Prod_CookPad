@@ -9,6 +9,7 @@ import { textMaxWidth } from "@/app/styles";
 import { CldImage } from "next-cloudinary";
 import { IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
 import { ContainerMainInput } from "./ContainerMainInput";
+import { ContainerListMainInput } from "@/app/components/main-list/list/new-ingr-window/ContainerListMainInput";
 
 
 
@@ -27,10 +28,11 @@ interface Controller {
 interface Props {
     ingredientId: string,
     controller:Controller,
-    showWarning:boolean
+    showWarning?:boolean,
+    page:'list' | 'form'
 }
 
-export const Autocomplite = memo(({ingredientId, controller, showWarning}: Props) => {
+export const Autocomplite = memo(({ingredientId, controller, showWarning, page}: Props) => {
     const { ingredient, isDisabled, handlers } = controller//showWarning ingredient
     const { handleAmountChange, handleUnitsChange } = handlers //handleAmountChange, handleUnitsChange
 
@@ -63,16 +65,21 @@ export const Autocomplite = memo(({ingredientId, controller, showWarning}: Props
                
             </Box>
 
-            <ContainerMainInput 
-                ingredient={ingredient}
-                // handleInputChange={handleInputChange}
-                page='form'
-            ></ContainerMainInput>
-            {/* <MainInput 
-                ingredient={ingredient}
-                handleInputChange={handleInputChange}
-                page='list'
-            ></MainInput> */}
+            {
+                page === 'list' ? 
+                <ContainerListMainInput
+                    ingredient={ingredient}
+                ></ContainerListMainInput>
+                :
+                page === 'form' ?
+                 <ContainerMainInput 
+                    ingredient={ingredient}
+                    // handleInputChange={handleInputChange}
+                ></ContainerMainInput>
+                :
+                null
+            }
+            
 
             
             <TextField
