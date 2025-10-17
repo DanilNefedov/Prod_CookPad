@@ -81,6 +81,9 @@ export function MainListPage() {
         { count: 7, widths: [250, 260, 270, 280, 290, 300, 310] },
     ], []);
 
+
+    console.log(useAppSelector((state) => state.list))
+
     return (
         <>
             <Table sx={table} stickyHeader aria-label="sticky table">

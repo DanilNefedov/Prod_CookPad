@@ -5,6 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { newIngredient } from "@/state/slices/list-form";
 import { ContainerIngredient } from "./ContainerIngredient";
+import { MainButtons } from "./MainButtons";
 
 
 
@@ -13,7 +14,6 @@ export function AddNewIngredient() {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const fabRef = useRef<HTMLButtonElement>(null);
     const ingredientsForm = useAppSelector(state => state.newListIngredient.ingredients)
-    const dispatch = useAppDispatch()
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -24,9 +24,6 @@ export function AddNewIngredient() {
 
     // const open = Boolean(anchorEl);
 
-    function handleNewIngredient(){
-        dispatch(newIngredient())
-    }
 
     return (
         <Box sx={{ position: 'absolute', right: '28px', bottom: '10px' }}>
@@ -35,7 +32,7 @@ export function AddNewIngredient() {
             </Fab>
             <Popover
                 id={open ? 'simple-popover' : undefined}
-                open={true}//open
+                open={open}//open
                 anchorEl={anchorEl}
                 onClose={handleClose}
                 anchorOrigin={{
@@ -56,8 +53,10 @@ export function AddNewIngredient() {
                             // overflow:'auto'
                         },
                     },
-                }}  
+                }}   
             >
+                <Typography sx={{mt:'20px'}}>At least 1 ingredient completely filled</Typography>
+
                 <Box sx={{
                     // maxWidth:'400px',
                     width:'100%',
@@ -77,11 +76,8 @@ export function AddNewIngredient() {
                     
                 </Box>
 
-                <Button 
-                    color="blackRedBtn" 
-                    onClick={handleNewIngredient}
-                    sx={{mb:'20px'}}
-                >Add ingredient</Button>
+                <MainButtons></MainButtons>
+
             </Popover>
         </Box>
 

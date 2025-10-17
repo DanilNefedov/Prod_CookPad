@@ -1,8 +1,9 @@
-import { ChangeAmountFetch, DeleteUnitIngrFetch, ListFetchReq, ListFetchRes, 
+import { ChangeAmountFetch, CreateIngredientsFetchReq, DeleteUnitIngrFetch, ListFetchReq, ListFetchRes, 
     ListIngrDataFetch, 
     ListRootState, 
     NewIngrFetchReq, NewIngrFetchRes, NewUnitFetchReq, NewUnitFetchRes, NewUnitIngrFetchReq,
     NewUnitIngrFetchRes, ShopIngrFetch, ShopUnitFetch, UpdCookUnitFetch } from "@/app/(main)/(main-list)/list/types";
+import { IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -58,7 +59,9 @@ const initialState: ListState = {
     connection_id: '',
     page_list: 1,
     ingredients:{},
+    //sorting order of ingredients
     queue_ingredients:[],
+
     units:{},
     operations:createOperations<ListOperationKey>(
         listOperationKeys,
@@ -85,6 +88,33 @@ export const fetchList = createAsyncThunk<ListFetchRes, ListFetchReq, { rejectVa
 
         } catch (error) {
             console.log(error)
+            return rejectWithValue('Request failed!');
+        }
+    }
+)
+
+
+export const createNewIngredients = createAsyncThunk<IngredientAutocomplite[], CreateIngredientsFetchReq, { rejectValue: string }>(
+    'list/createNewIngredients',
+    async function (data, { rejectWithValue }) {
+        try {
+            const response = await fetch('/api/list/create-ingredients', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+
+            if (!response.ok) return rejectWithValue('Server Error!');
+
+            const result = await response.json()
+
+            return result
+
+        } catch (error) {
+            console.error(error)
             return rejectWithValue('Request failed!');
         }
     }

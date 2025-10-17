@@ -1,6 +1,8 @@
 // *S - start
 // *E - end
 
+import { IngredientAutocomplite } from "../../new-recipe/types";
+
 
 
 
@@ -108,6 +110,11 @@ export interface ListFetchRes {
 export interface ListFetchReq {
     id:string, 
     page_list:number
+}
+
+export interface CreateIngredientsFetchReq {
+    connection_id:string,
+    data:IngredientAutocomplite[]
 }
 
 export interface NewIngrFetchRes {
