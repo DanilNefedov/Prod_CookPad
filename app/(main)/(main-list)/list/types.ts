@@ -185,6 +185,33 @@ export interface NewUnitFetchReq {
     new_unit:UnitNoId
 }
 
+export interface UnitCreateIngr extends UnitNoId {
+    unit_id:string
+}
+
+export interface CreatedIngredientResult {
+    type: "created";
+    ingredient_id: string;
+    name: string;
+    media: string;
+    shop_ingr: boolean;
+    list: string[];           
+    units: UnitCreateIngr;             
+}
+
+export interface UpdatedIngredientResult {
+    type: "updated";
+    ingredient_id: string;
+    new_unit: UnitCreateIngr;           
+}
+
+export type CreateIngredientsFetchRes = CreatedIngredientResult | UpdatedIngredientResult;
+
+// export interface CreateIngredientsFetchRes {
+//     results: CreatedIngredientResult[] | UpdatedIngredientResult[];
+//     notFound: string[];       
+// }
+
 //---------- thunks E----------//
 
 //----------- state E-----------//

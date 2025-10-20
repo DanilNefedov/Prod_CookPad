@@ -1,8 +1,10 @@
-import { ChangeAmountFetch, CreateIngredientsFetchReq, DeleteUnitIngrFetch, ListFetchReq, ListFetchRes, 
-    ListIngrDataFetch, 
-    ListRootState, 
+import {
+    ChangeAmountFetch, CreateIngredientsFetchReq, CreateIngredientsFetchRes, DeleteUnitIngrFetch, ListFetchReq, ListFetchRes,
+    ListIngrDataFetch,
+    ListRootState,
     NewIngrFetchReq, NewIngrFetchRes, NewUnitFetchReq, NewUnitFetchRes, NewUnitIngrFetchReq,
-    NewUnitIngrFetchRes, ShopIngrFetch, ShopUnitFetch, UpdCookUnitFetch } from "@/app/(main)/(main-list)/list/types";
+    NewUnitIngrFetchRes, ShopIngrFetch, ShopUnitFetch, UpdCookUnitFetch
+} from "@/app/(main)/(main-list)/list/types";
 import { IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
@@ -13,16 +15,17 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 export type ListOperationKey =
-  | 'fetchList'
-  | 'newIngredientList'
-  | 'newUnitIngredientList'
-  | 'updateCookUnit'
-  | 'toggleShopIngrFetch'
-  | 'shopUnitUpdate'
-  | 'deleteIngredientFetch'
-  | 'deleteUnitIngrFetch'
-  | 'changeAmountFetch'
-  | 'addNewUnit'
+    | 'fetchList'
+    | 'newIngredientList'
+    | 'newUnitIngredientList'
+    | 'updateCookUnit'
+    | 'toggleShopIngrFetch'
+    | 'shopUnitUpdate'
+    | 'deleteIngredientFetch'
+    | 'deleteUnitIngrFetch'
+    | 'changeAmountFetch'
+    | 'addNewUnit'
+    | 'createNewIngredients'
 
 
 
@@ -36,7 +39,8 @@ const listOperationKeys: ListOperationKey[] = [
     'deleteIngredientFetch',
     'deleteUnitIngrFetch',
     'changeAmountFetch',
-    'addNewUnit'
+    'addNewUnit',
+    'createNewIngredients'
 ];
 
 
@@ -58,17 +62,17 @@ const loadingStatus: ListOperationKey[] = [
 const initialState: ListState = {
     connection_id: '',
     page_list: 1,
-    ingredients:{},
+    ingredients: {},
     //sorting order of ingredients
-    queue_ingredients:[],
+    queue_ingredients: [],
 
-    units:{},
-    operations:createOperations<ListOperationKey>(
+    units: {},
+    operations: createOperations<ListOperationKey>(
         listOperationKeys,
         (key) =>
-        loadingStatus.includes(key)
-            ? createOperationStatus(false)
-            : createOperationStatus()
+            loadingStatus.includes(key)
+                ? createOperationStatus(false)
+                : createOperationStatus()
     )
 }
 
@@ -94,7 +98,7 @@ export const fetchList = createAsyncThunk<ListFetchRes, ListFetchReq, { rejectVa
 )
 
 
-export const createNewIngredients = createAsyncThunk<IngredientAutocomplite[], CreateIngredientsFetchReq, { rejectValue: string }>(
+export const createNewIngredients = createAsyncThunk<CreateIngredientsFetchRes[], CreateIngredientsFetchReq, { rejectValue: string }>(
     'list/createNewIngredients',
     async function (data, { rejectWithValue }) {
         try {
@@ -106,12 +110,21 @@ export const createNewIngredients = createAsyncThunk<IngredientAutocomplite[], C
                 body: JSON.stringify(data),
             });
 
+            const result = await response.json()
+
+            if (response.status === 207) {
+                const notFoundList = result.notFound?.length
+                    ? result.notFound.join(', ')
+                    : 'Unknown ingredients';
+
+                return rejectWithValue(
+                    `The following ingredients could not be created: ${notFoundList}`
+                );
+            }
 
             if (!response.ok) return rejectWithValue('Server Error!');
 
-            const result = await response.json()
-
-            return result
+            return result.results
 
         } catch (error) {
             console.error(error)
@@ -180,7 +193,7 @@ export const updateCookUnit = createAsyncThunk<UpdCookUnitFetch, UpdCookUnitFetc
     'list/updateCookUnit',
     async function (data, { rejectWithValue }) {
         try {
-            
+
             const response = await fetch('/api/list/cook-amount', {
                 method: 'PATCH',
                 headers: {
@@ -215,11 +228,11 @@ export const toggleShopIngrFetch = createAsyncThunk<ShopIngrFetch, ShopIngrFetch
                 },
                 body: JSON.stringify(data),
             });
-    
+
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-    
+
             return data;
         } catch (error) {
             console.log(error)
@@ -241,13 +254,13 @@ export const shopUnitUpdate = createAsyncThunk<ShopUnitFetch, ShopUnitFetch, { r
                 },
                 body: JSON.stringify(data),
             });
-    
+
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-    
+
             return data;
-    
+
         } catch (error) {
             console.log(error);
             return rejectWithValue('Request failed!');
@@ -255,7 +268,7 @@ export const shopUnitUpdate = createAsyncThunk<ShopUnitFetch, ShopUnitFetch, { r
     }
 );
 
-export const deleteIngredientFetch = createAsyncThunk<{_id:string}, {_id:string}, { rejectValue: string }>(
+export const deleteIngredientFetch = createAsyncThunk<{ _id: string }, { _id: string }, { rejectValue: string }>(
     'list/deleteIngredientFetch',
     async function (data, { rejectWithValue }) {
         try {
@@ -266,13 +279,13 @@ export const deleteIngredientFetch = createAsyncThunk<{_id:string}, {_id:string}
                 },
                 body: JSON.stringify(data),
             });
-    
+
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-    
+
             return data;
-    
+
         } catch (error) {
             console.log(error);
             return rejectWithValue('Request failed!');
@@ -294,13 +307,13 @@ export const deleteUnitIngrFetch = createAsyncThunk<DeleteUnitIngrFetch, DeleteU
                 },
                 body: JSON.stringify(data),
             });
-    
+
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-    
+
             return data;
-    
+
         } catch (error) {
             console.log(error);
             return rejectWithValue('Request failed!');
@@ -314,7 +327,7 @@ export const changeAmountFetch = createAsyncThunk<ChangeAmountFetch, ChangeAmoun
     'list/changeAmountFetch',
     async function (data, { rejectWithValue }) {
         try {
-            
+
             const response = await fetch('/api/list/amount', {
                 method: 'PATCH',
                 headers: {
@@ -322,15 +335,15 @@ export const changeAmountFetch = createAsyncThunk<ChangeAmountFetch, ChangeAmoun
                 },
                 body: JSON.stringify(data),
             });
-    
+
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-    
+
             const listData = await response.json()
 
             return listData;
-    
+
         } catch (error) {
             console.log(error);
             return rejectWithValue('Request failed!');
@@ -352,14 +365,14 @@ export const addNewUnit = createAsyncThunk<NewUnitFetchRes, NewUnitFetchReq, { r
                 },
                 body: JSON.stringify(data),
             });
-    
+
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
             const respData = await response.json()
 
             return respData;
-    
+
         } catch (error) {
             console.log(error);
             return rejectWithValue('Request failed!');
@@ -392,13 +405,14 @@ const deleteIngredientFetchHandlers = createReducerHandlers('deleteIngredientFet
 const deleteUnitIngrFetchHandlers = createReducerHandlers('deleteUnitIngrFetch');
 const changeAmountFetchHandlers = createReducerHandlers('changeAmountFetch');
 const addNewUnitHandlers = createReducerHandlers('addNewUnit');
+const createNewIngredientsHandlers = createReducerHandlers('createNewIngredients');
 
 
 const listSlice = createSlice({
     name: 'list',
     initialState,
     reducers: {
-        closeAlertList(state, action: PayloadAction<ListOperationKey>){
+        closeAlertList(state, action: PayloadAction<ListOperationKey>) {
             const key = action.payload
 
             if (state.operations[key]) {
@@ -414,7 +428,7 @@ const listSlice = createSlice({
             .addCase(fetchList.fulfilled, (state, action: PayloadAction<ListFetchRes, string>) => {
                 state.operations.fetchList.error = false
                 state.operations.fetchList.loading = false
-                
+
                 const payload = action.payload;
                 state.connection_id = payload.connection_id;
                 state.page_list = payload.page_list;
@@ -474,7 +488,7 @@ const listSlice = createSlice({
                         state.queue_ingredients.unshift(data._id);
                     }
 
-                   data.units.forEach(({ _id, amount, choice, shop_unit }) => {
+                    data.units.forEach(({ _id, amount, choice, shop_unit }) => {
                         state.units[_id] = {
                             ...state.units[_id],
                             amount,
@@ -550,9 +564,9 @@ const listSlice = createSlice({
             .addCase(shopUnitUpdate.fulfilled, (state, action: PayloadAction<ShopUnitFetch, string>) => {
                 state.operations.shopUnitUpdate.error = false;
                 state.operations.shopUnitUpdate.loading = false;
-                
+
                 const { ingredient_id, unit_id, shop_unit } = action.payload;
-                
+
                 if (state.ingredients[ingredient_id]) {
                     if (state.units[unit_id] && state.ingredients[ingredient_id].unit_ids.includes(unit_id)) {
                         state.units[unit_id].shop_unit = !shop_unit;
@@ -575,13 +589,13 @@ const listSlice = createSlice({
                     const unitsToRemove = new Set(ingredient.unit_ids);
 
                     state.units = Object.fromEntries(
-                    Object.entries(state.units)
-                        .filter(([unitId]) => !unitsToRemove.has(unitId))
+                        Object.entries(state.units)
+                            .filter(([unitId]) => !unitsToRemove.has(unitId))
                     );
 
                     state.ingredients = Object.fromEntries(
-                    Object.entries(state.ingredients)
-                        .filter(([ingredientId]) => ingredientId !== _id)
+                        Object.entries(state.ingredients)
+                            .filter(([ingredientId]) => ingredientId !== _id)
                     );
                 }
             })
@@ -648,11 +662,64 @@ const listSlice = createSlice({
                 }
             })
 
+            .addCase(createNewIngredients.pending, createNewIngredientsHandlers.pending)
+            .addCase(createNewIngredients.rejected, createNewIngredientsHandlers.rejected)
+            .addCase(createNewIngredients.fulfilled,(state, action: PayloadAction<CreateIngredientsFetchRes[], string>) => {
+                    state.operations.addNewUnit.error = false;
+                    state.operations.addNewUnit.loading = false;
+
+                    for (const item of action.payload) {
+                        if (item.type === "created") {
+                            const newUnit = item.units; 
+                            const newUnitId = newUnit.unit_id;
+
+                            state.units[newUnitId] = {
+                                unit_id: newUnitId,
+                                choice: newUnit.choice,
+                                amount: newUnit.amount,
+                                shop_unit: newUnit.shop_unit,
+                            };
+
+                            state.ingredients[item.ingredient_id] = {
+                                ingredient_id: item.ingredient_id,
+                                name: item.name,
+                                media: item.media,
+                                shop_ingr: item.shop_ingr,
+                                list: item.list,
+                                unit_ids: [newUnitId],
+                            };
+
+                            if (!state.queue_ingredients.includes(item.ingredient_id)) {
+                                state.queue_ingredients.unshift(item.ingredient_id);
+                            }
+                        }
+
+                        if (item.type === "updated") {
+                            const newUnit = item.new_unit;
+                            const newUnitId = newUnit.unit_id;
+
+                            state.units[newUnitId] = {
+                                unit_id: newUnitId,
+                                choice: newUnit.choice,
+                                amount: newUnit.amount,
+                                shop_unit: newUnit.shop_unit,
+                            };
+
+                            const ingredient = state.ingredients[item.ingredient_id];
+                            if (ingredient && !ingredient.unit_ids.includes(newUnitId)) {
+                                ingredient.unit_ids.push(newUnitId);
+                            }
+                        }
+                    }
+                }
+            )
+            
+
         }
 })
-    
+
 
 export const { closeAlertList } = listSlice.actions
 
-    
+
 export default listSlice.reducer
