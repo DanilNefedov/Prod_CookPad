@@ -4,6 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useAppSelector } from "@/state/hook";
 import { ContainerIngredient } from "./ContainerIngredient";
 import { MainButtons } from "./MainButtons";
+import { theme } from "@/config/ThemeMUI/theme";
 
 
 
@@ -25,7 +26,13 @@ export function AddNewIngredient() {
 
     return (
         <Box sx={{ position: 'absolute', right: '28px', bottom: '10px' }}>
-            <Fab color="primary" onClick={handleClick} ref={fabRef}>
+            <Fab color="primary" onClick={handleClick} ref={fabRef}
+            sx={{
+                [theme.breakpoints.down(600)]: { 
+                    width:"37px",
+                    height:'33px'
+                }
+            }}>
                 <AddIcon />
             </Fab>
             <Popover

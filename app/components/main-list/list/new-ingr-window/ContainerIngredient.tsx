@@ -2,6 +2,7 @@ import { Unit } from "@/app/(main)/cook/types";
 import { clearBtn } from "@/app/(main)/new-recipe/style";
 import { Autocomplite } from "@/app/components/new-recipe/steps/ingredient/Autocompletions";
 import { handleAmountChange } from "@/app/helpers/input-unit";
+import { theme } from "@/config/ThemeMUI/theme";
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { amountNewIngredient, choiceUnit, removeIngredient } from "@/state/slices/list-form";
 import { Box, Button } from "@mui/material";
@@ -77,7 +78,16 @@ export const ContainerIngredient = memo(({ingredient_id, length}:Props) => {
         <Box sx={{
             width:'100%',
             display:'flex',
-            alignItems:'center'
+            alignItems:'center',
+
+            [theme.breakpoints.down(600)]: { 
+                flexWrap:'wrap',
+                borderWidth:'0 0 1px 0',
+                borderStyle:'solid',
+                borderColor:'text.desactive',
+                pb:'10px',
+                mb:'10px'
+            }
         }}>
             <Autocomplite
                 ingredientId={ingredient_id}
