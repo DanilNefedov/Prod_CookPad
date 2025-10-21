@@ -1,7 +1,6 @@
 import { NewIngredientRootState } from "@/app/(main)/(main-list)/list-recipe/types";
-import { Amount, Autocompite, ChoiceUnits, IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
-import { createOperations, createOperationStatus } from "@/app/types";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Amount, Autocompite, ChoiceUnits } from "@/app/(main)/new-recipe/types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -55,15 +54,6 @@ const initialState: NewIngredientState = {
             },
         }
     ]
-    
-    
-    // operations:createOperations<ListFormOperationKey>(
-    //     listOperationKeys,
-    //     (key) =>
-    //     loadingStatus.includes(key)
-    //         ? createOperationStatus(false)
-    //         : createOperationStatus()
-    // )
 }
 
 
@@ -155,6 +145,22 @@ const newListIngredient = createSlice({
             }
             
         },
+
+        clearItems(state) {
+            state.ingredients = [
+                {
+                    ingredient_id: uuidv4(),
+                    name: "",
+                    media: "",
+                    new_ingredient: false,
+                    units: {
+                        choice: "",
+                        amount: 0,
+                        list: [],
+                    },
+                },
+            ];
+        }
     },
     extraReducers: (builder) => {
     }
@@ -162,7 +168,7 @@ const newListIngredient = createSlice({
 
 
 
-export const { choiceAutoIngredient, amountNewIngredient, choiceUnit, newIngredient, removeIngredient } = newListIngredient.actions
+export const { choiceAutoIngredient, amountNewIngredient, choiceUnit, newIngredient, removeIngredient, clearItems } = newListIngredient.actions
 
     
 export default newListIngredient.reducer

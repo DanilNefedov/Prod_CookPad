@@ -8,6 +8,7 @@ import {
 import { IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { clearItems } from "./list-form";
 
 
 
@@ -100,7 +101,7 @@ export const fetchList = createAsyncThunk<ListFetchRes, ListFetchReq, { rejectVa
 
 export const createNewIngredients = createAsyncThunk<CreateIngredientsFetchRes[], CreateIngredientsFetchReq, { rejectValue: string }>(
     'list/createNewIngredients',
-    async function (data, { rejectWithValue }) {
+    async function (data, { rejectWithValue, dispatch }) {
         try {
             const response = await fetch('/api/list/create-ingredients', {
                 method: 'PATCH',
@@ -123,6 +124,8 @@ export const createNewIngredients = createAsyncThunk<CreateIngredientsFetchRes[]
             }
 
             if (!response.ok) return rejectWithValue('Server Error!');
+
+            dispatch(clearItems())
 
             return result.results
 

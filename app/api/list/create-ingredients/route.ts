@@ -1,5 +1,3 @@
-import { CreateIngredientsFetchReq } from "@/app/(main)/(main-list)/list/types";
-import { IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
 import connectDB from "@/app/lib/mongoose";
 import ListIngredients from "@/app/models/list";
 import { NextResponse } from "next/server";
@@ -90,7 +88,7 @@ export async function PATCH(request: Request) {
             results,
             notFound,
         },
-        { status: 207 }//notFound.length > 0 ? 207 : 200
+        { status: notFound.length > 0 ? 207 : 200 }//notFound.length > 0 ? 207 : 200
         );
 
     } catch (error) {

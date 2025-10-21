@@ -1,9 +1,7 @@
-import { Box, Button, Fab, Modal, Popover, SpeedDial, SpeedDialAction, Typography } from "@mui/material";
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import { Box, Fab, Popover, Typography } from "@mui/material";
 import { useRef, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
-import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { newIngredient } from "@/state/slices/list-form";
+import { useAppSelector } from "@/state/hook";
 import { ContainerIngredient } from "./ContainerIngredient";
 import { MainButtons } from "./MainButtons";
 

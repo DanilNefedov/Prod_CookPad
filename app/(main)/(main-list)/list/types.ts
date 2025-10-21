@@ -207,10 +207,7 @@ export interface UpdatedIngredientResult {
 
 export type CreateIngredientsFetchRes = CreatedIngredientResult | UpdatedIngredientResult;
 
-// export interface CreateIngredientsFetchRes {
-//     results: CreatedIngredientResult[] | UpdatedIngredientResult[];
-//     notFound: string[];       
-// }
+
 
 //---------- thunks E----------//
 

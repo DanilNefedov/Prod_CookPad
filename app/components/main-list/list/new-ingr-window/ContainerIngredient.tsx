@@ -1,6 +1,5 @@
 import { Unit } from "@/app/(main)/cook/types";
 import { clearBtn } from "@/app/(main)/new-recipe/style";
-import { IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
 import { Autocomplite } from "@/app/components/new-recipe/steps/ingredient/Autocompletions";
 import { handleAmountChange } from "@/app/helpers/input-unit";
 import { useAppDispatch, useAppSelector } from "@/state/hook"

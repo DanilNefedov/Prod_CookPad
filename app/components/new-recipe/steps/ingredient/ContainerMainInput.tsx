@@ -1,8 +1,6 @@
 import { CallbackIngrAutocomplite, IngredientAutocomplite } from "@/app/(main)/new-recipe/types"
-import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarning"
 import { fetchLocationSuggestions } from "@/app/services/autocomplite"
 import { useAppDispatch, useAppSelector } from "@/state/hook"
-import { choiceAutoIngredient } from "@/state/slices/list-form"
 import { choiceAutocomplite } from "@/state/slices/stepper/ingredients"
 import { debounce } from "@mui/material"
 import { memo, useCallback, useEffect, useMemo, useState } from "react"
