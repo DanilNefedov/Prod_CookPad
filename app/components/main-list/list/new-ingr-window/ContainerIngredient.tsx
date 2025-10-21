@@ -96,3 +96,7 @@ export const ContainerIngredient = memo(({ingredient_id, length}:Props) => {
         
     )
 })
+
+
+
+ContainerIngredient.displayName = "ContainerIngredient"

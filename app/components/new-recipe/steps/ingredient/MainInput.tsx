@@ -2,15 +2,10 @@ import {
     autoCompliteItems, autocompliteMenuItem, autocompMenuBox,
     autocompMenuContainer, autocompMenuText, paperMenu
 } from "@/app/(main)/new-recipe/style";
-import { CallbackIngrAutocomplite, IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
-import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarning";
-import { fetchLocationSuggestions } from "@/app/services/autocomplite";
+import { IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
 import { textMaxWidth } from "@/app/styles";
-import { useAppDispatch } from "@/state/hook";
-import { choiceAutoIngredient } from "@/state/slices/list-form";
-import { choiceAutocomplite } from "@/state/slices/stepper/ingredients";
-import { Autocomplete, Box, debounce, ListItem, TextField, Typography } from "@mui/material";
-import { memo, useEffect, useMemo, useState, Dispatch, SetStateAction } from "react";
+import { Autocomplete, Box, ListItem, TextField, Typography } from "@mui/material";
+import { memo, Dispatch, SetStateAction } from "react";
 
 
 interface Controller {

@@ -1,11 +1,10 @@
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { Autocomplite } from "./Autocompletions";
 import { shallowEqual } from "react-redux";
-import { ChangeEvent, memo, useCallback, useEffect, useMemo, useRef } from "react";
+import { ChangeEvent, memo, useCallback, useMemo } from "react";
 import { choiceUnits, ingredientAmount } from "@/state/slices/stepper/ingredients";
 import { handleAmountChange } from "@/app/helpers/input-unit";
 import { Unit } from "@/app/(main)/cook/types";
-import { addErrorIngredient, deleteErrorIngredient } from "@/state/slices/stepper/error-open";
 import { selectShowMinOneFilledWarning } from "@/state/selectors/stepper-autocomp-error";
 
 

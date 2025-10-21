@@ -1,6 +1,5 @@
 import { Autocomplete, Box, ListItem, TextField, Typography} from "@mui/material";
 import { ChangeEvent, memo} from "react";
-import { MainInput } from "./MainInput";
 import { amoutIngredient, autocompliteImg, autoCompliteItems, autocompliteMenuItem, 
     autocompMenuBox, autocompMenuContainer, autocompMenuText, boxAutocompliteImg, 
     boxImgCloudinary, 
@@ -26,13 +25,13 @@ interface Controller {
 
 
 interface Props {
-    ingredientId: string,
+    ingredientId: string,//may be deleted
     controller:Controller,
     showWarning?:boolean,
     page:'list' | 'form'
 }
 
-export const Autocomplite = memo(({ingredientId, controller, showWarning, page}: Props) => {
+export const Autocomplite = memo(({ controller, showWarning, page}: Props) => {
     const { ingredient, isDisabled, handlers } = controller//showWarning ingredient
     const { handleAmountChange, handleUnitsChange } = handlers //handleAmountChange, handleUnitsChange
 

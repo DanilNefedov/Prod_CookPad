@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request) {
     try {
-        const { connection_id, data }:any = await request.json();
+        const { connection_id, data } = await request.json();
 
         if (!connection_id || !data || data.length <= 0) {
             return NextResponse.json(
@@ -24,7 +24,7 @@ export async function PATCH(request: Request) {
         const notFound: string[] = [];
 
         for (const el of data) {
-            const { ingredient_id, name, media, new_ingredient, units } = el;
+            const { name, media, new_ingredient, units } = el;
 
 
             console.log({ units })
