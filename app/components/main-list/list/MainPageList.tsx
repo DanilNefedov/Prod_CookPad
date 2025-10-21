@@ -10,6 +10,7 @@ import { containerInfo, moreButton, table, tableBody } from '@/app/(main)/(main-
 import MainTableHeader from '../MainTableHeader';
 import { SkeletonTable } from './SkeletonTable';
 import { SkeletonHeader } from './SkeletonHeader';
+import { AddNewIngredient } from './new-ingr-window/AddNewIngredient';
 
 
 export function MainListPage() {
@@ -80,6 +81,9 @@ export function MainListPage() {
         { count: 7, widths: [250, 260, 270, 280, 290, 300, 310] },
     ], []);
 
+
+    console.log(useAppSelector((state) => state.list))
+
     return (
         <>
             <Table sx={table} stickyHeader aria-label="sticky table">
@@ -135,6 +139,7 @@ export function MainListPage() {
 
             </Table>
 
+            <AddNewIngredient></AddNewIngredient>
 
             {
                 !isLoading && Object.keys(ingredientsMap).length > 0 ?

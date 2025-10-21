@@ -1,6 +1,7 @@
 // *S - start
 // *E - end
 
+import { IngredientAutocomplite } from "../../new-recipe/types";
 import { NormalizedData, UnitNoId } from "../list/types"
 
 
@@ -122,3 +123,13 @@ export interface DeleteListRecipeFetchReq {
 //---------- thunks E----------//
 
 //----------- state E-----------//
+
+
+
+//----------- state form S-----------//
+
+export interface NewIngredientRootState {
+    ingredients:IngredientAutocomplite[]
+}
+
+//----------- state form E-----------//

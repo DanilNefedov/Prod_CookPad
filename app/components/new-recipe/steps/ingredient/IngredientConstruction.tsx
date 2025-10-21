@@ -7,7 +7,7 @@ import { addNewIngr, clearBtn, errorIngrText, headerIngredient, ingrdientLine,
     ingredientBox, ingredientContainer, ingredientStepContainer, tooltipText } from "@/app/(main)/new-recipe/style";
 import { columnCenter, headerSteps } from "@/app/styles";
 import { useShowMinOneFilledWarning } from "@/app/hooks/useShowMinOneFilledWarning";
-import { Autocomplite } from "./Autocompletions";
+import { ContainerAutocomplite } from "./ContainerAutocomplite";
 
 
 export function IngredientConstruction() {
@@ -38,7 +38,8 @@ export function IngredientConstruction() {
                 {stepperState.ingredients.map((ingredient: IngredientAutocomplite) => (
                     <Box key={ingredient.ingredient_id} sx={ingredientContainer}>
 
-                        <Autocomplite ingredientId={ingredient.ingredient_id}/>
+                        {/* <Autocomplite ingredientId={ingredient.ingredient_id}/> */}
+                        <ContainerAutocomplite ingredientId={ingredient.ingredient_id}></ContainerAutocomplite>
 
                         <Button 
                             color="grayButton"

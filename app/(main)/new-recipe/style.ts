@@ -423,7 +423,7 @@ export const boxAutocompliteImg = (theme: Theme) => ({
     width: '38px',
     height: '38px',
     borderRadius: '50%',
-    backgroundColor: theme.palette.background.default,
+    // backgroundColor: theme.palette.background.default,
     border: `1px solid ${theme.palette.common.border}`,
     [theme.breakpoints.down('md')]: {
         width: '38px',

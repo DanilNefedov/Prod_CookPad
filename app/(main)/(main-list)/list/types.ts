@@ -1,6 +1,8 @@
 // *S - start
 // *E - end
 
+import { IngredientAutocomplite } from "../../new-recipe/types";
+
 
 
 
@@ -110,6 +112,11 @@ export interface ListFetchReq {
     page_list:number
 }
 
+export interface CreateIngredientsFetchReq {
+    connection_id:string,
+    data:IngredientAutocomplite[]
+}
+
 export interface NewIngrFetchRes {
     _id:string,
     name:string,
@@ -177,6 +184,30 @@ export interface NewUnitFetchReq {
     ingredient_id:string,
     new_unit:UnitNoId
 }
+
+export interface UnitCreateIngr extends UnitNoId {
+    unit_id:string
+}
+
+export interface CreatedIngredientResult {
+    type: "created";
+    ingredient_id: string;
+    name: string;
+    media: string;
+    shop_ingr: boolean;
+    list: string[];           
+    units: UnitCreateIngr;             
+}
+
+export interface UpdatedIngredientResult {
+    type: "updated";
+    ingredient_id: string;
+    new_unit: UnitCreateIngr;           
+}
+
+export type CreateIngredientsFetchRes = CreatedIngredientResult | UpdatedIngredientResult;
+
+
 
 //---------- thunks E----------//
 

@@ -8,7 +8,7 @@ import { InputComment } from "./InputComment";
 import { CommentsItem } from "./CommentsItem";
 import { shallowEqual } from "react-redux";
 import { containerInfiniteScroll, countComments, mainCommentContainer } from "@/app/(main)/popular/styles";
-import { usePingGate } from "@/app/hooks/ping";
+import { usePingGate } from "@/app/hooks/usePing";
 import { columnSpaceBetween } from "@/app/styles";
 
 

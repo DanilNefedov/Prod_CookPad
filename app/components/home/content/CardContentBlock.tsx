@@ -33,7 +33,7 @@ import SwiperMediaCard from './SwiperMediaCard';
 
 
 
-interface Props { 
+interface Props {
     recipe_id: string,
     id: string,
     isSkeleton: boolean
@@ -67,7 +67,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
 
 
     const handlerFavorite = (recipe_id: string, favorite: boolean | undefined): void => {
-        if (isFavoriteLoading ) return
+        if (isFavoriteLoading) return
 
         if (recipe_id && id !== '' && favorite !== undefined) {
             const data = { recipe_id, favorite }
@@ -91,7 +91,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                     isSkeleton ?
                         <Skeleton variant='text' sx={{
                             '@media (max-width:800px)': {
-                                width:'calc(100% - 24px)'
+                                width: 'calc(100% - 24px)'
                             }
                         }}></Skeleton>
                         :
@@ -102,7 +102,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
 
             </Box>
 
-          
+
             <Box sx={[containerMobileMenu]}>
                 <IconButton
                     aria-label="more"
@@ -136,11 +136,11 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                 </Menu>
             </Box>
 
-            
+
 
             {
                 isSkeleton ?
-                    <Skeleton variant='rectangular' sx={{width:'100%', height:'100%'}}></Skeleton>
+                    <Skeleton variant='rectangular' sx={{ width: '100%', height: '100%' }}></Skeleton>
                     :
                     <Swiper
                         modules={[Navigation, Virtual]}
@@ -181,11 +181,11 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
 
             <CardContent sx={[contentPostionAbsolute, cardBottom,]}>
                 <Box sx={[mobileBottomInfo, { gap: ellipsisEnabled ? '7px' : 0 }]}>
-                    
 
-                        {
-                            isSkeleton ? 
-                            <Skeleton variant='text' sx={{width:'100%'}}></Skeleton> 
+
+                    {
+                        isSkeleton ?
+                            <Skeleton variant='text' sx={{ width: '100%' }}></Skeleton>
                             :
                             <Collapse in={!ellipsisEnabled} collapsedSize={isMobile ? 21 : 24} timeout={400}>
                                 <Typography
@@ -197,9 +197,9 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                                     {recipe?.name}
                                 </Typography>
                             </Collapse>
-                        }
-                        
-                    
+                    }
+
+
 
 
                     {isMobile &&
@@ -213,7 +213,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                     }
                 </Box>
 
-                
+
                 <Box sx={[desktopBotInfo]}>
                     <Button
                         disabled={isSkeleton}
@@ -221,9 +221,9 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                         href={`/cook/${recipe_id}?name=${recipe?.name}`}
                         sx={cookBtn}
                     >Cook</Button>
-                    <Button 
-                        disabled={isSkeleton} 
-                        onClick={() => addToList()} 
+                    <Button
+                        disabled={isSkeleton}
+                        onClick={() => addToList()}
                         sx={[cookBtn, { mr: isMobile ? '0' : '24px' }]}
                     >To List</Button>
                     <IconButton
@@ -235,7 +235,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
                     </IconButton>
 
                 </Box>
-                
+
 
             </CardContent>
         </Card>
@@ -244,6 +244,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
     return prevProps.props.id === nextProps.props.id &&
         prevProps.props.recipe_id === nextProps.props.recipe_id
 });
+
 
 
 CardContentBlock.displayName = "CardContentBlock"

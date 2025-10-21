@@ -11,7 +11,7 @@ import { avatar, avatarContainer, commentsWrapper, commentTime, containerAvatarC
     containerCommentItem, containerSecondBlockComm, iconReplyBtn, likeComm, likeIcon, 
     loaderReplyBox, moreHideBox, moreHideBtns, repliesOpen, replyBox, replyComm, 
     textComment } from "@/app/(main)/popular/styles";
-import { usePingGate } from "@/app/hooks/ping";
+import { usePingGate } from "@/app/hooks/usePing";
 import { UXLoading } from "../ui-helpers/UXLoading";
 import { Like } from "@/app/(main)/popular/types";
 import { betweenCenter } from "@/app/styles";
