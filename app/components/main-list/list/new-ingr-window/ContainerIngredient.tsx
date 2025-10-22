@@ -1,8 +1,8 @@
+import { containerIngrItem } from "@/app/(main)/(main-list)/list/styles";
 import { Unit } from "@/app/(main)/cook/types";
 import { clearBtn } from "@/app/(main)/new-recipe/style";
 import { Autocomplite } from "@/app/components/new-recipe/steps/ingredient/Autocompletions";
 import { handleAmountChange } from "@/app/helpers/input-unit";
-import { theme } from "@/config/ThemeMUI/theme";
 import { useAppDispatch, useAppSelector } from "@/state/hook"
 import { amountNewIngredient, choiceUnit, removeIngredient } from "@/state/slices/list-form";
 import { Box, Button } from "@mui/material";
@@ -62,10 +62,8 @@ export const ContainerIngredient = memo(({ingredient_id, length}:Props) => {
     const controller = useMemo(
         () => ({
             ingredient,
-            // showWarning:showMinOneFilledWarning,
             isDisabled,
             handlers: {
-                // handleInputChange,
                 handleAmountChange: handleAmount,
                 handleUnitsChange:handleUnits,
             },
@@ -75,22 +73,10 @@ export const ContainerIngredient = memo(({ingredient_id, length}:Props) => {
 
 
     return(
-        <Box sx={{
-            width:'100%',
-            display:'flex',
-            alignItems:'center',
-
-            [theme.breakpoints.down(600)]: { 
-                flexWrap:'wrap',
-                borderWidth:'0 0 1px 0',
-                borderStyle:'solid',
-                borderColor:'text.desactive',
-                pb:'10px',
-                mb:'10px'
-            }
-        }}>
+        <Box sx={[containerIngrItem, {
+            borderWidth: length > 1 ? '0 0 1px 0' : '0'
+        }]}>
             <Autocomplite
-                ingredientId={ingredient_id}
                 controller={controller}
                 page={'list'}
 

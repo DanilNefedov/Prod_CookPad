@@ -82,7 +82,6 @@ export function MainListPage() {
     ], []);
 
 
-    console.log(useAppSelector((state) => state.list))
 
     return (
         <>

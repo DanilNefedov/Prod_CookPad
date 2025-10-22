@@ -13,17 +13,15 @@ import { selectShowMinOneFilledWarning } from "@/state/selectors/stepper-autocom
 
 interface Props {
     ingredient: IngredientAutocomplite,
-    // handleInputChange: (newInputValue: string) => void,
-    // page: 'form' | 'list' | 'recipe'
+
 }
 
 
-export const ContainerMainInput = memo(({ ingredient }: Props) => {//handleInputChange
+export const ContainerMainInput = memo(({ ingredient }: Props) => {
     const numbStep = 4
     const [options, setOptions] = useState<IngredientAutocomplite[]>([]);
     const [value, setValue] = useState<IngredientAutocomplite | null>(ingredient);
     const [inputValue, setInputValue] = useState<string>('');
-    // const showMinOneFilledWarning = false //useShowMinOneFilledWarning(numbStep);
 
     const dispatch = useAppDispatch();
 
@@ -96,9 +94,6 @@ export const ContainerMainInput = memo(({ ingredient }: Props) => {//handleInput
                 choiceAutocomplite(newIngredient)
             );
         
-
-            
-
             // handleInputChange(newIngredient.name)
             // dispatch(updateError({ step: numbStep, error: false }));
         } else {
@@ -112,10 +107,8 @@ export const ContainerMainInput = memo(({ ingredient }: Props) => {//handleInput
                     new_ingredient: newValue?.new_ingredient || false, // maybe only need to change it to false
                     media: newValue?.media || '',
                     units: newValue?.units as string[] || [],
-                    // check_open_link: newValue?.ingredient_id || ''
                 })
             );
-            
             
             // handleInputChange(newValue?.name.trim() || '')
             // dispatch(updateError({ step: numbStep, error: false }));

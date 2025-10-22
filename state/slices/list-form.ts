@@ -8,34 +8,15 @@ import { v4 as uuidv4 } from 'uuid';
 
 export type ListFormOperationKey =
   | 'fetchList'
-//   | 'newIngredientList'
-//   | 'newUnitIngredientList'
-//   | 'updateCookUnit'
-//   | 'toggleShopIngrFetch'
-//   | 'shopUnitUpdate'
-//   | 'deleteIngredientFetch'
-//   | 'deleteUnitIngrFetch'
-//   | 'changeAmountFetch'
-//   | 'addNewUnit'
 
 
 
-const listOperationKeys: ListFormOperationKey[] = [
-    'fetchList',
-    // 'newIngredientList',
-    // 'newUnitIngredientList',
-    // 'updateCookUnit',
-    // 'toggleShopIngrFetch',
-    // 'shopUnitUpdate',
-    // 'deleteIngredientFetch',
-    // 'deleteUnitIngrFetch',
-    // 'changeAmountFetch',
-    // 'addNewUnit'
-];
+// const listOperationKeys: ListFormOperationKey[] = [
+//     'fetchList',
+// ];
 
 
 interface NewIngredientState extends NewIngredientRootState {
-    // operations: OperationState<ListOperationKey>
 }
 
 
@@ -55,36 +36,6 @@ const initialState: NewIngredientState = {
         }
     ]
 }
-
-
-
-
-// export const saveNewListIngredients = createAsyncThunk<IngredientAutocomplite[], IngredientAutocomplite[], { rejectValue: string }>(
-//     'cook/saveNewListIngredients',
-//     async function (data, { rejectWithValue }) {
-//         try {
-//             const response = await fetch(url, {
-//                 method: 'PATCH',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                 },
-//                 body: JSON.stringify(data),
-//             });
-
-
-//             if (!response.ok) return rejectWithValue('Server Error!');
-
-//             const result = await response.json()
-
-//             return result
-
-//         } catch (error) {
-//             console.error(error)
-//             return rejectWithValue('Request failed!');
-//         }
-//     }
-// )
-
 
 
 

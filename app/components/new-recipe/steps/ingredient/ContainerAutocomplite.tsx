@@ -27,15 +27,7 @@ export const ContainerAutocomplite = memo(({ ingredientId }: Props) => {
         selectShowMinOneFilledWarning(state, numbStep)
     );
 
-    
     const dispatch = useAppDispatch();
-    // const inputValue = useRef<string>('');
-
-    // const handleInputChange = useCallback((newInputValue: string) => {
-    //     inputValue.current = newInputValue;
-    // }, []);
-
-
 
     const changeAmount = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const newValue = e.target.value;
@@ -96,21 +88,18 @@ export const ContainerAutocomplite = memo(({ ingredientId }: Props) => {
     const controller = useMemo(
         () => ({
             ingredient,
-            // showWarning:showMinOneFilledWarning,
             isDisabled,
             handlers: {
-                // handleInputChange,
                 handleAmountChange: changeAmount,
                 handleUnitsChange:changeUnits,
             },
         }),
-        [isDisabled, ingredient, changeAmount, changeUnits]//handleInputChange
+        [isDisabled, ingredient, changeAmount, changeUnits]
     );
 
     return (
         <Autocomplite
             showWarning={showMinOneFilledWarning}
-            ingredientId={ingredientId}
             controller={controller}
             page="form"
 

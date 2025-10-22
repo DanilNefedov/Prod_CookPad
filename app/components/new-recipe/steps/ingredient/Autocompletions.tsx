@@ -14,10 +14,8 @@ import { ContainerListMainInput } from "@/app/components/main-list/list/new-ingr
 
 interface Controller {
     ingredient: IngredientAutocomplite
-    // showWarning: boolean;
     isDisabled: boolean;
     handlers: {
-        // handleInputChange: (newInputValue: string) => void;
         handleAmountChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
         handleUnitsChange: (newValue: string) => void;
     };
@@ -25,7 +23,6 @@ interface Controller {
 
 
 interface Props {
-    ingredientId: string,//may be deleted
     controller:Controller,
     showWarning?:boolean,
     page:'list' | 'form'
@@ -159,8 +156,7 @@ export const Autocomplite = memo(({ controller, showWarning, page}: Props) => {
     const prevAmount = Array.isArray(prevUnits) ? null : prevUnits.amount;
     const nextAmount = Array.isArray(nextUnits) ? null : nextUnits.amount;
 
-    return prevProps.ingredientId === nextProps.ingredientId &&
-    prevProps.controller.ingredient.ingredient_id === nextProps.controller.ingredient.ingredient_id &&
+    return prevProps.controller.ingredient.ingredient_id === nextProps.controller.ingredient.ingredient_id &&
     prevProps.controller.ingredient.name === nextProps.controller.ingredient.name &&
     prevAmount === nextAmount &&
     prevProps.showWarning === nextProps.showWarning

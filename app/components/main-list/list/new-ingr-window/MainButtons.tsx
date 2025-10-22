@@ -1,3 +1,4 @@
+import { mainBtnsCreation } from "@/app/(main)/(main-list)/list/styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { checkNewListIngredient, selectFilledNewIngredients } from "@/state/selectors/new-ingr-list";
 import { newIngredient } from "@/state/slices/list-form";
@@ -27,7 +28,7 @@ export function MainButtons(){
 
 
     return(
-        <Box sx={{display:'flex', justifyContent:'center', gap:'20px'}}>
+        <Box sx={mainBtnsCreation}>
             <Button 
                 color="blackRedBtn" 
                 onClick={handleNewIngredient}

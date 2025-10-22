@@ -18,16 +18,12 @@ export async function PATCH(request: Request) {
 
         await connectDB();
 
-
-
         const results = [];
         const notFound: string[] = [];
 
         for (const el of data) {
             const { name, media, new_ingredient, units } = el;
 
-
-            console.log({ units })
             if (new_ingredient) {
                 const newIngredient = await ListIngredients.create({
                     connection_id,
@@ -51,7 +47,6 @@ export async function PATCH(request: Request) {
                     shop_ingr: false,
                     list: units.list,
                     units:newIngredient.units[newIngredient.units.length - 1],
-                    // new_unit: newIngredient.units[0],
                     type: "created",
                 });
             } else {
@@ -88,7 +83,7 @@ export async function PATCH(request: Request) {
             results,
             notFound,
         },
-        { status: notFound.length > 0 ? 207 : 200 }//notFound.length > 0 ? 207 : 200
+        { status: notFound.length > 0 ? 207 : 200 }
         );
 
     } catch (error) {
