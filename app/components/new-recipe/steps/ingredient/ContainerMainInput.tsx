@@ -13,7 +13,6 @@ import { selectShowMinOneFilledWarning } from "@/state/selectors/stepper-autocom
 
 interface Props {
     ingredient: IngredientAutocomplite,
-
 }
 
 
@@ -93,7 +92,7 @@ export const ContainerMainInput = memo(({ ingredient }: Props) => {
             dispatch(
                 choiceAutocomplite(newIngredient)
             );
-        
+
             // handleInputChange(newIngredient.name)
             // dispatch(updateError({ step: numbStep, error: false }));
         } else {
@@ -109,7 +108,6 @@ export const ContainerMainInput = memo(({ ingredient }: Props) => {
                     units: newValue?.units as string[] || [],
                 })
             );
-            
             // handleInputChange(newValue?.name.trim() || '')
             // dispatch(updateError({ step: numbStep, error: false }));
         }

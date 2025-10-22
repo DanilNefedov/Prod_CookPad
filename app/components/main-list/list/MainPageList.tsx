@@ -82,7 +82,6 @@ export function MainListPage() {
     ], []);
 
 
-
     return (
         <>
             <Table sx={table} stickyHeader aria-label="sticky table">

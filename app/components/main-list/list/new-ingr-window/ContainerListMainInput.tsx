@@ -102,6 +102,7 @@ export const ContainerListMainInput = memo(({ ingredient }: Props) => {
                 new_ingredient: newValue?.new_ingredient || false, // maybe only need to change it to false
                 media: newValue?.media || '',
                 units: newValue?.units as string[] || [],
+
             }))
 
 

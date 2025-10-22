@@ -1,3 +1,4 @@
+
 import { Box, Fab, Fade, Popover, Typography, Zoom } from "@mui/material";
 import { useRef, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
@@ -20,7 +21,6 @@ export function AddNewIngredient() {
     };
 
     const handleClose = () => setOpen(false);
-
 
     return (
         <Box sx={mainBoxCreating}>
