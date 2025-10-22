@@ -13,7 +13,7 @@ export type OperationStatus = {
 // defaultStatus
 export function createOperationStatus(
     loading = true,
-    error = false
+    error = false,
 ): OperationStatus {
     return { loading, error };
 }

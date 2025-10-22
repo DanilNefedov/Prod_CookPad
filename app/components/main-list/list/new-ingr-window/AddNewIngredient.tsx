@@ -1,10 +1,12 @@
-import { Box, Fab, Popover, Typography } from "@mui/material";
+
+import { Box, Fab, Fade, Popover, Typography, Zoom } from "@mui/material";
 import { useRef, useState } from "react";
 import AddIcon from '@mui/icons-material/Add';
 import { useAppSelector } from "@/state/hook";
 import { ContainerIngredient } from "./ContainerIngredient";
 import { MainButtons } from "./MainButtons";
-
+import { containerCreationIngr, fabCreating, fabIcon, mainBoxCreating, popoverCreating } from "@/app/(main)/(main-list)/list/styles";
+import CloseIcon from '@mui/icons-material/Close';
 
 
 export function AddNewIngredient() {
@@ -20,13 +22,20 @@ export function AddNewIngredient() {
 
     const handleClose = () => setOpen(false);
 
-    // const open = Boolean(anchorEl);
-
-
     return (
-        <Box sx={{ position: 'absolute', right: '28px', bottom: '10px' }}>
-            <Fab color="primary" onClick={handleClick} ref={fabRef}>
-                <AddIcon />
+        <Box sx={mainBoxCreating}>
+            <Fab 
+                color="primary" 
+                onClick={handleClick} 
+                ref={fabRef}
+                sx={fabCreating}
+            >
+                <Zoom in={!open} timeout={300}>
+                    <AddIcon sx={fabIcon}/>
+                </Zoom >
+                <Zoom in={open} timeout={300}>
+                    <CloseIcon sx={fabIcon}/>
+                </Zoom >
             </Fab>
             <Popover
                 id={open ? 'simple-popover' : undefined}
@@ -43,26 +52,13 @@ export function AddNewIngredient() {
                 }}
                 slotProps={{
                     paper: {
-                        sx: {
-                            display:'flex',
-                            flexDirection:'column',
-                            alignItems:'center',
-                            width:'600px',
-                            // overflow:'auto'
-                        },
+                        sx: popoverCreating,
                     },
                 }}   
             >
                 <Typography sx={{mt:'20px'}}>At least 1 ingredient completely filled</Typography>
 
-                <Box sx={{
-                    // maxWidth:'400px',
-                    width:'100%',
-                    // height:'100%',
-                    // maxHeight:'1000px',
-                    bgcolor:'background.paper',
-                    p:'20px 10px'
-                }}>
+                <Box sx={containerCreationIngr}>
                     {ingredientsForm.map(el =>(
                         <ContainerIngredient 
                             key={el.ingredient_id}

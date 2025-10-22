@@ -78,3 +78,54 @@ export const skeletonBoxMainBtns = {
         display: "flex",
     }, 
 }
+
+export const mainBoxCreating = { 
+    position: 'absolute', 
+    right: '28px', 
+    bottom: '10px' 
+}
+
+export const fabCreating = {
+    position:'relative',
+    [theme.breakpoints.down(600)]: { 
+        width:"36px",
+        height:'33px'
+    }
+}
+
+export const fabIcon = {
+    position:'absolute'
+}
+
+export const popoverCreating = {
+    display:'flex',
+    flexDirection:'column',
+    alignItems:'center',
+    width:'600px',
+}
+
+export const containerCreationIngr = {
+    width:'100%',
+    bgcolor:'background.paper',
+    p:'20px 10px'
+}
+
+export const mainBtnsCreation = {
+    display:'flex', 
+    justifyContent:'center', 
+    gap:'20px'
+}
+
+export const containerIngrItem = {
+    width:'100%',
+    display:'flex',
+    alignItems:'center',
+
+    [theme.breakpoints.down(600)]: { 
+        flexWrap:'wrap',
+        borderStyle:'solid',
+        borderColor:'text.desactive',
+        pb:'10px',
+        mb:'10px'
+    }
+}

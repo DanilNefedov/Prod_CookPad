@@ -1,11 +1,8 @@
-import {
-    ChangeAmountFetch, CreateIngredientsFetchReq, CreateIngredientsFetchRes, DeleteUnitIngrFetch, ListFetchReq, ListFetchRes,
-    ListIngrDataFetch,
-    ListRootState,
-    NewIngrFetchReq, NewIngrFetchRes, NewUnitFetchReq, NewUnitFetchRes, NewUnitIngrFetchReq,
+import { ChangeAmountFetch, CreateIngredientsFetchReq, CreateIngredientsFetchRes, DeleteUnitIngrFetch, 
+    ListFetchReq, ListFetchRes,ListIngrDataFetch,ListRootState,
+    NewIngrFetchReq, NewUnitFetchReq, NewUnitFetchRes, NewUnitIngrFetchReq,
     NewUnitIngrFetchRes, ShopIngrFetch, ShopUnitFetch, UpdCookUnitFetch
 } from "@/app/(main)/(main-list)/list/types";
-import { IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { clearItems } from "./list-form";

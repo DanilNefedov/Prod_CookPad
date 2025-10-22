@@ -21,7 +21,6 @@ export const ContainerListMainInput = memo(({ ingredient }: Props) => {
     const [options, setOptions] = useState<IngredientAutocomplite[]>([]);
     const [value, setValue] = useState<IngredientAutocomplite | null>(ingredient);
     const [inputValue, setInputValue] = useState<string>('');
-    // const showMinOneFilledWarning = false //useShowMinOneFilledWarning(numbStep);
 
     const dispatch = useAppDispatch();
 
@@ -103,7 +102,7 @@ export const ContainerListMainInput = memo(({ ingredient }: Props) => {
                 new_ingredient: newValue?.new_ingredient || false, // maybe only need to change it to false
                 media: newValue?.media || '',
                 units: newValue?.units as string[] || [],
-                // check_open_link: newValue?.ingredient_id || ''
+
             }))
 
 
@@ -126,14 +125,12 @@ export const ContainerListMainInput = memo(({ ingredient }: Props) => {
     return (
         <MainInput 
             controller={controller}
-            // showWarning={showMinOneFilledWarning}
         ></MainInput>
     )
 
 }, (prevProps, nextProps) => {
     return prevProps.ingredient.ingredient_id === nextProps.ingredient.ingredient_id &&
-        prevProps.ingredient.name === nextProps.ingredient.name
-    // prevProps.page === nextProps.page
+    prevProps.ingredient.name === nextProps.ingredient.name
 })
 
 

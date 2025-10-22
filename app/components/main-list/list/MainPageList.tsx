@@ -82,8 +82,6 @@ export function MainListPage() {
     ], []);
 
 
-    console.log(useAppSelector((state) => state.list))
-
     return (
         <>
             <Table sx={table} stickyHeader aria-label="sticky table">
