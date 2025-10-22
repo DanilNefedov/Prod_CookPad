@@ -10,6 +10,7 @@ import { Box, Button } from "@mui/material";
 
 
 
+
 export function MainButtons(){
     const showWarning = useAppSelector(checkNewListIngredient);
     const filledIngredients = useAppSelector(selectFilledNewIngredients);

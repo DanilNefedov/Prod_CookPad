@@ -12,7 +12,7 @@ import { SkeletonTable } from './SkeletonTable';
 import { SkeletonHeader } from './SkeletonHeader';
 import { AddNewIngredient } from './new-ingr-window/AddNewIngredient';
 
-
+ 
 export function MainListPage() {
     const dispatch = useAppDispatch()
     const currentPage = useAppSelector((state) => state.list.page_list);
