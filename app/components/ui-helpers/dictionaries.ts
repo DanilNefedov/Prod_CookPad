@@ -59,6 +59,7 @@ export const ERROR_MESSAGES_LIST: Partial<Record<ListOperationKey, string>> = {
     deleteUnitIngrFetch: 'Failed to remove unit from ingredient.',
     changeAmountFetch: 'Failed to update ingredient amount.',
     addNewUnit: 'Failed to add new unit.',
+    createNewIngredients:'Failed to create new ingredient(s).'
 };
 //----------------------------------  list ---------------------------------//
 

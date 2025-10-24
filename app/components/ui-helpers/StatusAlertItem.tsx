@@ -93,7 +93,10 @@ export function GlobalStatusNotifierItem({ config }: Props) {
                 const key = shownLoadingRef.current[operationKey];
                 if (key) closeSnackbar(key);
 
-                const message = config.errorMessages[operationKey] ?? 'Something went wrong.';
+                const message =
+                    (status.message ? status.message : undefined) ??
+                    (config.errorMessages[operationKey] ? config.errorMessages[operationKey] : undefined) ??
+                    'Something went wrong.';
 
                 enqueueSnackbar('', {
                     content: (snackbarKey) => (

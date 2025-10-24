@@ -10,7 +10,7 @@ import { GlobalStatusNotifierItem } from "./StatusAlertItem";
 
 
 export type OperationConfig<K extends string = string> = {
-    sliceSelector: (state: RootState) => Record<K, { error: boolean; loading: boolean }>;
+    sliceSelector: (state: RootState) => Record<K, { error: boolean; loading: boolean; message:string | undefined }>;
     successMessages: Partial<Record<K, string>>;
     errorMessages: Partial<Record<K, string>>;
     loadingMessages: Partial<Record<K, string>>;

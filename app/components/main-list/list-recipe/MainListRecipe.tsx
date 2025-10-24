@@ -60,14 +60,6 @@ export function MainListRecipe() {
         }
     }
 
-
-    function handleDeleteRecipe(recipe_id: string) {
-        if (connection_id !== '') {
-            dispatch(deleteListRecipe({ connection_id, recipe_id }))
-        }
-    }
-
-
     function handleMore() {
         if (connection_id !== '' && pageListRecipe !== null) {
             dispatch(preLoaderMain({ connection_id, page:pageListRecipe }))
@@ -142,16 +134,6 @@ export function MainListRecipe() {
 
                                         
                                         <ContentAccordion props={{ _id: el._id, status: loadingRecipeIds.includes(el._id) && el.ingredient_ids.length === 0 }} />
-
-                                    
-
-                                     
-                                        <Button
-                                            onClick={() => handleDeleteRecipe(id)}
-                                            sx={deleteRecipeBtn}
-                                        >
-                                            <DeleteIcon sx={deleteRecipeIcon}></DeleteIcon>
-                                        </Button>
                                             
                                     </Accordion>
 
