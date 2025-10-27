@@ -1,7 +1,7 @@
 // *S - start
 // *E - end
 
-import { IngredientAutocomplite } from "../../new-recipe/types";
+import { Amount, Autocompite, ChoiceUnits, IngredientAutocomplite } from "../../new-recipe/types";
 import { NormalizedData, UnitNoId } from "../list/types"
 
 
@@ -118,6 +118,19 @@ export interface NewUnitListRecipeFetchReq extends TemplateIngrListRecipe{
 export interface DeleteListRecipeFetchReq {
     connection_id:string, 
     recipe_id:string
+}
+
+export interface RecipeAmout extends Amount{
+    recipeId:string
+}
+
+export interface RecipeChoiceUnits extends ChoiceUnits{
+    recipeId:string
+}
+
+export interface RecipeAutocompite {
+    ingredient: Autocompite
+    recipeId:string
 }
 
 //---------- thunks E----------//

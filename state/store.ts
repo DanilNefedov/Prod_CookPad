@@ -17,6 +17,7 @@ import ingredientsSlice from './slices/stepper/ingredients'
 import descriptionSlice from './slices/stepper/description'
 import instructionSlice from './slices/stepper/instruction'
 import newListIngredient from './slices/list-form'
+import formListRecipe from './slices/list-recipe-form'
 
 
 export const RESET_APP = 'RESET_APP';
@@ -31,6 +32,7 @@ const appReducer = combineReducers({
     popular:popularSlice,
     comments:commentsPopular,
     commentContext:commentContext,
+    formListRecipe:formListRecipe,
 
 
     statusStepSlice:statusStepSlice,

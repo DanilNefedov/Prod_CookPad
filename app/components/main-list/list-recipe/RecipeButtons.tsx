@@ -27,7 +27,7 @@ export const RecipeButtons = memo(({recipeId}:Props) => {
 
     return (
         <Box sx={{display:'flex', justifyContent:'center', gap:'20px', mt:'15px'}}>
-            <NewIngredientBtn></NewIngredientBtn>
+            <NewIngredientBtn recipeId={recipeId}></NewIngredientBtn>
             <Button
                 color="blackRedBtn"
                 onClick={() => handleDeleteRecipe(recipeId)}
