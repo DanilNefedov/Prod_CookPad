@@ -22,10 +22,36 @@ export async function PATCH(request: Request) {
         const notFound: string[] = [];
 
         for (const el of data) {
-            const { name, media, new_ingredient, units } = el;
+            const { name, media, units } = el;
 
-            if (new_ingredient) {
-                const newIngredient = await ListIngredients.create({
+            if (!units || typeof units.choice === 'undefined' || typeof units.amount === 'undefined') {
+                notFound.push(name || 'unknown');
+                continue;
+            }
+
+            const existing = await ListIngredients.findOne({ connection_id, name });
+
+            if (existing) {
+                const newUnit = {
+                    choice: units.choice,
+                    amount: units.amount,
+                    shop_unit: false,
+                };
+
+                existing.units.push(newUnit);
+                await existing.save();
+
+                const savedUnit = existing.units[existing.units.length - 1];
+
+                results.push({
+                    ingredient_id: existing._id,
+                    type: 'updated',
+                    new_unit: savedUnit,
+                    name: existing.name,
+                });
+            } else {
+
+                const created = await ListIngredients.create({
                     connection_id,
                     name,
                     media,
@@ -41,56 +67,30 @@ export async function PATCH(request: Request) {
                 });
 
                 results.push({
-                    ingredient_id: newIngredient._id,
+                    ingredient_id: created._id,
                     name,
                     media,
                     shop_ingr: false,
                     list: units.list,
-                    units:newIngredient.units[newIngredient.units.length - 1],
+                    units:created.units[created.units.length - 1],
                     type: "created",
                 });
-            } else {
-                const existing = await ListIngredients.findOne({
-                    connection_id,
-                    name,
-                });
-
-                if (!existing) {
-                    notFound.push(el.name);
-                    continue;
-                }
-
-                const newUnit = {
-                    choice: units.choice,
-                    amount: units.amount,
-                    shop_unit: false,
-                };
-
-                existing.units.push(newUnit);
-                await existing.save();
-
-                const savedUnit = existing.units[existing.units.length - 1];
-
-                results.push({
-                    ingredient_id: existing._id,
-                    new_unit: savedUnit,
-                    type: "updated",
-                });
             }
+                
         }
 
         return NextResponse.json({
             results,
             notFound,
         },
-        { status: notFound.length > 0 ? 207 : 200 }
+            { status: notFound.length > 0 ? 207 : 200 }
         );
 
-    } catch (error) {
-        console.error(error);
-        return NextResponse.json(
-            { error: "An internal error occurred" },
-            { status: 500 }
-        );
+        } catch (error) {
+            console.error(error);
+            return NextResponse.json(
+                { error: "An internal error occurred" },
+                { status: 500 }
+            );
+        }
     }
-}

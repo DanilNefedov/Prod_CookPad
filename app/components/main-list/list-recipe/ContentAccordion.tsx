@@ -49,7 +49,6 @@ const ContentAccordion = memo(({ props }: { props: Props }) => {
 
     if (!ingredients_list) return null; 
 
-
     return (
         <AccordionDetails sx={accordionMain}>
             <Table

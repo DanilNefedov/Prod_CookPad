@@ -29,6 +29,7 @@ export const ERROR_MESSAGES_LIST_RECIPE: Partial<Record<OperationKey, string>> =
     newAmountListRecipe: 'Failed to update ingredient amount.',
     newUnitListRecipe: 'Failed to update unit.',
     deleteUnitListRecipe: 'Failed to remove unit.',
+    creationIngredients:'Failed to create new ingredient(s).'
 };
 //----------------------------------  list-recipe-slice ---------------------------------//
 

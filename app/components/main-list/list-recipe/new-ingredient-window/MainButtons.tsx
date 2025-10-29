@@ -2,6 +2,7 @@ import { mainBtnsCreation } from "@/app/(main)/(main-list)/list/styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { checkNewListIngredient, selectFilledNewIngredients } from "@/state/selectors/list-recipe";
 import { newIngredient } from "@/state/slices/list-recipe-form";
+import { creationIngredients } from "@/state/slices/list-recipe-slice";
 import { Box, Button } from "@mui/material";
 
 
@@ -24,9 +25,14 @@ export function MainButtons({recipeId}: Props){
         dispatch(newIngredient({recipeId}))
     }
 
-    // function handleSave(){
-    //     dispatch(createNewIngredients({connection_id, data:filledIngredients}))    
-    // }
+    function handleSave(){
+        console.log(recipeId, filledIngredients)
+        dispatch(creationIngredients({
+            connection_id,
+            recipe_id:recipeId,
+            ingredients:filledIngredients
+        }))    
+    }
 
 
     return(
@@ -40,7 +46,7 @@ export function MainButtons({recipeId}: Props){
             <Button 
                 disabled={showWarning}
                 color="blackRedBtn" 
-                // onClick={handleSave}
+                onClick={handleSave}
                 sx={{mb:'20px'}}
             >Save</Button>
         </Box>

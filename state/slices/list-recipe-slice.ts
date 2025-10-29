@@ -1,23 +1,28 @@
-import { ChangeAmountListRecipeFetch, TemplateIngrListRecipe, DeleteListRecipeFetchReq, 
-    DeleteUnitListRecipeFetch, IngrListRecipeFetchReq, IngrListRecipeFetchRes, ListRecipeData, 
-    ListRecipeRootState, NewListRecipeFetchReq, NewUnitListRecipeFetchReq, 
-    NewUnitListRecipeFetchRes, PreLoaderFetchReq, PreLoaderFetchRes, ShopIngrListRecipeFetch, 
-    ShopUnitListRecipeFetch } from "@/app/(main)/(main-list)/list-recipe/types";
+import {
+    ChangeAmountListRecipeFetch, TemplateIngrListRecipe, DeleteListRecipeFetchReq,
+    DeleteUnitListRecipeFetch, IngrListRecipeFetchReq, IngrListRecipeFetchRes, ListRecipeData,
+    ListRecipeRootState, NewListRecipeFetchReq, NewUnitListRecipeFetchReq,
+    NewUnitListRecipeFetchRes, PreLoaderFetchReq, PreLoaderFetchRes, ShopIngrListRecipeFetch,
+    ShopUnitListRecipeFetch,
+    NewIngredientsFetchReq,
+    PatchResponseItem
+} from "@/app/(main)/(main-list)/list-recipe/types";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
-import { createAsyncThunk, createSlice,  PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 export type OperationKey =
-  | 'preLoaderMain'
-  | 'newListRecipe'
-  | 'ingredientsListRecipe'
-  | 'shopIngrListRecipe'
-  | 'deleteIngrRecipeList'
-  | 'shopUnitListRecipe'
-  | 'newAmountListRecipe'
-  | 'newUnitListRecipe'
-  | 'deleteUnitListRecipe'
-  | 'deleteListRecipe'
+    | 'preLoaderMain'
+    | 'newListRecipe'
+    | 'ingredientsListRecipe'
+    | 'shopIngrListRecipe'
+    | 'deleteIngrRecipeList'
+    | 'shopUnitListRecipe'
+    | 'newAmountListRecipe'
+    | 'newUnitListRecipe'
+    | 'deleteUnitListRecipe'
+    | 'deleteListRecipe'
+    | 'creationIngredients'
 
 
 const listOperationKeys: OperationKey[] = [
@@ -30,9 +35,10 @@ const listOperationKeys: OperationKey[] = [
     'newAmountListRecipe',
     'newUnitListRecipe',
     'deleteUnitListRecipe',
-    'deleteListRecipe'
+    'deleteListRecipe',
+    'creationIngredients'
 ];
-  
+
 
 interface ListRecipeState extends ListRecipeRootState {
     operations: OperationState<OperationKey>
@@ -47,29 +53,29 @@ const loadingStatus: OperationKey[] = [
 
 const initialState: ListRecipeState = {
     connection_id: '',
-    page:1,
-    recipes: {}, 
-    queue_recipes:[],
+    page: 1,
+    recipes: {},
+    queue_recipes: [],
     ingredients: {},
-    units: {}, 
-    operations:createOperations<OperationKey>(
+    units: {},
+    operations: createOperations<OperationKey>(
         listOperationKeys,
         (key) =>
-        loadingStatus.includes(key)
-            ? createOperationStatus(false)
-            : createOperationStatus()
+            loadingStatus.includes(key)
+                ? createOperationStatus(false)
+                : createOperationStatus()
     )
 }
 
 export const preLoaderMain = createAsyncThunk<PreLoaderFetchRes, PreLoaderFetchReq, { rejectValue: string }>(
     'listRecipe/preLoaderMain',
-    async function ({connection_id, page}, { rejectWithValue }) {
+    async function ({ connection_id, page }, { rejectWithValue }) {
         try {
             const urlList = `/api/list-recipe?connection_id=${connection_id}&page=${page}`
             const responseList = await fetch(urlList);
 
             if (!responseList.ok) return rejectWithValue('Server Error!');
-            
+
             const dataList = await responseList.json()
 
             return dataList
@@ -98,7 +104,7 @@ export const newListRecipe = createAsyncThunk<ListRecipeData, NewListRecipeFetch
 
 
             if (!response.ok) return rejectWithValue('Server Error!');
-            
+
             const dataList = await response.json()
 
             return dataList.data
@@ -111,6 +117,43 @@ export const newListRecipe = createAsyncThunk<ListRecipeData, NewListRecipeFetch
 )
 
 
+export const creationIngredients = createAsyncThunk<PatchResponseItem, NewIngredientsFetchReq, { rejectValue: string  | { message: string } }>(
+    'listRecipe/creationIngredients',
+    async function (data, { rejectWithValue }) {
+        try {
+            const urlList = `/api/list-recipe/create-ingredients`
+            const response = await fetch(urlList, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            const result = await response.json()
+
+            if (response.status === 207) {
+                const notFoundList = result.notFound?.length
+                    ? result.notFound.join(', ')
+                    : 'Unknown ingredients';
+
+                return rejectWithValue({
+                   message: `The following ingredients could not be created: ${notFoundList}`
+                });
+            }
+
+            if (!response.ok) return rejectWithValue('Server Error!');
+
+            console.log(result)
+
+            return result
+
+        } catch (error) {
+            console.log(error)
+            return rejectWithValue('Request failed!');
+        }
+    }
+)
 
 
 
@@ -145,11 +188,11 @@ export const shopIngrListRecipe = createAsyncThunk<ShopIngrListRecipeFetch, Shop
                 },
                 body: JSON.stringify(data),
             });
-    
+
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-            
+
             const dataList = await response.json()
 
             return dataList;
@@ -173,11 +216,11 @@ export const deleteIngrRecipeList = createAsyncThunk<TemplateIngrListRecipe, Tem
                 },
                 body: JSON.stringify(data),
             });
-    
+
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-            
+
             const dataList = await response.json()
 
             return dataList;
@@ -202,11 +245,11 @@ export const shopUnitListRecipe = createAsyncThunk<ShopUnitListRecipeFetch, Shop
                 },
                 body: JSON.stringify(data),
             });
-    
+
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-            
+
             const dataList = await response.json()
 
             return dataList;
@@ -230,11 +273,11 @@ export const deleteUnitListRecipe = createAsyncThunk<DeleteUnitListRecipeFetch, 
                 },
                 body: JSON.stringify(data),
             });
-    
+
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-            
+
             const dataList = await response.json()
 
             return dataList;
@@ -258,11 +301,11 @@ export const newAmountListRecipe = createAsyncThunk<ChangeAmountListRecipeFetch,
                 },
                 body: JSON.stringify(data),
             });
-    
+
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-            
+
             const dataList = await response.json()
 
             return dataList;
@@ -284,11 +327,11 @@ export const newUnitListRecipe = createAsyncThunk<NewUnitListRecipeFetchRes, New
                 },
                 body: JSON.stringify(data),
             });
-    
+
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-            
+
             const dataList = await response.json()
 
             return dataList;
@@ -311,11 +354,11 @@ export const deleteListRecipe = createAsyncThunk<string, DeleteListRecipeFetchRe
                 },
                 body: JSON.stringify(data),
             });
-    
+
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-            
+
             const dataList = await response.json()
 
             return dataList;
@@ -331,10 +374,17 @@ const createReducerHandlers = <T extends keyof ListRecipeState['operations']>(op
     pending: (state: ListRecipeState) => {
         state.operations[operationName].error = false;
         state.operations[operationName].loading = true;
+        state.operations[operationName].message = undefined;
     },
-    rejected: (state: ListRecipeState) => {
+    rejected: (state: ListRecipeState, action: PayloadAction<string | { message: string } | undefined>) => {
         state.operations[operationName].error = true;
         state.operations[operationName].loading = false;
+
+        if (action.payload && typeof action.payload === 'object' && 'message' in action.payload) {
+            state.operations[operationName].message = action.payload.message;
+        } else {
+            state.operations[operationName].message = undefined;
+        }
     }
 });
 
@@ -348,6 +398,7 @@ const newAmountListRecipeHandlers = createReducerHandlers('newAmountListRecipe')
 const newUnitListRecipeHandlers = createReducerHandlers('newUnitListRecipe');
 const deleteUnitListRecipeHandlers = createReducerHandlers('deleteUnitListRecipe');
 const deleteListRecipeHandlers = createReducerHandlers('deleteListRecipe');
+const creationIngredientsRecipeHandlers = createReducerHandlers('creationIngredients');
 
 
 
@@ -356,7 +407,7 @@ const listRecipeSlice = createSlice({
     initialState,
     reducers: {
 
-        closeAlertListRecipe(state, action: PayloadAction<OperationKey>){
+        closeAlertListRecipe(state, action: PayloadAction<OperationKey>) {
             const key = action.payload
 
             if (state.operations[key]) {
@@ -381,29 +432,29 @@ const listRecipeSlice = createSlice({
                 }
             })
 
-           
+
 
             .addCase(preLoaderMain.pending, preLoaderMainHandlers.pending)
             .addCase(preLoaderMain.rejected, preLoaderMainHandlers.rejected)
             .addCase(preLoaderMain.fulfilled, (state, action: PayloadAction<PreLoaderFetchRes, string>) => {
-                    state.operations.preLoaderMain.error = false;
-                    state.operations.preLoaderMain.loading = false;
+                state.operations.preLoaderMain.error = false;
+                state.operations.preLoaderMain.loading = false;
 
-                    const payload = action.payload;
-                    state.connection_id = payload.connection_id;
-                    state.page = payload.page;
+                const payload = action.payload;
+                state.connection_id = payload.connection_id;
+                state.page = payload.page;
 
-                    payload.recipe.forEach((recipe) => {
+                payload.recipe.forEach((recipe) => {
                     const recipeId = recipe._id;
 
                     if (!state.recipes[recipeId]) {
                         state.recipes[recipeId] = {
-                            _id:recipe._id,
+                            _id: recipe._id,
                             recipe_id: recipeId,
                             recipe_name: recipe.recipe_name,
                             recipe_media: recipe.recipe_media,
                             recipe_shop: recipe.recipe_shop,
-                            ingredient_ids: [] 
+                            ingredient_ids: []
                         };
 
                         state.queue_recipes.push(recipe._id);
@@ -411,7 +462,7 @@ const listRecipeSlice = createSlice({
                 });
             })
 
-           
+
 
 
 
@@ -560,7 +611,7 @@ const listRecipeSlice = createSlice({
                     };
                 }
             })
-            
+
 
 
             .addCase(deleteUnitListRecipe.pending, deleteUnitListRecipeHandlers.pending)
@@ -599,12 +650,82 @@ const listRecipeSlice = createSlice({
                 );
 
                 state.queue_recipes = state.queue_recipes.filter(id => id !== recipe_id);
-            });
+            })
+
+
+            .addCase(creationIngredients.pending, creationIngredientsRecipeHandlers.pending)
+            .addCase(creationIngredients.rejected, creationIngredientsRecipeHandlers.rejected)
+            .addCase(creationIngredients.fulfilled, (state, action: PayloadAction<PatchResponseItem, string>) => {
+                state.operations.newListRecipe.error = false;
+                state.operations.newListRecipe.loading = false;
+
+                console.log(action.payload)
+                const results = action.payload;
+                if (!Array.isArray(results) || results.length === 0) return;
+
+                for (const result of results) {
+                    const { recipe_id, type, name, ingredient_id, new_unit, new_ingredient } = result;
+
+                    const recipe = state.recipes[recipe_id];
+                    if (!recipe) continue;
+
+                    if (type === "created" && new_ingredient && ingredient_id) {
+                        if (!state.ingredients[ingredient_id]) {
+                            state.ingredients[ingredient_id] = {
+                                ingredient_id,
+                                name: new_ingredient.name,
+                                media: new_ingredient.media,
+                                shop_ingr: new_ingredient.shop_ingr,
+                                list: new_ingredient.list,
+                                unit_ids: [],
+                            };
+                        }
+
+                        for (const unit of new_ingredient.units) {
+                            const unit_id = unit.unit_id || unit._id; 
+                            if (!unit_id) continue;
+
+                            state.units[unit_id] = {
+                                unit_id,
+                                choice: unit.choice,
+                                amount: unit.amount,
+                                shop_unit: unit.shop_unit,
+                            };
+
+                            if (!state.ingredients[ingredient_id].unit_ids.includes(unit_id)) {
+                                state.ingredients[ingredient_id].unit_ids.push(unit_id);
+                            }
+                        }
+
+                        if (!recipe.ingredient_ids.includes(ingredient_id)) {
+                            recipe.ingredient_ids.unshift(ingredient_id);
+                        }
+                    }
+
+                    if (type === "updated" && new_unit && ingredient_id) {
+                        const ingredient = state.ingredients[ingredient_id];
+                        if (!ingredient) continue;
+
+                        const unit_id = new_unit.unit_id || new_unit._id;
+                        if (!unit_id) continue;
+
+                        state.units[unit_id] = {
+                            unit_id,
+                            choice: new_unit.choice,
+                            amount: new_unit.amount,
+                            shop_unit: new_unit.shop_unit,
+                        };
+
+                        if (!ingredient.unit_ids.includes(unit_id)) {
+                            ingredient.unit_ids.push(unit_id);
+                        }
+                    }
+                }
+            })
 
 
 
 
-           
     }
 })
 
