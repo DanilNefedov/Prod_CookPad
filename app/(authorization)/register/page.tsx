@@ -15,8 +15,7 @@ import { centerFlexBlock, InputForMedia } from "@/app/styles";
 
 
 export default function Register() {
-  const [state, formAction] = useActionState(registerAndSignIn, { error: null });
-  const [isLoading, setIsLoading] = useState(false);
+  const [state, formAction, isPending] = useActionState(registerAndSignIn, { error: null });
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [sizeAvatar, setSizeAvatar] = useState(false);
   const [inputErrorState, setInputErrorState] = useState<InputErrorState>({
@@ -84,7 +83,7 @@ export default function Register() {
   return (
     <>
       {
-        isLoading &&
+        isPending &&
         <Box sx={containerLoading}>
           <UXLoading></UXLoading>
         </Box>
