@@ -144,9 +144,7 @@ export const creationIngredients = createAsyncThunk<PatchResponseItem, NewIngred
 
             if (!response.ok) return rejectWithValue('Server Error!');
 
-            console.log(result)
-
-            return result
+            return result.results
 
         } catch (error) {
             console.log(error)
@@ -659,13 +657,13 @@ const listRecipeSlice = createSlice({
                 state.operations.newListRecipe.error = false;
                 state.operations.newListRecipe.loading = false;
 
-                console.log(action.payload)
                 const results = action.payload;
                 if (!Array.isArray(results) || results.length === 0) return;
 
                 for (const result of results) {
                     const { recipe_id, type, name, ingredient_id, new_unit, new_ingredient } = result;
 
+                    console.log(result)
                     const recipe = state.recipes[recipe_id];
                     if (!recipe) continue;
 

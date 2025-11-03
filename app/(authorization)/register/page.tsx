@@ -15,8 +15,7 @@ import { centerFlexBlock, InputForMedia } from "@/app/styles";
 
 
 export default function Register() {
-  const [state, formAction] = useActionState(registerAndSignIn, { error: null });
-  const [isLoading, setIsLoading] = useState(false);
+  const [state, formAction, isPending] = useActionState(registerAndSignIn, { error: null });
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [sizeAvatar, setSizeAvatar] = useState(false);
   const [inputErrorState, setInputErrorState] = useState<InputErrorState>({
@@ -28,66 +27,63 @@ export default function Register() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setIsLoading(true)
 
-    const formData = new FormData(event.currentTarget);
+    try {
+      const formData = new FormData(event.currentTarget);
 
-    const email = formData.get("email")?.toString().trim() || "";
-    const password = formData.get("password")?.toString().trim() || "";
-    const name = formData.get("name")?.toString().trim() || "";
-    const imageFile = formData.get("image") as File | null;
-    const connection_id = uuidv4();
+      const email = formData.get("email")?.toString().trim() ?? "";
+      const password = formData.get("password")?.toString().trim() ?? "";
+      const name = formData.get("name")?.toString().trim() ?? "";
+      const imageFile = formData.get("image") as File | null;
+      const connection_id = uuidv4();
 
-    const fieldErrors: InputErrorState = {
-      email: !email || !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email),
-      password: !password || !/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{4,8}$/.test(password),
-      name: !name || !/^[A-Za-z0-9 ]{1,15}$/.test(name),
-      image: false,
-    };
+      const fieldErrors: InputErrorState = {
+        email: !email || !/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email),
+        password: !password || !/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{4,8}$/.test(password),
+        name: !name || !/^[A-Za-z0-9 ]{1,15}$/.test(name),
+        image: false,
+      };
 
-    const hasValidationError = Object.values(fieldErrors).some(Boolean);
-    if (hasValidationError) {
-      setInputErrorState(fieldErrors);
-      setIsLoading(false);
-      return;
-    }
-
-    let imageUrl = "";
-    if (imageFile instanceof File && imageFile.size > 0) {
-      try {
-        imageUrl = await uploadFile({ connection_id, image: imageFile });
-      } catch (e) {
-        console.log(e)
-        fieldErrors.image = true;
+      const hasValidationError = Object.values(fieldErrors).some(Boolean);
+      if (hasValidationError) {
+        setInputErrorState(fieldErrors);
+        return;
       }
+
+      let imageUrl = "";
+      if (imageFile instanceof File && imageFile.size > 0) {
+        try {
+          imageUrl = await uploadFile({ connection_id, image: imageFile });
+        } catch (e) {
+          console.error(e);
+          fieldErrors.image = true;
+        }
+      }
+
+      if (fieldErrors.image) {
+        setInputErrorState(prev => ({ ...prev, ...fieldErrors }));
+        return;
+      }
+
+      const serverFormData: RegisterFormData = {
+        email,
+        password,
+        name,
+        image: imageUrl,
+        connection_id,
+      };
+
+      startTransition(() => formAction(serverFormData));
+
+    } catch (err) {
+      console.error("submit error", err);
     }
-
-
-    if (fieldErrors.image) {
-      setInputErrorState(prev => ({ ...prev, ...fieldErrors }));
-      setIsLoading(false);
-      return;
-    }
-
-    const serverFormData: RegisterFormData = {
-      email,
-      password,
-      name,
-      image: imageUrl,
-      connection_id,
-    };
-
-    startTransition(() => {
-      formAction(serverFormData);
-      setIsLoading(false);
-    });
-    // await formAction(serverFormData);
   }
 
   return (
     <>
       {
-        isLoading &&
+        isPending &&
         <Box sx={containerLoading}>
           <UXLoading></UXLoading>
         </Box>
