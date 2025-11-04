@@ -16,6 +16,7 @@ import { centerFlexBlock, InputForMedia } from "@/app/styles";
 
 export default function Register() {
   const [state, formAction, isPending] = useActionState(registerAndSignIn, { error: null });
+  const [avatarLoader, setAvatarLoader] = useState<boolean>(false)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [sizeAvatar, setSizeAvatar] = useState(false);
   const [inputErrorState, setInputErrorState] = useState<InputErrorState>({
@@ -52,11 +53,14 @@ export default function Register() {
 
       let imageUrl = "";
       if (imageFile instanceof File && imageFile.size > 0) {
+        setAvatarLoader(true)
         try {
           imageUrl = await uploadFile({ connection_id, image: imageFile });
         } catch (e) {
           console.error(e);
           fieldErrors.image = true;
+        } finally{
+          setAvatarLoader(false)
         }
       }
 
@@ -83,7 +87,7 @@ export default function Register() {
   return (
     <>
       {
-        isPending &&
+        (isPending || avatarLoader) &&
         <Box sx={containerLoading}>
           <UXLoading></UXLoading>
         </Box>
