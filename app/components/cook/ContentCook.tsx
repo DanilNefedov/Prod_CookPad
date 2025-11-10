@@ -52,8 +52,6 @@ export function ContentCook() {
     }, [recipe_id, hasCookRecipe, user_id, dispatch]);
 
 
- 
-
 
     const handleEdit = () => {
         if(isEditing){

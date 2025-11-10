@@ -7,6 +7,7 @@ import { RESET_APP } from '@/state/store';
 import { signOut } from 'next-auth/react';
 import { exitButton, exitIcon } from '@/app/(main)/home/styles';
 import { Button } from '@mui/material';
+import { clearCachedUser } from '@/app/helpers/user-data-cashe';
 
 export function LogOut() {
     const dispatch = useAppDispatch()
@@ -14,6 +15,7 @@ export function LogOut() {
 
     const handleLogout = async () => {
         await signOut({ redirect: false })
+        clearCachedUser()
         dispatch({ type: RESET_APP })
         router.push('/login')
     }
