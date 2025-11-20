@@ -27,6 +27,10 @@ const IngredientsSchema = new Schema(
         deletedAt: {
             type: Schema.Types.Mixed,
             default: null
+        },
+        cat_id: {
+            type: Number,
+            required: true
         }
     },
     {

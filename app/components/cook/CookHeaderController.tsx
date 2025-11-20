@@ -79,6 +79,7 @@ export function CookHeaderController() {
         open,
         toggleDrawer,
     };
+    console.log(cookHistoryStore)
 
 
     return (
