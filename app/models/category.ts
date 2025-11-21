@@ -11,10 +11,6 @@ const CategorySchema = new Schema(
             type: String,
             required: true
         },
-        seq:{
-            type: Number,
-            required: true
-        },
         slug:{
             type: String,
             required: true
