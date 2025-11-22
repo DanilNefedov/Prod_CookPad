@@ -52,26 +52,45 @@
 
 // console.log(averageCalc({ multiplier, history_length_average }, newValue));
 
+const SCALE = 1_000_000n;
 
-function averageCalc({ multiplier, history_length_average }, newValue) {
-    if (!multiplier || multiplier.length === 0 || history_length_average === 0) {
-        return { newAvg: newValue, totalCount: 1 };
-    }
-
-    const oldAvg = multiplier[0];
-    const oldCount = history_length_average;
-    const newValues = multiplier.slice(1);
-    const newCount = newValues.length;
-
-    const totalSum = oldAvg * oldCount + newValues.reduce((a, b) => a + b, 0) + newValue;
-    const totalCount = oldCount + newCount + 1;
-
-    const newAvg = totalSum / totalCount;
-    return { newAvg, totalCount };
+function toBig(x) {
+    return BigInt(Math.round(x * Number(SCALE)));
 }
 
-const multiplier = [0.55, 2, -2, 1.2, -1.3];
-const history_length_average = 6;
-const newValue = 1.4;
+function fromBig(x) {
+    return Number(x) / Number(SCALE);
+}
 
-console.log(averageCalc({ multiplier, history_length_average }, newValue));
+
+
+function averageCalc({ multiplier, history_length_average }) {
+    if (!multiplier || multiplier.length === 0 || history_length_average === 0) {
+        return { newAvg: multiplier?.[0] ?? 0, totalCount: multiplier.length };
+    }
+
+    const oldAvg = toBig(multiplier[0]);             
+    const oldCount = BigInt(history_length_average);
+
+    const tail = multiplier.slice(1).map(toBig);
+    const sumTail = tail.reduce((a, b) => a + b, 0n);
+
+    const totalSum = oldAvg * oldCount + sumTail;
+    const totalCount = oldCount + BigInt(tail.length);
+
+    const newAvg = fromBig(totalSum / totalCount);
+
+    return { newAvg, totalCount: Number(totalCount) };
+}
+
+// const multiplier = [0.55, 2, -2, 1.2, -1.3, 1.4];
+// const history_length_average = 6;
+
+// const multiplier = [2, 2, -2, 1.2, -1.3, 1.4];
+// const history_length_average = 1;
+// const newValue = 1.4;
+
+const multiplier = [0.4181, 1.5, -2, 1.3, -1.1, 1.7];
+const history_length_average = 11;
+
+console.log(averageCalc({ multiplier, history_length_average }));
