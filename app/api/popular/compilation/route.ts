@@ -26,6 +26,7 @@ export async function POST(request: Request) {
         const recipes = await Recipe.find({ _id: { $in: creatorIds } });
         const connectionIds = recipes.map(recipe => recipe.connection_id).filter(Boolean);
 
+        console.log(configIds)
         const [authors, userLikes, userSaves] = await Promise.all([
             User.find({ connection_id: { $in: connectionIds } }),
             LikesPopular.aggregate([

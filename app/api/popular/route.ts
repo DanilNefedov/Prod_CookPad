@@ -6,6 +6,7 @@ import { NextResponse } from "next/server";
 import _ from 'lodash';
 import RecipePopularConfig from "@/app/models/popular-config";
 import { PipelineStage } from "mongoose";
+// import { RecipeConfig, TopItems, UserMultiplier } from "@/app/(main)/popular/types";
 
 
 
@@ -100,22 +101,7 @@ import { PipelineStage } from "mongoose";
 
 // }
 
-// function avg(arr: number[]) {
-//     if (!arr || arr.length === 0) return 0;
-//     let s = 0;
-//     for (let v of arr) s += v;
-//     return s / arr.length;
-// }
 
-// // Build Map: category → avg(user.categoryMultiplier)
-// function buildUserWeights(userList: any[]) {
-//     const map = new Map<string, number>();
-//     for (const u of userList) {
-//         const a = avg(u.multiplier);
-//         map.set(u.category, a);
-//     }
-//     return map;
-// }
 
 interface UserMultiplier{
     id: string;
@@ -210,42 +196,6 @@ function recipeImpact(item: any, categoryStrength: number) {
     return interactionScore * categoryStrength;
 }
 
-// Process list of recipes
-// function rankRecipes(list: any[], userWeights: Map<string, number>, finalLimit: number) {
-//     const stage1: {
-//         item: any;
-//         categoryStrength: number;
-//     }[] = [];
-
-//     // ============ 1. Compute category matching ==============
-//     console.log(list)
-//     for (const item of list) {
-//         const { matchCount, matchCoef, avgUserCoef } = computeCategoryMatch(
-//             item.categories || [],
-//             userWeights
-//         );
-
-//         if (matchCount === 0) continue;
-
-//         const categoryStrength = matchCoef * avgUserCoef;
-//         console.log({ item, categoryStrength })
-//         stage1.push({ item, categoryStrength });
-//     }
-
-//     // ============ 2. Take top 120 by category ==============
-//     stage1.sort((a, b) => b.categoryStrength - a.categoryStrength);
-//     const top = stage1.slice(0, 120);
-
-//     // ============ 3. Final scoring with interactions =========
-//     const stage2 = top.map((entry) => {
-//         const finalScore = recipeImpact(entry.item, entry.categoryStrength);
-//         return { item: entry.item, finalScore };
-//     });
-
-//     stage2.sort((a, b) => b.finalScore - a.finalScore);
-
-//     return stage2.slice(0, finalLimit).map((x) => x.item);
-// }
 
 function rankRecipes(list: any[], userWeights: Map<string, number> | null, finalLimit: number) {
     const stage1: { item: any; categoryStrength: number }[] = [];
@@ -324,7 +274,7 @@ export async function POST(request: Request) {
             { $sample: { size: 200 } }
         ]);
 
-        // console.log(list)
+        console.log(list)
 
         // --- main ranking logic ---
         const result = rankRecipes(list, userWeights, +count);
@@ -384,10 +334,10 @@ export async function POST(request: Request) {
 //         // ])
 
 
-//         // const sortedByCateries = getSortingByCategory(list, userData.popular_config);
-//         // // const fullSorted = orderByUsersImpact(sortedByCateries, +count);
-//         const sortedByCateries = processListFast(list, userData.popular_config)
-//         const fullSorted = categoryCoefVideoFast(sortedByCateries, +count);
+//         const sortedByCateries = getSortingByCategory(list, userData.popular_config);
+//         const fullSorted = orderByUsersImpact(sortedByCateries, +count);
+//         // const sortedByCateries = processListFast(list, userData.popular_config)
+//         // const fullSorted = categoryCoefVideoFast(sortedByCateries, +count);
 
 //         // const creatorIds = fullSorted.map(el => el.creator.toString());
 //         // const configIds = fullSorted.map(el => el._id.toString());

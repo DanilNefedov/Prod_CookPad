@@ -57,6 +57,8 @@ export const popularFetch = createAsyncThunk<PopularFetchRes, PopularFetchReq, {
 
             const dataCoef = await response.json()
 
+            console.log(dataCoef)
+
             const responseData = await fetch('/api/popular/compilation', {
                 method: 'POST',
                 headers: {
