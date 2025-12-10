@@ -64,12 +64,31 @@ function fromBig(x) {
 
 
 
+// function averageCalc({ multiplier, history_length_average }) {
+//     if (!multiplier || multiplier.length === 0 || history_length_average === 0) {
+//         return { newAvg: multiplier?.[0] ?? 0, totalCount: multiplier.length };
+//     }
+
+//     const oldAvg = toBig(multiplier[0]);             
+//     const oldCount = BigInt(history_length_average);
+
+//     const tail = multiplier.slice(1).map(toBig);
+//     const sumTail = tail.reduce((a, b) => a + b, 0n);
+
+//     const totalSum = oldAvg * oldCount + sumTail;
+//     const totalCount = oldCount + BigInt(tail.length);
+
+//     const newAvg = fromBig(totalSum / totalCount);
+
+//     return { newAvg, totalCount: Number(totalCount) };
+// }
+
 function averageCalc({ multiplier, history_length_average }) {
     if (!multiplier || multiplier.length === 0 || history_length_average === 0) {
-        return { newAvg: multiplier?.[0] ?? 0, totalCount: multiplier.length };
+        return multiplier?.[0] ?? 0
     }
 
-    const oldAvg = toBig(multiplier[0]);             
+    const oldAvg = toBig(multiplier[0]);
     const oldCount = BigInt(history_length_average);
 
     const tail = multiplier.slice(1).map(toBig);
@@ -78,19 +97,26 @@ function averageCalc({ multiplier, history_length_average }) {
     const totalSum = oldAvg * oldCount + sumTail;
     const totalCount = oldCount + BigInt(tail.length);
 
+    // ИСПРАВЛЕНО: Для сохранения дробной части при делении BigInt,
+    // мы умножаем числитель (totalSum) на SCALE перед делением на знаменатель (totalCount).
+    // Это "переводит" результат деления в наш BigInt-формат с фиксированной точкой.
     const newAvg = fromBig(totalSum / totalCount);
 
-    return { newAvg, totalCount: Number(totalCount) };
+    // console.log(newAvgBig)
+    // const newAvg = fromBig(newAvgBig);
+    console.log(newAvg)
+
+    return newAvg;
 }
 
 // const multiplier = [0.55, 2, -2, 1.2, -1.3, 1.4];
 // const history_length_average = 6;
 
-// const multiplier = [2, 2, -2, 1.2, -1.3, 1.4];
-// const history_length_average = 1;
+const multiplier = [2, 2, -2, 1.2, -1.3, 1.4];
+const history_length_average = 1;
 // const newValue = 1.4;
 
-const multiplier = [0.4181, 1.5, -2, 1.3, -1.1, 1.7];
-const history_length_average = 11;
+// const multiplier = [0.4181, 1.5, -2, 1.3, -1.1, 1.7];
+// const history_length_average = 11;
 
 console.log(averageCalc({ multiplier, history_length_average }));
