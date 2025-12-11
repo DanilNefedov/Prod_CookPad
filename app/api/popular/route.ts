@@ -165,19 +165,22 @@ function buildUserWeights(userList: UserMultiplier[]) {
 
 // Compute match count & weighted category score
 function computeCategoryMatch(itemCategories: string[], weights: Map<string, number>) {
-    const total = BigInt(itemCategories.length || 1);
+    console.log(itemCategories, weights)
+    const total = toBig(itemCategories.length || 1);
     
     // IMPORTANT 0.01 - value, there will be 1 match per 100 categories
     let matchCount = toBig(0.01);
     let coefSum = 0n;
 
-    for (const c of itemCategories) {
-        if (weights.has(c)) {
+    for (let i = 0; i < itemCategories.length; i++) {
+        const userWeight = weights.get(itemCategories[i]);
+        if (userWeight !== undefined) {
             matchCount += SCALE;
-            coefSum += toBig(weights.get(c)!);
+            coefSum += toBig(userWeight);
         }
     }
 
+    console.log(matchCount, total, matchCount / total, (matchCount * SCALE) / total)
     const matchCoef = fromBig((matchCount * SCALE) / total);
     const avgUserCoef = matchCount > 0n ? fromBig((coefSum * SCALE) / matchCount) : 0;
 
@@ -244,7 +247,7 @@ function recipeImpactBig(item: any, categoryStrengthBig: bigint): number {
 
     // finalScore = interactionScore * categoryStrength
     const finalScoreBig = (interactionScoreBig * categoryStrengthBig) / SCALE;
-    console.log(finalScoreBig, interactionScoreBig * categoryStrengthBig, fromBig(finalScoreBig), fromBig(interactionScoreBig * categoryStrengthBig))
+    // console.log(finalScoreBig, interactionScoreBig * categoryStrengthBig, fromBig(finalScoreBig), fromBig(interactionScoreBig * categoryStrengthBig))
     return fromBig(finalScoreBig);
 }
 // function recipeImpact(item: any, categoryStrength: number) {
@@ -265,12 +268,15 @@ function recipeImpactBig(item: any, categoryStrengthBig: bigint): number {
 
 function rankRecipes(list: any[], userWeights: Map<string, number> | null, finalLimit: number) {
     const stage1: { item: any; categoryStrength: bigint }[] = [];
+    const hasUserWeights = userWeights && userWeights.size > 0;
 
+    // console.log(list, userWeights, finalLimit)
+    // console.log(fromBig((SCALE * SCALE) / SCALE))
     for (const item of list) {
         let matchCoefBig = SCALE;  // 1.0 в bigint
         let avgUserCoefBig = SCALE; // 1.0 в bigint
 
-        if (userWeights && userWeights.size > 0) {
+        if (hasUserWeights) {
             const { matchCount, matchCoef, avgUserCoef } = computeCategoryMatch(
                 item.categories || [], 
                 userWeights

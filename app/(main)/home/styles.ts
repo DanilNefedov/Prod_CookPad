@@ -327,23 +327,23 @@ export const mainCard = {
     position:'relative',
     borderRadius: '0',
 
-    '&:nth-child(1)': {
+    '&:nth-of-type(1)': {
         borderRadius: '20px 0 0 0',
     },
-    '&:nth-child(4)': {
+    '&:nth-of-type(4)': {
         borderRadius: '0 20px 0 0',
     },
 
     [theme.breakpoints.down(1350)]: {
         width: 'calc(33.33% - 11px)',
 
-        '&:nth-child(1)': {
+        '&:nth-of-type(1)': {
             borderRadius: '10px 0 0 0',
         },
-        '&:nth-child(3)': {
+        '&:nth-of-type(3)': {
             borderRadius: '0 10px 0 0',
         },
-        '&:nth-child(4)': {
+        '&:nth-of-type(4)': {
             borderRadius: '0',
         },
     },
@@ -356,13 +356,13 @@ export const mainCard = {
         // maxHeight:'350px',
         width: 'calc(50% - 8px)',
         mb:"0",
-        '&:nth-child(1)': {
+        '&:nth-of-type(1)': {
             borderRadius: '10px 0 0 0',
         },
-        '&:nth-child(2)': {
+        '&:nth-of-type(2)': {
             borderRadius: '0 10px 0 0',
         },
-        '&:nth-child(3)': {
+        '&:nth-of-type(3)': {
             borderRadius: '0 0 0 0',
         },
     },
