@@ -1,4 +1,11 @@
+const fs = require("fs");
+const { performance } = require("node:perf_hooks");
 
+
+const raw = fs.readFileSync("./recipes.json", "utf-8");
+const data = JSON.parse(raw);
+
+const popular_config = data.popular_config;
 
 
 
@@ -83,40 +90,119 @@ function fromBig(x) {
 //     return { newAvg, totalCount: Number(totalCount) };
 // }
 
+// function averageCalc({ multiplier, history_length_average }) {
+//     if (!multiplier || multiplier.length === 0 || history_length_average === 0) {
+//         return multiplier?.[0] ?? 0
+//     }
+
+//     const oldAvg = toBig(multiplier[0]);
+//     const oldCount = BigInt(history_length_average);
+
+//     const tail = multiplier.slice(1).map(toBig);
+//     const sumTail = tail.reduce((a, b) => a + b, 0n);
+
+//     const totalSum = oldAvg * oldCount + sumTail;
+//     const totalCount = oldCount + BigInt(tail.length);
+
+
+//     const newAvg = fromBig(totalSum / totalCount);
+
+//     // console.log(newAvgBig)
+//     // const newAvg = fromBig(newAvgBig);
+//     // console.log(newAvg)
+
+//     return newAvg;
+// }
 function averageCalc({ multiplier, history_length_average }) {
-    if (!multiplier || multiplier.length === 0 || history_length_average === 0) {
-        return multiplier?.[0] ?? 0
+    const len = multiplier?.length ?? 0;
+
+    if (len === 0 || history_length_average === 0) {
+        return multiplier?.[0] ?? 0;
     }
 
-    const oldAvg = toBig(multiplier[0]);
-    const oldCount = BigInt(history_length_average);
+    let totalSum = toBig(multiplier[0]) * BigInt(history_length_average);
+    let totalCount = BigInt(history_length_average);
 
-    const tail = multiplier.slice(1).map(toBig);
-    const sumTail = tail.reduce((a, b) => a + b, 0n);
+    for (let i = 1; i < len; i++) {
+        totalSum += toBig(multiplier[i]);
+        totalCount += 1n;
+    }
 
-    const totalSum = oldAvg * oldCount + sumTail;
-    const totalCount = oldCount + BigInt(tail.length);
-
-    // ИСПРАВЛЕНО: Для сохранения дробной части при делении BigInt,
-    // мы умножаем числитель (totalSum) на SCALE перед делением на знаменатель (totalCount).
-    // Это "переводит" результат деления в наш BigInt-формат с фиксированной точкой.
-    const newAvg = fromBig(totalSum / totalCount);
-
-    // console.log(newAvgBig)
-    // const newAvg = fromBig(newAvgBig);
-    console.log(newAvg)
-
-    return newAvg;
+    return fromBig(totalSum / totalCount);
 }
 
 // const multiplier = [0.55, 2, -2, 1.2, -1.3, 1.4];
 // const history_length_average = 6;
 
-const multiplier = [2, 2, -2, 1.2, -1.3, 1.4];
-const history_length_average = 1;
+// const multiplier = [2, 2, -2, 1.2, -1.3, 1.4];
+// const history_length_average = 1;
 // const newValue = 1.4;
 
 // const multiplier = [0.4181, 1.5, -2, 1.3, -1.1, 1.7];
 // const history_length_average = 11;
 
-console.log(averageCalc({ multiplier, history_length_average }));
+// const multiplier = [2, -2];
+// const history_length_average = 1;
+
+// console.log(averageCalc({ multiplier, history_length_average }));
+
+
+
+function pickWeakestConfig(popular_config) {
+    const trusted = popular_config.filter(
+        c => c.history_length_average < 50
+    );
+
+    const pool = trusted.length > 0 ? trusted : popular_config;
+
+    let weakest = pool[0];
+    let weakestAvg = averageCalc({
+        multiplier: weakest.multiplier,
+        history_length_average:
+            weakest.history_length_average < 50 ? 1 : weakest.history_length_average
+    });
+
+    for (let i = 1; i < pool.length; i++) {
+        const c = pool[i];
+        const avg = averageCalc({
+            multiplier: c.multiplier,
+            history_length_average:
+                c.history_length_average < 50 ? 1 : c.history_length_average
+        });
+
+        if (avg < weakestAvg) {
+            weakest = c;
+            weakestAvg = avg;
+        }
+    }
+
+    return { weakest, weakestAvg };
+}
+
+
+
+
+for (let i = 0; i < 20_000; i++) {
+    pickWeakestConfig(popular_config);
+}
+
+const ITERATIONS = 100_000;
+const start = performance.now();
+
+
+
+for (let i = 0; i < ITERATIONS; i++) {
+    pickWeakestConfig(popular_config);
+}
+
+const end = performance.now();
+
+// console.log(`Time: ${(end - start).toFixed(4)} ms`);
+console.log(
+    `Avg per call: ${((end - start) / ITERATIONS).toFixed(6)} ms`
+);
+
+const { weakest, weakestAvg } = pickWeakestConfig(popular_config);
+
+console.log("Weakest config:", weakest);
+console.log("Weakest average:", weakestAvg);
