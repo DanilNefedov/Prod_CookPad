@@ -60,15 +60,30 @@ const popular_config = data.popular_config;
 // console.log(averageCalc({ multiplier, history_length_average }, newValue));
 
 const SCALE = 1_000_000n;
+let warnedFromBig = false;
 
 function toBig(x) {
     return BigInt(Math.round(x * Number(SCALE)));
 }
 
+
+
 function fromBig(x) {
+    const MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER);
+    const MAX_X = MAX_SAFE * SCALE;
+
+    const oldX = x;
+
+    if (x > MAX_X) x = MAX_X;
+    if (x < -MAX_X) x = -MAX_X;
+
+    if (!warnedFromBig && oldX !== x) {
+        console.warn(`fromBig: the number was truncated due to size: ${oldX}`);
+        warnedFromBig = true;
+    }
+
     return Number(x) / Number(SCALE);
 }
-
 
 
 // function averageCalc({ multiplier, history_length_average }) {
@@ -158,16 +173,14 @@ function pickWeakestConfig(popular_config) {
     let weakest = pool[0];
     let weakestAvg = averageCalc({
         multiplier: weakest.multiplier,
-        history_length_average:
-            weakest.history_length_average < 50 ? 1 : weakest.history_length_average
+        history_length_average: weakest.history_length_average < 50 ? 1 : weakest.history_length_average
     });
 
     for (let i = 1; i < pool.length; i++) {
         const c = pool[i];
         const avg = averageCalc({
             multiplier: c.multiplier,
-            history_length_average:
-                c.history_length_average < 50 ? 1 : c.history_length_average
+            history_length_average: c.history_length_average < 50 ? 1 : c.history_length_average
         });
 
         if (avg < weakestAvg) {
@@ -180,29 +193,83 @@ function pickWeakestConfig(popular_config) {
 }
 
 
+// function effectiveValue(avg, history_length_average) {
 
+//     const weight = Math.min(history_length_average, 50);
+//     return avg * (1 - weight / 100);
+// }
 
-for (let i = 0; i < 20_000; i++) {
-    pickWeakestConfig(popular_config);
+function confidenceMarginNumber(history) {
+    const capped = Math.min(history, 50);
+    return 0.35 * Math.log10(capped + 1) / Math.log10(51);
+    // return toBig(0.35 * Math.log10(capped + 1) / Math.log10(51))
 }
 
-const ITERATIONS = 100_000;
-const start = performance.now();
+console.log(confidenceMarginNumber(49))
 
 
+function shouldReplace({ popular_config, newConfig }) {
+    const { weakest, weakestAvg } = pickWeakestConfig(popular_config);
 
-for (let i = 0; i < ITERATIONS; i++) {
-    pickWeakestConfig(popular_config);
+    //A new element at this point will always have 1 history and 1 average value.
+    const newAvg = averageCalc({
+        multiplier: newConfig.multiplier,
+        history_length_average: newConfig.history_length_average < 50 ? 1 : newConfig.history_length_average
+    });
+
+    console.log({ newAvg, newConfig })
+
+    const adjustedWeakest = confidenceMarginNumber(
+        weakestAvg,
+        weakest.history_length_average
+    );
+
+    console.log({ adjustedWeakest })
+
+    return {
+        replace: newAvg > adjustedWeakest,
+        weakestId: weakest._id
+    };
 }
 
-const end = performance.now();
 
-// console.log(`Time: ${(end - start).toFixed(4)} ms`);
-console.log(
-    `Avg per call: ${((end - start) / ITERATIONS).toFixed(6)} ms`
-);
 
-const { weakest, weakestAvg } = pickWeakestConfig(popular_config);
 
-console.log("Weakest config:", weakest);
-console.log("Weakest average:", weakestAvg);
+// for (let i = 0; i < 20_000; i++) {
+//     pickWeakestConfig(popular_config);
+// }
+
+// const ITERATIONS = 100_000;
+// const start = performance.now();
+
+
+
+// for (let i = 0; i < ITERATIONS; i++) {
+//     pickWeakestConfig(popular_config);
+// }
+
+// const end = performance.now();
+
+// // console.log(`Time: ${(end - start).toFixed(4)} ms`);
+// console.log(
+//     `Avg per call: ${((end - start) / ITERATIONS).toFixed(6)} ms`
+// );
+
+
+
+
+
+
+
+
+// const { weakest, weakestAvg } = pickWeakestConfig(popular_config);
+
+// console.log("Weakest config:", weakest);
+// console.log("Weakest average:", weakestAvg);
+
+// const newConfig = {
+//     history_length_average: 1,
+//     multiplier: [1.14]
+// }
+
+// console.log(shouldReplace({ popular_config, newConfig }))
