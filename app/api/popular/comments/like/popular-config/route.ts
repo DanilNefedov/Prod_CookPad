@@ -48,6 +48,7 @@ export async function PATCH(request: Request) {
 
 
         const updatedConfig = categoryUser(user.popular_config, liked, 1.1, popularData.categories);
+        console.log(updatedConfig)
         if (updatedConfig.length > 0) {
             const updated = await User.updateOne(
                 { connection_id: id_author },

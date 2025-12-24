@@ -188,7 +188,6 @@ function pickWeakestConfig(popular_config) {
             weakestAvg = avg;
         }
     }
-
     return { weakest, weakestAvg };
 }
 
@@ -199,38 +198,83 @@ function pickWeakestConfig(popular_config) {
 //     return avg * (1 - weight / 100);
 // }
 
-function confidenceMarginNumber(history) {
-    const capped = Math.min(history, 50);
-    return 0.35 * Math.log10(capped + 1) / Math.log10(51);
-    // return toBig(0.35 * Math.log10(capped + 1) / Math.log10(51))
+// function confidenceMarginNumber({weakestAvg, weakest, newConfig}) {
+    
+//     // const capped = Math.min(history, 50);
+//     // return 0.35 * Math.log10(capped + 1) / Math.log10(51);
+//     // return toBig(0.35 * Math.log10(capped + 1) / Math.log10(51))
+//     // console.log(weakestAvg, weakest, newConfig)
+//     const oldCount = BigInt(Math.max(weakest, 1));
+//     const newCount = BigInt(Math.max(newConfig.history_length_average, 1));
+
+//     // const combinedAvg = (weakestAvg * oldCount + newAvg * newCount) / (oldCount + newCount);
+
+//     return {oldCount, newCount}
+// }
+
+function adjustedWeakestAverage(avg, history) {
+    if (history <= 1) return avg; 
+
+    const trust = Math.log(history) / (1 + Math.log(history));
+
+    const MAX_BOOST = 0.3; 
+
+    return avg + trust * MAX_BOOST;
 }
 
-console.log(confidenceMarginNumber(49))
-
+// console.log(confidenceMarginNumber(49))
 
 function shouldReplace({ popular_config, newConfig }) {
     const { weakest, weakestAvg } = pickWeakestConfig(popular_config);
 
-    //A new element at this point will always have 1 history and 1 average value.
     const newAvg = averageCalc({
         multiplier: newConfig.multiplier,
-        history_length_average: newConfig.history_length_average < 50 ? 1 : newConfig.history_length_average
+        history_length_average: 1
     });
 
-    console.log({ newAvg, newConfig })
-
-    const adjustedWeakest = confidenceMarginNumber(
+    const adjustedWeakestAvg = adjustedWeakestAverage(
         weakestAvg,
         weakest.history_length_average
     );
 
-    console.log({ adjustedWeakest })
-
     return {
-        replace: newAvg > adjustedWeakest,
-        weakestId: weakest._id
+        replace: newAvg >= adjustedWeakestAvg,
+        weakestId: weakest._id,
+        debug: {
+            weakestAvg,
+            adjustedWeakestAvg,
+            newAvg,
+            history: weakest.history_length_average
+        },
+        weakest
     };
 }
+// function shouldReplace({ popular_config, newConfig }) {
+//     const { weakest, weakestAvg } = pickWeakestConfig(popular_config);
+
+//     //A new element at this point will always have 1 history and 1 average value.
+//     const newAvg = averageCalc({
+//         multiplier: newConfig.multiplier,
+//         history_length_average: newConfig.history_length_average < 50 ? 1 : newConfig.history_length_average
+//     });
+
+//     console.log({ newAvg, newConfig })
+
+//     const {oldCount, newCount} = confidenceMarginNumber(
+//         {weakestAvg,
+//         weakest:weakest.history_length_average,
+//         newConfig}
+//     );
+
+    
+//     const combinedAvg = (toBig(weakestAvg) * oldCount + toBig(newAvg) * newCount) / (oldCount + newCount);
+//     console.log(fromBig(combinedAvg), { weakest, weakestAvg })
+
+//     return {
+//         replace: toBig(newAvg) > combinedAvg,
+//         weakestId: weakest._id
+//     };
+// }
 
 
 
@@ -267,9 +311,14 @@ function shouldReplace({ popular_config, newConfig }) {
 // console.log("Weakest config:", weakest);
 // console.log("Weakest average:", weakestAvg);
 
-// const newConfig = {
-//     history_length_average: 1,
-//     multiplier: [1.14]
-// }
+const newConfig = {
+    history_length_average: 1,
+    multiplier: [1.2]
+}
 
-// console.log(shouldReplace({ popular_config, newConfig }))
+console.log(shouldReplace({ popular_config, newConfig }))
+
+
+// 1.15 * 0.41 = 0.47
+// 1.15 / 0.41 = 2.8
+// 0.41 / 1.15 = 0.35

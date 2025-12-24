@@ -142,7 +142,7 @@
             }
         },
         {
-            "history_length_average": 1,
+            "history_length_average": 2,
             "category": "fg",
             "multiplier": [
                 1.2,
@@ -153,7 +153,7 @@
             }
         },
         {
-            "history_length_average": 1,
+            "history_length_average": 2,
             "category": "First course",
             "multiplier": [
                 1.2,2
@@ -163,17 +163,17 @@
             }
         },
         {
-            "history_length_average": 1,
+            "history_length_average": 3,
             "category": "sdf",
             "multiplier": [
-                1.2,1.1
+                1.1
             ],
             "_id": {
                 "$oid": "68528b9408b279c8e3b713e4"
             }
         },
         {
-            "history_length_average": 1,
+            "history_length_average": 2,
             "category": "sdfs",
             "multiplier": [
                 1.2,1.4
