@@ -7,7 +7,8 @@ import { RecipeMedia } from "../types"
 //----------- state S-----------//
 
 export interface PopularRootState {
-    pop_list:PopularData[]
+    pop_list:PopularData[],
+    is_list_empty:boolean
 }
 
 export interface PopularData {
@@ -56,7 +57,7 @@ export interface PopularFetchReq {
 }
 
 export interface PopularFetchRes {
-    list: PopularData[],
+    list: PopularData[] | null,
     more:boolean
 }
 

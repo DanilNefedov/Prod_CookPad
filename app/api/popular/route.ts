@@ -258,11 +258,22 @@ export async function POST(request: Request) {
             { $sample: { size: 200 } }
         ]);
 
-
         // --- main ranking logic ---
         const result = rankRecipes(list, userWeights, +count);
 
-        return NextResponse.json(result);
+        const filtered = result.filter(item => {
+            if (!item) return false;
+            if (!getAllIds) return true;
+            return !getAllIds.includes(item._id.toString());
+        });
+
+        console.log(result, getAllIds, filtered)
+
+        if (filtered.length === 0) {
+            return NextResponse.json(null);
+        }
+        
+        return NextResponse.json(filtered);
     } catch (error) {
         console.error(error);
         return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });

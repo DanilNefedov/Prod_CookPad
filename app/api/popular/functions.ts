@@ -115,10 +115,15 @@ function pickWeakestConfig(old_popular_config:UserHistoryMulti[]) {
     return { weakest, weakestAvg };
 }
 
+// Change category entry to id 
+function normalizeCategory(value: string) {
+    return value.trim();
+}
 
 
 
 export function categoryUser(popular_config: UserHistoryMulti[], action: boolean, coef: number, categories: string[]) {
+    const MAX_LENGTH = 50
     const delta = action ? -coef : coef;
 
     // If empty, create a new object 
@@ -132,19 +137,20 @@ export function categoryUser(popular_config: UserHistoryMulti[], action: boolean
 
     const categoryIndex = new Map();
     for (let i = 0; i < popular_config.length; i++) {
-        categoryIndex.set(popular_config[i].category, i);
+        categoryIndex.set(normalizeCategory(popular_config[i].category), i);
     }
 
     const result = [...popular_config];
 
-    for (const category of categories) {
+    for (const rawCategory of categories) {
+        const category = normalizeCategory(rawCategory);
         const idx = categoryIndex.get(category);
 
         // Category found
         if (idx !== undefined) {
             const item = result[idx];
 
-            if (item.multiplier.length < 50) {
+            if (item.multiplier.length < MAX_LENGTH) {
                 item.multiplier.push(delta);
                 item.history_length_average += 1;
             } else {
@@ -164,19 +170,27 @@ export function categoryUser(popular_config: UserHistoryMulti[], action: boolean
             continue;
         }
 
-        // Category not found - preparing a new object
-        const newConfig = {
+        // Category NOT found
+        const newConfig: UserHistoryMulti = {
             category,
             history_length_average: 1,
             multiplier: [delta],
         };
 
+        // There is free space — just push
+        if (result.length < MAX_LENGTH) {
+            result.push(newConfig);
+            categoryIndex.set(category, result.length - 1);
+            continue;
+        }
+
+        // No free space — try to replace weakest
         const { replace, weakestId } = shouldReplace({
             old_popular_config: result,
             newConfig,
         });
 
-        // if (!replace || !weakestId) continue;
+        // // if (!replace || !weakestId) continue;
         if (!replace) continue;
 
         // Replace the weakest one
