@@ -301,7 +301,8 @@ export function MainPopular() {
             </Card>
             <Box
                 ref={commentRef}
-                sx={(theme) => mainContainerInfoComments(theme, openInfo, openComment)}>
+                sx={mainContainerInfoComments(openInfo, openComment)}
+            >
 
                 <Box
                     onClick={() => {
