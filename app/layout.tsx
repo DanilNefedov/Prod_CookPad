@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="en">
       <body suppressHydrationWarning={true} className={IBM.className}>
-        <ThemeRegistry options={{ key: "mui" }}>
+        <ThemeRegistry>
           <ProviderStore>
             <ProviderAuth>
               <WrapperLayout>

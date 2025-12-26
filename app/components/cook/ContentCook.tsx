@@ -10,7 +10,6 @@ import 'swiper/css/grid';
 import './styles.css';
 import { useEffect, useState } from "react";
 import { changeNewInfo, fetchCook } from "@/state/slices/cook-slice";
-import { usePathname } from "next/navigation";
 import { skeletonSwiperCook } from "@/app/styles";
 import SwiperMediaCook from "./SwiperMedia";
 import dynamic from "next/dynamic";
@@ -28,13 +27,13 @@ const IngredientSwiper = dynamic(() => import("./IngredientSwiper"), {
 });
 
 
+interface Props {
+    recipe_id:string
+}
 
 
-
-export function ContentCook() {
-    const pathName = usePathname()
-    const segments = pathName.split("/");
-    const recipe_id = segments[2];
+export function ContentCook(props:Props) {
+    const { recipe_id } = props
     const [isEditing, setIsEditing] = useState(false);
 
     const dispatch = useAppDispatch()
@@ -51,8 +50,6 @@ export function ContentCook() {
         }
     }, [recipe_id, hasCookRecipe, user_id, dispatch]);
 
-
- 
 
 
     const handleEdit = () => {

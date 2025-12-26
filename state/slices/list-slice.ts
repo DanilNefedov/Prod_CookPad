@@ -3,7 +3,7 @@ import { ChangeAmountFetch, CreateIngredientsFetchReq, CreateIngredientsFetchRes
     NewIngrFetchReq, NewUnitFetchReq, NewUnitFetchRes, NewUnitIngrFetchReq,
     NewUnitIngrFetchRes, ShopIngrFetch, ShopUnitFetch, UpdCookUnitFetch
 } from "@/app/(main)/(main-list)/list/types";
-import { createOperations, createOperationStatus, OperationState } from "@/app/types";
+import { createOperations, createOperationStatus, Message, OperationState } from "@/app/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { clearItems } from "./list-form";
 
@@ -96,7 +96,7 @@ export const fetchList = createAsyncThunk<ListFetchRes, ListFetchReq, { rejectVa
 )
 
 
-export const createNewIngredients = createAsyncThunk<CreateIngredientsFetchRes[], CreateIngredientsFetchReq, { rejectValue: string }>(
+export const createNewIngredients = createAsyncThunk<CreateIngredientsFetchRes[], CreateIngredientsFetchReq, { rejectValue: string  | { message: string }  }>(
     'list/createNewIngredients',
     async function (data, { rejectWithValue, dispatch }) {
         try {
@@ -115,9 +115,9 @@ export const createNewIngredients = createAsyncThunk<CreateIngredientsFetchRes[]
                     ? result.notFound.join(', ')
                     : 'Unknown ingredients';
 
-                return rejectWithValue(
-                    `The following ingredients could not be created: ${notFoundList}`
-                );
+                return rejectWithValue({
+                   message: `The following ingredients could not be created: ${notFoundList}`
+                });
             }
 
             if (!response.ok) return rejectWithValue('Server Error!');
@@ -386,10 +386,17 @@ const createReducerHandlers = <T extends keyof ListState['operations']>(operatio
     pending: (state: ListState) => {
         state.operations[operationName].error = false;
         state.operations[operationName].loading = true;
+        state.operations[operationName].message = undefined;
     },
-    rejected: (state: ListState) => {
+    rejected: (state: ListState, action: PayloadAction<string | { message: string } | undefined>) => {
         state.operations[operationName].error = true;
         state.operations[operationName].loading = false;
+
+        if (action.payload && typeof action.payload === 'object' && 'message' in action.payload) {
+            state.operations[operationName].message = action.payload.message;
+        } else {
+            state.operations[operationName].message = undefined;
+        }
     }
 });
 

@@ -9,6 +9,7 @@ import { CldImage } from "next-cloudinary";
 import { IngredientAutocomplite } from "@/app/(main)/new-recipe/types";
 import { ContainerMainInput } from "./ContainerMainInput";
 import { ContainerListMainInput } from "@/app/components/main-list/list/new-ingr-window/ContainerListMainInput";
+import { ContainerRecipeMainInput } from "@/app/components/main-list/list-recipe/new-ingredient-window/ContainerRecipeMainInput";
 
 
 
@@ -25,10 +26,11 @@ interface Controller {
 interface Props {
     controller:Controller,
     showWarning?:boolean,
-    page:'list' | 'form'
+    page:'list' | 'form' | 'recipe',
+    recipeId?:string
 }
 
-export const Autocomplite = memo(({ controller, showWarning, page}: Props) => {
+export const Autocomplite = memo(({ controller, showWarning, page, recipeId}: Props) => {
     const { ingredient, isDisabled, handlers } = controller//showWarning ingredient
     const { handleAmountChange, handleUnitsChange } = handlers //handleAmountChange, handleUnitsChange
 
@@ -68,10 +70,17 @@ export const Autocomplite = memo(({ controller, showWarning, page}: Props) => {
                 ></ContainerListMainInput>
                 :
                 page === 'form' ?
-                 <ContainerMainInput 
+                <ContainerMainInput 
                     ingredient={ingredient}
                     // handleInputChange={handleInputChange}
                 ></ContainerMainInput>
+                :
+                page === 'recipe' ?
+                <ContainerRecipeMainInput 
+                    ingredient={ingredient}
+                    recipeId={recipeId}
+                    // handleInputChange={handleInputChange}
+                ></ContainerRecipeMainInput>
                 :
                 null
             }

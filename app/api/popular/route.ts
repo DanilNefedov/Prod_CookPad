@@ -1,170 +1,284 @@
 import connectDB from "@/app/lib/mongoose";
 import User from "@/app/models/user";
-import { add, bignumber, divide,  mean, multiply, round, sum } from "mathjs";
 import mongoose from "mongoose";
 import { NextResponse } from "next/server";
 import _ from 'lodash';
 import RecipePopularConfig from "@/app/models/popular-config";
-import { PipelineStage } from "mongoose";
-import { RecipeConfig, TopItems, UserMultiplier } from "@/app/(main)/popular/types";
+// import { PipelineStage } from "mongoose";
 
 
 
 
 
-
-//--------------------    average coefficient of action history with EVERY item in the category    -------//
-function categoryCoefUser(data: number[]): number {
-    return data.length > 0 ? round(mean(data), 15) : 0;
-    
+interface UserMultiplier {
+    id: string;
+    category: string;
+    multiplier: number[];
+    history_length_average: number
 }
 
 
-function categoryCoefVideo(data: RecipeConfig, matchCoefficient: number): number {//form 1 to 2
-    const { comments, fully, likes, saves, views } = data;
+let warnedFromBig = false;
+const SCALE = 1_000_000n;
+const LAMBDA = toBig(0.6);
+const VIEWS_SMOOTH = 50n;
 
-    if (views === 0) return matchCoefficient;
 
-    const newFully = round(add(fully, 1), 15);
-    const coefLikes = round(add(divide(likes, views), 1), 15);
-    const coefComm = round(add(divide(comments, views), 1), 15);
-    const coefSaves = round(add(divide(saves, views), 1), 15)
 
-    const interactionScore = mean([coefLikes, coefComm, coefSaves, newFully]);
-   
-    return round(multiply(interactionScore, matchCoefficient), 15);
+function toBig(x: number): bigint {
+    return BigInt(Math.round(x * Number(SCALE)));
 }
 
 
-//------------------  return the number of matches between user and recipe ---------------------//
 
-function calculateMatchCount(categories: string[], userList: UserMultiplier[]): number {
-    return categories.filter(category => 
-        userList.some(user => user.category === category)
-    ).length;
+function fromBig(x: bigint): number {
+    const MAX_SAFE = BigInt(Number.MAX_SAFE_INTEGER);
+    const MAX_X = MAX_SAFE * SCALE;
+
+    const oldX = x;
+
+    if (x > MAX_X) x = MAX_X;
+    if (x < -MAX_X) x = -MAX_X;
+
+    if (!warnedFromBig && oldX !== x) {
+        console.warn(`fromBig: the number was truncated due to size: ${oldX}`);
+        warnedFromBig = true;
+    }
+
+    return Number(x) / Number(SCALE);
+}
+
+function averageCalc({ multiplier, history_length_average }: { multiplier: number[], history_length_average: number }): number {
+    if (!multiplier || multiplier.length === 0 || history_length_average === 0) {
+        return multiplier?.[0] ?? 0
+    }
+
+    const oldAvg = toBig(multiplier[0]);
+    const oldCount = BigInt(history_length_average);
+
+    const tail = multiplier.slice(1).map(toBig);
+    const sumTail = tail.reduce((a, b) => a + b, 0n);
+
+    const totalSum = oldAvg * oldCount + sumTail;
+    const totalCount = oldCount + BigInt(tail.length);
+
+    const newAvg = fromBig(totalSum / totalCount);
+
+    return newAvg;
+}
+
+function buildUserWeights(userList: UserMultiplier[]) {
+    const map = new Map<string, number>();
+
+    for (const u of userList) {
+        if (!u.multiplier || !Array.isArray(u.multiplier) || u.multiplier.length === 0) {
+            map.set(u.category, 0);
+            continue;
+        }
+
+        if (u.history_length_average > 50) {
+            const avgValue = averageCalc({ multiplier: u.multiplier, history_length_average: u.history_length_average });
+            map.set(u.category, avgValue);
+        } else {
+            const avgValue = averageCalc({ multiplier: u.multiplier, history_length_average: 1 });
+            map.set(u.category, avgValue);
+        }
+    }
+
+    return map;
 }
 
 
-function getSortingByCategory(selectedElements: RecipeConfig[], userList: UserMultiplier[]) {
+function computeCategoryMatch(itemCategories: string[], weights: Map<string, number>) {
+    const recipeLen = itemCategories.length;
 
-    const elementsWithMatchCoefficient = selectedElements.map(item => {
-        const matchCount = calculateMatchCount(item.categories, userList);
+    if (recipeLen === 0) {
+        return {
+            matchCoef: 0n,
+            avgUserCoef: toBig(0.01),
+        };
+    }
 
-        const categoryCount = item.categories.length || 1;
-        const matchCoefficient = round(divide(matchCount, categoryCount), 15);
-        return { item, matchCount, matchCoefficient };
+    const recipeLenBig = toBig(recipeLen);
+
+    let matches = 0n;// PURE number of matches
+    let coefSum = 0n;
+
+    for (const cat of itemCategories) {
+        const w = weights.get(cat);
+        if (w !== undefined) {
+            matches += SCALE;
+            coefSum += toBig(w);// category weight
+        }
+    }
+
+    if (matches === 0n) {
+        return {
+            matchCoef: 0n,
+            avgUserCoef: toBig(0.01),
+        };
+    }
+
+    // r = matches / recipeLen
+    const r = (matches * SCALE) / recipeLenBig;
+
+    // preference(r) = r * (1 - λ * r)
+    const noisePreference =
+        (r * (SCALE - (LAMBDA * r) / SCALE)) / SCALE;
+
+    // average weight of matching categories
+    const avgUserCoef = (coefSum * SCALE) / matches;
+
+    return {
+        matchCoef: noisePreference,
+        avgUserCoef,
+    };
+}
+
+
+// Video/recipe impact based on interactions
+function recipeImpactBig(item: any, categoryStrengthBig: bigint): number {
+    const { comments, likes, saves, views, fully } = item;
+
+    if (views === 0) return fromBig(categoryStrengthBig);
+
+    const viewsBig = toBig(views);
+    const likesBig = toBig(likes);
+    const commentsBig = toBig(comments);
+    const savesBig = toBig(saves);
+    const fullyBig = toBig(fully);
+
+    // newFully = fully + 1
+    const newFullyBig = fullyBig + SCALE;
+
+    // coefLikes = 1 + likes / views
+    const coefLikesBig = SCALE + (likesBig * SCALE) / (viewsBig + VIEWS_SMOOTH);
+
+    // coefComm = 1 + comments / views
+    const coefCommBig = SCALE + (commentsBig * SCALE) / (viewsBig + VIEWS_SMOOTH);
+
+    // coefSaves = 1 + saves / views
+    const coefSavesBig = SCALE + (savesBig * SCALE) / (viewsBig + VIEWS_SMOOTH);
+
+    // interactionScore = (coefLikes + coefComm + coefSaves + newFully) / 4
+    const sumBig = coefLikesBig + coefCommBig + coefSavesBig + newFullyBig;
+    const interactionScoreBig = sumBig / 4n;
+
+    // finalScore = interactionScore * categoryStrength
+    const finalScoreBig = (interactionScoreBig * categoryStrengthBig) / SCALE;
+
+    return fromBig(finalScoreBig);
+}
+
+
+function rankRecipes(list: any[], userWeights: Map<string, number> | null, finalLimit: number) {
+    const stage1: { item: any; categoryStrength: bigint }[] = [];
+    const hasUserWeights = userWeights && userWeights.size > 0;
+
+    for (const item of list) {
+        let matchCoefBig = SCALE;  // 1.0 в bigint
+        let avgUserCoefBig = SCALE; // 1.0 в bigint
+
+        if (hasUserWeights) {
+            const {
+                // matchCount, 
+                matchCoef, avgUserCoef } = computeCategoryMatch(
+                    item.categories || [],
+                    userWeights
+                );
+
+            // if (matchCount === 0n) continue;
+
+            matchCoefBig = matchCoef; //ratio of matches between user categories and recipes
+            avgUserCoefBig = avgUserCoef; //how strong the weights of the matching tags are.
+        }
+        // categoryStrength = matchCoef * avgUserCoef
+        const categoryStrengthBig = (matchCoefBig * avgUserCoefBig) / SCALE;
+
+        stage1.push({ item, categoryStrength: categoryStrengthBig });
+    }
+
+    stage1.sort((a, b) => {
+        if (a.categoryStrength > b.categoryStrength) return -1;
+        if (a.categoryStrength < b.categoryStrength) return 1;
+        return 0;
     });
 
-    return _.orderBy(elementsWithMatchCoefficient, ['matchCoefficient'], ['desc'])
-        .slice(0, 100)
-        .map(entry => ({
-            item: entry.item,
-            matchCoefficient: calculateAverageCoef(entry.item, userList, entry.matchCoefficient)
-        }));
-}
+    const top = stage1.slice(0, 120);
 
+    const stage2 = top.map((entry) => {
+        const finalScore = recipeImpactBig(entry.item, entry.categoryStrength);
+        return { item: entry.item, finalScore };
+    });
 
+    stage2.sort((a, b) => b.finalScore - a.finalScore);
 
-
-function calculateAverageCoef(item: RecipeConfig, userList: UserMultiplier[], matchCoefficient: number): number {
-    const matchingUsers = item.categories
-        .map(category => userList.find(user => user.category === category))
-        .filter((user): user is UserMultiplier => !!user);
-//----------------------------------- sum of the average coefficients of the categories (user) that matched the recipe ------------------//
-
-    if (matchingUsers.length === 0) {
-        return matchCoefficient;
-    }
- 
-    const coefSum = parseFloat(round(
-        sum(matchingUsers.map(user => bignumber(categoryCoefUser(user.multiplier)))),
-        15
-    ).toString());
-
-//----------------------------------- sorting by highest sum of average coefficients ----------------------------//
-    return round(multiply(matchCoefficient, divide(coefSum, matchingUsers.length)), 15);
-}
-
-
-
-//----------------------------------- sorting by other users' activity -----------------------------------//
-function orderByUsersImpact(top20Elements: TopItems[], count: number): RecipeConfig[] {//RecipeT
-
-    const sortedByImpact = top20Elements.map(elem => ({
-        item: elem.item,
-        matchCoefficient: categoryCoefVideo(elem.item, elem.matchCoefficient)
-    }));
-
-    return _.orderBy(sortedByImpact, ['matchCoefficient'], ['desc'])
-        .map(entry => entry.item)
-        .slice(0, count);
-
+    return stage2.slice(0, finalLimit).map((x) => x.item);
 }
 
 
 
 export async function POST(request: Request) {
-    try{
+    try {
         const { connection_id, count, getAllIds } = await request.json();
-
-
         if (!connection_id || !count) {
-            return NextResponse.json(
-                { message: 'Invalid request data' },
-                { status: 400 }
-            );
+            return NextResponse.json({ message: "Invalid data" }, { status: 400 });
         }
 
         await connectDB();
 
-        const userData = await User.findOne({ connection_id })
-            .select('popular_config');
-
+        // --- get user config ---
+        const userData = await User.findOne({ connection_id }).select("popular_config");
         if (!userData?.popular_config) {
-            return NextResponse.json({ message: 'User data not found' }, { status: 404 });
+            return NextResponse.json({ message: "User config not found" }, { status: 404 });
         }
 
-        const formattedGetAllIds = getAllIds !== null
-        ? getAllIds.map((id: string) => new mongoose.Types.ObjectId(id))
-        : [];
+        let userWeights: Map<string, number> | null = null;
+        if (userData.popular_config.length > 0) {
+            userWeights = buildUserWeights(userData.popular_config);
+        }
+
+        // --- build exclusion (optional) ---
+        const formattedGetAllIds =
+            getAllIds !== null
+                ? getAllIds.map((id: string) => new mongoose.Types.ObjectId(id))
+                : [];
 
         const totalDocsCount = await RecipePopularConfig.countDocuments();
 
-        let matchStage: PipelineStage[] = [];
-
+        let matchStage: any = [];
         if (formattedGetAllIds.length < totalDocsCount) {
             matchStage = [{ $match: { _id: { $nin: formattedGetAllIds } } }];
         }
 
+
+        // --- get random 200 docs (fast sampling) ---
         const list = await RecipePopularConfig.aggregate([
             ...matchStage,
             { $sample: { size: 200 } }
         ]);
 
-        // const formattedGetAllIds = getAllIds !== null ? getAllIds.map((id:string) => new mongoose.Types.ObjectId(id)) : [];
-        // const list = await RecipePopularConfig.aggregate([
-        //     ...(formattedGetAllIds.length > 0 ? [{ $match: { _id: { $nin: formattedGetAllIds } } }] : []),
-        //     { $sample: { size: 200 } }
-        // ])
+        // --- main ranking logic ---
+        const result = rankRecipes(list, userWeights, +count);
+
+        const filtered = result.filter(item => {
+            if (!item) return false;
+            if (!getAllIds) return true;
+            return !getAllIds.includes(item._id.toString());
+        });
 
 
-        const sortedByCateries = getSortingByCategory(list, userData.popular_config);
-        const fullSorted = orderByUsersImpact(sortedByCateries, +count);
+        if (filtered.length === 0) {
+            return NextResponse.json(null);
+        }
         
-        // const creatorIds = fullSorted.map(el => el.creator.toString());
-        // const configIds = fullSorted.map(el => el._id.toString());
-
-
-        return NextResponse.json(fullSorted);
-
-    }catch(error){
+        return NextResponse.json(filtered);
+    } catch (error) {
         console.error(error);
-        return NextResponse.json(
-            { message: 'Internal Server Error' },
-            { status: 500 }
-        );
+        return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
     }
 }
+
 
 
 // if startSession() is placed in try session may be undefined 
@@ -184,7 +298,7 @@ export async function PATCH(request: Request) {
     try {
         const { config_id } = await request.json();
 
-        if(!config_id){
+        if (!config_id) {
             return NextResponse.json(
                 { message: 'Invalid request data' },
                 { status: 400 }

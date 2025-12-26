@@ -33,7 +33,7 @@ export async function PATCH(request: Request) {
             return NextResponse.json({ message: "User not found" }, { status: 404 });
         }
 
-        const updatedConfig = categoryUser(user.popular_config, true, 1.2, popular.categories);
+        const updatedConfig = categoryUser(user.popular_config, false, 1.2, popular.categories);
 
         if (updatedConfig.length > 0) {
             await User.updateOne(

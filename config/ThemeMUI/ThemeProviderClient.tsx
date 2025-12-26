@@ -15,7 +15,7 @@ export default function ThemeProviderClient({ children }: { children: ReactNode 
 
     return (
         <CacheProvider value={cache}>
-            <ThemeRegistry options={{ key: "mui" }}>
+            <ThemeRegistry>
                 {children}
             </ThemeRegistry>
         </CacheProvider>

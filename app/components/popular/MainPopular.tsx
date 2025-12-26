@@ -12,7 +12,7 @@ import 'swiper/css/navigation';
 import './styles.css';
 import { InfoAboutContent } from "./InfoAboutContent";
 import {
-    boxMediaSwiper,boxProgress,btnOpenInfoMobile, commentModileArrow, containerActiveInfo, containerNameDescription, 
+    boxMediaSwiper, boxProgress, btnOpenInfoMobile, commentModileArrow, containerActiveInfo, containerNameDescription,
     containerSwichBtns, descriptionRecipe, mainArrowIcon, mainBtnsPopular, mainCardContent,
     mainContainerInfoComments, mainDescriptionRecipe, mainNameRecipe, nameRecipeMobile, viewContentContainer
 } from "@/app/(main)/popular/styles";
@@ -34,6 +34,7 @@ export function MainPopular() {
     const dispatch = useAppDispatch()
     const popularStore = useAppSelector(state => state.popular.pop_list);
     const popularStatusLoading = useAppSelector(state => state.popular.operations.popularFetch)
+    const popularListEmpty = useAppSelector(state => state.popular.is_list_empty);
     const userStore = useAppSelector(state => state.user);
     const errorState = useAppSelector(state => state.popular.operations.popularFetch.error);
     const connection_id = userStore?.user?.connection_id;
@@ -49,13 +50,13 @@ export function MainPopular() {
     const isFetching = useAppSelector(state => state.popular.operations.popularFetch.loading)
     const configId = popularStore[activeVideo]?.config_id;
     const initialFetchDone = useRef(false);
- 
-    
-    
-    useEffect(() => {        
+
+
+
+    useEffect(() => {
         dispatch(initCommentsState(configId))
-    },[configId, activeVideo, dispatch])
-    
+    }, [configId, activeVideo, dispatch])
+
 
 
     useEffect(() => {
@@ -76,10 +77,10 @@ export function MainPopular() {
     }, [openComment]);
 
     useEffect(() => {
-        if (!connection_id || errorState || initialFetchDone.current ) return;//|| initialFetchDone.current
+        if (!connection_id || errorState || initialFetchDone.current) return;//|| initialFetchDone.current
 
         pingGate(() => {
-            dispatch(popularFetch({ more:false, connection_id, count: 5, getAllIds: null }))
+            dispatch(popularFetch({ more: false, connection_id, count: 5, getAllIds: null }))
             initialFetchDone.current = true;
         });
     }, [connection_id, errorState, dispatch, pingGate]);
@@ -99,27 +100,27 @@ export function MainPopular() {
 
 
     function handleNewVideo() {
-        if (isFetching || errorState) return;
+        if ((isFetching || errorState) && !popularListEmpty) return;
 
         const remaining = popularStore.filter(item => !viewedVideos.current.has(item.config_id)).length;
 
-        if (remaining <= 4){
+        if (remaining <= 4) {
             pingGate(() => {
-                if (connection_id ) {
+                if (connection_id) {
                     dispatch(popularFetch({
-                        more:true,
+                        more: true,
                         connection_id,
                         count: 1,
                         getAllIds: popularStore.map(item => item.config_id)
                     }))
-                } 
+                }
             });
         }
-    
-    }
- 
 
-    
+    }
+
+
+
     const toggleComment = useCallback(() => {
         const width = window.innerWidth;
 
@@ -143,24 +144,26 @@ export function MainPopular() {
             cooldownRef.current = false;
         }, 1000);
     };
-    
+
     return (
         <>
             <Card
                 onClick={(event) => {
-                    if( window.innerWidth <= 768 &&
+                    if (window.innerWidth <= 768 &&
                         openComment &&
                         commentRef.current &&
                         !commentRef.current.contains(event.target as Node)
-                    ){
+                    ) {
                         setOpenComment(false);
                     }
                     // if (openComment) setOpenComment(false);
                 }}
-                sx={[mainCardContent, centerFlexBlock, 
-                    {[theme.breakpoints.down(1030)]: {
-                        pr: openInfo ? '30px' : '0'
-                    }}
+                sx={[mainCardContent, centerFlexBlock,
+                    {
+                        [theme.breakpoints.down(1030)]: {
+                            pr: openInfo ? '30px' : '0'
+                        }
+                    }
                 ]}
             >
                 <Box sx={viewContentContainer} >
@@ -175,7 +178,7 @@ export function MainPopular() {
                         <Typography
                             variant="body2"
                             onClick={() => setExpanded(prev => !prev)}
-                            sx={[descriptionRecipe, 
+                            sx={[descriptionRecipe,
                                 {
                                     wordBreak: expanded ? 'break-word' : 'break-all',
                                     whiteSpace: expanded ? 'normal' : 'nowrap',
@@ -188,7 +191,7 @@ export function MainPopular() {
                     {/* FOR MOBILE */}
 
 
-                    
+
                     <Swiper
                         onSwiper={(swiper) => (swiperRef.current = swiper)}
                         touchReleaseOnEdges
@@ -213,16 +216,14 @@ export function MainPopular() {
 
                             if (openComment) setOpenComment(false);
 
-                            if (newIndex > oldIndex) {
-                                handleNewVideo();
-                            } 
+                            handleNewVideo();
 
                         }}
                         modules={[Virtual, Mousewheel]}
                         style={{ height: '100%', zIndex: 3 }}
                     >
                         {popularStore.map((item, index) => (
-                            popularStatusLoading && index >= popularStore.length - 1 ?
+                            popularStatusLoading && index >= popularStore.length  ?
                                 <Box key={index} style={boxProgress}>
                                     <CircularProgress color="secondary" size="35px" />
                                 </Box>
@@ -230,7 +231,6 @@ export function MainPopular() {
                                 <SwiperSlide key={item.config_id} virtualIndex={index}>
                                     <Box sx={boxMediaSwiper}>
                                         <MediaSwiper configId={item.config_id} />
-                                        {/* activeVideo={activeVideo} */}
                                     </Box>
                                 </SwiperSlide>
                         ))}
@@ -270,18 +270,20 @@ export function MainPopular() {
                                             }
                                         });
                                     }}
-                                ><KeyboardDoubleArrowUpIcon sx={[mainArrowIcon, {mb: '2px'}]}></KeyboardDoubleArrowUpIcon></Box>
+                                ><KeyboardDoubleArrowUpIcon sx={[mainArrowIcon, { mb: '2px' }]}></KeyboardDoubleArrowUpIcon></Box>
                                 <Box
                                     sx={[mainBtnsPopular, centerFlexBlock]}
                                     onClick={() => {
                                         handleCooldown(() => {
-                                            
+
+                                            if(popularListEmpty && (popularStore.length === activeVideo + 1)) return
+
                                             if (activeVideo + 1 < popularStore.length || !errorState) {
                                                 const newIndex = activeVideo + 1;
                                                 swiperRef.current?.slideTo(newIndex);
                                                 setActiveVideo(newIndex);
-                                                // handleNewVideo();
-                                                dispatch(updateViews({config_id:popularStore[newIndex].config_id}));
+                                                dispatch(updateViews({ config_id: popularStore[newIndex].config_id }));
+                                                
                                             }
 
                                             if (openComment) {
@@ -299,20 +301,21 @@ export function MainPopular() {
             </Card>
             <Box
                 ref={commentRef}
-                sx={(theme) => mainContainerInfoComments(theme, openInfo, openComment)}>
+                sx={mainContainerInfoComments(openInfo, openComment)}
+            >
 
                 <Box
                     onClick={() => {
-                        if(openInfo && openComment){
+                        if (openInfo && openComment) {
                             setOpenComment(false)
                         }
                         setOpenInfo(!openInfo)
-                        
+
                     }}
                     sx={btnOpenInfoMobile}
                 >
                     <KeyboardArrowLeftIcon sx={[commentModileArrow,
-                    {transform: openInfo ? 'rotate(180deg)' : 'rotate(0deg)'}
+                        { transform: openInfo ? 'rotate(180deg)' : 'rotate(0deg)' }
                     ]}
                     ></KeyboardArrowLeftIcon>
                 </Box>

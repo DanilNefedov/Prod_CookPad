@@ -1,11 +1,12 @@
 import {  useAppSelector } from "@/state/hook"
-import { AccordionDetails, Table, TableBody, TableCell, TableRow,  } from "@mui/material"
+import { AccordionDetails, Box, Button, Table, TableBody, TableCell, TableRow,  } from "@mui/material"
 import MainTableHeader from "../MainTableHeader"
 import { memo, useMemo, useState } from "react"
 import { UXLoading } from "../../ui-helpers/UXLoading"
 import dynamic from "next/dynamic"
 import { selectIngredientsListByRecipeId } from "@/state/selectors/list-recipe"
 import { accordionMain, accordionTable, accordionTableBody, accorionCell } from "@/app/(main)/(main-list)/list-recipe/styles"
+import { RecipeButtons } from "./RecipeButtons"
 
 const MainTableBody = dynamic(() => import('../MainTableBody'), {
     ssr: false, 
@@ -48,7 +49,6 @@ const ContentAccordion = memo(({ props }: { props: Props }) => {
 
     if (!ingredients_list) return null; 
 
-
     return (
         <AccordionDetails sx={accordionMain}>
             <Table
@@ -84,6 +84,7 @@ const ContentAccordion = memo(({ props }: { props: Props }) => {
 
             </Table>
             
+            <RecipeButtons recipeId={_id}></RecipeButtons>
 
         </AccordionDetails>
 
@@ -96,4 +97,4 @@ const ContentAccordion = memo(({ props }: { props: Props }) => {
 
 ContentAccordion.displayName = "ContentAccordion"
 
-export default ContentAccordion
+export default ContentAccordion 

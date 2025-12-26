@@ -6,7 +6,6 @@ import { RecipeMedia } from "@/app/(main)/types";
 import { centerFlexBlock } from "@/app/styles";
 import { Box } from "@mui/material";
 import { CldImage, CldVideoPlayer } from "next-cloudinary";
-import { useRef } from "react";
 
 
 
@@ -19,12 +18,11 @@ interface Props {
 
 
 export function MediaSlide({ el, recipeName, priority }: Props) {
-    const ref = useRef<HTMLDivElement | null>(null);
 
 
     return (
         
-        <Box sx={[centerFlexBlock, mediaContainer]} ref={ref}>
+        <Box sx={[centerFlexBlock, mediaContainer]}>
             {el.media_type === "image" ? (
 
                 <CldImage

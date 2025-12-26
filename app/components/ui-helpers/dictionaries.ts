@@ -29,6 +29,7 @@ export const ERROR_MESSAGES_LIST_RECIPE: Partial<Record<OperationKey, string>> =
     newAmountListRecipe: 'Failed to update ingredient amount.',
     newUnitListRecipe: 'Failed to update unit.',
     deleteUnitListRecipe: 'Failed to remove unit.',
+    creationIngredients:'Failed to create new ingredient(s).'
 };
 //----------------------------------  list-recipe-slice ---------------------------------//
 
@@ -59,6 +60,7 @@ export const ERROR_MESSAGES_LIST: Partial<Record<ListOperationKey, string>> = {
     deleteUnitIngrFetch: 'Failed to remove unit from ingredient.',
     changeAmountFetch: 'Failed to update ingredient amount.',
     addNewUnit: 'Failed to add new unit.',
+    createNewIngredients:'Failed to create new ingredient(s).'
 };
 //----------------------------------  list ---------------------------------//
 

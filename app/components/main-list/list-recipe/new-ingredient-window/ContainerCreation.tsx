@@ -3,30 +3,30 @@ import { Unit } from "@/app/(main)/cook/types";
 import { clearBtn } from "@/app/(main)/new-recipe/style";
 import { Autocomplite } from "@/app/components/new-recipe/steps/ingredient/Autocompletions";
 import { handleAmountChange } from "@/app/helpers/input-unit";
-import { useAppDispatch, useAppSelector } from "@/state/hook"
-import { amountNewIngredient, choiceUnit, removeIngredient } from "@/state/slices/list-form";
+import { useAppDispatch, useAppSelector } from "@/state/hook";
+import { amountNewIngredient, choiceUnit, removeIngredient } from "@/state/slices/list-recipe-form";
 import { Box, Button } from "@mui/material";
-import { ChangeEvent, memo, useCallback, useMemo } from "react";
+import { ChangeEvent, useCallback, useMemo } from "react";
 import { shallowEqual } from "react-redux";
-
 
 
 
 interface Props {
     ingredient_id:string,
-    length:number
+    length:number,
+    recipeId:string
 }
 
 
-export const ContainerIngredient = memo(({ingredient_id, length}:Props) => {
+export function ContainerCreation({ingredient_id, length, recipeId}:Props) {
     const ingredient = useAppSelector((state) => {
-        const found = state.newListIngredient.ingredients.find((ingr) => ingr.ingredient_id === ingredient_id);
+        const found = state.formListRecipe[recipeId].find((ingr) => ingr.ingredient_id === ingredient_id);
         if (!found) throw new Error(`Ingredient with id ${ingredient_id} not found`);
         return found;
     }, shallowEqual);
     const dispatch = useAppDispatch();
 
-
+ 
 
     const handleAmount = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const newValue = e.target.value;
@@ -37,13 +37,14 @@ export const ContainerIngredient = memo(({ingredient_id, length}:Props) => {
             amountNewIngredient({
                 ingredient_id: ingredient.ingredient_id,
                 amount: parseFloat(resValue),
+                recipeId
             })
         );
     }, [dispatch, ingredient.ingredient_id]);
 
 
     const handleUnits = useCallback((newValue: string) => {
-        dispatch(choiceUnit({ ingredient_id: ingredient.ingredient_id, choice: newValue }));
+        dispatch(choiceUnit({ ingredient_id: ingredient.ingredient_id, choice: newValue, recipeId }));
     }, [dispatch, ingredient.ingredient_id]);
 
 
@@ -65,34 +66,30 @@ export const ContainerIngredient = memo(({ingredient_id, length}:Props) => {
             isDisabled,
             handlers: {
                 handleAmountChange: handleAmount,
-                handleUnitsChange:handleUnits,
+                handleUnitsChange: handleUnits,
             },
         }),
         [isDisabled, , ingredient, handleAmount, handleUnits]
     );
 
 
-    return(
+    return (
         <Box sx={[containerIngrItem, {
             borderWidth: length > 1 ? '0 0 1px 0' : '0'
         }]}>
             <Autocomplite
                 controller={controller}
-                page={'list'}
-
+                page={'recipe'}
+                recipeId={recipeId}
             ></Autocomplite>
 
-            <Button 
+            <Button
                 color="blackRedBtn"
                 sx={clearBtn}
-                onClick={() => dispatch(removeIngredient({ ingredient_id: ingredient.ingredient_id}))}
+                onClick={() => dispatch(removeIngredient({ ingredient_id: ingredient.ingredient_id, recipeId}))}
                 disabled={length === 1 ? true : false}
             >X</Button>
         </Box>
-        
+
     )
-})
-
-
-
-ContainerIngredient.displayName = "ContainerIngredient"
+}

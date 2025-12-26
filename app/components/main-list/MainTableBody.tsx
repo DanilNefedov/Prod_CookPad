@@ -71,6 +71,7 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
 
     if (!thisIngredient) return null;
 
+    console.log(thisIngredient)
     return (
         <>
             <TableRow sx={[ingredientRow, {

@@ -3,32 +3,32 @@ import mongoose, { Schema } from 'mongoose';
 
 
 const HistoryLinksSchema = new Schema(
-    {
-      recipe_id: {
-        type:String,
-        required: true
-      },
-      recipe_name: {
-        type:String,
-        required: true
-      }
-    }
-  )
-  
-  const CookHistorySchema = new Schema(
-    {
-      connection_id: {
-        type:String,
-        required: true
-      },
-      history_links:[HistoryLinksSchema]
+  {
+    recipe_id: {
+      type: String,
+      required: true
     },
-    {
-      timestamps: true,
-      collection: 'cook-history'
+    recipe_name: {
+      type: String,
+      required: true
     }
-  );
-  
-  
-  const CookHistory = mongoose.models.CookHistory || mongoose.model('CookHistory', CookHistorySchema);
-  export default CookHistory;
+  }
+)
+
+const CookHistorySchema = new Schema(
+  {
+    connection_id: {
+      type: String,
+      required: true
+    },
+    history_links: [HistoryLinksSchema]
+  },
+  {
+    timestamps: true,
+    collection: 'cook-history'
+  }
+);
+
+
+const CookHistory = mongoose.models.CookHistory || mongoose.model('CookHistory', CookHistorySchema);
+export default CookHistory;

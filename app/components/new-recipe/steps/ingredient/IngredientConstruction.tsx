@@ -44,7 +44,7 @@ export function IngredientConstruction() {
                         <Button 
                             color="grayButton"
                             sx={clearBtn}
-                            onClick={() => dispatch(deleteIngredient({ ingredient_id: ingredient.ingredient_id as string }))}
+                            onClick={() => dispatch(deleteIngredient({ ingredient_id: ingredient.ingredient_id}))}
                             disabled={stepperState.ingredients.length === 1 ? true : false}
                         >X</Button>
                         <Divider sx={ingrdientLine}/>

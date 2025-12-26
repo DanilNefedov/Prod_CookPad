@@ -1,76 +1,76 @@
 // *S - start
 // *E - end
 
-import { IngredientAutocomplite } from "../../new-recipe/types";
-import { NormalizedData, UnitNoId } from "../list/types"
+import { Amount, Autocompite, ChoiceUnits, IngredientAutocomplite } from "../../new-recipe/types";
+import { NewIngrFetchRes, NormalizedData, UnitNoId, UnitsId } from "../list/types"
 
 
 
 
 //----------- state S-----------//
 
-export interface NormalizedRecipeData extends NormalizedData{
+export interface NormalizedRecipeData extends NormalizedData {
     recipes: {
         [key: string]: ListRecipeData;
     };
 }
 
 
-export interface ListRecipeRootState{
-    connection_id:string
-    page:number | null
+export interface ListRecipeRootState {
+    connection_id: string
+    page: number | null
     recipes: NormalizedRecipeData['recipes'];
     queue_recipes: string[]
-    ingredients: NormalizedRecipeData['ingredients']; 
+    ingredients: NormalizedRecipeData['ingredients'];
     units: NormalizedRecipeData['units'];
 }
 
 export interface ListRecipeData {
-    _id:string
+    _id: string
     recipe_id: string
     recipe_name: string
-    recipe_media:{
-        url:string
-        type:string
+    recipe_media: {
+        url: string
+        type: string
     },
-    recipe_shop:boolean
+    recipe_shop: boolean
     ingredient_ids: string[]
 }
 
-export interface TemplateIngrListRecipe{
-    ingredient_id:string, 
-    connection_id:string, 
-    _id:string
+export interface TemplateIngrListRecipe {
+    ingredient_id: string,
+    connection_id: string,
+    _id: string
 }
 
 //---------- thunks S----------//
 
 export interface PreLoaderFetchRes {
-    connection_id:string,
-    page:number | null
-    recipe:ListRecipeData[]
+    connection_id: string,
+    page: number | null
+    recipe: ListRecipeData[]
 }
 
 export interface PreLoaderFetchReq {
-    connection_id:string, 
-    page:number
+    connection_id: string,
+    page: number
 }
 
 export interface NewListRecipeFetchReq {
-    connection_id: string, 
+    connection_id: string,
     recipe_id: string
 }
 
 export interface IngrListRecipeFetchRes {
-    connection_id:string,
-    _id:string,
-    ingredients:ListIngrDataFetch[]
+    connection_id: string,
+    _id: string,
+    ingredients: ListIngrDataFetch[]
 }
 
 export interface ListIngrDataFetch {
-    _id:string,
+    _id: string,
     name: string,
-    media:string,
+    media: string,
     shop_ingr: boolean,
     list: string[],
     units: UnitsIdFetch[]
@@ -79,13 +79,13 @@ export interface ListIngrDataFetch {
 export interface UnitsIdFetch {
     choice: string,
     amount: number,
-    shop_unit:boolean,
-    _id:string
+    shop_unit: boolean,
+    _id: string
 }
 
-export interface IngrListRecipeFetchReq { 
-    connection_id: string, 
-    _id: string 
+export interface IngrListRecipeFetchReq {
+    connection_id: string,
+    _id: string
 }
 
 export interface ShopIngrListRecipeFetch extends TemplateIngrListRecipe {
@@ -93,32 +93,62 @@ export interface ShopIngrListRecipeFetch extends TemplateIngrListRecipe {
 }
 
 
-export interface ShopUnitListRecipeFetch extends TemplateIngrListRecipe{
-    unit_id:string,
-    shop_unit:boolean
+export interface ShopUnitListRecipeFetch extends TemplateIngrListRecipe {
+    unit_id: string,
+    shop_unit: boolean
 }
 
-export interface DeleteUnitListRecipeFetch extends TemplateIngrListRecipe{
-    unit_id:string
+export interface DeleteUnitListRecipeFetch extends TemplateIngrListRecipe {
+    unit_id: string
 }
 
-export interface ChangeAmountListRecipeFetch extends TemplateIngrListRecipe{
-    unit_id: string, 
+export interface ChangeAmountListRecipeFetch extends TemplateIngrListRecipe {
+    unit_id: string,
     amount: number
 }
 
-export interface NewUnitListRecipeFetchRes extends TemplateIngrListRecipe{
-    new_unit:UnitsIdFetch
+export interface NewUnitListRecipeFetchRes extends TemplateIngrListRecipe {
+    new_unit: UnitsIdFetch
 }
 
-export interface NewUnitListRecipeFetchReq extends TemplateIngrListRecipe{
-    updated_unit:UnitNoId
+export interface NewUnitListRecipeFetchReq extends TemplateIngrListRecipe {
+    updated_unit: UnitNoId
 }
 
 export interface DeleteListRecipeFetchReq {
-    connection_id:string, 
-    recipe_id:string
+    connection_id: string,
+    recipe_id: string
 }
+
+export interface RecipeAmout extends Amount {
+    recipeId: string
+}
+
+export interface RecipeChoiceUnits extends ChoiceUnits {
+    recipeId: string
+}
+
+export interface RecipeAutocompite {
+    ingredient: Autocompite
+    recipeId: string
+}
+
+export interface NewIngredientsFetchReq {
+    connection_id: string,
+    recipe_id: string,
+    ingredients: IngredientAutocomplite[]
+}
+
+export interface PatchResponseItem {
+    recipe_id: string;
+    ingredient_id: string;
+    name: string;
+    type: "created" | "updated";
+    new_ingredient?: NewIngrFetchRes;
+    new_unit?: UnitsId;
+}
+
+export type PatchResponse = PatchResponseItem[];
 
 //---------- thunks E----------//
 
@@ -129,7 +159,7 @@ export interface DeleteListRecipeFetchReq {
 //----------- state form S-----------//
 
 export interface NewIngredientRootState {
-    ingredients:IngredientAutocomplite[]
+    ingredients: IngredientAutocomplite[]
 }
 
 //----------- state form E-----------//

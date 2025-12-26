@@ -1,6 +1,5 @@
 import { theme } from "@/config/ThemeMUI/theme";
-import { Theme } from "@mui/material";
-import { SxProps, SystemStyleObject } from "@mui/system";
+import { SxProps, Theme } from "@mui/material";
 
 
 
@@ -70,7 +69,7 @@ export const viewContentContainer = {
     },
 }
 
-export const containerNameDescription = (theme: Theme, expanded: boolean): SystemStyleObject<Theme> => ({
+export const containerNameDescription = (theme: Theme, expanded: boolean) => ({
     display: 'none',
     position: 'absolute',
     zIndex: expanded ? "150" : "99",
@@ -191,7 +190,7 @@ export const mainArrowIcon = {
     } 
 };
 
-export const mainContainerInfoComments = (theme: Theme, openInfo: boolean, openComment: boolean): SystemStyleObject<Theme> => ({
+export const mainContainerInfoComments = (openInfo: boolean, openComment: boolean):SxProps<Theme> => ({
     backgroundColor: "background.default",
     display: 'flex',
     flexDirection: 'column',
@@ -486,7 +485,7 @@ export const replyBox = {
     }
 }
 
-export const repliesOpen = (theme: Theme, count: boolean, openReply: boolean): SystemStyleObject<Theme> => ({
+export const repliesOpen = (theme: Theme, count: boolean, openReply: boolean) => ({
     whiteSpace: 'nowrap',
     m: '0 20px',
     p: '0',

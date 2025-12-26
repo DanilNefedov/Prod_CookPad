@@ -1,5 +1,7 @@
-import { LikePopFetchReq, LikePopFetchRes, PopularFetchReq, PopularFetchRes, 
-    PopularRootState, SavePopFetchReq, SavePopFetchRes} from "@/app/(main)/popular/types";
+import {
+    LikePopFetchReq, LikePopFetchRes, PopularFetchReq, PopularFetchRes,
+    PopularRootState, SavePopFetchReq, SavePopFetchRes
+} from "@/app/(main)/popular/types";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -7,11 +9,11 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
 export type PopularOperationKey =
-  | 'popularFetch'
-  | 'likePopContent'
-  | 'savePopContent'
-  | 'updateViews'
-  
+    | 'popularFetch'
+    | 'likePopContent'
+    | 'savePopContent'
+    | 'updateViews'
+
 
 
 interface PopularState extends PopularRootState {
@@ -23,10 +25,11 @@ interface PopularState extends PopularRootState {
 
 const initialState: PopularState = {
     pop_list: [],
-    operations:createOperations<PopularOperationKey>(
+    is_list_empty: false,
+    operations: createOperations<PopularOperationKey>(
         ['popularFetch', 'likePopContent', 'savePopContent', 'updateViews'],
         (key) => {
-            if (key === 'likePopContent' || 'savePopContent' ) {
+            if (key === 'likePopContent' || 'savePopContent') {
                 return createOperationStatus(false);
             }
             return createOperationStatus();
@@ -47,8 +50,8 @@ export const popularFetch = createAsyncThunk<PopularFetchRes, PopularFetchReq, {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    connection_id: data.connection_id, 
-                    count: data.count, 
+                    connection_id: data.connection_id,
+                    count: data.count,
                     getAllIds: data.getAllIds
                 })
             });
@@ -57,21 +60,29 @@ export const popularFetch = createAsyncThunk<PopularFetchRes, PopularFetchReq, {
 
             const dataCoef = await response.json()
 
-            const responseData = await fetch('/api/popular/compilation', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({fullSorted:dataCoef, connection_id:data.connection_id})
-            })
+            if (dataCoef !== null) {
+                const responseData = await fetch('/api/popular/compilation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ fullSorted: dataCoef, connection_id: data.connection_id })
+                })
 
-            if (!responseData.ok) return rejectWithValue('Server Error!');
-            
-            const dataList = await responseData.json()
+                if (!responseData.ok) return rejectWithValue('Server Error!');
+
+                const dataList = await responseData.json()
+                return {
+                    list: dataList,
+                    more: data.more
+                };
+            }
+
             return {
-                list: dataList,
-                more: data.more   
+                list: null,
+                more: data.more
             };
+
 
         } catch (error) {
             console.log(error)
@@ -82,7 +93,7 @@ export const popularFetch = createAsyncThunk<PopularFetchRes, PopularFetchReq, {
 
 
 
-export const likePopContent = createAsyncThunk<LikePopFetchRes, LikePopFetchReq, { rejectValue: string } >(
+export const likePopContent = createAsyncThunk<LikePopFetchRes, LikePopFetchReq, { rejectValue: string }>(
     'popular/likePopContent',
     async function (data, { rejectWithValue }) {
         try {
@@ -160,7 +171,7 @@ export const updateViews = createAsyncThunk<{ config_id: string }, { config_id: 
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ config_id:data.config_id }),
+                body: JSON.stringify({ config_id: data.config_id }),
             });
 
             if (!response.ok) return rejectWithValue('Server Error!');
@@ -201,13 +212,13 @@ const popularSlice = createSlice({
     name: 'popular',
     initialState,
     reducers: {
-        newCommCalc:(state, action:PayloadAction<{config_id:string}, string>) =>{
+        newCommCalc: (state, action: PayloadAction<{ config_id: string }, string>) => {
             const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
-            if(thisPop){
+            if (thisPop) {
                 thisPop.comments += 1
             }
         },
-        closeAlertPopular(state, action: PayloadAction<PopularOperationKey>){
+        closeAlertPopular(state, action: PayloadAction<PopularOperationKey>) {
             const key = action.payload
 
             if (state.operations[key]) {
@@ -224,32 +235,36 @@ const popularSlice = createSlice({
                 state.operations.popularFetch.error = false
                 state.operations.popularFetch.loading = false
 
-                const {list, more } = action.payload
-                
+                const { list, more } = action.payload
 
-                if (more) {
-                    list.forEach(el => {
-                        state.pop_list.push(el)
-                    })
+                if (list === null) {
+                    state.is_list_empty = true
                 } else {
-                    list.forEach(el => {
-                        const exists = state.pop_list.some(item => item.config_id === el.config_id);
-                        if (!exists) {
-                            state.pop_list.push(el);
-                        }
-                    });
+                    if (more) {
+                        list.forEach(el => {
+                            state.pop_list.push(el)
+                        })
+                    } else {
+                        list.forEach(el => {
+                            const exists = state.pop_list.some(item => item.config_id === el.config_id);
+                            if (!exists) {
+                                state.pop_list.push(el);
+                            }
+                        });
+                    }
                 }
 
             })
 
 
-            
+
             .addCase(likePopContent.pending, likePopContentHandlers.pending)
             .addCase(likePopContent.rejected, likePopContentHandlers.rejected)
             .addCase(likePopContent.fulfilled, (state, action: PayloadAction<LikePopFetchRes, string>) => {
                 state.operations.likePopContent.error = false
                 state.operations.likePopContent.loading = false
                 const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
+
                 if (thisPop) {
                     thisPop.liked = action.payload.liked
                     thisPop.likes = action.payload.liked ? thisPop.likes + 1 : thisPop.likes - 1
@@ -279,7 +294,7 @@ const popularSlice = createSlice({
                 state.operations.updateViews.error = false
                 state.operations.updateViews.loading = false
             })
-        
+
     }
 })
 
