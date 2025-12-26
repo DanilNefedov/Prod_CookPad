@@ -267,7 +267,6 @@ export async function POST(request: Request) {
             return !getAllIds.includes(item._id.toString());
         });
 
-        console.log(result, getAllIds, filtered)
 
         if (filtered.length === 0) {
             return NextResponse.json(null);

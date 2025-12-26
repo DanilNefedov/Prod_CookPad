@@ -59,7 +59,6 @@ export const popularFetch = createAsyncThunk<PopularFetchRes, PopularFetchReq, {
             if (!response.ok) return rejectWithValue('Server Error!');
 
             const dataCoef = await response.json()
-            console.log(dataCoef)
 
             if (dataCoef !== null) {
                 const responseData = await fetch('/api/popular/compilation', {
@@ -118,7 +117,6 @@ export const likePopContent = createAsyncThunk<LikePopFetchRes, LikePopFetchReq,
             if (!userConfigRes.ok) return rejectWithValue('Server Error!');
 
             const returnData = await response.json()
-            console.log(returnData)
             return returnData
 
         } catch (error) {
@@ -239,7 +237,6 @@ const popularSlice = createSlice({
 
                 const { list, more } = action.payload
 
-                console.log(action.payload)
                 if (list === null) {
                     state.is_list_empty = true
                 } else {
@@ -269,7 +266,6 @@ const popularSlice = createSlice({
                 const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
 
                 if (thisPop) {
-                    console.log(action.payload.config_id, action.payload)
                     thisPop.liked = action.payload.liked
                     thisPop.likes = action.payload.liked ? thisPop.likes + 1 : thisPop.likes - 1
                 }
