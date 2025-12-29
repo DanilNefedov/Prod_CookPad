@@ -25,6 +25,7 @@ import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import { usePingGate } from "@/app/hooks/usePing";
 import { initCommentsState } from "@/state/slices/comments-popular-slice";
 import { centerFlexBlock, textMaxWidth } from "@/app/styles";
+import { EndOfList } from "./EndOfList";
 
 
 
@@ -166,6 +167,11 @@ export function MainPopular() {
                     }
                 ]}
             >
+                {
+                    popularListEmpty && (popularStore.length === activeVideo + 1) &&
+                    <EndOfList></EndOfList>
+                }
+
                 <Box sx={viewContentContainer} >
 
 
@@ -233,6 +239,7 @@ export function MainPopular() {
                                         <MediaSwiper configId={item.config_id} />
                                     </Box>
                                 </SwiperSlide>
+                            
                         ))}
                     </Swiper>
                     {/* }  */}
