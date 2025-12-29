@@ -83,7 +83,7 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
         }
     }
 
-
+    console.log(`/cook/${recipe_id}?name=${recipe?.name}`)
     return (
         <Card sx={mainCard}>
             <Box sx={boxTypeRecipe}>
@@ -215,10 +215,11 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
 
 
                 <Box sx={[desktopBotInfo]}>
+                    
                     <Button
                         disabled={isSkeleton}
                         component={Link}
-                        href={`/cook/${recipe_id}?name=${recipe?.name}`}
+                        href={`/cook/${recipe_id}${recipe?.name ? `?name=${recipe.name}` : ''}`}
                         sx={cookBtn}
                     >Cook</Button>
                     <Button

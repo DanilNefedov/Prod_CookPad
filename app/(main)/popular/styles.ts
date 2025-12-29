@@ -769,3 +769,12 @@ export const containerAvatarComment = {
         p: '4px 0' 
     }
 }
+
+export const infoAlert = {
+    position:'fixed', 
+    top:'10px', 
+    right:'50%', 
+    zIndex:'9999', 
+    width:'300px', 
+    transform: 'translateX(50%)'
+}
