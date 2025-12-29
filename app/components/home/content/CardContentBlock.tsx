@@ -83,7 +83,6 @@ export const CardContentBlock = memo(({ props }: { props: Props }) => {
         }
     }
 
-    console.log(`/cook/${recipe_id}?name=${recipe?.name}`)
     return (
         <Card sx={mainCard}>
             <Box sx={boxTypeRecipe}>
