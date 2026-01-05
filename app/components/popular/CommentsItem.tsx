@@ -15,6 +15,7 @@ import { usePingGate } from "@/app/hooks/usePing";
 import { UXLoading } from "../ui-helpers/UXLoading";
 import { Like } from "@/app/(main)/popular/types";
 import { betweenCenter } from "@/app/styles";
+import { getImageSrc } from "@/app/services/imgForAvatar";
 
 
 
@@ -124,7 +125,11 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: Props) =>
 
                 <Box sx={[containerAvatarComment, betweenCenter]}>
                     <ListItemAvatar sx={avatarContainer}>
-                        <Avatar alt={commentsData.author_name} src={commentsData.author_avatar } 
+                        <Avatar 
+                        alt={commentsData.author_name} 
+                        src={getImageSrc(
+                            commentsData.author_avatar,
+                        )}
                         sx={avatar}></Avatar>
                     </ListItemAvatar>
                     <ListItemText

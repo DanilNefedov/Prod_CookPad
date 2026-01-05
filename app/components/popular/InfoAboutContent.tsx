@@ -10,6 +10,7 @@ import { authorAvatar, authorName, containerBtnsStats, statsBtn, statsRecipe } f
 import { usePingGate } from "@/app/hooks/usePing";
 import { PopularAuthorInfo } from "@/app/(main)/popular/types";
 import { columnCenter, columnSpaceBetween, textMaxWidth } from "@/app/styles";
+import { getImageSrc } from "@/app/services/imgForAvatar";
 
 
 interface Props {
@@ -78,11 +79,17 @@ export const InfoAboutContent = memo(({ props }: { props: Props }) => {
         });
     };
 
-
+    console.log(author.author_img)
     return (
 
         <Box sx={[statsRecipe, columnSpaceBetween]}>
-            <Avatar alt="name" src={author.author_img } sx={authorAvatar} />
+            <Avatar 
+                alt={author.author_name} 
+                sx={authorAvatar} 
+                src={getImageSrc(
+                    author.author_img,
+                )}
+            />
             <Typography sx={[authorName, textMaxWidth]}>{author.author_name}</Typography>
 
             <CardActions sx={[containerBtnsStats]}>
