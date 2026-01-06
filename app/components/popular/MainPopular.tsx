@@ -146,7 +146,6 @@ export function MainPopular() {
         }, 1000);
     };
 
-
     return (
         <>
             <Card
