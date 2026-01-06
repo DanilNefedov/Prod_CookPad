@@ -1,6 +1,7 @@
 'use client'
 
 import { containerUser, textAvatar } from '@/app/(main)/home/styles';
+import { getImageSrc } from '@/app/services/imgForAvatar';
 import { avatarSize, centerFlexBlock, textMaxWidth } from '@/app/styles';
 import { useAppSelector } from '@/state/hook';
 import { Avatar, Box, Tooltip, Typography } from '@mui/material';
@@ -23,14 +24,17 @@ export function AboutUser() {
                     />
                 ) : null} */}
                 <Avatar 
-                    src={userStore.img } 
+                    alt={userStore.name} 
+                    src={getImageSrc(
+                        userStore.img,
+                    )} 
                     slotProps={{
                         img: {
                             alt: userStore.name,
                         },
                     }}
                     sx={avatarSize}
-                ></Avatar>
+                />
             </Tooltip>
             <Typography color='text.disabled' sx={[textMaxWidth, textAvatar]}>{userStore.name}</Typography>
         </Box>

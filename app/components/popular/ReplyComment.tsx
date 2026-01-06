@@ -9,6 +9,7 @@ import { arrowBetweenNames, avatarReply, avatarReplyBox, avatarTextReplyBox, com
     fullTextReply, likeComm, replyBtnBoxInReply, replyComm, replyContainer } from "@/app/(main)/popular/styles";
 import { Like } from "@/app/(main)/popular/types";
 import { textMaxWidth } from "@/app/styles";
+import { getImageSrc } from "@/app/services/imgForAvatar";
 
 
 
@@ -67,7 +68,13 @@ export const ReplyComment = memo(({ id_comment_p, id_branch_p, handleLike, confi
         <ListItem sx={[replyContainer, {borderColor: isActive ? 'text.disabled' : 'transparent'}]}>
             <Box sx={avatarTextReplyBox}>
                 <ListItemAvatar sx={avatarReplyBox}>
-                    <Avatar alt={author_name} src={author_avatar } sx={avatarReply}/>
+                    <Avatar 
+                        alt={author_name} 
+                        src={getImageSrc(
+                            author_avatar,
+                        )} 
+                        sx={avatarReply}
+                    />
                 </ListItemAvatar>
                 <ListItemText
                     sx={fullTextReply}
