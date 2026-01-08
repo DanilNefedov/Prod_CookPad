@@ -1,8 +1,8 @@
 import connectDB from "@/app/lib/mongoose"
-import CookHistory from "@/app/models/cook-history";
 import Recipe from "@/app/models/recipe"
 import { NextResponse } from "next/server"
-import { deleteHistory } from "./services";
+import { deleteHistory, deleteListRecipe, deleteRecipe } from "./services";
+import mongoose from "mongoose";
 
 
 
@@ -48,7 +48,12 @@ export async function GET(request: Request) {
 
 
 export async function DELETE(request: Request) {
+  const session = await mongoose.startSession();
+
   try {
+    await connectDB();
+    session.startTransaction();
+
     const { searchParams } = new URL(request.url);
     const connection_id = searchParams.get("connection_id");
     const recipe_id = searchParams.get("recipe");
@@ -60,12 +65,20 @@ export async function DELETE(request: Request) {
       );
     }
 
-    await connectDB();
+    //for the future, there is the possibility to determine return values 
+    await deleteHistory({connection_id, recipe_id}, session)
+    await deleteListRecipe({connection_id, recipe_id}, session)
+    await deleteRecipe({recipe_id}, session)
 
-    const deleteHistoryRes = await deleteHistory({connection_id, recipe_id})
+    await session.commitTransaction();
+    session.endSession();
 
+    return new NextResponse(null, { status: 204 });
 
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
     console.error(error);
     return NextResponse.json(
       { error: "An internal error occurred" },
