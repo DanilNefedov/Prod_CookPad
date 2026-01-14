@@ -1,4 +1,5 @@
 import CookHistory from "@/app/models/cook-history";
+import LikesPopular from "@/app/models/likes-popular";
 import ListRecipe from "@/app/models/list-recipe";
 import RecipePopularConfig from "@/app/models/popular-config";
 import Recipe from "@/app/models/recipe";
@@ -20,11 +21,15 @@ export async function deleteHistory({ connection_id, recipe_id }: DeleteRecipePa
         const result = await CookHistory.updateOne(
             { connection_id },
             {
-                $pull: {
-                    history_links: { recipe_id }
-                }
+                $set: {
+                    "history_links.$[item].is_deleted": true,
+                    "history_links.$[item].deletedAt": new Date(),
+                },
             },
-            { session }
+            {
+                arrayFilters: [{ "item.recipe_id": recipe_id, "item.is_deleted": false }],
+                session,
+            }
         );
 
         return result.modifiedCount > 0;
@@ -39,11 +44,20 @@ export async function deleteHistory({ connection_id, recipe_id }: DeleteRecipePa
 
 export async function deleteListRecipe({ connection_id, recipe_id }: DeleteRecipeParams, session: mongoose.ClientSession) {
     try {
-        const result = await ListRecipe.deleteOne({
+        const result = await ListRecipe.updateOne({
             connection_id,
             "recipe.recipe_id": recipe_id,
-        }, { session });
-        return result.deletedCount === 1;
+            is_deleted: false,
+        },
+            {
+                $set: {
+                    is_deleted: true,
+                    deletedAt: new Date(),
+                },
+            },
+            { session });
+
+        return result.modifiedCount === 1;
 
     } catch (error) {
         console.error("Mongo delete error:", error);
@@ -53,7 +67,11 @@ export async function deleteListRecipe({ connection_id, recipe_id }: DeleteRecip
 
 
 
-export async function deleteRecipe({ recipe_id }: { recipe_id: string }, session: mongoose.ClientSession) {
+export async function deleteRecipeAndPopular({ recipe_id }: { recipe_id: string }, session: mongoose.ClientSession):
+    Promise<{
+        deleted: boolean;
+        recipe_popular_config?: string;
+    }> {
     try {
         const recipe = await Recipe.findOne(
             { recipe_id },
@@ -62,20 +80,64 @@ export async function deleteRecipe({ recipe_id }: { recipe_id: string }, session
         ).lean<RecipeLean>();
 
         if (!recipe) {
-            return false;
+            return { deleted: false };
         }
 
         if (recipe.recipe_popular_config) {
-            try {
-                await RecipePopularConfig.deleteOne({ _id: recipe.recipe_popular_config }, { session });
-            } catch (err) {
-                console.error("Failed to delete PopularConfig:", err);
-                throw new Error("Failed to delete associated popular config");
-            }
+            await RecipePopularConfig.updateOne(
+                { _id: recipe.recipe_popular_config, is_deleted: false },
+                {
+                    $set: {
+                        is_deleted: true,
+                        deletedAt: new Date(),
+                    },
+                },
+                { session }
+            );
         }
 
-        const result = await Recipe.deleteOne({ recipe_id }, { session });
-        return result.deletedCount === 1;
+        const result = await Recipe.updateOne(
+            { recipe_id, is_deleted: false },
+            {
+                $set: {
+                    is_deleted: true,
+                    deletedAt: new Date(),
+                },
+            },
+            { session }
+        );
+
+        return {
+            deleted: result.modifiedCount === 1,
+            recipe_popular_config: recipe.recipe_popular_config
+                ? recipe.recipe_popular_config.toString()
+                : undefined,
+        };
+        // return result.modifiedCount === 1;
+
+    } catch (error) {
+        console.error("Mongo delete error:", error);
+        throw new Error("Database deletion failed");
+    }
+}
+
+
+
+export async function deleteLikesPopular({ config_id }: { config_id: string }, session: mongoose.ClientSession) {
+    try {
+
+        const result = await LikesPopular.updateOne(
+            { config_id, is_deleted: false },
+            {
+                $set: {
+                    is_deleted: true,
+                    deletedAt: new Date(),
+                },
+            },
+            { session }
+        );
+
+        return result.modifiedCount === 1;
 
     } catch (error) {
         console.error("Mongo delete error:", error);

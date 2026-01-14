@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Query, Schema } from 'mongoose';
 
 
 
@@ -71,6 +71,21 @@ ReplyCommentSchema.index({ deletedAt: 1 }, { expireAfterSeconds: 100 });
 
 
 //Delayed deletion if the user changes their mind or clicks the like button frequently
+
+
+
+
+ReplyCommentSchema.pre<Query<unknown, unknown>>(/^find/, function (next) {
+  const opts = this.getOptions() as { withDeleted?: boolean };
+
+  if (!opts.withDeleted) {
+    this.where({ is_deleted: false });
+  }
+
+  next();
+});
+
+//withDeleted - flag. What to get when searching is_deleted: false or is_deleted: true
 
 
 

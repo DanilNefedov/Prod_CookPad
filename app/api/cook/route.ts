@@ -1,7 +1,7 @@
 import connectDB from "@/app/lib/mongoose"
 import Recipe from "@/app/models/recipe"
 import { NextResponse } from "next/server"
-import { deleteHistory, deleteListRecipe, deleteRecipe } from "./services";
+import { deleteHistory, deleteLikesPopular, deleteListRecipe, deleteRecipeAndPopular } from "./services";
 import mongoose from "mongoose";
 
 
@@ -68,7 +68,17 @@ export async function DELETE(request: Request) {
     //for the future, there is the possibility to determine return values 
     await deleteHistory({connection_id, recipe_id}, session)
     await deleteListRecipe({connection_id, recipe_id}, session)
-    await deleteRecipe({recipe_id}, session)
+    await deleteRecipeAndPopular({recipe_id}, session)
+    // const resPopular = await deleteRecipeAndPopular({recipe_id}, session)
+
+
+
+    // For all other collections, you need to add a worker. Most likely BullMQ. 
+    
+    // if(resPopular.recipe_popular_config && resPopular.recipe_popular_config !== ''){
+    //   await deleteLikesPopular({config_id: resPopular.recipe_popular_config}, session)
+    //   await deleteCommentsPopular({})
+    // }
 
     await session.commitTransaction();
     session.endSession();

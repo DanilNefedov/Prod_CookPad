@@ -42,13 +42,6 @@ const CookHistorySchema = new Schema(
 
 CookHistorySchema.index({ deletedAt: 1 }, { expireAfterSeconds: 100 });
 
-CookHistorySchema.pre<Query<any, any>>(/^find/, function (next) {
-  const opts = (this as any).options;
-  if (opts?.withDeleted) return next();
-
-  this.setQuery({ ...this.getQuery(), is_deleted: false });
-  next();
-});
 
 // It is possible that there is a “race” error in the code. when the function to 
 // cancel object deletion is executed at the moment when the database deleted the object.
@@ -60,6 +53,23 @@ CookHistorySchema.pre<Query<any, any>>(/^find/, function (next) {
 
 
 //Delayed deletion if the user changes their mind or clicks the like button frequently
+
+
+
+CookHistorySchema.pre<Query<unknown, unknown>>(/^find/, function (next) {
+  const opts = this.getOptions() as { withDeleted?: boolean };
+
+  if (!opts.withDeleted) {
+    this.where({ is_deleted: false });
+  }
+
+  next();
+});
+
+//withDeleted - flag. What to get when searching is_deleted: false or is_deleted: true
+
+
+
 
 const CookHistory = mongoose.models.CookHistory || mongoose.model('CookHistory', CookHistorySchema);
 export default CookHistory;
