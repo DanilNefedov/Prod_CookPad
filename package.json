@@ -20,6 +20,7 @@
     "@next/bundle-analyzer": "^15.4.0-canary.51",
     "@reduxjs/toolkit": "^2.6.1",
     "bcryptjs": "^3.0.2",
+    "bullmq": "^5.66.5",
     "cloudinary": "^2.7.0",
     "dayjs": "^1.11.13",
     "firebase": "^11.2.0",

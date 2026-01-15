@@ -42,6 +42,10 @@ const ReplyCommentSchema = new Schema(
             type: Number,
             required: true
         },
+        config_id:{
+            type: String,
+            required: true
+        },
 
 
 

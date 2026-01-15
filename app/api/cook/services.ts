@@ -1,8 +1,13 @@
+import CommentPopular from "@/app/models/comments-popular";
 import CookHistory from "@/app/models/cook-history";
+import LikesComments from "@/app/models/likes-comments";
 import LikesPopular from "@/app/models/likes-popular";
+import LikesReply from "@/app/models/likes-reply";
 import ListRecipe from "@/app/models/list-recipe";
 import RecipePopularConfig from "@/app/models/popular-config";
 import Recipe from "@/app/models/recipe";
+import ReplyComment from "@/app/models/reply-comments";
+import SavesPopular from "@/app/models/saves-popular";
 import mongoose from "mongoose";
 
 
@@ -126,7 +131,7 @@ export async function deleteRecipeAndPopular({ recipe_id }: { recipe_id: string 
 export async function deleteLikesPopular({ config_id }: { config_id: string }, session: mongoose.ClientSession) {
     try {
 
-        const result = await LikesPopular.updateOne(
+        const result = await LikesPopular.updateMany(
             { config_id, is_deleted: false },
             {
                 $set: {
@@ -137,10 +142,132 @@ export async function deleteLikesPopular({ config_id }: { config_id: string }, s
             { session }
         );
 
-        return result.modifiedCount === 1;
+        return result.modifiedCount;
 
     } catch (error) {
         console.error("Mongo delete error:", error);
         throw new Error("Database deletion failed");
     }
+}
+
+
+
+export async function deleteCommentsPopular({ config_id }: { config_id: string }, session: mongoose.ClientSession) {
+    try {
+
+        const result = await CommentPopular.updateMany(
+            { config_id, is_deleted: false },
+            {
+                $set: {
+                    is_deleted: true,
+                    deletedAt: new Date(),
+                },
+            },
+            { session }
+        );
+
+        return result.modifiedCount;
+
+    } catch (error) {
+        console.error("Mongo delete error:", error);
+        throw new Error("Database deletion failed");
+    }
+
+}
+
+
+export async function deleteLikesComments({ config_id }: { config_id: string }, session: mongoose.ClientSession) {
+    try {
+
+        const result = await LikesComments.updateMany(
+            { config_id, is_deleted: false },
+            {
+                $set: {
+                    is_deleted: true,
+                    deletedAt: new Date(),
+                },
+            },
+            { session }
+        );
+
+        return result.modifiedCount;
+
+    } catch (error) {
+        console.error("Mongo delete error:", error);
+        throw new Error("Database deletion failed");
+    }
+
+}
+
+
+export async function deleteLikesReply({ config_id }: { config_id: string }, session: mongoose.ClientSession) {
+    try {
+
+        const result = await LikesReply.updateMany(
+            { config_id, is_deleted: false },
+            {
+                $set: {
+                    is_deleted: true,
+                    deletedAt: new Date(),
+                },
+            },
+            { session }
+        );
+
+        return result.modifiedCount;
+
+    } catch (error) {
+        console.error("Mongo delete error:", error);
+        throw new Error("Database deletion failed");
+    }
+
+}
+
+
+
+export async function deleteSavePopular({ config_id }: { config_id: string }, session: mongoose.ClientSession) {
+    try {
+
+        const result = await SavesPopular.updateMany(
+            { config_id, is_deleted: false },
+            {
+                $set: {
+                    is_deleted: true,
+                    deletedAt: new Date(),
+                },
+            },
+            { session }
+        );
+
+        return result.modifiedCount;
+
+    } catch (error) {
+        console.error("Mongo delete error:", error);
+        throw new Error("Database deletion failed");
+    }
+
+}
+
+
+export async function deleteReplyComments({ config_id }: { config_id: string }, session: mongoose.ClientSession) {
+    try {
+
+        const result = await ReplyComment.updateMany(
+            { config_id, is_deleted: false },
+            {
+                $set: {
+                    is_deleted: true,
+                    deletedAt: new Date(),
+                },
+            },
+            { session }
+        );
+
+        return result.modifiedCount;
+
+    } catch (error) {
+        console.error("Mongo delete error:", error);
+        throw new Error("Database deletion failed");
+    }
+
 }
