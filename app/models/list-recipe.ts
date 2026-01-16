@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Query, Schema } from "mongoose";
 import { UnitsStateSchema } from "./list";
 
 
@@ -9,11 +9,11 @@ const IngredientsDataSchema = new Schema(
             type: String,
             required: true
         },
-        media: { 
-            type: String, 
-            default: '' 
+        media: {
+            type: String,
+            default: ''
         },
-        shop_ingr:{
+        shop_ingr: {
             type: Boolean,
             required: true
         },
@@ -28,14 +28,14 @@ const IngredientsDataSchema = new Schema(
     }
 )
 
-const MediaRecipeSchema = new Schema (
+const MediaRecipeSchema = new Schema(
     {
-        url:{ 
-            type: String, 
+        url: {
+            type: String,
             required: true
         },
-        type:{
-            type: String, 
+        type: {
+            type: String,
             required: true
         }
     }
@@ -51,15 +51,15 @@ const RecipeDataSchema = new Schema(
             type: String,
             required: true
         },
-        recipe_media:{ 
-            type: MediaRecipeSchema, 
+        recipe_media: {
+            type: MediaRecipeSchema,
             required: true
         },//only main | if we dont have it - first
-        recipe_shop:{
+        recipe_shop: {
             type: Boolean,
             required: true
         },
-        ingredients_list:{
+        ingredients_list: {
             type: [IngredientsDataSchema],
             required: true
         },
@@ -73,17 +73,56 @@ const ListRecipeSchema = new Schema(
             type: String,
             required: true
         },
-        recipe:{
+        recipe: {
             type: RecipeDataSchema,
             required: true
-        }
-        
+        },
+
+
+
+
+        is_deleted: {
+            type: Boolean,
+            default: false,
+            required: true
+        },
+        deletedAt: { type: Date }
+
     },
     {
         timestamps: true,
-        collection: 'list-recipe' 
+        collection: 'list-recipe'
     },
 );
+
+
+ListRecipeSchema.index({ deletedAt: 1 }, { expireAfterSeconds: 100 });
+// It is possible that there is a “race” error in the code. when the function to 
+// cancel object deletion is executed at the moment when the database deleted the object.
+
+// For this purpose, the timer is set for a longer time, hoping that the user will switch to another object. 
+
+// IT IS IMPORTANT TO FIND A SOLUTION
+
+
+
+//Delayed deletion if the user changes their mind or clicks the like button frequently
+
+
+ListRecipeSchema.pre<Query<unknown, unknown>>(/^find/, function (next) {
+  const opts = this.getOptions() as { withDeleted?: boolean };
+
+  if (!opts.withDeleted) {
+    this.where({ is_deleted: false });
+  }
+
+  next();
+});
+
+//withDeleted - flag. What to get when searching is_deleted: false or is_deleted: true
+
+
+
 
 const ListRecipe = mongoose.models.ListRecipe || mongoose.model('ListRecipe', ListRecipeSchema);
 

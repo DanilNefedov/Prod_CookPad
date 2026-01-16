@@ -4,6 +4,7 @@ export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const publicPaths = ["/login", "/register"];
 
+
   const token = req.cookies.get("authjs.session-token")?.value
     || req.cookies.get("__Secure-authjs.session-token")?.value;
 

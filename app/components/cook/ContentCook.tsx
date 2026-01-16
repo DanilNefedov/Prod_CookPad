@@ -15,6 +15,7 @@ import SwiperMediaCook from "./SwiperMedia";
 import dynamic from "next/dynamic";
 import ActionInfoRecipe from "./ActionInfoRecipe";
 import Instruction from "./edit/Instruction";
+import { DeleteRecipe } from "./DeleteRecipe";
 
 const IngredientSwiper = dynamic(() => import("./IngredientSwiper"), { 
     ssr: false ,
@@ -90,6 +91,9 @@ export function ContentCook(props:Props) {
                         
                         <Instruction isEditing={isEditing} recipe_id={recipe_id}></Instruction>
                     </Box>
+                    
+
+                    {/* <DeleteRecipe></DeleteRecipe> */}
                 </Box>
             </Box>
 

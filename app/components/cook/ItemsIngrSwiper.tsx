@@ -151,7 +151,7 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
         <Box sx={{p:'5px'}}>
             <ListItemAvatar sx={avatarIngr}>
                 {
-                    el.media !== '' ? 
+                    el.media ? 
                     <Box sx={{position:'relative'}}>
                         <CldImage
                             alt={el.name}

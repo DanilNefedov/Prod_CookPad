@@ -23,9 +23,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  compiler:{
-    removeConsole: process.env.NODE_ENV === 'production',
-  }
+
+  // compiler: {
+  //   removeConsole: {
+  //     exclude: ['error', 'warn'],
+  //   },
+  // },
   
 };
 

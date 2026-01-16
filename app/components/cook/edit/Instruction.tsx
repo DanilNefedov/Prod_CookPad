@@ -32,7 +32,7 @@ const Instruction = memo(({recipe_id, isEditing}:Props) => {
     }
 
     return(
-        <Typography component='span' variant="body1" sx={[descriptionInstruction, instruction]}>
+        <Typography  variant="body1" sx={[descriptionInstruction, instruction]}>
 
             {
                 isEditing ? 
@@ -46,7 +46,8 @@ const Instruction = memo(({recipe_id, isEditing}:Props) => {
                         onChange={handleChange}
                         sx={{
                             width:'100%',
-                            ml:'5px',
+                            ml:'10px',
+                            mt:'10px',
                             '& .MuiInputBase-root':{
                                 p:'0'
                             }
