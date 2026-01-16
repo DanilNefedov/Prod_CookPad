@@ -21,10 +21,6 @@ const CookHistorySchema = new Schema(
       type: String,
       required: true
     },
-<<<<<<< HEAD
-=======
-
->>>>>>> master
     history_links: [HistoryLinksSchema],
 
 
