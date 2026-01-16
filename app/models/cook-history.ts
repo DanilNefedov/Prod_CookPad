@@ -21,6 +21,10 @@ const CookHistorySchema = new Schema(
       type: String,
       required: true
     },
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
     history_links: [HistoryLinksSchema],
 
 
@@ -67,8 +71,6 @@ CookHistorySchema.pre<Query<unknown, unknown>>(/^find/, function (next) {
 });
 
 //withDeleted - flag. What to get when searching is_deleted: false or is_deleted: true
-
-
 
 
 const CookHistory = mongoose.models.CookHistory || mongoose.model('CookHistory', CookHistorySchema);

@@ -2,15 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 export default async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  // const publicPaths = ["/login", "/register"];
-  const isPublicPath = pathname.startsWith('/login') || pathname.startsWith('/register');
+  const publicPaths = ["/login", "/register"];
 
 
   const token = req.cookies.get("authjs.session-token")?.value
     || req.cookies.get("__Secure-authjs.session-token")?.value;
 
-  // if (!token && !publicPaths.includes(pathname)) {
-  if (!token && !isPublicPath) {
+  if (!token && !publicPaths.includes(pathname)) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
