@@ -18,6 +18,7 @@ import descriptionSlice from './slices/stepper/description'
 import instructionSlice from './slices/stepper/instruction'
 import newListIngredient from './slices/list-form'
 import formListRecipe from './slices/list-recipe-form'
+import { cookListener } from "./listener/cook-listener";
 
 
 export const RESET_APP = 'RESET_APP';
@@ -54,6 +55,7 @@ const rootReducer = (state: ReturnType<typeof appReducer> | undefined, action: a
 
 export const store = configureStore({
     reducer: rootReducer,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(cookListener.middleware),
 });
 
 

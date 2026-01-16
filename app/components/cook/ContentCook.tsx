@@ -9,13 +9,15 @@ import 'swiper/css/navigation';
 import 'swiper/css/grid';
 import './styles.css';
 import { useEffect, useState } from "react";
-import { changeNewInfo, fetchCook } from "@/state/slices/cook-slice";
+import { changeNewInfo, fetchCook, setRedirect } from "@/state/slices/cook-slice";
 import { skeletonSwiperCook } from "@/app/styles";
 import SwiperMediaCook from "./SwiperMedia";
 import dynamic from "next/dynamic";
 import ActionInfoRecipe from "./ActionInfoRecipe";
 import Instruction from "./edit/Instruction";
 import { DeleteRecipe } from "./DeleteRecipe";
+import { useRouter } from 'next/navigation'
+
 
 const IngredientSwiper = dynamic(() => import("./IngredientSwiper"), { 
     ssr: false ,
@@ -36,20 +38,29 @@ interface Props {
 export function ContentCook(props:Props) {
     const { recipe_id } = props
     const [isEditing, setIsEditing] = useState(false);
-
+    const router = useRouter()
     const dispatch = useAppDispatch()
     const hasCookRecipe = useAppSelector(state => Boolean(state.cook.recipes[recipe_id]));
     const recipeIngredients = useAppSelector(state => state.cook.recipes[recipe_id]?.ingredients)
     const user_id = useAppSelector(state => state.user.user.connection_id)
     const recipeStatus = useAppSelector(state => state.cook.operations.fetchCook.loading)
+    const redirectTo = useAppSelector(state => state.cook.redirect_to)
 
     
     useEffect(() => {
         if (!user_id) return; 
-        if (!hasCookRecipe) {
+        if (!hasCookRecipe && redirectTo === '') {
             dispatch(fetchCook({ id: user_id, recipe_id }));
         }
     }, [recipe_id, hasCookRecipe, user_id, dispatch]);
+
+    
+    useEffect(() => {
+        if (redirectTo !== '') {
+            router.push(redirectTo);
+            dispatch(setRedirect(''));
+        }
+    }, [redirectTo]);
 
 
 
@@ -59,7 +70,6 @@ export function ContentCook(props:Props) {
         }
         setIsEditing(prev => !prev);
     };
-    console.log('3434')
 
     return (
         <Box sx={containerContent}>

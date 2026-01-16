@@ -13,6 +13,7 @@ export interface CookRootState {
     connection_id:string
     recipes:Record<string, CookRecipe>;
     modified:Modified
+    redirect_to:string
     // recipes:CookRecipe[]
 }
 
