@@ -89,6 +89,13 @@ export interface DeleteCookFetch{
     recipe_id: string
 }
 
+export interface DeleteCookFetchRes{
+    connection_id: string, 
+    recipe_id: string,
+    config_id:string
+}
+
+
 export interface ChangeName {
     recipe_id:string
     name:string

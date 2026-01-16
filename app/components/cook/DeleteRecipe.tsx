@@ -1,10 +1,17 @@
+import { useAppDispatch } from "@/state/hook";
+import { deleteRecipe } from "@/state/slices/cook-slice";
 import { Box, Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import { useState } from "react";
 
 
+interface Props {
+    user_id:string,
+    recipe_id:string
+}
 
-export function DeleteRecipe() {
-    const [confirmed, setConfirmed] = useState<boolean>(false)
+export function DeleteRecipe(props:Props) {
+    const {recipe_id, user_id} = props
+    const dispatch = useAppDispatch()
     const [open, setOpen] = useState<boolean>(false);
 
     const handleClickOpen = () => {
@@ -12,13 +19,13 @@ export function DeleteRecipe() {
     };
 
     const handleClose = (res:boolean) => {
-        console.log(res)
-        setConfirmed(res)
+        if(res){
+            dispatch(deleteRecipe({connection_id:user_id, recipe_id}))
+        }
         setOpen(false);
     };
 
 
-    console.log(confirmed)
     return (
         <Box sx={{ m: '30px 0 5px' }}>
             <Button color='blackRedBtn'

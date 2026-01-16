@@ -47,28 +47,28 @@ export async function deleteHistory({ connection_id, recipe_id }: DeleteRecipePa
 
 
 
-export async function deleteListRecipe({ connection_id, recipe_id }: DeleteRecipeParams, session: mongoose.ClientSession) {
-    try {
-        const result = await ListRecipe.updateOne({
-            connection_id,
-            "recipe.recipe_id": recipe_id,
-            is_deleted: false,
-        },
-            {
-                $set: {
-                    is_deleted: true,
-                    deletedAt: new Date(),
-                },
-            },
-            { session });
+// export async function deleteListRecipe({ connection_id, recipe_id }: DeleteRecipeParams, session: mongoose.ClientSession) {
+//     try {
+//         const result = await ListRecipe.updateOne({
+//             connection_id,
+//             "recipe.recipe_id": recipe_id,
+//             is_deleted: false,
+//         },
+//             {
+//                 $set: {
+//                     is_deleted: true,
+//                     deletedAt: new Date(),
+//                 },
+//             },
+//             { session });
 
-        return result.modifiedCount === 1;
+//         return result.modifiedCount === 1;
 
-    } catch (error) {
-        console.error("Mongo delete error:", error);
-        throw new Error("Database deletion failed");
-    }
-}
+//     } catch (error) {
+//         console.error("Mongo delete error:", error);
+//         throw new Error("Database deletion failed");
+//     }
+// }
 
 
 

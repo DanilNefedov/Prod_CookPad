@@ -59,7 +59,7 @@ export function ContentCook(props:Props) {
         }
         setIsEditing(prev => !prev);
     };
-
+    console.log('3434')
 
     return (
         <Box sx={containerContent}>
@@ -93,7 +93,7 @@ export function ContentCook(props:Props) {
                     </Box>
                     
 
-                    {/* <DeleteRecipe></DeleteRecipe> */}
+                    <DeleteRecipe user_id={user_id} recipe_id={recipe_id}></DeleteRecipe>
                 </Box>
             </Box>
 

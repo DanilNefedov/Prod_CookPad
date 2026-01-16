@@ -2,7 +2,7 @@ import connectDB from "@/app/lib/mongoose"
 import Recipe from "@/app/models/recipe"
 import { NextResponse } from "next/server"
 import { deleteCommentsPopular, deleteHistory, deleteLikesComments, 
-  deleteLikesPopular, deleteLikesReply, deleteListRecipe, deleteRecipeAndPopular, 
+  deleteLikesPopular, deleteLikesReply, deleteRecipeAndPopular, 
   deleteReplyComments, deleteSavePopular } from "./services";
 import mongoose from "mongoose";
 
@@ -58,7 +58,7 @@ export async function DELETE(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const connection_id = searchParams.get("connection_id");
-    const recipe_id = searchParams.get("recipe");
+    const recipe_id = searchParams.get("recipe_id");
 
     if (!connection_id || !recipe_id) {
       return NextResponse.json(
@@ -68,28 +68,28 @@ export async function DELETE(request: Request) {
     }
 
     //for the future, there is the possibility to determine return values 
-    await deleteHistory({connection_id, recipe_id}, session)
-    await deleteListRecipe({connection_id, recipe_id}, session)
-    // await deleteRecipeAndPopular({recipe_id}, session)
-    const resPopular = await deleteRecipeAndPopular({recipe_id}, session)
+    // await deleteHistory({connection_id, recipe_id}, session)
+    // // await deleteListRecipe({connection_id, recipe_id}, session)
+    // // await deleteRecipeAndPopular({recipe_id}, session)
+    // const resPopular = await deleteRecipeAndPopular({recipe_id}, session)
 
 
 
-    // For all other collections, you need to add a worker. Most likely BullMQ. 
+    // // For all other collections, you need to add a worker. Most likely BullMQ. 
     
-    if(resPopular.recipe_popular_config && resPopular.recipe_popular_config !== ''){
-      await deleteLikesPopular({config_id: resPopular.recipe_popular_config}, session)
-      await deleteCommentsPopular({config_id: resPopular.recipe_popular_config}, session)
-      await deleteLikesComments({config_id: resPopular.recipe_popular_config}, session)
-      await deleteLikesReply({config_id: resPopular.recipe_popular_config}, session)
-      await deleteSavePopular({config_id: resPopular.recipe_popular_config}, session)
-      await deleteReplyComments({config_id: resPopular.recipe_popular_config}, session)
-    }
+    // if(resPopular.recipe_popular_config && resPopular.recipe_popular_config !== ''){
+    //   await deleteLikesPopular({config_id: resPopular.recipe_popular_config}, session)
+    //   await deleteCommentsPopular({config_id: resPopular.recipe_popular_config}, session)
+    //   await deleteLikesComments({config_id: resPopular.recipe_popular_config}, session)
+    //   await deleteLikesReply({config_id: resPopular.recipe_popular_config}, session)
+    //   await deleteSavePopular({config_id: resPopular.recipe_popular_config}, session)
+    //   await deleteReplyComments({config_id: resPopular.recipe_popular_config}, session)
+    // }
 
     await session.commitTransaction();
     session.endSession();
 
-    return new NextResponse(null, { status: 204 });
+    return NextResponse.json({connection_id, recipe_id, config_id: ''});
 
   } catch (error) {
     await session.abortTransaction();

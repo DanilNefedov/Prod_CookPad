@@ -418,7 +418,7 @@ export const unitsContainer = {
     flexShrink: '0',
     maxWidth: '420px',
     position: 'relative',
-    '&:first-child':{
+    '&:first-of-type':{
         ml:'0'
     },
     '&:last-child':{

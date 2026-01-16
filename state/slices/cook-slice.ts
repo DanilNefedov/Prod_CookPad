@@ -1,7 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import { ChangeDescription, ChangeHours, ChangeInfoFetchReq, ChangeInfoFetchRes, ChangeInstruction, 
-    ChangeMinutes, ChangeName, ChangeTypeSorting, CookFetchReq, CookFetchRes, CookRootState, DeleteCookFetch, } from "@/app/(main)/cook/types";
+    ChangeMinutes, ChangeName, ChangeTypeSorting, CookFetchReq, CookFetchRes, CookRootState, DeleteCookFetch,
+    DeleteCookFetchRes, } from "@/app/(main)/cook/types";
 import { FavoriteRecipeFetch } from "@/app/(main)/types";
 import { RootState } from "../store";
 import { changeHistory } from "./cook-history";
@@ -111,11 +112,11 @@ export const changeNewInfo = createAsyncThunk<ChangeInfoFetchRes, ChangeInfoFetc
 
 
 
-export const deleteRecipe = createAsyncThunk<DeleteCookFetch, DeleteCookFetch, { rejectValue: string }>(
+export const deleteRecipe = createAsyncThunk<DeleteCookFetchRes, DeleteCookFetch, { rejectValue: string }>(
     'cook/deleteRecipe',
     async function (data, { rejectWithValue }) {
         try {
-            const url = `/api/cook?connection_id=${data.connection_id}/${data.recipe_id}`
+            const url = `/api/cook?connection_id=${data.connection_id}&recipe_id=${data.recipe_id}`
             const response = await fetch(url, {
                 method: 'DELETE',
                 headers: {
@@ -126,9 +127,10 @@ export const deleteRecipe = createAsyncThunk<DeleteCookFetch, DeleteCookFetch, {
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-            // const cookData = await response.json();
+            const respDelete = await response.json();
+            console.log(respDelete)
 
-            return data
+            return respDelete
 
         } catch (error) {
             console.error(error)
@@ -294,15 +296,15 @@ const cookSlice = createSlice({
 
             .addCase(deleteRecipe.pending, deleteRecipeHandlers.pending)
             .addCase(deleteRecipe.rejected, deleteRecipeHandlers.rejected)
-            .addCase(deleteRecipe.fulfilled, (state, action: PayloadAction<DeleteCookFetch, string>) => {
+            .addCase(deleteRecipe.fulfilled, (state, action: PayloadAction<DeleteCookFetchRes, string>) => {
                 state.operations.deleteRecipe.error = false;
                 state.operations.deleteRecipe.loading = false;
 
-                const recipeIdToRemove = action.payload.recipe_id;
+                // const recipeIdToRemove = action.payload.recipe_id;
 
-                state.recipes = Object.fromEntries(
-                    Object.entries(state.recipes).filter(([key]) => key !== recipeIdToRemove)
-                );
+                // state.recipes = Object.fromEntries(
+                //     Object.entries(state.recipes).filter(([key]) => key !== recipeIdToRemove)
+                // );
             })
 
     }
