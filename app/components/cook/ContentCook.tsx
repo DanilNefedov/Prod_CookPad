@@ -93,7 +93,7 @@ export function ContentCook(props:Props) {
                     </Box>
                     
 
-                    <DeleteRecipe></DeleteRecipe>
+                    {/* <DeleteRecipe></DeleteRecipe> */}
                 </Box>
             </Box>
 
