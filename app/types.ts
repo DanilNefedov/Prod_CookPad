@@ -5,7 +5,7 @@
 
 //---------------- state S---------------//
 export interface Message {
-    message:string | { message: string};
+    message: string | { message: string };
 }
 
 
@@ -16,7 +16,7 @@ export type OperationStatus = {
 };
 
 // defaultStatus
-export function createOperationStatus(loading = true, error = false, message?:string): OperationStatus {
+export function createOperationStatus(loading = true, error = false, message?: string): OperationStatus {
     // const normalizedMessage: Message | undefined = typeof message === 'string' ? { message } : message;
 
     return { loading, error, message: message };
@@ -39,7 +39,19 @@ export function createOperations<T extends string>(
 
 
 export interface LoadingContainer {
-    position: string, 
-    right: string, 
+    position: string,
+    right: string,
     mobileText: string
+}
+
+export enum ErrorCode {
+    NOT_FOUND = 'NOT_FOUND',
+    DELETED = 'DELETED',
+    SERVER_ERROR = 'SERVER_ERROR'
+}
+
+export interface ErrorResponse {
+    code: ErrorCode;
+    message: string;
+    resource?: 'save'; //| 'user' | 'list';
 }

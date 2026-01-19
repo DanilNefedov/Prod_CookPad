@@ -128,7 +128,7 @@ export const likePopContent = createAsyncThunk<LikePopFetchRes, LikePopFetchReq,
 
 
 
-export const savePopContent = createAsyncThunk<SavePopFetchRes, SavePopFetchReq, { rejectValue: string }>(
+export const savePopContent = createAsyncThunk<SavePopFetchRes, SavePopFetchReq, { rejectValue: string  | { message: string } }>(
     'popular/savePopContent',
     async function (data, { rejectWithValue }) {
         try {
@@ -141,6 +141,15 @@ export const savePopContent = createAsyncThunk<SavePopFetchRes, SavePopFetchReq,
                 body: JSON.stringify(data)
             });
 
+            const checkSaving = await response.json()
+
+            if(response.status === 410){
+                const errorMessage = checkSaving.message
+
+                return rejectWithValue({    
+                   message: errorMessage
+                });
+            }
             if (!response.ok) return rejectWithValue('Server Error!');
 
             const userConfigRes = await fetch('/api/popular/save/config', {
@@ -153,6 +162,7 @@ export const savePopContent = createAsyncThunk<SavePopFetchRes, SavePopFetchReq,
 
             const returnData = await response.json()
             return returnData
+            // return data
 
         } catch (error) {
             console.log(error)
@@ -194,10 +204,17 @@ const createReducerHandlers = <T extends keyof PopularState['operations']>(opera
     pending: (state: PopularState) => {
         state.operations[operationName].error = false;
         state.operations[operationName].loading = true;
+        state.operations[operationName].message = undefined;
     },
-    rejected: (state: PopularState) => {
+    rejected: (state: PopularState, action: PayloadAction<string | { message: string } | undefined>) => {
         state.operations[operationName].error = true;
         state.operations[operationName].loading = false;
+
+        if (action.payload && typeof action.payload === 'object' && 'message' in action.payload) {
+            state.operations[operationName].message = action.payload.message;
+        } else {
+            state.operations[operationName].message = undefined;
+        }
     }
 });
 

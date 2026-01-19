@@ -6,7 +6,7 @@ import { ChangeDescription, ChangeHours, ChangeInfoFetchReq, ChangeInfoFetchRes,
 import { FavoriteRecipeFetch } from "@/app/(main)/types";
 import { RootState } from "../store";
 import { changeHistory, deleteCookHistory } from "./cook-history";
-import { changeNameRecipe } from "./recipe-slice";
+import { changeNameRecipe, deleteRecipeData } from "./recipe-slice";
 
 
 
@@ -131,6 +131,7 @@ export const deleteRecipe = createAsyncThunk<DeleteCookFetchRes, DeleteCookFetch
             const respDelete = await response.json();
 
             // dispatch(deleteCookHistory({connection_id, recipe_id}))
+            dispatch(deleteRecipeData({recipe_id}))
 
             console.log(respDelete)
 

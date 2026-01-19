@@ -66,10 +66,12 @@ export async function DELETE(request: Request) {
         { status: 400 }
       );
     }
+    // // await deleteListRecipe({connection_id, recipe_id}, session)
+
+
 
     //for the future, there is the possibility to determine return values 
     // await deleteHistory({connection_id, recipe_id}, session)
-    // // await deleteListRecipe({connection_id, recipe_id}, session)
     // // await deleteRecipeAndPopular({recipe_id}, session)
     // const resPopular = await deleteRecipeAndPopular({recipe_id}, session)
 

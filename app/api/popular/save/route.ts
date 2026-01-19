@@ -3,6 +3,7 @@ import RecipePopularConfig from "@/app/models/popular-config";
 import SavesPopular from "@/app/models/saves-popular";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
+import { ErrorCode, ErrorResponse } from "@/app/types";
 
 
 
@@ -27,18 +28,41 @@ export async function PUT(request: Request) {
     try {
         await connectDB();
         session.startTransaction();
-
-        const { config_id, saved, user_id } = await request.json();
         
+        const { config_id, saved, user_id } = await request.json();
+
         if (!config_id || !user_id || typeof saved !== 'boolean') {
             await session.abortTransaction();
-            return NextResponse.json({ message: 'Invalid request data' }, { status: 400 });
+
+            const error: ErrorResponse = {
+                code: ErrorCode.SERVER_ERROR,
+                message: 'Invalid request data'
+            };
+            return NextResponse.json(error, { status: 404 });
         }
 
-        const popVideo = await RecipePopularConfig.findById(config_id).session(session);
+        const popVideo = await RecipePopularConfig
+            .findById(config_id)
+            .setOptions({ withDeleted: true })
+            .session(session);
+
         if (!popVideo) {
             await session.abortTransaction();
-            return NextResponse.json({ message: 'Popular content not found' }, { status: 404 });
+            const error: ErrorResponse = {
+                code: ErrorCode.NOT_FOUND,
+                message: 'Popular content not found'
+            };
+            return NextResponse.json(error, { status: 404 });
+            // return NextResponse.json({ message: 'Popular content not found' }, { status: 404 });
+        }
+
+        if (popVideo.is_deleted) {
+            await session.abortTransaction();
+            const error: ErrorResponse = {
+                code: ErrorCode.DELETED,
+                message: 'Recipe was deleted',
+            };
+            return NextResponse.json(error, { status: 410 });
         }
 
         const update = { $inc: { saves: saved ? -1 : 1 } };
@@ -46,7 +70,11 @@ export async function PUT(request: Request) {
 
         if (updateResult.modifiedCount === 0) {
             await session.abortTransaction();
-            return NextResponse.json({ message: 'Failed to update saves' }, { status: 500 });
+            const error: ErrorResponse = {
+                code: ErrorCode.SERVER_ERROR,
+                message: 'Failed to update saves',
+            };
+            return NextResponse.json(error, { status: 500 });
         }
 
         const save_doc = await SavesPopular.findOne({ config_id, user_id }).session(session);
@@ -56,10 +84,12 @@ export async function PUT(request: Request) {
             const newSave = await new SavesPopular({ user_id, config_id }).save({ session });
             if (!newSave) {
                 await session.abortTransaction();
-                return NextResponse.json(
-                    { message: 'Failed to create save document' },
-                    { status: 500 }
-                );
+
+                const error: ErrorResponse = {
+                    code: ErrorCode.SERVER_ERROR,
+                    message: 'Failed to create save document',
+                };
+                return NextResponse.json(error, { status: 500 });
             }
         } else if (saved && !save_doc.is_deleted) {
 
@@ -68,22 +98,26 @@ export async function PUT(request: Request) {
             const savedDoc = await save_doc.save({ session });
             if (!savedDoc) {
                 await session.abortTransaction();
-                return NextResponse.json(
-                    { message: 'Failed to soft delete save document' },
-                    { status: 500 }
-                );
+
+                const error: ErrorResponse = {
+                    code: ErrorCode.SERVER_ERROR,
+                    message: 'Failed to soft delete save document',
+                };
+                return NextResponse.json(error, { status: 500 });
             }
         } else if (!saved && save_doc.is_deleted) {
-            
+
             save_doc.is_deleted = false;
             save_doc.deletedAt = undefined;
             const savedDoc = await save_doc.save({ session });
             if (!savedDoc) {
                 await session.abortTransaction();
-                return NextResponse.json(
-                    { message: 'Failed to restore save document' },
-                    { status: 500 }
-                );
+
+                const error: ErrorResponse = {
+                    code: ErrorCode.SERVER_ERROR,
+                    message: 'Failed to restore save document',
+                };
+                return NextResponse.json(error, { status: 500 });
             }
         }
 
@@ -94,7 +128,12 @@ export async function PUT(request: Request) {
     } catch (error) {
         console.error(error);
         await session.abortTransaction();
-        return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+
+        const errorRes: ErrorResponse = {
+            code: ErrorCode.SERVER_ERROR,
+            message: 'Internal Server Error',
+        };
+        return NextResponse.json(errorRes, { status: 500 });
     } finally {
         session.endSession();
     }
