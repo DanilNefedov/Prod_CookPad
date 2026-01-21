@@ -35,7 +35,7 @@ export async function PUT(request: Request) {
             await session.abortTransaction();
 
             const error: ErrorResponse = {
-                code: ErrorCode.SERVER_ERROR,
+                code: ErrorCode.INVALID_INPUT,
                 message: 'Invalid request data'
             };
             return NextResponse.json(error, { status: 404 });
@@ -43,6 +43,7 @@ export async function PUT(request: Request) {
 
         const popVideo = await RecipePopularConfig
             .findById(config_id)
+            .select('_id is_deleted')
             .setOptions({ withDeleted: true })
             .session(session);
 
@@ -50,10 +51,9 @@ export async function PUT(request: Request) {
             await session.abortTransaction();
             const error: ErrorResponse = {
                 code: ErrorCode.NOT_FOUND,
-                message: 'Popular content not found'
+                message: 'Popular content not found or was deleted'
             };
             return NextResponse.json(error, { status: 404 });
-            // return NextResponse.json({ message: 'Popular content not found' }, { status: 404 });
         }
 
         if (popVideo.is_deleted) {

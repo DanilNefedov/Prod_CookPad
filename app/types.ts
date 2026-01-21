@@ -47,7 +47,8 @@ export interface LoadingContainer {
 export enum ErrorCode {
     NOT_FOUND = 'NOT_FOUND',
     DELETED = 'DELETED',
-    SERVER_ERROR = 'SERVER_ERROR'
+    SERVER_ERROR = 'SERVER_ERROR',
+    INVALID_INPUT = 'INVALID_INPUT'
 }
 
 export interface ErrorResponse {

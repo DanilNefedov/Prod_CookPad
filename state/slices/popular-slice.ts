@@ -2,7 +2,7 @@ import {
     LikePopFetchReq, LikePopFetchRes, PopularFetchReq, PopularFetchRes,
     PopularRootState, SavePopFetchReq, SavePopFetchRes
 } from "@/app/(main)/popular/types";
-import { createOperations, createOperationStatus, OperationState } from "@/app/types";
+import { createOperations, createOperationStatus, ErrorCode, OperationState } from "@/app/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
@@ -93,7 +93,7 @@ export const popularFetch = createAsyncThunk<PopularFetchRes, PopularFetchReq, {
 
 
 
-export const likePopContent = createAsyncThunk<LikePopFetchRes, LikePopFetchReq, { rejectValue: string }>(
+export const likePopContent = createAsyncThunk<LikePopFetchRes, LikePopFetchReq, { rejectValue: string | { message: string } }>(
     'popular/likePopContent',
     async function (data, { rejectWithValue }) {
         try {
@@ -106,6 +106,24 @@ export const likePopContent = createAsyncThunk<LikePopFetchRes, LikePopFetchReq,
                 body: JSON.stringify(data)
             });
 
+            const checkLike = await response.json()
+
+            if (checkLike.code === ErrorCode.DELETED) {
+                const errorMessage = checkLike.message
+
+                return rejectWithValue({
+                    message: errorMessage
+                });
+            }
+
+            if (checkLike.code === ErrorCode.NOT_FOUND) {
+                const errorMessage = checkLike.message
+
+                return rejectWithValue({
+                    message: errorMessage
+                });
+            }
+
             if (!response.ok) return rejectWithValue('Server Error!');
 
             const userConfigRes = await fetch('/api/popular/like/config', {
@@ -116,8 +134,7 @@ export const likePopContent = createAsyncThunk<LikePopFetchRes, LikePopFetchReq,
 
             if (!userConfigRes.ok) return rejectWithValue('Server Error!');
 
-            const returnData = await response.json()
-            return returnData
+            return checkLike
 
         } catch (error) {
             console.log(error)
@@ -128,7 +145,7 @@ export const likePopContent = createAsyncThunk<LikePopFetchRes, LikePopFetchReq,
 
 
 
-export const savePopContent = createAsyncThunk<SavePopFetchRes, SavePopFetchReq, { rejectValue: string  | { message: string } }>(
+export const savePopContent = createAsyncThunk<SavePopFetchRes, SavePopFetchReq, { rejectValue: string | { message: string } }>(
     'popular/savePopContent',
     async function (data, { rejectWithValue }) {
         try {
@@ -143,13 +160,22 @@ export const savePopContent = createAsyncThunk<SavePopFetchRes, SavePopFetchReq,
 
             const checkSaving = await response.json()
 
-            if(response.status === 410){
+            if (checkSaving.code === ErrorCode.DELETED) {
                 const errorMessage = checkSaving.message
 
-                return rejectWithValue({    
-                   message: errorMessage
+                return rejectWithValue({
+                    message: errorMessage
                 });
             }
+
+            if (checkSaving.code === ErrorCode.NOT_FOUND) {
+                const errorMessage = checkSaving.message
+
+                return rejectWithValue({
+                    message: errorMessage
+                });
+            }
+
             if (!response.ok) return rejectWithValue('Server Error!');
 
             const userConfigRes = await fetch('/api/popular/save/config', {
@@ -160,9 +186,7 @@ export const savePopContent = createAsyncThunk<SavePopFetchRes, SavePopFetchReq,
 
             if (!userConfigRes.ok) return rejectWithValue('Server Error!');
 
-            const returnData = await response.json()
-            return returnData
-            // return data
+            return checkSaving
 
         } catch (error) {
             console.log(error)

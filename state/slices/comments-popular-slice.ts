@@ -62,7 +62,7 @@ const initialState: CommentState = {
 
 
 
-export const commVideoFetch = createAsyncThunk<CommentsFetchRes, CommentsFetchReq, { rejectValue: string }>(
+export const commVideoFetch = createAsyncThunk<CommentsFetchRes, CommentsFetchReq, { rejectValue: string | { message: string } }>(
     'commentsPopular/commVideoFetch',
     async function (data, { rejectWithValue }) {
         try {
