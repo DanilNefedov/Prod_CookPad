@@ -41,6 +41,13 @@ export async function PUT(request: Request) {
             return NextResponse.json(error, { status: 404 });
         }
 
+        const error: ErrorResponse = {
+                        code: ErrorCode.NOT_FOUND,
+                        message: 'Popular content not found or was deleted'
+                    };
+                    return NextResponse.json(error, { status: 404 });
+        
+
         const popVideo = await RecipePopularConfig
             .findById(config_id)
             .select('_id is_deleted')

@@ -2,7 +2,7 @@ import {
     LikePopFetchReq, LikePopFetchRes, PopularFetchReq, PopularFetchRes,
     PopularRootState, SavePopFetchReq, SavePopFetchRes
 } from "@/app/(main)/popular/types";
-import { createOperations, createOperationStatus, ErrorCode, OperationState } from "@/app/types";
+import { createOperations, createOperationStatus, ErrorCode, OperationState, UiNoticePayload } from "@/app/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 
@@ -93,7 +93,7 @@ export const popularFetch = createAsyncThunk<PopularFetchRes, PopularFetchReq, {
 
 
 
-export const likePopContent = createAsyncThunk<LikePopFetchRes, LikePopFetchReq, { rejectValue: string | { message: string } }>(
+export const likePopContent = createAsyncThunk<LikePopFetchRes | UiNoticePayload<PopularOperationKey>, LikePopFetchReq, { rejectValue: string }>(
     'popular/likePopContent',
     async function (data, { rejectWithValue }) {
         try {
@@ -109,19 +109,23 @@ export const likePopContent = createAsyncThunk<LikePopFetchRes, LikePopFetchReq,
             const checkLike = await response.json()
 
             if (checkLike.code === ErrorCode.DELETED) {
-                const errorMessage = checkLike.message
+                const notice: UiNoticePayload<PopularOperationKey> = {
+                    key: 'likePopContent', 
+                    message: checkLike.message,
+                    config_id:data.config_id
+                };
 
-                return rejectWithValue({
-                    message: errorMessage
-                });
+                return notice
             }
 
             if (checkLike.code === ErrorCode.NOT_FOUND) {
-                const errorMessage = checkLike.message
+                const notice: UiNoticePayload<PopularOperationKey> = {
+                    key: 'likePopContent', 
+                    message: checkLike.message,
+                    config_id:data.config_id
+                };
 
-                return rejectWithValue({
-                    message: errorMessage
-                });
+                return notice
             }
 
             if (!response.ok) return rejectWithValue('Server Error!');
@@ -145,7 +149,7 @@ export const likePopContent = createAsyncThunk<LikePopFetchRes, LikePopFetchReq,
 
 
 
-export const savePopContent = createAsyncThunk<SavePopFetchRes, SavePopFetchReq, { rejectValue: string | { message: string } }>(
+export const savePopContent = createAsyncThunk<SavePopFetchRes | UiNoticePayload<PopularOperationKey>, SavePopFetchReq, { rejectValue: string }>(
     'popular/savePopContent',
     async function (data, { rejectWithValue }) {
         try {
@@ -161,19 +165,23 @@ export const savePopContent = createAsyncThunk<SavePopFetchRes, SavePopFetchReq,
             const checkSaving = await response.json()
 
             if (checkSaving.code === ErrorCode.DELETED) {
-                const errorMessage = checkSaving.message
+                const notice: UiNoticePayload<PopularOperationKey> = {
+                    key: 'likePopContent', 
+                    message: checkSaving.message,
+                    config_id:data.config_id
+                };
 
-                return rejectWithValue({
-                    message: errorMessage
-                });
+                return notice
             }
 
             if (checkSaving.code === ErrorCode.NOT_FOUND) {
-                const errorMessage = checkSaving.message
+                const notice: UiNoticePayload<PopularOperationKey> = {
+                    key: 'likePopContent', 
+                    message: checkSaving.message,
+                    config_id:data.config_id
+                };
 
-                return rejectWithValue({
-                    message: errorMessage
-                });
+                return notice
             }
 
             if (!response.ok) return rejectWithValue('Server Error!');
@@ -301,16 +309,24 @@ const popularSlice = createSlice({
 
             .addCase(likePopContent.pending, likePopContentHandlers.pending)
             .addCase(likePopContent.rejected, likePopContentHandlers.rejected)
-            .addCase(likePopContent.fulfilled, (state, action: PayloadAction<LikePopFetchRes, string>) => {
-                state.operations.likePopContent.error = false
-                state.operations.likePopContent.loading = false
-                const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
+            .addCase(likePopContent.fulfilled, (state, action: PayloadAction<LikePopFetchRes | UiNoticePayload<PopularOperationKey>, string>) => {
+                if ('key' in action.payload) {
+                    state.operations[action.payload.key] = {
+                        error:true,
+                        loading:false,
+                        message: action.payload.message
+                    };
+                } else {
+                
+                    state.operations.likePopContent.error = false
+                    state.operations.likePopContent.loading = false
+                    const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
 
-                if (thisPop) {
-                    thisPop.liked = action.payload.liked
-                    thisPop.likes = action.payload.liked ? thisPop.likes + 1 : thisPop.likes - 1
+                    if (thisPop) {
+                        thisPop.liked = action.payload.liked
+                        thisPop.likes = action.payload.liked ? thisPop.likes + 1 : thisPop.likes - 1
+                    }
                 }
-
 
             })
 
@@ -318,13 +334,21 @@ const popularSlice = createSlice({
 
             .addCase(savePopContent.pending, savePopContentHandlers.pending)
             .addCase(savePopContent.rejected, savePopContentHandlers.rejected)
-            .addCase(savePopContent.fulfilled, (state, action: PayloadAction<SavePopFetchRes, string>) => {
-                state.operations.savePopContent.error = false
-                state.operations.savePopContent.loading = false
-                const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
-                if (thisPop) {
-                    thisPop.saved = action.payload.saved
-                    thisPop.saves = action.payload.saved ? thisPop.saves + 1 : thisPop.saves - 1
+            .addCase(savePopContent.fulfilled, (state, action: PayloadAction<SavePopFetchRes | UiNoticePayload<PopularOperationKey>, string>) => {
+                if ('key' in action.payload) {
+                    state.operations[action.payload.key] = {
+                        error:true,
+                        loading:false,
+                        message: action.payload.message
+                    };
+                } else {
+                    state.operations.savePopContent.error = false
+                    state.operations.savePopContent.loading = false
+                    const thisPop = state.pop_list.find(el => el.config_id === action.payload.config_id)
+                    if (thisPop) {
+                        thisPop.saved = action.payload.saved
+                        thisPop.saves = action.payload.saved ? thisPop.saves + 1 : thisPop.saves - 1
+                    }
                 }
             })
 

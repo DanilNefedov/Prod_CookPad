@@ -79,7 +79,7 @@ export const InfoAboutContent = memo(({ props }: { props: Props }) => {
         });
     };
 
-    console.log(author.author_img)
+    console.log(useAppSelector(state => state.popular.operations))
     return (
 
         <Box sx={[statsRecipe, columnSpaceBetween]}>

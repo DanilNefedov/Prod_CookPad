@@ -141,7 +141,7 @@ export interface CommentsFetchRes {
     formattedComments:CommentsData[],
     page:number,
     totalCommentsCount:number,
-    config_id:string
+    config_id:string,
 }
 
 export interface CommentsFetchReq {

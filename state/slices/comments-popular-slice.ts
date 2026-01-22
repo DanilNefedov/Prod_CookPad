@@ -1,11 +1,10 @@
 import { createAsyncThunk, createEntityAdapter, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { newCommCalc } from "./popular-slice";
-import { createOperations, createOperationStatus, OperationState } from "@/app/types";
+import { createOperations, createOperationStatus, ErrorCode, OperationState, UiNoticePayload } from "@/app/types";
 import { CommentRootState, CommentsFetchReq, CommentsFetchRes, 
     GetRepliesFetchReq, GetRepliesFetchRes, LikeCommentFetch, CommentsData, 
     NewCommentFetchRes, NewReplyFetch, 
     ReplyData} from "@/app/(main)/popular/types";
-
 
 
 
@@ -62,7 +61,7 @@ const initialState: CommentState = {
 
 
 
-export const commVideoFetch = createAsyncThunk<CommentsFetchRes, CommentsFetchReq, { rejectValue: string | { message: string } }>(
+export const commVideoFetch = createAsyncThunk<CommentsFetchRes | UiNoticePayload<CommentsOperationKey>, CommentsFetchReq, { rejectValue: string }>(
     'commentsPopular/commVideoFetch',
     async function (data, { rejectWithValue }) {
         try {
@@ -74,11 +73,31 @@ export const commVideoFetch = createAsyncThunk<CommentsFetchRes, CommentsFetchRe
                 body: JSON.stringify(data),
             });
 
+            const checkComments = await responseList.json()
+            
+            if (checkComments.code === ErrorCode.DELETED) {
+                const notice: UiNoticePayload<CommentsOperationKey> = {
+                    key: 'commVideoFetch', 
+                    message: checkComments.message,
+                    config_id:data.config_id
+                };
+
+                return notice
+            }
+
+            if (checkComments.code === ErrorCode.NOT_FOUND) {
+                const notice: UiNoticePayload<CommentsOperationKey> = {
+                    key: 'commVideoFetch', 
+                    message: checkComments.message,
+                    config_id:data.config_id
+                };
+
+                return notice
+            }
+
             if (!responseList.ok) return rejectWithValue('Server Error!');
 
-            const dataList = await responseList.json()
-
-            return dataList
+            return checkComments
 
         } catch (error) {
             console.log(error)
@@ -306,28 +325,36 @@ const commentsPopularSlice = createSlice({
         builder
             .addCase(commVideoFetch.pending, commVideoFetchHandlers.pending)
             .addCase(commVideoFetch.rejected, commVideoFetchHandlers.rejected)
-            .addCase(commVideoFetch.fulfilled, (state, action: PayloadAction<CommentsFetchRes, string>) => {
-                state.operations.commVideoFetch.error = false
-                state.operations.commVideoFetch.loading = false
-                
-                const { config_id, page, totalCommentsCount, formattedComments } = action.payload;
+            .addCase(commVideoFetch.fulfilled, (state, action: PayloadAction<CommentsFetchRes | UiNoticePayload<CommentsOperationKey>, string>) => {
+                if ('key' in action.payload) {
+                    state.operations[action.payload.key] = {
+                        error:true,
+                        loading:false,
+                        message: action.payload.message
+                    };
+                    state.comments[action.payload.config_id].page = NaN
+                } else {
+                    state.operations.commVideoFetch.error = false
+                    state.operations.commVideoFetch.loading = false
+                    
+                    const { config_id, page, totalCommentsCount, formattedComments } = action.payload;
 
 
-                if (!state.comments[config_id]) {
-                  state.comments[config_id] = commentsAdapter.getInitialState({ page: 0 });
-                }
-
-                const commentsState = state.comments[config_id];
-                
-                if (formattedComments && formattedComments.length > 0) {
-                    if (page === 1) {
-                        commentsAdapter.setAll(commentsState, formattedComments);
-                    } else {
-                        commentsAdapter.addMany(commentsState, formattedComments);
+                    if (!state.comments[config_id]) {
+                        state.comments[config_id] = commentsAdapter.getInitialState({ page: 0 });
                     }
-                }
-                commentsState.page = totalCommentsCount <= commentsState.ids.length ? NaN : page;
 
+                    const commentsState = state.comments[config_id];
+                    
+                    if (formattedComments && formattedComments.length > 0) {
+                        if (page === 1) {
+                            commentsAdapter.setAll(commentsState, formattedComments);
+                        } else {
+                            commentsAdapter.addMany(commentsState, formattedComments);
+                        }
+                    }
+                    commentsState.page = totalCommentsCount <= commentsState.ids.length ? NaN : page;
+                }
             
             })
 

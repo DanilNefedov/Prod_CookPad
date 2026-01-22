@@ -48,7 +48,11 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
     const scrollRef = useRef<HTMLDivElement>(null);
     const firstFetchRef = useRef<boolean>(true);
 
-    
+    // console.log(useAppSelector(state => {
+    //     return state.comments 
+    // }), useAppSelector(state => {
+    //     return state.comments.comments[config_id] 
+    // }))
 
     useEffect(() => {
         if (config_id && connection_id && firstFetchRef.current && comments > 0) {

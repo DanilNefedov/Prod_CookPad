@@ -9,6 +9,7 @@ export interface Message {
 }
 
 
+
 export type OperationStatus = {
     loading: boolean;
     error: boolean;
@@ -33,6 +34,13 @@ export function createOperations<T extends string>(
         return acc;
     }, {} as OperationState<T>);
 }
+
+export interface UiNoticePayload<K extends string> {
+    key: K;
+    message: string;
+    config_id:string
+}
+
 
 //---------------- state E---------------//
 
