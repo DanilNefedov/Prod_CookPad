@@ -35,9 +35,9 @@ export async function PUT(request: Request) {
                 code: ErrorCode.INVALID_INPUT,
                 message: 'Invalid request data'
             };
-            return NextResponse.json(error, { status: 404 });
+            return NextResponse.json(error, { status: 400 });
         }
-
+        
         const popVideo = await RecipePopularConfig
             .findById(config_id)
             .select('_id is_deleted')

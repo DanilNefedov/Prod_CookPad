@@ -26,13 +26,19 @@ export async function POST(request: Request) {
                 code: ErrorCode.INVALID_INPUT,
                 message: 'Invalid request data'
             };
-            return NextResponse.json(error, { status: 404 });
+            return NextResponse.json(error, { status: 400 });
         }
 
         const pageSize = 5;
         const skip = (page - 1) * pageSize;
 
         await connectDB();
+
+        // const error: ErrorResponse = {
+        //         code: ErrorCode.NOT_FOUND,
+        //         message: 'Popular content not found or was deleted'
+        //     };
+        //     return NextResponse.json(error, { status: 404 });
 
         const popVideo = await RecipePopularConfig
             .findById(config_id)

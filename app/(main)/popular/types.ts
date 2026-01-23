@@ -175,14 +175,15 @@ export interface GetRepliesFetchRes{
     dataList:ReplyData[],
     page:number,
     totalCommentsCount:number,
-    id_comment:string
+    id_comment:string,
 }
 
 export interface GetRepliesFetchReq{
     id_comment: string, 
     page:number, 
     id_author:string,
-    newReply:string[]
+    newReply:string[],
+    config_id:string
 }
 
 //---------- thunks E----------//

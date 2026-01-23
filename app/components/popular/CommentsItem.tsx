@@ -75,7 +75,8 @@ export const CommentsItem = memo(({ id_comment, config_id, newReply,}: Props) =>
                         id_comment,
                         page: nextPage,
                         id_author: connection_id,
-                        newReply
+                        newReply,
+                        config_id
                     })).finally(() => {
                         setStatusReply('')
                     });

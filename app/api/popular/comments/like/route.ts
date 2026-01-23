@@ -3,6 +3,8 @@ import CommentPopular from "@/app/models/comments-popular";
 import LikesComments from "@/app/models/likes-comments";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
+import RecipePopularConfig from "@/app/models/popular-config";
+import { ErrorCode, ErrorResponse } from "@/app/types";
 
 
 
@@ -17,12 +19,33 @@ export async function PUT(request: Request) {
 
         if (!id_comment || !id_author || !config_id) {
             await session.abortTransaction();
-            return NextResponse.json(
-                { message: 'Invalid request data' },
-                { status: 400 }
-            );
+            const error: ErrorResponse = {
+                code: ErrorCode.INVALID_INPUT,
+                message: 'Invalid request data'
+            };
+            return NextResponse.json(error, { status: 400 });
         }
 
+        const popVideo = await RecipePopularConfig
+            .findById(config_id)
+            .select('_id is_deleted')
+            .setOptions({ withDeleted: true })
+
+        if (!popVideo) {
+            const error: ErrorResponse = {
+                code: ErrorCode.NOT_FOUND,
+                message: 'Popular content not found or was deleted'
+            };
+            return NextResponse.json(error, { status: 404 });
+        }
+
+        if (popVideo.is_deleted) {
+            const error: ErrorResponse = {
+                code: ErrorCode.DELETED,
+                message: 'Recipe was deleted',
+            };
+            return NextResponse.json(error, { status: 410 });
+        }
 
         const like_doc = await LikesComments.findOne({ id_comment, id_author }).session(session);
         
@@ -45,10 +68,11 @@ export async function PUT(request: Request) {
 
             if (!saved) {
                 await session.abortTransaction();
-                return NextResponse.json(
-                    { message: 'Failed to soft delete like document' },
-                    { status: 500 }
-                );
+                const error: ErrorResponse = {
+                    code: ErrorCode.SERVER_ERROR,
+                    message: 'Failed to soft delete like document'
+                };
+                return NextResponse.json(error, { status: 500 });
             }
         } else if (!liked && like_doc.is_deleted) {
             like_doc.is_deleted = false;
@@ -57,10 +81,11 @@ export async function PUT(request: Request) {
 
             if (!saved) {
                 await session.abortTransaction();
-                return NextResponse.json(
-                    { message: 'Failed to restore like document' },
-                    { status: 500 }
-                );
+                const error: ErrorResponse = {
+                    code: ErrorCode.SERVER_ERROR,
+                    message: 'Failed to restore like document'
+                };
+                return NextResponse.json(error, { status: 500 });
             }
         }
 
@@ -70,10 +95,11 @@ export async function PUT(request: Request) {
 
         if (commentUpdate.modifiedCount === 0) {
             await session.abortTransaction();
-            return NextResponse.json(
-                { message: 'Failed to update comment like count' },
-                { status: 500 }
-            );
+            const error: ErrorResponse = {
+                code: ErrorCode.SERVER_ERROR,
+                message: 'Failed to update comment like count'
+            };
+            return NextResponse.json(error, { status: 500 });
         }
         
         await session.commitTransaction();
@@ -87,7 +113,11 @@ export async function PUT(request: Request) {
     } catch (err) {
         console.error(err);
         await session.abortTransaction();
-        return NextResponse.json({ success: false }, { status: 500 });
+        const errorRes: ErrorResponse = {
+            code: ErrorCode.SERVER_ERROR,
+            message: 'Internal Server Error'
+        };
+        return NextResponse.json(errorRes, { status: 500 });
     } finally {
         session.endSession();
     }

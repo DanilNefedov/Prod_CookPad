@@ -238,15 +238,10 @@ const createReducerHandlers = <T extends keyof PopularState['operations']>(opera
         state.operations[operationName].loading = true;
         state.operations[operationName].message = undefined;
     },
-    rejected: (state: PopularState, action: PayloadAction<string | { message: string } | undefined>) => {
+    rejected: (state: PopularState, ) => {
         state.operations[operationName].error = true;
         state.operations[operationName].loading = false;
 
-        if (action.payload && typeof action.payload === 'object' && 'message' in action.payload) {
-            state.operations[operationName].message = action.payload.message;
-        } else {
-            state.operations[operationName].message = undefined;
-        }
     }
 });
 

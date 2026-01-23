@@ -106,20 +106,39 @@ export const commVideoFetch = createAsyncThunk<CommentsFetchRes | UiNoticePayloa
     }
 )
 
-export const newCommPopular = createAsyncThunk<NewCommentFetchRes, CommentsData, { rejectValue: string }>(
+export const newCommPopular = createAsyncThunk<NewCommentFetchRes | UiNoticePayload<CommentsOperationKey>, CommentsData, { rejectValue: string }>(
     'commentsPopular/newCommPopular',
     async function (data, { rejectWithValue, dispatch }) {
         try {
-            // const { id, count } = data
-            const urlList = `/api/popular/comments`
-
-            const response = await fetch(urlList, {
+            const response = await fetch(`/api/popular/comments`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),
             });
+
+            const checkComment = await response.json()
+
+            if (checkComment.code === ErrorCode.DELETED) {
+                const notice: UiNoticePayload<CommentsOperationKey> = {
+                    key: 'newCommPopular', 
+                    message: checkComment.message,
+                    config_id:data.config_id
+                };
+
+                return notice
+            }
+
+            if (checkComment.code === ErrorCode.NOT_FOUND) {
+                const notice: UiNoticePayload<CommentsOperationKey> = {
+                    key: 'newCommPopular', 
+                    message: checkComment.message,
+                    config_id:data.config_id
+                };
+
+                return notice
+            }
 
             if (!response.ok) return rejectWithValue('Server Error!');
 
@@ -136,11 +155,11 @@ export const newCommPopular = createAsyncThunk<NewCommentFetchRes, CommentsData,
 
             if (!responseConfig.ok) return rejectWithValue('Server Error!');
 
-            const dataReturn = await response.json()
+            // const dataReturn = await response.json()
 
             dispatch(newCommCalc({config_id:data.config_id}))
             
-            return dataReturn
+            return checkComment
 
         } catch (error) {
             console.log(error)
@@ -150,7 +169,7 @@ export const newCommPopular = createAsyncThunk<NewCommentFetchRes, CommentsData,
 )
 
 
-export const likedComment = createAsyncThunk<LikeCommentFetch, LikeCommentFetch, { rejectValue: string }>(
+export const likedComment = createAsyncThunk<LikeCommentFetch | UiNoticePayload<CommentsOperationKey>, LikeCommentFetch, { rejectValue: string }>(
     'commentsPopular/likedComment',
     async function (data, { rejectWithValue }) {
         try {
@@ -167,9 +186,29 @@ export const likedComment = createAsyncThunk<LikeCommentFetch, LikeCommentFetch,
                 }),
             });
 
-            if (!response.ok) return rejectWithValue('Server Error!');
+            const checkLike = await response.json()
 
-            const dataReturn = await response.json();
+            if (checkLike.code === ErrorCode.DELETED) {
+                const notice: UiNoticePayload<CommentsOperationKey> = {
+                    key: 'likedComment', 
+                    message: checkLike.message,
+                    config_id:data.config_id
+                };
+
+                return notice
+            }
+
+            if (checkLike.code === ErrorCode.NOT_FOUND) {
+                const notice: UiNoticePayload<CommentsOperationKey> = {
+                    key: 'likedComment', 
+                    message: checkLike.message,
+                    config_id:data.config_id
+                };
+
+                return notice
+            }
+
+            if (!response.ok) return rejectWithValue('Server Error!');
 
             if (!data.reply) {
                 const responseConfig = await fetch('/api/popular/comments/like/popular-config', {
@@ -178,7 +217,7 @@ export const likedComment = createAsyncThunk<LikeCommentFetch, LikeCommentFetch,
                     body: JSON.stringify({
                         id_author: data.id_author,
                         config_id: data.config_id,
-                        liked: dataReturn.data.liked,
+                        liked: checkLike.data.liked,
                     }),
                 });
 
@@ -191,7 +230,7 @@ export const likedComment = createAsyncThunk<LikeCommentFetch, LikeCommentFetch,
                 id_comment: data.id_comment,
                 id_author: data.id_author,
                 config_id: data.config_id,
-                liked: dataReturn.data.liked,
+                liked: checkLike.data.liked,
             };
 
         }  catch (error) {
@@ -202,13 +241,12 @@ export const likedComment = createAsyncThunk<LikeCommentFetch, LikeCommentFetch,
 )
 
 
-export const newReplyComm = createAsyncThunk<NewReplyFetch, NewReplyFetch, { rejectValue: string }>(
+export const newReplyComm = createAsyncThunk<NewReplyFetch | UiNoticePayload<CommentsOperationKey>, NewReplyFetch, { rejectValue: string }>(
     'popular/newReplyComm',
     async function (data, { rejectWithValue, dispatch }) {
         try {
-            const urlList = `/api/popular/reply`
 
-            const response = await fetch(urlList, {
+            const response = await fetch(`/api/popular/reply`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -216,11 +254,32 @@ export const newReplyComm = createAsyncThunk<NewReplyFetch, NewReplyFetch, { rej
                 body: JSON.stringify(data),
             });
 
+            const checkReply = await response.json()
+
+            if (checkReply.code === ErrorCode.DELETED) {
+                const notice: UiNoticePayload<CommentsOperationKey> = {
+                    key: 'newReplyComm', 
+                    message: checkReply.message,
+                    config_id:data.config_id
+                };
+
+                return notice
+            }
+
+            if (checkReply.code === ErrorCode.NOT_FOUND) {
+                const notice: UiNoticePayload<CommentsOperationKey> = {
+                    key: 'newReplyComm', 
+                    message: checkReply.message,
+                    config_id:data.config_id
+                };
+
+                return notice
+            }
+
             if (!response.ok) return rejectWithValue('Server Error!');
-            const dataReturn = await response.json()
 
             dispatch(newCommCalc({config_id:data.config_id}))
-            return dataReturn
+            return checkReply
 
         } catch (error) {
             console.log(error)
@@ -229,19 +288,12 @@ export const newReplyComm = createAsyncThunk<NewReplyFetch, NewReplyFetch, { rej
     }
 )
 
-export const getReplies = createAsyncThunk<GetRepliesFetchRes, GetRepliesFetchReq, { rejectValue: string }>(
+export const getReplies = createAsyncThunk<GetRepliesFetchRes | UiNoticePayload<CommentsOperationKey>, GetRepliesFetchReq, { rejectValue: string }>(
     'popular/getReplies',
     async function (data, { rejectWithValue }) {
         try {
-            // const { id, count } = data
-            // const urlList = `/api/popular/reply?id_comment=${data.id_comment}&page=${data.page}&id_author=${data.id_author}`
-            // const responseList = await fetch(urlList);
-            // if (!responseList.ok) return rejectWithValue('Server Error!');
-            // const dataList = await responseList.json()
 
-            const urlList = `/api/popular/reply/all`
-
-            const response = await fetch(urlList, {
+            const response = await fetch(`/api/popular/reply/all`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -249,14 +301,36 @@ export const getReplies = createAsyncThunk<GetRepliesFetchRes, GetRepliesFetchRe
                 body: JSON.stringify(data),
             });
 
+            const checkReply = await response.json()
+
+            if (checkReply.code === ErrorCode.DELETED) {
+                const notice: UiNoticePayload<CommentsOperationKey> = {
+                    key: 'getReplies', 
+                    message: checkReply.message,
+                    config_id:data.config_id
+                };
+
+                return notice
+            }
+
+            if (checkReply.code === ErrorCode.NOT_FOUND) {
+                const notice: UiNoticePayload<CommentsOperationKey> = {
+                    key: 'getReplies', 
+                    message: checkReply.message,
+                    config_id:data.config_id
+                };
+
+                return notice
+            }
+
             if (!response.ok) return rejectWithValue('Server Error!');
 
-            const dataList = await response.json()
+            // const dataList = await response.json()
 
             const returnData= {
-                dataList:dataList.formattedComments,
-                page:dataList.page,
-                totalCommentsCount:dataList.totalCommentsCount,
+                dataList:checkReply.formattedComments,
+                page:checkReply.page,
+                totalCommentsCount:checkReply.totalCommentsCount,
                 id_comment:data.id_comment
             }
             return returnData
@@ -361,145 +435,177 @@ const commentsPopularSlice = createSlice({
 
             .addCase(newCommPopular.pending, newCommPopularHandlers.pending)
             .addCase(newCommPopular.rejected, newCommPopularHandlers.rejected)
-            .addCase(newCommPopular.fulfilled, (state, action: PayloadAction<NewCommentFetchRes, string>) => {
-                state.operations.newCommPopular.error = false
-                state.operations.newCommPopular.loading = false
-
-                const { config_id, responseData } = action.payload;
-                
-                if (!state.comments[config_id]) {
-                    state.comments[config_id] = {
-                        page: 1,
-                        ids: [],
-                        entities: {},
+            .addCase(newCommPopular.fulfilled, (state, action: PayloadAction<NewCommentFetchRes | UiNoticePayload<CommentsOperationKey>, string>) => {
+                if ('key' in action.payload) {
+                    state.operations[action.payload.key] = {
+                        error:true,
+                        loading:false,
+                        message: action.payload.message
                     };
+                } else {
+                    state.operations.newCommPopular.error = false
+                    state.operations.newCommPopular.loading = false
+
+                    const { config_id, responseData } = action.payload;
+                    
+                    if (!state.comments[config_id]) {
+                        state.comments[config_id] = {
+                            page: 1,
+                            ids: [],
+                            entities: {},
+                        };
+                    }
+
+                    commentsAdapter.addOne(state.comments[config_id], responseData);
+
+                    state.comments[config_id].ids = [
+                        responseData.id_comment,
+                        ...state.comments[config_id].ids.filter(id => id !== responseData.id_comment),
+                    ];
                 }
-
-                commentsAdapter.addOne(state.comments[config_id], responseData);
-
-                state.comments[config_id].ids = [
-                    responseData.id_comment,
-                    ...state.comments[config_id].ids.filter(id => id !== responseData.id_comment),
-                ];
 
             })
 
 
             .addCase(likedComment.pending, likedCommentHandlers.pending)
             .addCase(likedComment.rejected, likedCommentHandlers.rejected)
-            .addCase(likedComment.fulfilled, (state, action: PayloadAction<LikeCommentFetch, string>) => {
-                state.operations.likedComment.error = false
-                state.operations.likedComment.loading = false
-
-                const { id_comment, liked, reply, id_branch, config_id } = action.payload;
-
-                if (!reply) {
-
-                    const commentBlock = state.comments[config_id];
-                    if (!commentBlock) return;
-
-                    const existingComment = commentBlock.entities[id_comment];
-                    if (!existingComment) return;
-
-                    commentsAdapter.updateOne(commentBlock, {
-                        id: id_comment,
-                        changes: {
-                            liked,
-                            likes_count: liked
-                                ? existingComment.likes_count + 1
-                                : existingComment.likes_count - 1,
-                        },
-                    });
+            .addCase(likedComment.fulfilled, (state, action: PayloadAction<LikeCommentFetch | UiNoticePayload<CommentsOperationKey>, string>) => {
+                if ('key' in action.payload) {
+                    state.operations[action.payload.key] = {
+                        error:true,
+                        loading:false,
+                        message: action.payload.message
+                    };
                 } else {
-                    const replyBlock = state.replies[id_branch];
-                    if (!replyBlock) return;
-            
-                    const existingReply = replyBlock.entities[id_comment];
-                    if (!existingReply) return;
-            
-                    repliesAdapter.updateOne(replyBlock, {
-                        id: id_comment,
-                        changes: {
-                            liked,
-                            likes_count: liked ? existingReply.likes_count + 1 : existingReply.likes_count - 1,
-                        },
-                    });
+                    state.operations.likedComment.error = false
+                    state.operations.likedComment.loading = false
+
+                    const { id_comment, liked, reply, id_branch, config_id } = action.payload;
+
+                    if (!reply) {
+
+                        const commentBlock = state.comments[config_id];
+                        if (!commentBlock) return;
+
+                        const existingComment = commentBlock.entities[id_comment];
+                        if (!existingComment) return;
+
+                        commentsAdapter.updateOne(commentBlock, {
+                            id: id_comment,
+                            changes: {
+                                liked,
+                                likes_count: liked
+                                    ? existingComment.likes_count + 1
+                                    : existingComment.likes_count - 1,
+                            },
+                        });
+                    } else {
+                        const replyBlock = state.replies[id_branch];
+                        if (!replyBlock) return;
+                
+                        const existingReply = replyBlock.entities[id_comment];
+                        if (!existingReply) return;
+                
+                        repliesAdapter.updateOne(replyBlock, {
+                            id: id_comment,
+                            changes: {
+                                liked,
+                                likes_count: liked ? existingReply.likes_count + 1 : existingReply.likes_count - 1,
+                            },
+                        });
+                    }
                 }
                 
             })
 
             .addCase(newReplyComm.pending, newReplyCommHandlers.pending)
             .addCase(newReplyComm.rejected, newReplyCommHandlers.rejected)
-            .addCase(newReplyComm.fulfilled, (state, action: PayloadAction<NewReplyFetch, string>) => {
-                state.operations.newReplyComm.error = false
-                state.operations.newReplyComm.loading = false
+            .addCase(newReplyComm.fulfilled, (state, action: PayloadAction<NewReplyFetch | UiNoticePayload<CommentsOperationKey>, string>) => {
+                if ('key' in action.payload) {
+                    state.operations[action.payload.key] = {
+                        error:true,
+                        loading:false,
+                        message: action.payload.message
+                    };
+                } else {
+                    state.operations.newReplyComm.error = false
+                    state.operations.newReplyComm.loading = false
 
-                const data = action.payload;
-                const reply = data.data
-                const id_comment = reply.id_branch;
-                const config_id = data.config_id;
-                
-                if (!state.replies[id_comment]) {
-                    state.replies[id_comment] = repliesAdapter.getInitialState({ page: 0 });
-                } else if (typeof state.replies[id_comment].page !== 'number') {
-                    state.replies[id_comment].page = 0;
+                    const data = action.payload;
+                    const reply = data.data
+                    const id_comment = reply.id_branch;
+                    const config_id = data.config_id;
+                    
+                    if (!state.replies[id_comment]) {
+                        state.replies[id_comment] = repliesAdapter.getInitialState({ page: 0 });
+                    } else if (typeof state.replies[id_comment].page !== 'number') {
+                        state.replies[id_comment].page = 0;
+                    }
+
+                    repliesAdapter.addOne(state.replies[id_comment], reply);
+
+
+                    const replyBlock = state.replies[id_comment];
+                    replyBlock.entities[reply.id_comment] = reply;
+
+                    replyBlock.ids = [
+                        reply.id_comment,
+                        ...replyBlock.ids.filter(id => id !== reply.id_comment)
+                    ];
+
+
+
+                    const commentBlock = state.comments[config_id];
+                    if (!commentBlock) return;
+
+                    const parentComment = commentBlock.entities[id_comment];
+                    if (!parentComment) return;
+
+                    commentsAdapter.updateOne(commentBlock, {
+                        id: id_comment,
+                        changes: {
+                            reply_count: parentComment.reply_count + 1,
+                        },
+                    });
                 }
-
-                repliesAdapter.addOne(state.replies[id_comment], reply);
-
-
-                const replyBlock = state.replies[id_comment];
-                replyBlock.entities[reply.id_comment] = reply;
-
-                replyBlock.ids = [
-                    reply.id_comment,
-                    ...replyBlock.ids.filter(id => id !== reply.id_comment)
-                ];
-
-
-
-                const commentBlock = state.comments[config_id];
-                if (!commentBlock) return;
-
-                const parentComment = commentBlock.entities[id_comment];
-                if (!parentComment) return;
-
-                commentsAdapter.updateOne(commentBlock, {
-                    id: id_comment,
-                    changes: {
-                        reply_count: parentComment.reply_count + 1,
-                    },
-                });
 
             })
 
 
             .addCase(getReplies.pending, getRepliesHandlers.pending)
             .addCase(getReplies.rejected, getRepliesHandlers.rejected)
-            .addCase(getReplies.fulfilled, (state, action: PayloadAction<GetRepliesFetchRes, string>) => {
-                state.operations.getReplies.error = false
-                state.operations.getReplies.loading = false
-            
-                const { id_comment, dataList, page, totalCommentsCount } = action.payload;
-            
-                if (!state.replies[id_comment]) {
-                    state.replies[id_comment] = repliesAdapter.addMany(
-                        repliesAdapter.getInitialState({ page }),
-                        dataList
-                    );
-            
-                    if (dataList.length === totalCommentsCount) {
-                        state.replies[id_comment].page = NaN;
-                    }
+            .addCase(getReplies.fulfilled, (state, action: PayloadAction<GetRepliesFetchRes | UiNoticePayload<CommentsOperationKey>, string>) => {
+                if ('key' in action.payload) {
+                    state.operations[action.payload.key] = {
+                        error:true,
+                        loading:false,
+                        message: action.payload.message
+                    };
                 } else {
-                    const replyBlock = state.replies[id_comment];
-            
-                    repliesAdapter.addMany(replyBlock, dataList);
-            
-                    if (replyBlock.ids.length === totalCommentsCount) {
-                        replyBlock.page = NaN;
+                    state.operations.getReplies.error = false
+                    state.operations.getReplies.loading = false
+                
+                    const { id_comment, dataList, page, totalCommentsCount } = action.payload;
+                
+                    if (!state.replies[id_comment]) {
+                        state.replies[id_comment] = repliesAdapter.addMany(
+                            repliesAdapter.getInitialState({ page }),
+                            dataList
+                        );
+                
+                        if (dataList.length === totalCommentsCount) {
+                            state.replies[id_comment].page = NaN;
+                        }
                     } else {
-                        replyBlock.page = page;
+                        const replyBlock = state.replies[id_comment];
+                
+                        repliesAdapter.addMany(replyBlock, dataList);
+                
+                        if (replyBlock.ids.length === totalCommentsCount) {
+                            replyBlock.page = NaN;
+                        } else {
+                            replyBlock.page = page;
+                        }
                     }
                 }
             })
