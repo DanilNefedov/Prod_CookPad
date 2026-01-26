@@ -14,7 +14,8 @@ const IngredientsSchema = new Schema(
         },
         media:{
             type: String,
-            required: true
+            required: false,//check client logic
+            default:''
         },
         units: {
             type: [String],
@@ -30,7 +31,7 @@ const IngredientsSchema = new Schema(
         },
         cat_id: {
             type: Number,
-            required: true
+            required: false
         }
     },
     {

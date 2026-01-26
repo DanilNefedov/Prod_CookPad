@@ -1,7 +1,7 @@
 import connectDB from "@/app/lib/mongoose"
 import Recipe from "@/app/models/recipe"
 import { NextResponse } from "next/server"
-import { deleteCommentsPopular, deleteHistory, deleteLikesComments, 
+import { deleteCloudinaryFolder, deleteCommentsPopular, deleteHistory, deleteLikesComments, 
   deleteLikesPopular, deleteLikesReply, deleteRecipeAndPopular, 
   deleteReplyComments, deleteSavePopular } from "./services";
 import mongoose from "mongoose";
@@ -66,30 +66,32 @@ export async function DELETE(request: Request) {
         { status: 400 }
       );
     }
-    // // await deleteListRecipe({connection_id, recipe_id}, session)
 
 
 
     //for the future, there is the possibility to determine return values 
-    // await deleteHistory({connection_id, recipe_id}, session)
-    // // await deleteRecipeAndPopular({recipe_id}, session)
-    // const resPopular = await deleteRecipeAndPopular({recipe_id}, session)
+    await deleteHistory({connection_id, recipe_id}, session)
+    // await deleteRecipeAndPopular({recipe_id}, session)
+    const resPopular = await deleteRecipeAndPopular({recipe_id}, session)
 
 
 
-    // // For all other collections, you need to add a worker. Most likely BullMQ. 
+    // For all other collections, you need to add a worker. Most likely BullMQ. 
     
-    // if(resPopular.recipe_popular_config && resPopular.recipe_popular_config !== ''){
-    //   await deleteLikesPopular({config_id: resPopular.recipe_popular_config}, session)
-    //   await deleteCommentsPopular({config_id: resPopular.recipe_popular_config}, session)
-    //   await deleteLikesComments({config_id: resPopular.recipe_popular_config}, session)
-    //   await deleteLikesReply({config_id: resPopular.recipe_popular_config}, session)
-    //   await deleteSavePopular({config_id: resPopular.recipe_popular_config}, session)
-    //   await deleteReplyComments({config_id: resPopular.recipe_popular_config}, session)
-    // }
+    if(resPopular.recipe_popular_config && resPopular.recipe_popular_config !== ''){
+      await deleteLikesPopular({config_id: resPopular.recipe_popular_config}, session)
+      await deleteCommentsPopular({config_id: resPopular.recipe_popular_config}, session)
+      await deleteLikesComments({config_id: resPopular.recipe_popular_config}, session)
+      await deleteLikesReply({config_id: resPopular.recipe_popular_config}, session)
+      await deleteSavePopular({config_id: resPopular.recipe_popular_config}, session)
+      await deleteReplyComments({config_id: resPopular.recipe_popular_config}, session)
+    }
 
     await session.commitTransaction();
     session.endSession();
+
+    deleteCloudinaryFolder(connection_id, recipe_id)
+      .catch(err => console.error('Cloudinary delete failed', err));
 
     return NextResponse.json({connection_id, recipe_id, config_id: ''});
 

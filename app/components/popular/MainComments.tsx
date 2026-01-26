@@ -138,6 +138,7 @@ export const MainComments = memo(({ config_id, comments }: Props) => {
                     name_parent: contextComment.author_name,
                     likes_count: 0,
                     text: text.trim(),
+                    config_id
                 }; 
 
                 pingGate(() => {

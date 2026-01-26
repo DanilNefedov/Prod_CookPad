@@ -128,6 +128,7 @@ export type ReplyData = {
     author_avatar:string,
     author_name:string,
     text: string,
+    config_id: string,
     likes_count:number,
     createdAt?:string,
     liked?:boolean

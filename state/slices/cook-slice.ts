@@ -117,6 +117,7 @@ export const deleteRecipe = createAsyncThunk<DeleteCookFetchRes, DeleteCookFetch
     'cook/deleteRecipe',
     async function ({connection_id, recipe_id}, { rejectWithValue, dispatch }) {
         try {
+
             const url = `/api/cook?connection_id=${connection_id}&recipe_id=${recipe_id}`
             const response = await fetch(url, {
                 method: 'DELETE',
@@ -130,7 +131,7 @@ export const deleteRecipe = createAsyncThunk<DeleteCookFetchRes, DeleteCookFetch
             }
             const respDelete = await response.json();
 
-            // dispatch(deleteCookHistory({connection_id, recipe_id}))
+            dispatch(deleteCookHistory({connection_id, recipe_id}))
             dispatch(deleteRecipeData({recipe_id}))
 
             console.log(respDelete)
