@@ -22,6 +22,7 @@ interface RecipeLean {
     recipe_popular_config?: string;
 }
 
+
 interface CloudinaryResource {
     public_id: string;
 }
@@ -35,6 +36,7 @@ export async function deleteHistory({ connection_id, recipe_id }: DeleteRecipePa
         const result = await CookHistory.updateOne(
             { connection_id },
             {
+
                 $pull: {
                     history_links: { recipe_id }
                 }
@@ -49,6 +51,7 @@ export async function deleteHistory({ connection_id, recipe_id }: DeleteRecipePa
         throw new Error("Database deletion failed");
     }
 }
+
 
 
 export async function deleteRecipeAndPopular({ recipe_id }: { recipe_id: string }, session: mongoose.ClientSession):

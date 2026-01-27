@@ -103,6 +103,7 @@ export function ContentCook(props:Props) {
                     </Box>
                     
 
+
                     <DeleteRecipe user_id={user_id} recipe_id={recipe_id}></DeleteRecipe>
                 </Box>
             </Box>

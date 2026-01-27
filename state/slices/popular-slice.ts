@@ -93,6 +93,7 @@ export const popularFetch = createAsyncThunk<PopularFetchRes, PopularFetchReq, {
 
 
 
+
 export const likePopContent = createAsyncThunk<LikePopFetchRes | UiNoticePayload<PopularOperationKey>, LikePopFetchReq, { rejectValue: string }>(
     'popular/likePopContent',
     async function (data, { rejectWithValue }) {

@@ -17,6 +17,7 @@ export type OperationStatus = {
 };
 
 // defaultStatus
+
 export function createOperationStatus(loading = true, error = false, message?: string): OperationStatus {
     // const normalizedMessage: Message | undefined = typeof message === 'string' ? { message } : message;
 

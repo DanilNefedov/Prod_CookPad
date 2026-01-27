@@ -6,6 +6,11 @@ import { deleteCloudinaryFolder, deleteCommentsPopular, deleteHistory, deleteLik
   deleteReplyComments, deleteSavePopular } from "./services";
 import mongoose from "mongoose";
 
+import { deleteCloudinaryFolder, deleteCommentsPopular, deleteHistory, deleteLikesComments, 
+  deleteLikesPopular, deleteLikesReply, deleteRecipeAndPopular, 
+  deleteReplyComments, deleteSavePopular } from "./services";
+import mongoose from "mongoose";
+
 
 
 
@@ -58,6 +63,7 @@ export async function DELETE(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const connection_id = searchParams.get("connection_id");
+
     const recipe_id = searchParams.get("recipe_id");
 
     if (!connection_id || !recipe_id) {
@@ -66,6 +72,7 @@ export async function DELETE(request: Request) {
         { status: 400 }
       );
     }
+
 
 
 
@@ -89,6 +96,7 @@ export async function DELETE(request: Request) {
 
     await session.commitTransaction();
     session.endSession();
+
 
     deleteCloudinaryFolder(connection_id, recipe_id)
       .catch(err => console.error('Cloudinary delete failed', err));

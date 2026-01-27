@@ -22,6 +22,13 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+
+  },
+
+  compiler: {
+    removeConsole: {
+      exclude: ['error', 'warn'],
+    },
   },
 
   // compiler: {

@@ -4,6 +4,7 @@ import { Box, Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
 import { useState } from "react";
 
 
+
 interface Props {
     user_id:string,
     recipe_id:string
@@ -19,11 +20,13 @@ export function DeleteRecipe(props:Props) {
     };
 
     const handleClose = (res:boolean) => {
+
         if(res){
             dispatch(deleteRecipe({connection_id:user_id, recipe_id}))
         }
         setOpen(false);
     };
+
 
 
     return (

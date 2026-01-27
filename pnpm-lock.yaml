@@ -67,8 +67,16 @@ importers:
         version: 8.20.2
       next:
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> dev-page
+>>>>>>> master
         specifier: ^16.0.10
         version: 16.0.10(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       next-auth:
@@ -78,6 +86,13 @@ importers:
         specifier: ^6.16.0
         version: 6.17.5(next@16.0.10(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)
 =======
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
+>>>>>>> dev-page
 >>>>>>> master
         specifier: ^16.0.1
         version: 16.0.8(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -88,7 +103,17 @@ importers:
         specifier: ^6.16.0
         version: 6.17.5(next@16.0.8(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> dev-page
+>>>>>>> master
+=======
+>>>>>>> dev-page
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
       notistack:
@@ -99,11 +124,22 @@ importers:
         version: 2.5.0
       pnpm:
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        specifier: ^10.27.0
+        version: 10.27.0
+=======
+<<<<<<< HEAD
+>>>>>>> master
         specifier: ^10.20.0
         version: 10.25.0
 =======
         specifier: ^10.27.0
         version: 10.27.0
+>>>>>>> master
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
 >>>>>>> master
       react:
         specifier: ^19.2.0
@@ -239,15 +275,31 @@ packages:
     resolution: {integrity: sha512-o1uhUASyo921r2XtHYOHy7gdkGLge8ghBEQHMWmyJFoXlpU58kIrhhN3w26lpQb6dspetweapMn2CSNwQ8I4wg==}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
   '@emnapi/runtime@1.7.1':
     resolution: {integrity: sha512-PVtJr5CmLwYAU9PZDMITZoR5iAOShYREoR45EyyLrbntV50mdePTgUn4AmOw90Ifcj+x2kRjdzr1HP3RrNiHGA==}
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
   '@emnapi/runtime@1.8.1':
     resolution: {integrity: sha512-mehfKSMWjjNol8659Z8KxEMrdSJDDot5SXMq00dM8BN4o+CLNXQ0xH2V7EchNHV4RmbZLmmPdEaXZc5H2FXmDg==}
 =======
   '@emnapi/runtime@1.7.1':
     resolution: {integrity: sha512-PVtJr5CmLwYAU9PZDMITZoR5iAOShYREoR45EyyLrbntV50mdePTgUn4AmOw90Ifcj+x2kRjdzr1HP3RrNiHGA==}
+>>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
 
@@ -923,15 +975,31 @@ packages:
     resolution: {integrity: sha512-bKCGI9onUYyLaAQKvJOTeSv1vt3CYtF4Or+CRlCP/1Yu8NR9W4A2kd4qBs2OYFbT+/38fKg8BIPNt7IcMLKZCA==}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
   '@next/env@16.0.8':
     resolution: {integrity: sha512-xP4WrQZuj9MdmLJy3eWFHepo+R3vznsMSS8Dy3wdA7FKpjCiesQ6DxZvdGziQisj0tEtCgBKJzjcAc4yZOgLEQ==}
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
   '@next/env@16.0.10':
     resolution: {integrity: sha512-8tuaQkyDVgeONQ1MeT9Mkk8pQmZapMKFh5B+OrFUlG3rVmYTXcXlBetBgTurKXGaIZvkoqRT9JL5K3phXcgang==}
 =======
   '@next/env@16.0.8':
     resolution: {integrity: sha512-xP4WrQZuj9MdmLJy3eWFHepo+R3vznsMSS8Dy3wdA7FKpjCiesQ6DxZvdGziQisj0tEtCgBKJzjcAc4yZOgLEQ==}
+>>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
 
@@ -939,95 +1007,159 @@ packages:
     resolution: {integrity: sha512-3Ln/nHq2V+v8uIaxCR6YfYo7ceRgZNXfTd3yW1ukTaFbO+/I8jNakrjYWODvG9BuR2v5kgVtH/C8r0i11quOgw==}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
   '@next/swc-darwin-arm64@16.0.8':
     resolution: {integrity: sha512-yjVMvTQN21ZHOclQnhSFbjBTEizle+1uo4NV6L4rtS9WO3nfjaeJYw+H91G+nEf3Ef43TaEZvY5mPWfB/De7tA==}
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
   '@next/swc-darwin-arm64@16.0.10':
     resolution: {integrity: sha512-4XgdKtdVsaflErz+B5XeG0T5PeXKDdruDf3CRpnhN+8UebNa5N2H58+3GDgpn/9GBurrQ1uWW768FfscwYkJRg==}
 =======
   '@next/swc-darwin-arm64@16.0.8':
     resolution: {integrity: sha512-yjVMvTQN21ZHOclQnhSFbjBTEizle+1uo4NV6L4rtS9WO3nfjaeJYw+H91G+nEf3Ef43TaEZvY5mPWfB/De7tA==}
 >>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
+>>>>>>> dev-page
 >>>>>>> master
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
   '@next/swc-darwin-x64@16.0.8':
     resolution: {integrity: sha512-+zu2N3QQ0ZOb6RyqQKfcu/pn0UPGmg+mUDqpAAEviAcEVEYgDckemOpiMRsBP3IsEKpcoKuNzekDcPczEeEIzA==}
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
   '@next/swc-darwin-x64@16.0.10':
     resolution: {integrity: sha512-spbEObMvRKkQ3CkYVOME+ocPDFo5UqHb8EMTS78/0mQ+O1nqE8toHJVioZo4TvebATxgA8XMTHHrScPrn68OGw==}
 =======
   '@next/swc-darwin-x64@16.0.8':
     resolution: {integrity: sha512-+zu2N3QQ0ZOb6RyqQKfcu/pn0UPGmg+mUDqpAAEviAcEVEYgDckemOpiMRsBP3IsEKpcoKuNzekDcPczEeEIzA==}
 >>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
+>>>>>>> dev-page
 >>>>>>> master
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
   '@next/swc-linux-arm64-gnu@16.0.8':
     resolution: {integrity: sha512-LConttk+BeD0e6RG0jGEP9GfvdaBVMYsLJ5aDDweKiJVVCu6sGvo+Ohz9nQhvj7EQDVVRJMCGhl19DmJwGr6bQ==}
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
   '@next/swc-linux-arm64-gnu@16.0.10':
     resolution: {integrity: sha512-uQtWE3X0iGB8apTIskOMi2w/MKONrPOUCi5yLO+v3O8Mb5c7K4Q5KD1jvTpTF5gJKa3VH/ijKjKUq9O9UhwOYw==}
 =======
   '@next/swc-linux-arm64-gnu@16.0.8':
     resolution: {integrity: sha512-LConttk+BeD0e6RG0jGEP9GfvdaBVMYsLJ5aDDweKiJVVCu6sGvo+Ohz9nQhvj7EQDVVRJMCGhl19DmJwGr6bQ==}
 >>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
+>>>>>>> dev-page
 >>>>>>> master
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
   '@next/swc-linux-arm64-musl@16.0.8':
     resolution: {integrity: sha512-JaXFAlqn8fJV+GhhA9lpg6da/NCN/v9ub98n3HoayoUSPOVdoxEEt86iT58jXqQCs/R3dv5ZnxGkW8aF4obMrQ==}
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
   '@next/swc-linux-arm64-musl@16.0.10':
     resolution: {integrity: sha512-llA+hiDTrYvyWI21Z0L1GiXwjQaanPVQQwru5peOgtooeJ8qx3tlqRV2P7uH2pKQaUfHxI/WVarvI5oYgGxaTw==}
 =======
   '@next/swc-linux-arm64-musl@16.0.8':
     resolution: {integrity: sha512-JaXFAlqn8fJV+GhhA9lpg6da/NCN/v9ub98n3HoayoUSPOVdoxEEt86iT58jXqQCs/R3dv5ZnxGkW8aF4obMrQ==}
 >>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
+>>>>>>> dev-page
 >>>>>>> master
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
   '@next/swc-linux-x64-gnu@16.0.8':
     resolution: {integrity: sha512-O7M9it6HyNhsJp3HNAsJoHk5BUsfj7hRshfptpGcVsPZ1u0KQ/oVy8oxF7tlwxA5tR43VUP0yRmAGm1us514ng==}
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
   '@next/swc-linux-x64-gnu@16.0.10':
     resolution: {integrity: sha512-AK2q5H0+a9nsXbeZ3FZdMtbtu9jxW4R/NgzZ6+lrTm3d6Zb7jYrWcgjcpM1k8uuqlSy4xIyPR2YiuUr+wXsavA==}
 =======
   '@next/swc-linux-x64-gnu@16.0.8':
     resolution: {integrity: sha512-O7M9it6HyNhsJp3HNAsJoHk5BUsfj7hRshfptpGcVsPZ1u0KQ/oVy8oxF7tlwxA5tR43VUP0yRmAGm1us514ng==}
 >>>>>>> dev-page
+<<<<<<< HEAD
 >>>>>>> master
-    engines: {node: '>= 10'}
-    cpu: [x64]
-    os: [linux]
-
-<<<<<<< HEAD
-  '@next/swc-linux-x64-musl@16.0.8':
-    resolution: {integrity: sha512-8+KClEC/GLI2dLYcrWwHu5JyC5cZYCFnccVIvmxpo6K+XQt4qzqM5L4coofNDZYkct/VCCyJWGbZZDsg6w6LFA==}
 =======
 <<<<<<< HEAD
-  '@next/swc-linux-x64-musl@16.0.10':
-    resolution: {integrity: sha512-1TDG9PDKivNw5550S111gsO4RGennLVl9cipPhtkXIFVwo31YZ73nEbLjNC8qG3SgTz/QZyYyaFYMeY4BKZR/g==}
 =======
-  '@next/swc-linux-x64-musl@16.0.8':
-    resolution: {integrity: sha512-8+KClEC/GLI2dLYcrWwHu5JyC5cZYCFnccVIvmxpo6K+XQt4qzqM5L4coofNDZYkct/VCCyJWGbZZDsg6w6LFA==}
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
     engines: {node: '>= 10'}
@@ -1035,15 +1167,63 @@ packages:
     os: [linux]
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
+  '@next/swc-linux-x64-musl@16.0.8':
+    resolution: {integrity: sha512-8+KClEC/GLI2dLYcrWwHu5JyC5cZYCFnccVIvmxpo6K+XQt4qzqM5L4coofNDZYkct/VCCyJWGbZZDsg6w6LFA==}
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
+  '@next/swc-linux-x64-musl@16.0.10':
+    resolution: {integrity: sha512-1TDG9PDKivNw5550S111gsO4RGennLVl9cipPhtkXIFVwo31YZ73nEbLjNC8qG3SgTz/QZyYyaFYMeY4BKZR/g==}
+=======
+  '@next/swc-linux-x64-musl@16.0.8':
+    resolution: {integrity: sha512-8+KClEC/GLI2dLYcrWwHu5JyC5cZYCFnccVIvmxpo6K+XQt4qzqM5L4coofNDZYkct/VCCyJWGbZZDsg6w6LFA==}
+>>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
+>>>>>>> dev-page
+>>>>>>> master
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
   '@next/swc-win32-arm64-msvc@16.0.8':
     resolution: {integrity: sha512-rpQ/PgTEgH68SiXmhu/cJ2hk9aZ6YgFvspzQWe2I9HufY6g7V02DXRr/xrVqOaKm2lenBFPNQ+KAaeveywqV+A==}
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
   '@next/swc-win32-arm64-msvc@16.0.10':
     resolution: {integrity: sha512-aEZIS4Hh32xdJQbHz121pyuVZniSNoqDVx1yIr2hy+ZwJGipeqnMZBJHyMxv2tiuAXGx6/xpTcQJ6btIiBjgmg==}
 =======
   '@next/swc-win32-arm64-msvc@16.0.8':
     resolution: {integrity: sha512-rpQ/PgTEgH68SiXmhu/cJ2hk9aZ6YgFvspzQWe2I9HufY6g7V02DXRr/xrVqOaKm2lenBFPNQ+KAaeveywqV+A==}
+>>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
     engines: {node: '>= 10'}
@@ -1051,15 +1231,31 @@ packages:
     os: [win32]
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
   '@next/swc-win32-x64-msvc@16.0.8':
     resolution: {integrity: sha512-jWpWjWcMQu2iZz4pEK2IktcfR+OA9+cCG8zenyLpcW8rN4rzjfOzH4yj/b1FiEAZHKS+5Vq8+bZyHi+2yqHbFA==}
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
   '@next/swc-win32-x64-msvc@16.0.10':
     resolution: {integrity: sha512-E+njfCoFLb01RAFEnGZn6ERoOqhK1Gl3Lfz1Kjnj0Ulfu7oJbuMyvBKNj/bw8XZnenHDASlygTjZICQW+rYW1Q==}
 =======
   '@next/swc-win32-x64-msvc@16.0.8':
     resolution: {integrity: sha512-jWpWjWcMQu2iZz4pEK2IktcfR+OA9+cCG8zenyLpcW8rN4rzjfOzH4yj/b1FiEAZHKS+5Vq8+bZyHi+2yqHbFA==}
+>>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
     engines: {node: '>= 10'}
@@ -1577,15 +1773,31 @@ packages:
     resolution: {integrity: sha512-dU+Tx2fsypxTgtLoE36npi3UqcjSSMNYfkqgmoEhtZrraP5VWq0K7FkWVTYa8eMPtnU/G2txVsfdCJTn9uzpuQ==}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
   caniuse-lite@1.0.30001760:
     resolution: {integrity: sha512-7AAMPcueWELt1p3mi13HR/LHH0TJLT11cnwDJEs3xA4+CK/PLKeO9Kl1oru24htkyUKtkGCvAx4ohB0Ttry8Dw==}
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
   caniuse-lite@1.0.30001762:
     resolution: {integrity: sha512-PxZwGNvH7Ak8WX5iXzoK1KPZttBXNPuaOvI2ZYU7NrlM+d9Ov+TUvlLOBNGzVXAntMSMMlJPd+jY6ovrVjSmUw==}
 =======
   caniuse-lite@1.0.30001760:
     resolution: {integrity: sha512-7AAMPcueWELt1p3mi13HR/LHH0TJLT11cnwDJEs3xA4+CK/PLKeO9Kl1oru24htkyUKtkGCvAx4ohB0Ttry8Dw==}
+>>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
 
@@ -2577,15 +2789,31 @@ packages:
       react: ^17 || ^18 || >=19.0.0-beta || ^19
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
   next@16.0.8:
     resolution: {integrity: sha512-LmcZzG04JuzNXi48s5P+TnJBsTGPJunViNKV/iE4uM6kstjTQsQhvsAv+xF6MJxU2Pr26tl15eVbp0jQnsv6/g==}
 =======
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
   next@16.0.10:
     resolution: {integrity: sha512-RtWh5PUgI+vxlV3HdR+IfWA1UUHu0+Ram/JBO4vWB54cVPentCD0e+lxyAYEsDTqGGMg7qpjhKh6dc6aW7W/sA==}
 =======
   next@16.0.8:
     resolution: {integrity: sha512-LmcZzG04JuzNXi48s5P+TnJBsTGPJunViNKV/iE4uM6kstjTQsQhvsAv+xF6MJxU2Pr26tl15eVbp0jQnsv6/g==}
+>>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
     engines: {node: '>=20.9.0'}
@@ -2727,11 +2955,22 @@ packages:
     engines: {node: '>=12'}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  pnpm@10.27.0:
+    resolution: {integrity: sha512-ctaZ2haxF5wUup5k3HHJpAmIy9xlwmTLDkidt96RfyDc9NZNhyNiXylpulLUt+KhFwaC2awqXcrqq3MrfhbwSg==}
+=======
+<<<<<<< HEAD
+>>>>>>> master
   pnpm@10.25.0:
     resolution: {integrity: sha512-XoJjkCevN8+DIGG8xtY5whljRIjg8rrr54UCink957Ul/80/f/V09emGBlTgmP6FK6isXdXO/hdn0joCCpL1AQ==}
 =======
   pnpm@10.27.0:
     resolution: {integrity: sha512-ctaZ2haxF5wUup5k3HHJpAmIy9xlwmTLDkidt96RfyDc9NZNhyNiXylpulLUt+KhFwaC2awqXcrqq3MrfhbwSg==}
+>>>>>>> master
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
 >>>>>>> master
     engines: {node: '>=18.12'}
     hasBin: true
@@ -3378,12 +3617,28 @@ snapshots:
     optional: true
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   '@emnapi/runtime@1.7.1':
 =======
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+  '@emnapi/runtime@1.7.1':
+=======
+<<<<<<< HEAD
+>>>>>>> dev-page
+>>>>>>> master
   '@emnapi/runtime@1.8.1':
 =======
   '@emnapi/runtime@1.7.1':
+>>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
     dependencies:
@@ -4058,12 +4313,28 @@ snapshots:
   '@img/sharp-wasm32@0.34.5':
     dependencies:
 <<<<<<< HEAD
+<<<<<<< HEAD
       '@emnapi/runtime': 1.7.1
 =======
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+      '@emnapi/runtime': 1.7.1
+=======
+<<<<<<< HEAD
+>>>>>>> dev-page
+>>>>>>> master
       '@emnapi/runtime': 1.8.1
 =======
       '@emnapi/runtime': 1.7.1
+>>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
     optional: true
@@ -4109,14 +4380,29 @@ snapshots:
       '@types/react': 19.0.0
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> dev-page
+>>>>>>> master
   '@mui/material-nextjs@7.3.6(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.0.0)(react@19.2.1))(@types/react@19.0.0)(next@16.0.10(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)':
     dependencies:
       '@babel/runtime': 7.28.4
       '@emotion/react': 11.14.0(@types/react@19.0.0)(react@19.2.1)
       next: 16.0.10(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
 =======
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
+>>>>>>> dev-page
 >>>>>>> master
   '@mui/material-nextjs@7.3.6(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.0.0)(react@19.2.1))(@types/react@19.0.0)(next@16.0.8(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)':
     dependencies:
@@ -4124,7 +4410,17 @@ snapshots:
       '@emotion/react': 11.14.0(@types/react@19.0.0)(react@19.2.1)
       next: 16.0.8(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> dev-page
+>>>>>>> master
+=======
+>>>>>>> dev-page
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
       react: 19.2.1
@@ -4224,12 +4520,28 @@ snapshots:
     dependencies:
       '@emnapi/core': 1.7.1
 <<<<<<< HEAD
+<<<<<<< HEAD
       '@emnapi/runtime': 1.7.1
 =======
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+      '@emnapi/runtime': 1.7.1
+=======
+<<<<<<< HEAD
+>>>>>>> dev-page
+>>>>>>> master
       '@emnapi/runtime': 1.8.1
 =======
       '@emnapi/runtime': 1.7.1
+>>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
       '@tybys/wasm-util': 0.10.1
@@ -4243,12 +4555,28 @@ snapshots:
       - utf-8-validate
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   '@next/env@16.0.8': {}
 =======
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+  '@next/env@16.0.8': {}
+=======
+<<<<<<< HEAD
+>>>>>>> dev-page
+>>>>>>> master
   '@next/env@16.0.10': {}
 =======
   '@next/env@16.0.8': {}
+>>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
 
@@ -4257,8 +4585,16 @@ snapshots:
       fast-glob: 3.3.1
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> dev-page
+>>>>>>> master
   '@next/swc-darwin-arm64@16.0.10':
     optional: true
 
@@ -4282,6 +4618,13 @@ snapshots:
 
   '@next/swc-win32-x64-msvc@16.0.10':
 =======
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
+>>>>>>> dev-page
 >>>>>>> master
   '@next/swc-darwin-arm64@16.0.8':
     optional: true
@@ -4306,7 +4649,17 @@ snapshots:
 
   '@next/swc-win32-x64-msvc@16.0.8':
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> dev-page
+>>>>>>> master
+=======
+>>>>>>> dev-page
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
     optional: true
@@ -4844,12 +5197,28 @@ snapshots:
   camelize@1.0.1: {}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   caniuse-lite@1.0.30001760: {}
 =======
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+  caniuse-lite@1.0.30001760: {}
+=======
+<<<<<<< HEAD
+>>>>>>> dev-page
+>>>>>>> master
   caniuse-lite@1.0.30001762: {}
 =======
   caniuse-lite@1.0.30001760: {}
+>>>>>>> dev-page
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
 
@@ -6027,8 +6396,16 @@ snapshots:
   natural-compare@1.4.0: {}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> dev-page
+>>>>>>> master
   next-auth@5.0.0-beta.30(next@16.0.10(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1):
     dependencies:
       '@auth/core': 0.41.0
@@ -6037,6 +6414,13 @@ snapshots:
 
   next-cloudinary@6.17.5(next@16.0.10(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1):
 =======
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
+>>>>>>> dev-page
 >>>>>>> master
   next-auth@5.0.0-beta.30(next@16.0.8(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1):
     dependencies:
@@ -6046,7 +6430,17 @@ snapshots:
 
   next-cloudinary@6.17.5(next@16.0.8(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1):
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> dev-page
+>>>>>>> master
+=======
+>>>>>>> dev-page
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
     dependencies:
@@ -6054,8 +6448,16 @@ snapshots:
       '@cloudinary-util/url-loader': 5.10.4
       '@cloudinary-util/util': 4.0.0
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> dev-page
+>>>>>>> master
       next: 16.0.10(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react: 19.2.1
 
@@ -6065,6 +6467,13 @@ snapshots:
       '@swc/helpers': 0.5.15
       caniuse-lite: 1.0.30001762
 =======
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
+>>>>>>> dev-page
 >>>>>>> master
       next: 16.0.8(@opentelemetry/api@1.9.0)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react: 19.2.1
@@ -6075,7 +6484,17 @@ snapshots:
       '@swc/helpers': 0.5.15
       caniuse-lite: 1.0.30001760
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> dev-page
+>>>>>>> master
+=======
+>>>>>>> dev-page
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
       postcss: 8.4.31
@@ -6084,8 +6503,16 @@ snapshots:
       styled-jsx: 5.1.6(react@19.2.1)
     optionalDependencies:
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+=======
+<<<<<<< HEAD
+>>>>>>> dev-page
+>>>>>>> master
       '@next/swc-darwin-arm64': 16.0.10
       '@next/swc-darwin-x64': 16.0.10
       '@next/swc-linux-arm64-gnu': 16.0.10
@@ -6095,6 +6522,13 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 16.0.10
       '@next/swc-win32-x64-msvc': 16.0.10
 =======
+<<<<<<< HEAD
+>>>>>>> master
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> master
+>>>>>>> dev-page
 >>>>>>> master
       '@next/swc-darwin-arm64': 16.0.8
       '@next/swc-darwin-x64': 16.0.8
@@ -6105,7 +6539,17 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 16.0.8
       '@next/swc-win32-x64-msvc': 16.0.8
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+>>>>>>> dev-page
+>>>>>>> master
+=======
+>>>>>>> dev-page
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
+>>>>>>> master
 >>>>>>> dev-page
 >>>>>>> master
       '@opentelemetry/api': 1.9.0
@@ -6236,9 +6680,19 @@ snapshots:
   picomatch@4.0.3: {}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  pnpm@10.27.0: {}
+=======
+<<<<<<< HEAD
+>>>>>>> master
   pnpm@10.25.0: {}
 =======
   pnpm@10.27.0: {}
+>>>>>>> master
+<<<<<<< HEAD
+=======
+>>>>>>> dev-page
 >>>>>>> master
 
   possible-typed-array-names@1.1.0: {}
