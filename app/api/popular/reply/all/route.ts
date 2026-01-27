@@ -5,6 +5,8 @@ import LikesReply from '@/app/models/likes-reply';
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import updateLocale from 'dayjs/plugin/updateLocale'
+import { ErrorCode, ErrorResponse } from '@/app/types';
+import RecipePopularConfig from '@/app/models/popular-config';
 
 
 
@@ -19,20 +21,41 @@ import updateLocale from 'dayjs/plugin/updateLocale'
 export async function POST(request: Request) {
     try {
 
-        const { id_comment, page, id_author, newReply } = await request.json();
+        const { id_comment, page, id_author, newReply, config_id } = await request.json();
 
-        if (!id_comment || !id_author) {
-            return NextResponse.json(
-                { message: 'Invalid request data' },
-                { status: 400 }
-            );
+        if (!id_comment || !id_author || !config_id) {
+            const error: ErrorResponse = {
+                code: ErrorCode.INVALID_INPUT,
+                message: 'Invalid request data'
+            };
+            return NextResponse.json(error, { status: 400 });
         }
 
         const pageSize = 4;
         const skip = (page - 1) * pageSize;
 
-
         await connectDB();
+
+        const popVideo = await RecipePopularConfig
+            .findById(config_id)
+            .select('_id is_deleted')
+            .setOptions({ withDeleted: true })
+
+        if (!popVideo) {
+            const error: ErrorResponse = {
+                code: ErrorCode.NOT_FOUND,
+                message: 'Popular content not found or was deleted'
+            };
+            return NextResponse.json(error, { status: 404 });
+        }
+
+        if (popVideo.is_deleted) {
+            const error: ErrorResponse = {
+                code: ErrorCode.DELETED,
+                message: 'Recipe was deleted',
+            };
+            return NextResponse.json(error, { status: 410 });
+        }
 
         const comments = await ReplyComment.find({ id_branch: id_comment, id_comment: { $nin: newReply }  })
         .sort({ createdAt: 1 }) 
@@ -41,19 +64,21 @@ export async function POST(request: Request) {
         .lean();
 
         if (!Array.isArray(comments)) {
-            return NextResponse.json(
-                { message: 'Failed to fetch comments' },
-                { status: 500 }
-            );
+            const error: ErrorResponse = {
+                code: ErrorCode.SERVER_ERROR,
+                message: 'Failed to fetch comments'
+            };
+            return NextResponse.json(error, { status: 500 });
         }
 
         const totalCommentsCount = await ReplyComment.countDocuments({ id_branch: id_comment });
 
         if (typeof totalCommentsCount !== 'number') {
-            return NextResponse.json(
-                { message: 'Failed to count comments' },
-                { status: 500 }
-            );
+            const error: ErrorResponse = {
+                code: ErrorCode.SERVER_ERROR,
+                message: 'Failed to count comments'
+            };
+            return NextResponse.json(error, { status: 500 });
         }
 
 
@@ -123,9 +148,10 @@ export async function POST(request: Request) {
         return NextResponse.json({formattedComments, page, totalCommentsCount});
     } catch (error) {
         console.error(error);
-        return NextResponse.json(
-            { message: 'Internal Server Error' },
-            { status: 500 }
-        );
+        const errorRes: ErrorResponse = {
+            code: ErrorCode.SERVER_ERROR,
+            message: 'Internal Server Error'
+        };
+        return NextResponse.json(errorRes, { status: 500 });
     }
 }

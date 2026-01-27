@@ -1,8 +1,9 @@
 import connectDB from "@/app/lib/mongoose"
 import Recipe from "@/app/models/recipe"
 import { NextResponse } from "next/server"
-import { deleteCommentsPopular, deleteHistory, deleteLikesComments, 
-  deleteLikesPopular, deleteLikesReply, deleteListRecipe, deleteRecipeAndPopular, 
+
+import { deleteCloudinaryFolder, deleteCommentsPopular, deleteHistory, deleteLikesComments, 
+  deleteLikesPopular, deleteLikesReply, deleteRecipeAndPopular, 
   deleteReplyComments, deleteSavePopular } from "./services";
 import mongoose from "mongoose";
 
@@ -58,7 +59,8 @@ export async function DELETE(request: Request) {
 
     const { searchParams } = new URL(request.url);
     const connection_id = searchParams.get("connection_id");
-    const recipe_id = searchParams.get("recipe");
+
+    const recipe_id = searchParams.get("recipe_id");
 
     if (!connection_id || !recipe_id) {
       return NextResponse.json(
@@ -67,9 +69,11 @@ export async function DELETE(request: Request) {
       );
     }
 
+
+
+
     //for the future, there is the possibility to determine return values 
     await deleteHistory({connection_id, recipe_id}, session)
-    await deleteListRecipe({connection_id, recipe_id}, session)
     // await deleteRecipeAndPopular({recipe_id}, session)
     const resPopular = await deleteRecipeAndPopular({recipe_id}, session)
 
@@ -89,7 +93,11 @@ export async function DELETE(request: Request) {
     await session.commitTransaction();
     session.endSession();
 
-    return new NextResponse(null, { status: 204 });
+
+    deleteCloudinaryFolder(connection_id, recipe_id)
+      .catch(err => console.error('Cloudinary delete failed', err));
+
+    return NextResponse.json({connection_id, recipe_id, config_id: ''});
 
   } catch (error) {
     await session.abortTransaction();

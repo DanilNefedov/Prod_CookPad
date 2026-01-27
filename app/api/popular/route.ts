@@ -254,6 +254,7 @@ export async function POST(request: Request) {
 
         // --- get random 200 docs (fast sampling) ---
         const list = await RecipePopularConfig.aggregate([
+            { $match: { is_deleted: false } },
             ...matchStage,
             { $sample: { size: 200 } }
         ]);
@@ -271,7 +272,7 @@ export async function POST(request: Request) {
         if (filtered.length === 0) {
             return NextResponse.json(null);
         }
-        
+
         return NextResponse.json(filtered);
     } catch (error) {
         console.error(error);
@@ -308,11 +309,17 @@ export async function PATCH(request: Request) {
         await connectDB();
 
         const updatedPopular = await RecipePopularConfig.findOneAndUpdate(
-            { _id: config_id },
+            { _id: config_id, is_deleted: false },
             { $inc: { views: 1 } },
             { new: true }
         );
 
+        if (!updatedPopular) {
+            return NextResponse.json(
+                { message: 'Ignored' },
+                { status: 200 }
+            );
+        }
         if (!updatedPopular) {
             return NextResponse.json(
                 { message: 'Recipe not found' },

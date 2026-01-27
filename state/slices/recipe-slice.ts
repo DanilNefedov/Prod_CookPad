@@ -150,6 +150,12 @@ const recipeSlice = createSlice({
             if(thisRecipe){
                 thisRecipe.name = action.payload.name
             }
+        },
+
+        deleteRecipeData(state, action:PayloadAction<{recipe_id:string}>){
+            state.recipes = state.recipes.filter(
+                recipe => recipe.recipe_id !== action.payload.recipe_id
+            );
         }
     },
     extraReducers: (builder) => {
@@ -221,6 +227,6 @@ const recipeSlice = createSlice({
            
     }
 })
-export const { resetStateRecipes, closeAlertRecipe, changeNameRecipe } = recipeSlice.actions;
+export const { resetStateRecipes, closeAlertRecipe, changeNameRecipe, deleteRecipeData } = recipeSlice.actions;
 
 export default recipeSlice.reducer

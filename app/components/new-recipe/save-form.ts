@@ -114,7 +114,6 @@ export async function saveForm(
                 ingredient.units.amount !== 0 &&
                 ingredient.units.choice.trim() !== ''
         );
-                
         const ingredientsCopy = ingredientsWithValues.map(ingredient =>
             _.omit(ingredient, ['new_ingredient'])
         );

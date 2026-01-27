@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import { ChangeDescription, ChangeHours, ChangeInfoFetchReq, ChangeInfoFetchRes, ChangeInstruction, 
-    ChangeMinutes, ChangeName, ChangeTypeSorting, CookFetchReq, CookFetchRes, CookRootState, DeleteCookFetch, } from "@/app/(main)/cook/types";
+    ChangeMinutes, ChangeName, ChangeTypeSorting, CookFetchReq, CookFetchRes, CookRootState, DeleteCookFetch,
+    DeleteCookFetchRes, } from "@/app/(main)/cook/types";
 import { FavoriteRecipeFetch } from "@/app/(main)/types";
 import { RootState } from "../store";
-import { changeHistory } from "./cook-history";
-import { changeNameRecipe } from "./recipe-slice";
+import { changeHistory, deleteCookHistory } from "./cook-history";
+import { changeNameRecipe, deleteRecipeData } from "./recipe-slice";
 
 
 
@@ -33,6 +34,7 @@ const initialState: CookState = {
         instruction:'',
         sorting:[]
     },
+    redirect_to:'',
     operations:createOperations<CookOperationKey>(
         ['fetchCook', 'deleteRecipe', 'changeNewInfo'],
         (key) => {
@@ -111,11 +113,12 @@ export const changeNewInfo = createAsyncThunk<ChangeInfoFetchRes, ChangeInfoFetc
 
 
 
-export const deleteRecipe = createAsyncThunk<DeleteCookFetch, DeleteCookFetch, { rejectValue: string }>(
+export const deleteRecipe = createAsyncThunk<DeleteCookFetchRes, DeleteCookFetch, { rejectValue: string }>(
     'cook/deleteRecipe',
-    async function (data, { rejectWithValue }) {
+    async function ({connection_id, recipe_id}, { rejectWithValue, dispatch }) {
         try {
-            const url = `/api/cook?connection_id=${data.connection_id}/${data.recipe_id}`
+
+            const url = `/api/cook?connection_id=${connection_id}&recipe_id=${recipe_id}`
             const response = await fetch(url, {
                 method: 'DELETE',
                 headers: {
@@ -126,9 +129,14 @@ export const deleteRecipe = createAsyncThunk<DeleteCookFetch, DeleteCookFetch, {
             if (!response.ok) {
                 return rejectWithValue('Server Error!');
             }
-            // const cookData = await response.json();
+            const respDelete = await response.json();
 
-            return data
+            dispatch(deleteCookHistory({connection_id, recipe_id}))
+            dispatch(deleteRecipeData({recipe_id}))
+
+            console.log(respDelete)
+
+            return respDelete
 
         } catch (error) {
             console.error(error)
@@ -161,14 +169,6 @@ const cookSlice = createSlice({
     initialState,
     
     reducers: {
-        // updateStatus(state, action: PayloadAction<string, string>) {
-        //     state.name_status = action.payload
-        // },
-        
-        deleteCookRecipe(state, action: PayloadAction<string, string>){
-
-        },
-
         changeName(state, action: PayloadAction<ChangeName, string>){
 
             const recipe = state.recipes[action.payload.recipe_id];
@@ -242,7 +242,10 @@ const cookSlice = createSlice({
                 state.operations[key].error = false
                 state.operations[key].loading = false
             }
-        }
+        },
+        setRedirect(state, action: PayloadAction<string>) {
+            state.redirect_to = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -294,21 +297,21 @@ const cookSlice = createSlice({
 
             .addCase(deleteRecipe.pending, deleteRecipeHandlers.pending)
             .addCase(deleteRecipe.rejected, deleteRecipeHandlers.rejected)
-            .addCase(deleteRecipe.fulfilled, (state, action: PayloadAction<DeleteCookFetch, string>) => {
+            .addCase(deleteRecipe.fulfilled, (state, action: PayloadAction<DeleteCookFetchRes, string>) => {
                 state.operations.deleteRecipe.error = false;
                 state.operations.deleteRecipe.loading = false;
+                const { recipe_id } = action.payload;
 
-                const recipeIdToRemove = action.payload.recipe_id;
+                const { [recipe_id]: _, ...rest } = state.recipes;
 
-                state.recipes = Object.fromEntries(
-                    Object.entries(state.recipes).filter(([key]) => key !== recipeIdToRemove)
-                );
+                state.recipes = rest;
             })
 
     }
 })
 
-export const { setFavoriteCook, closeAlertCook, changeName, changeType, changeDescription, changeInstruction,changeHours, changeMinutes } = cookSlice.actions
+export const { setFavoriteCook, closeAlertCook, changeName, changeType, 
+    changeDescription, changeInstruction, changeHours, changeMinutes,setRedirect } = cookSlice.actions
 
 
 export default cookSlice.reducer

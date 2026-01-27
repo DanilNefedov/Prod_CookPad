@@ -3,6 +3,7 @@ import LikesPopular from "@/app/models/likes-popular";
 import RecipePopularConfig from "@/app/models/popular-config";
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
+import { ErrorCode, ErrorResponse } from "@/app/types";
 
 
 
@@ -30,15 +31,48 @@ export async function PUT(request: Request) {
 
         if (!config_id || !user_id || typeof liked !== 'boolean') {
             await session.abortTransaction();
-            return NextResponse.json({ message: 'Invalid request data' }, { status: 400 });
+            const error: ErrorResponse = {
+                code: ErrorCode.INVALID_INPUT,
+                message: 'Invalid request data'
+            };
+            return NextResponse.json(error, { status: 400 });
         }
+        
+        const popVideo = await RecipePopularConfig
+            .findById(config_id)
+            .select('_id is_deleted')
+            .setOptions({ withDeleted: true })
+            .session(session);
+
+        if (!popVideo) {
+            await session.abortTransaction();
+            const error: ErrorResponse = {
+                code: ErrorCode.NOT_FOUND,
+                message: 'Popular content not found or was deleted'
+            };
+            return NextResponse.json(error, { status: 404 });
+        }
+
+        if (popVideo.is_deleted) {
+            await session.abortTransaction();
+            const error: ErrorResponse = {
+                code: ErrorCode.DELETED,
+                message: 'Recipe was deleted',
+            };
+            return NextResponse.json(error, { status: 410 });
+        }
+
 
         const update = { $inc: { likes: liked ? -1 : 1 } };
         const updateResult = await RecipePopularConfig.updateOne({ _id: config_id }, update, { session });
 
         if (updateResult.modifiedCount === 0) {
             await session.abortTransaction();
-            return NextResponse.json({ message: 'Failed to update likes' }, { status: 500 });
+            const error: ErrorResponse = {
+                code: ErrorCode.SERVER_ERROR,
+                message: 'Failed to update likes',
+            };
+            return NextResponse.json(error, { status: 500 });
         }
 
         const like_doc = await LikesPopular.findOne({ config_id, user_id }).session(session);
@@ -48,10 +82,12 @@ export async function PUT(request: Request) {
 
             if (!newLike) {
                 await session.abortTransaction();
-                return NextResponse.json(
-                    { message: 'Failed to create like document' },
-                    { status: 500 }
-                );
+
+                const error: ErrorResponse = {
+                    code: ErrorCode.SERVER_ERROR,
+                    message: 'Failed to create like document',
+                };
+                return NextResponse.json(error, { status: 500 });
             }
 
         } else if (liked && !like_doc.is_deleted) {
@@ -62,10 +98,12 @@ export async function PUT(request: Request) {
 
             if (!saved) {
                 await session.abortTransaction();
-                return NextResponse.json(
-                    { message: 'Failed to soft delete like document' },
-                    { status: 500 }
-                );
+
+                const error: ErrorResponse = {
+                    code: ErrorCode.SERVER_ERROR,
+                    message: 'Failed to soft delete like document',
+                };
+                return NextResponse.json(error, { status: 500 });
             }
         } else if (!liked && like_doc.is_deleted) {
             
@@ -75,10 +113,12 @@ export async function PUT(request: Request) {
 
             if (!saved) {
                 await session.abortTransaction();
-                return NextResponse.json(
-                    { message: 'Failed to restore like document' },
-                    { status: 500 }
-                );
+
+                const error: ErrorResponse = {
+                    code: ErrorCode.SERVER_ERROR,
+                    message: 'Failed to restore like document',
+                };
+                return NextResponse.json(error, { status: 500 });
             }
         }
 
@@ -88,7 +128,11 @@ export async function PUT(request: Request) {
     } catch (error) {
         console.error(error);
         await session.abortTransaction();
-        return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+        const errorRes: ErrorResponse = {
+            code: ErrorCode.SERVER_ERROR,
+            message: 'Internal Server Error',
+        };
+        return NextResponse.json(errorRes, { status: 500 });
     } finally {
         session.endSession();
     }

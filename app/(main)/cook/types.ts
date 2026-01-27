@@ -13,6 +13,7 @@ export interface CookRootState {
     connection_id:string
     recipes:Record<string, CookRecipe>;
     modified:Modified
+    redirect_to:string
     // recipes:CookRecipe[]
 }
 
@@ -88,6 +89,13 @@ export interface DeleteCookFetch{
     connection_id: string, 
     recipe_id: string
 }
+
+export interface DeleteCookFetchRes{
+    connection_id: string, 
+    recipe_id: string,
+    config_id:string
+}
+
 
 export interface ChangeName {
     recipe_id:string

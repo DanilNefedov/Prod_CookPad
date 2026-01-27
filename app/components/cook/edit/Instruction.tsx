@@ -32,7 +32,8 @@ const Instruction = memo(({recipe_id, isEditing}:Props) => {
     }
 
     return(
-        <Typography  variant="body1" sx={[descriptionInstruction, instruction]}>
+
+        <Typography component={'div'} sx={[descriptionInstruction, instruction]}>
 
             {
                 isEditing ? 

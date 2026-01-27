@@ -8,6 +8,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import _ from 'lodash';
 import updateLocale from 'dayjs/plugin/updateLocale'
+import { ErrorCode, ErrorResponse } from '@/app/types';
 
 
 
@@ -23,31 +24,42 @@ export async function POST(request: Request) {
 
         if(!data || !config_id){
             await session.abortTransaction();
-            return NextResponse.json(
-                { message: 'Invalid request data' },
-                { status: 400 }
-            );
+            const error: ErrorResponse = {
+                code: ErrorCode.INVALID_INPUT,
+                message: 'Invalid request data'
+            };
+            return NextResponse.json(error, { status: 400 });
         }
+
+        const popVideo = await RecipePopularConfig
+            .findById(config_id)
+            .select('_id is_deleted')
+            .setOptions({ withDeleted: true })
+
+        if (!popVideo) {
+            const error: ErrorResponse = {
+                code: ErrorCode.NOT_FOUND,
+                message: 'Popular content not found or was deleted'
+            };
+            return NextResponse.json(error, { status: 404 });
+        }
+
+        if (popVideo.is_deleted) {
+            const error: ErrorResponse = {
+                code: ErrorCode.DELETED,
+                message: 'Recipe was deleted',
+            };
+            return NextResponse.json(error, { status: 410 });
+        }
+
         const comment = new ReplyComment(data);
         await comment.save({ session }); 
 
-       
-
-        const updatedPopular = await RecipePopularConfig.findOneAndUpdate(
-            { _id: config_id },
+        await RecipePopularConfig.findByIdAndUpdate(
+            data.config_id,
             { $inc: { comments: 1 } },
-            { new: true, session }
+            { session }
         );
-
-        
-
-
-        if (!updatedPopular) {
-            await session.abortTransaction();
-            return NextResponse.json({
-                message: "Popular config document not found",
-            }, { status: 404 });
-        }
 
         const updatedParentComm = await CommentPopular.findOneAndUpdate(
             { id_comment: data.id_branch },
@@ -58,9 +70,11 @@ export async function POST(request: Request) {
 
         if (!updatedParentComm) {
             await session.abortTransaction();
-            return NextResponse.json({
-                message: "Parent comment not found",
-            }, { status: 404 });
+            const error: ErrorResponse = {
+                code: ErrorCode.SERVER_ERROR,
+                message: 'Parent comment not found'
+            };
+            return NextResponse.json(error, { status: 404 });
         }
 
         dayjs.extend(relativeTime)
@@ -95,10 +109,11 @@ export async function POST(request: Request) {
     } catch (error) {
         console.log(error)
         await session.abortTransaction(); 
-        return NextResponse.json(
-            { message: 'Internal Server Error' },
-            { status: 500 }
-        );
+        const errorRes: ErrorResponse = {
+            code: ErrorCode.SERVER_ERROR,
+            message: 'Internal Server Error'
+        };
+        return NextResponse.json(errorRes, { status: 500 });
     } finally {
         session.endSession();
     }
