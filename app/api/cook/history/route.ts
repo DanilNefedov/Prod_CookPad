@@ -1,7 +1,7 @@
 import connectDB from "@/app/lib/mongoose";
 import CookHistory from "@/app/models/cook-history";
-import Recipe from "@/app/models/recipe";
 import { NextResponse } from "next/server";
+import { addRecipeToCookHistory, getCookHistoryWithRecipe } from "./services";
 
 
 
@@ -17,7 +17,7 @@ export async function POST(req: Request) {
         const newHistory = new CookHistory(data);
         await newHistory.save();
 
-        return NextResponse.json({data: newHistory});
+        return NextResponse.json({ data: newHistory });
 
     } catch (error) {
         console.error(error)
@@ -28,20 +28,14 @@ export async function POST(req: Request) {
     }
 }
 
-interface linkT {
-    recipe_id:string
-    recipe_name:string
-    _id:string
-}
-
 
 export async function GET(request: Request) {
     try {
         await connectDB();
 
-        const { searchParams } = new URL(request.url)
-        const connection_id = searchParams.get('connection_id')
-        const recipe_id = searchParams.get('recipe_id')
+        const { searchParams } = new URL(request.url);
+        const connection_id = searchParams.get('connection_id');
+        const recipe_id = searchParams.get('recipe_id');
 
         if (!connection_id || !recipe_id) {
             return NextResponse.json(
@@ -49,32 +43,23 @@ export async function GET(request: Request) {
                 { status: 400 }
             );
         }
-        
-        const cook = await CookHistory.findOne({connection_id }).select('-_id connection_id history_links.recipe_id history_links.recipe_name')
 
-        if (!cook) {
+        const result = await getCookHistoryWithRecipe(
+            connection_id,
+            recipe_id
+        );
+
+        if (!result) {
             return NextResponse.json(
-                { message: 'History Cook not found' }, 
+                { message: 'History Cook not found' },
                 { status: 404 }
             );
-            
         }
 
-        const exists = cook.history_links.some((link: linkT) => link.recipe_id === recipe_id);
-
-        if(!exists){
-            const dataCook = await Recipe.findOne({ recipe_id, connection_id })
-            .select('-_id name recipe_id')
-            .lean();
-
-            return NextResponse.json({cook, newCook:dataCook})
-        }
-        
-
-        return NextResponse.json({cook, newCook:null})
+        return NextResponse.json(result);
 
     } catch (error) {
-        console.error(error)
+        console.error(error);
         return NextResponse.json(
             { error: "An internal error occurred" },
             { status: 500 }
@@ -83,52 +68,48 @@ export async function GET(request: Request) {
 }
 
 
-
-
 export async function PATCH(request: Request) {
     try {
         await connectDB();
 
-        const data = await request.json();
-        const { connection_id, history_links } = data;
+        const { connection_id, history_links } = await request.json();
 
-        if (!connection_id || !history_links) {
+        if (!connection_id || !history_links?.recipe_id) {
             return NextResponse.json(
                 { message: 'Invalid request data' },
                 { status: 400 }
             );
         }
 
-        const filter = {
+        const result = await addRecipeToCookHistory(
             connection_id,
-            'history_links.recipe_id': { $ne: history_links.recipe_id }
-        };
+            history_links
+        );
 
-        const update = {
-            $push: {
-                history_links: history_links,
-            },
-        };
+        switch (result.status) {
+            case 'NOT_FOUND':
+                return NextResponse.json(
+                    { message: 'Cook history not found' },
+                    { status: 404 }
+                );
 
-        const updatedCook = await CookHistory.updateOne(filter, update);
+            case 'ALREADY_EXISTS':
+                return NextResponse.json(
+                    { message: 'Recipe link already exists' },
+                    { status: 200 }
+                );
 
-        if (updatedCook.matchedCount > 0 && updatedCook.modifiedCount > 0) {
-            return NextResponse.json(
-                { message: 'Recipe link added successfully' },
-                { status: 200 } 
-            );
-        } else {
-            return NextResponse.json(
-                { message: 'Recipe link already exists, no changes made' },
-                { status: 200 } 
-            );
+            case 'ADDED':
+                return NextResponse.json(
+                    { message: 'Recipe link added successfully' },
+                    { status: 200 }
+                );
         }
 
-        
     } catch (error) {
-        console.error(error)
+        console.error(error);
         return NextResponse.json(
-            { error: "An internal error occurred" },
+            { error: 'An internal error occurred' },
             { status: 500 }
         );
     }

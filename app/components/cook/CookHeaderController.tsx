@@ -11,6 +11,7 @@ import { Box } from "@mui/material";
 import { headerCookContainer, scrollBox, } from "@/app/(main)/cook/styles";
 import { HistoryLinks } from "@/app/(main)/cook/types";
 import { SkeletonList } from "./SkeletonList";
+import { getNextRouteAfterDelete } from "@/state/listener/cook-listener";
 
 export interface HeaderProps {
     cookHistoryStore: HistoryLinks[];
@@ -19,7 +20,7 @@ export interface HeaderProps {
     toggleDrawer: (v: boolean) => () => void;
     handleDeleteRecipe: (recipeId: string) => void;
 }
- 
+
 export function CookHeaderController() {
     const cookHistoryStore = useAppSelector(state => state.cookHistory.history_links);
     const cookHistoryStatus = useAppSelector(state => state.cookHistory.operations.fetchHistoryCook.loading);
@@ -31,14 +32,15 @@ export function CookHeaderController() {
     const recipe_id = pathName.split("/")[2];
     const recipeName = searchParams.get("name") ?? '';
 
+
     const [open, setOpen] = useState(false);
 
     const toggleDrawer = (newOpen: boolean) => () => setOpen(newOpen);
 
-    
+
     useEffect(() => {
         /* eslint-disable react-hooks/exhaustive-deps */
-        if(!user_id) return 
+        if (!user_id) return
         const alreadyFetched = cookHistoryStore.some(item => item.recipe_id === recipe_id);
         if (!alreadyFetched) {
             dispatch(fetchHistoryCook({ connection_id: user_id, recipe_id }));
@@ -48,28 +50,21 @@ export function CookHeaderController() {
     }, [user_id, dispatch, recipeName, recipe_id]);
 
 
+
+
     const handleDeleteRecipe = (recipeId: string) => {
-        const index = cookHistoryStore.findIndex(el => el.recipe_id === recipeId);
+        const nextRoute = recipeId === recipe_id
+            ? getNextRouteAfterDelete(cookHistoryStore, recipeId)
+            : null;
 
-        if (cookHistoryStore.length <= 1) {
-            router.push('/home');
-        }
 
-        else if (recipeId === recipe_id) {
-            const nextIndex = index === 0 ? 1 : 0;
-            const nextRecipe = cookHistoryStore[nextIndex];
-
-            if (nextRecipe) {
-                router.push(`/cook/${nextRecipe.recipe_id}`);
-            } else {     
-                router.push('/home'); //protection against unforeseen events
-            }
-        }
-        
         dispatch(deleteCookHistory({
             connection_id: user_id,
-            recipe_id:recipeId,
+            recipe_id: recipeId,
         }));
+
+
+        if (nextRoute) router.push(nextRoute);
     };
 
     const sharedProps = {
@@ -79,22 +74,21 @@ export function CookHeaderController() {
         open,
         toggleDrawer,
     };
-    console.log(cookHistoryStore)
 
 
     return (
 
         <>
             <AdaptiveHeader {...sharedProps} />
-            
-            <Box sx={[headerCookContainer, {display: { xs: 'none', md: 'flex' }}]}>
+
+            <Box sx={[headerCookContainer, { display: { xs: 'none', md: 'flex' } }]}>
                 {
-                    cookHistoryStatus ? 
-                    <SkeletonList></SkeletonList> 
-                    :
-                    <Box component="ul" sx={scrollBox}>
-                        <HeaderCook {...sharedProps} />
-                    </Box>
+                    cookHistoryStatus ?
+                        <SkeletonList></SkeletonList>
+                        :
+                        <Box component="ul" sx={scrollBox}>
+                            <HeaderCook {...sharedProps} />
+                        </Box>
                 }
             </Box>
         </>

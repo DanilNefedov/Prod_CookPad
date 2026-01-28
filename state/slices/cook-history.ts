@@ -128,6 +128,7 @@ export const deleteCookHistory = createAsyncThunk<DeleteCookHistoryFetch, Delete
     'cook-history/deleteCookHistory',
     async function ({connection_id, recipe_id}, {rejectWithValue}){
         try {
+             
             const response = await fetch(`/api/cook/history/${recipe_id}`, {
                 method: 'PATCH',
                 headers: { 

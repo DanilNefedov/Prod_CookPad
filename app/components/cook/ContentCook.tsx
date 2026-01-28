@@ -50,6 +50,7 @@ export function ContentCook(props:Props) {
     useEffect(() => {
         if (!user_id) return; 
         if (!hasCookRecipe && redirectTo === '') {
+            console.log(recipe_id)
             dispatch(fetchCook({ id: user_id, recipe_id }));
         }
     }, [recipe_id, hasCookRecipe, user_id, dispatch]);

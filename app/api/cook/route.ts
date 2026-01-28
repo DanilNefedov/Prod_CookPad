@@ -6,12 +6,6 @@ import { deleteCloudinaryFolder, deleteCommentsPopular, deleteHistory, deleteLik
   deleteReplyComments, deleteSavePopular } from "./services";
 import mongoose from "mongoose";
 
-import { deleteCloudinaryFolder, deleteCommentsPopular, deleteHistory, deleteLikesComments, 
-  deleteLikesPopular, deleteLikesReply, deleteRecipeAndPopular, 
-  deleteReplyComments, deleteSavePopular } from "./services";
-import mongoose from "mongoose";
-
-
 
 
 export async function GET(request: Request) {
