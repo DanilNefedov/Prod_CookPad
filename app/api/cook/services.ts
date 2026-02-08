@@ -9,27 +9,13 @@ import RecipePopularConfig from "@/app/models/popular-config";
 import Recipe from "@/app/models/recipe";
 import ReplyComment from "@/app/models/reply-comments";
 import SavesPopular from "@/app/models/saves-popular";
+import { CloudinaryResource, DeleteRecipeParams, RecipeLean } from "@/app/types";
+import { DEFAULT_BATCH_SIZE, DEFAULT_RETRIES, RETRY_DELAY_MS } from "@/app/variables";
 import { DeleteApiResponse } from "cloudinary";
 import mongoose from "mongoose";
 
 
-interface DeleteRecipeParams {
-    connection_id: string,
-    recipe_id: string
-}
 
-interface RecipeLean {
-    recipe_popular_config?: string;
-}
-
-
-interface CloudinaryResource {
-    public_id: string;
-}
-
-const DEFAULT_RETRIES = 3;
-const RETRY_DELAY_MS = 2000;
-const DEFAULT_BATCH_SIZE = 50;
 
 export async function deleteHistory({ connection_id, recipe_id }: DeleteRecipeParams, session: mongoose.ClientSession) {
     try {

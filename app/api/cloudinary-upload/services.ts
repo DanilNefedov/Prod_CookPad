@@ -7,12 +7,12 @@ import { UploadApiResponse } from "cloudinary";
 
 export async function uploadFileToCloudinary(
     file: File,
-    userId: string,
-    recipeId: string,
-    mediaId: string
+    user_id: string,
+    recipe_id: string,
+    media_id: string
 ): Promise<string> {
     const cloudinary = getCloudinary();
-    const folder = `recipes/${userId}/${recipeId}`;
+    const folder = `recipes/${user_id}/${recipe_id}`;
 
     // Working with very large files.
     // You can use stream directly instead of a full buffer.
@@ -23,7 +23,7 @@ export async function uploadFileToCloudinary(
 
     const uploaded = await new Promise<UploadApiResponse>((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
-            { folder, public_id: mediaId, resource_type: resourceType, quality_analysis: true },
+            { folder, public_id: media_id, resource_type: resourceType, quality_analysis: true },
             (err, res) => {
                 if (err) reject(err);
                 else resolve(res as UploadApiResponse);

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { uploadFileToCloudinary } from "./services";
+import { PostRecipeMediaSchema } from "./schema";
 
 
 
@@ -7,30 +8,36 @@ import { uploadFileToCloudinary } from "./services";
 export async function POST(req: Request) {
     try {
         const formData = await req.formData();
-        const fileRaw = formData.get("file");
-        if (!(fileRaw instanceof File)) {
-            return NextResponse.json({ message: "File is missing or invalid" }, { status: 400 });
-        }
 
-        const file = fileRaw;
-        const id = formData.get("id") as string;
-        const idRecipe = formData.get("idRecipe") as string;
-        const media_id = formData.get("media_id") as string;
+        const raw = {
+            file: formData.get('file'),
+            user_id: formData.get('user_id'),
+            recipe_id: formData.get('recipe_id'),
+            media_id: formData.get('media_id'),
+        };
 
-        if (!file || !id || !idRecipe || !media_id) {
+        const parsed = PostRecipeMediaSchema.safeParse(raw);
+        console.log(parsed)
+        if (!parsed.success) {
             return NextResponse.json(
-                { message: "Invalid request data" }, 
+                {message: 'Invalid request data',
+                    data:parsed
+                },
                 { status: 400 }
             );
         }
 
-        const public_id = await uploadFileToCloudinary(file, id, idRecipe, media_id);
+        const { file, user_id, recipe_id, media_id } = parsed.data;
+
+        const public_id = await uploadFileToCloudinary(file, user_id, recipe_id, media_id);
         return NextResponse.json(public_id);
     } catch (error) {
         console.error(error);
         return NextResponse.json(
-            { message: "Internal Server Error" }, 
+            { message: "Internal Server Error" },
             { status: 500 }
         );
     }
 }
+
+

@@ -5,22 +5,28 @@ import { deleteCloudinaryFolder, deleteCommentsPopular, deleteHistory, deleteLik
   deleteLikesPopular, deleteLikesReply, deleteRecipeAndPopular, 
   deleteReplyComments, deleteSavePopular } from "./services";
 import mongoose from "mongoose";
+import { DeleteRecipeQuerySchema, GetRecipeQuerySchema } from "./schema";
 
 
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const connection_id = searchParams.get("connection_id");
-    const recipe_id = searchParams.get("recipe");
-    // const recipeExists = searchParams.get("recipeExists") === "true";
+    const rawQuery = {
+      connection_id: searchParams.get("connection_id"),
+      recipe_id: searchParams.get("recipe_id"),
+    };
 
-    if (!connection_id || !recipe_id) {
+    const parsed = GetRecipeQuerySchema.safeParse(rawQuery);
+
+     if (!parsed.success) {
       return NextResponse.json(
-        { message: 'Invalid request data' },
+        { message: "Invalid request data" },
         { status: 400 }
       );
     }
+
+    const { connection_id, recipe_id } = parsed.data;
 
     await connectDB();
 
@@ -34,8 +40,8 @@ export async function GET(request: Request) {
         { status: 404 }
       );
     }
-    return NextResponse.json({ dataCook });// isInHistory
 
+    return NextResponse.json({ dataCook });// isInHistory
   } catch (error) {
     console.error(error);
     return NextResponse.json(
@@ -56,26 +62,30 @@ export async function DELETE(request: Request) {
     session.startTransaction();
 
     const { searchParams } = new URL(request.url);
-    const connection_id = searchParams.get("connection_id");
 
-    const recipe_id = searchParams.get("recipe_id");
+    const rawQuery = {
+      connection_id: searchParams.get("connection_id"),
+      recipe_id: searchParams.get("recipe_id"),
+    };
 
-    if (!connection_id || !recipe_id) {
+    const parsed = DeleteRecipeQuerySchema.safeParse(rawQuery);
+
+    if (!parsed.success) {
+      await session.abortTransaction();
+      session.endSession();
+
       return NextResponse.json(
-        { message: 'Invalid request data' },
+        {message: "Invalid request data"},
         { status: 400 }
       );
     }
 
-
-
+    const { connection_id, recipe_id } = parsed.data;
 
     //for the future, there is the possibility to determine return values 
     await deleteHistory({connection_id, recipe_id}, session)
     // await deleteRecipeAndPopular({recipe_id}, session)
     const resPopular = await deleteRecipeAndPopular({recipe_id}, session)
-
-
 
     // For all other collections, you need to add a worker. Most likely BullMQ. 
     

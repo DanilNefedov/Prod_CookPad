@@ -13,7 +13,7 @@ export async function PATCH(request: Request) {
 
         if (!recipe_id) {
             return NextResponse.json(
-                { message: "Missing required fields" },
+                { message: "Invalid request data" },
                 { status: 400 }
             );
         }

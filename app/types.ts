@@ -65,3 +65,28 @@ export interface ErrorResponse {
     message: string;
     resource?: 'save'; //| 'user' | 'list';
 }
+
+
+
+
+
+
+export interface DeleteRecipeParams {
+    connection_id: string,
+    recipe_id: string
+}
+
+export interface RecipeLean {
+    recipe_popular_config?: string;
+}
+
+
+export interface CloudinaryResource {
+    public_id: string;
+}
+
+
+export interface IngredientInput {
+    name: string;
+    new_ingredient?: boolean;
+}

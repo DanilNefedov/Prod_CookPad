@@ -1,7 +1,7 @@
-import { UnitsIdFetch } from "@/app/(main)/(main-list)/list/types";
 import connectDB from "@/app/lib/mongoose"
-import ListIngredients from "@/app/models/list"
 import { NextResponse } from "next/server"
+import { GetUnitsQuerySchema } from "./schema";
+import { getIngredientUnits } from "./services";
 
 
 
@@ -12,43 +12,30 @@ import { NextResponse } from "next/server"
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
-        const connection_id = searchParams.get('connection_id');
-        const name = searchParams.get('name');
-        const choice = searchParams.get('choice');
 
-        if (!connection_id || !name) {
+        const rawQuery = {
+            connection_id: searchParams.get('connection_id'),
+            name: searchParams.get('name'),
+            choice: searchParams.get('choice'),
+        };
+
+        const parsed = GetUnitsQuerySchema.safeParse(rawQuery);
+
+        if (!parsed.success) {
             return NextResponse.json(
-                { message: 'Invalid request data' },
+                { message: 'Invalid request data'},
                 { status: 400 }
             );
         }
 
         await connectDB();
 
-        const document = await ListIngredients.findOne({ connection_id, name });
+        const result = await getIngredientUnits(parsed.data);
 
-        if (!document) {
-            return NextResponse.json({
-                unit_found: null,
-                units: null
-            }, { status: 200 });
-        }
-        
-
-        const unitFound = document.units.some((el: UnitsIdFetch) => el.choice === choice);
-
-        return NextResponse.json({
-            unit_found: unitFound,
-            units: document.units.map((unit: UnitsIdFetch) => ({
-                choice: unit.choice,
-                amount: unit.amount,
-                _id: unit._id
-            }))
-        });
-
+        return NextResponse.json(result);
     } catch (error) {
         console.error(error)
-         return NextResponse.json(
+        return NextResponse.json(
             { error: "An internal error occurred" },
             { status: 500 }
         );

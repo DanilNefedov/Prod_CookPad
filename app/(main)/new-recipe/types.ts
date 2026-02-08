@@ -46,8 +46,8 @@ export interface ChoiceUnits {
 
 
 export interface DataType {
-    id: string,
-    idRecipe: string,
+    user_id: string,
+    recipe_id: string,
     media_id: string,
     media_url: string,
 }

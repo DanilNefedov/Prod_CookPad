@@ -1,10 +1,14 @@
 'use client'
 
 import { MouseEvent, useState } from "react";
-import { Alert, Box, Button, Chip, ListItemAvatar, ListItemText, Menu, 
-    MenuItem, Slide, SlideProps, Stack, Typography } from "@mui/material";
-import { addIcon, avatarImg, avatarIngr, boxOr, buttonList, chipMenu, containerButtons, containerUnit, 
-    emptyUnits, headerMenu, menuContainer, menuListItems, nameIngr, scrollItems } from "@/app/(main)/cook/styles";
+import {
+    Alert, Box, Button, Chip, ListItemAvatar, ListItemText, Menu,
+    MenuItem, Slide, SlideProps, Stack, Typography
+} from "@mui/material";
+import {
+    addIcon, avatarImg, avatarIngr, boxOr, buttonList, chipMenu, containerButtons, containerUnit,
+    emptyUnits, headerMenu, menuContainer, menuListItems, nameIngr, scrollItems
+} from "@/app/(main)/cook/styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
 import { newIngredientList, newUnitIngredientList, updateCookUnit } from "@/state/slices/list-slice";
 import { add, bignumber, } from "mathjs";
@@ -13,6 +17,7 @@ import { Ingredients, ReturnData } from "@/app/(main)/cook/types";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { alertMui, hideScroll } from "@/app/styles";
 import { CldImage } from "next-cloudinary";
+import { fetchIngredientUnits } from "./services/units";
 
 
 interface Props {
@@ -32,66 +37,55 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
     const [units, setUnits] = useState<ReturnData[] | null>(null)
     const [method, setMethod] = useState<'PATCH' | 'POST' | ''>('');
     const open = Boolean(anchorEl);
-    
+
+
 
     const handleClick = async (event: MouseEvent<HTMLElement>) => {
-        const choice = el.units.choice
-
-        const url = `/api/cook/units?connection_id=${user_id}&name=${el.name}&choice=${choice}`
-
         setAnchorEl(event.currentTarget);
 
-        const responseData = await fetch(url);
+        try {
+            const data = await fetchIngredientUnits({
+                connection_id: user_id,
+                name: el.name,
+                choice: el.units.choice,
+            });
 
-        if (!responseData.ok) {
+            if (data.unit_found === null) {
+                setMethod('POST');
+                return;
+            }
+
+            setMethod('PATCH');
+            setUnits(data.units);
+
+        } catch (error) {
+            console.error(error)
             enqueueSnackbar('', {
                 content: (key) => (
                     <Stack>
-                       <Alert
+                        <Alert
                             severity="error"
                             onClose={() => closeSnackbar(key)}
                             sx={alertMui}
                         >
                             Unit retrieval error.
-                        </Alert> 
+                        </Alert>
                     </Stack>
-                    
                 ),
-                persist: true, 
+                persist: true,
                 anchorOrigin: { vertical: 'top', horizontal: 'center' },
                 TransitionComponent: SlideTransition,
             });
-            return;
         }
-
-
-        const dataList = await responseData.json()
-
-        if (dataList.unit_found) {
-
-            setMethod('PATCH')
-            setUnits(dataList.units)
-
-        } else if (dataList.unit_found === false) {
-            setMethod('PATCH')
-            setUnits(dataList.units)
-
-
-        } else if (dataList.unit_found === null) {
-            setMethod('POST')
-        }
-
-
     };
 
-
-
+   
     const handleClose = () => {
         setAnchorEl(null);
         setMethod('')
     };
 
-    
+
 
     function addNewUnit(el: Ingredients) {
         if (user_id !== '') {
@@ -132,14 +126,14 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
 
     function addOldUnit(elem: ReturnData) {
         const sum = add(bignumber(el.units.amount), bignumber(elem.amount));
-        const newAmount  = Number(sum.toFixed(5));
+        const newAmount = Number(sum.toFixed(5));
 
         if (user_id !== '') {
             const data = {
                 name: el.name,
                 connection_id: user_id,
                 _id: elem._id,
-                amount: newAmount 
+                amount: newAmount
             }
 
             dispatch(updateCookUnit(data))
@@ -148,33 +142,33 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
     }
 
     return (
-        <Box sx={{p:'5px'}}>
+        <Box sx={{ p: '5px' }}>
             <ListItemAvatar sx={avatarIngr}>
                 {
-                    el.media ? 
-                    <Box sx={{position:'relative'}}>
-                        <CldImage
-                            alt={el.name}
-                            src={el.media}
-                            width={45}
-                            height={45}
-                            quality="auto"
-                            dpr="auto"
-                            crop="fill"
-                            gravity="auto"
-                        >
-                        </CldImage>
-                    </Box>
-                    :
-                    <Box 
-                        component={'img'} 
-                        src={'/images/load-ingr.svg'} 
-                        alt={el.media} 
-                        sx={avatarImg}
-                    ></Box>
-                    
+                    el.media ?
+                        <Box sx={{ position: 'relative' }}>
+                            <CldImage
+                                alt={el.name}
+                                src={el.media}
+                                width={45}
+                                height={45}
+                                quality="auto"
+                                dpr="auto"
+                                crop="fill"
+                                gravity="auto"
+                            >
+                            </CldImage>
+                        </Box>
+                        :
+                        <Box
+                            component={'img'}
+                            src={'/images/load-ingr.svg'}
+                            alt={el.media}
+                            sx={avatarImg}
+                        ></Box>
+
                 }
-                
+
             </ListItemAvatar>
             <ListItemText
                 primary={el.name}
@@ -235,7 +229,7 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
                                             label={`${elem.amount} ${elem.choice}`}
                                             sx={chipMenu}
                                             onDelete={() => addOldUnit(elem)}
-                                            deleteIcon={<AddCircleIcon sx={[addIcon]}/>}
+                                            deleteIcon={<AddCircleIcon sx={[addIcon]} />}
                                         />
                                     </Box>
                                 ))
@@ -243,17 +237,17 @@ export function ItemsIngrSwiper({ props }: { props: Props }) {
                                 <MenuItem disabled sx={emptyUnits}>Nothing</MenuItem>
                             }
                         </Box>
-                        
+
                     </Box>
-                    
+
                     <MenuItem disabled={true} sx={boxOr}>
                         <Typography align="center">Or</Typography>
                     </MenuItem>
 
-                    <Button 
+                    <Button
                         disabled={method !== '' ? false : true} onClick={() => addNewUnit(el)}
-                        color="grayButton" 
-                        sx={{width:"100%"}}
+                        color="grayButton"
+                        sx={{ width: "100%" }}
                     >Like a new</Button>
                 </Menu>
             </Box>

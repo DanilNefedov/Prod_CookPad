@@ -1,56 +1,56 @@
 import { AppDispatch } from "@/state/store";
 import { v4 as uuidv4 } from 'uuid';
 import _ from "lodash";
-import { resetStateRecipes } from "@/state/slices/recipe-slice";
 import { TypeRecommendState } from "@/state/slices/stepper/type-recommend";
 import { NameTimeState, } from "@/state/slices/stepper/name-time";
 import { MediaState, } from "@/state/slices/stepper/media";
 import { IngredientState, } from "@/state/slices/stepper/ingredients";
 import { DescriptionState,} from "@/state/slices/stepper/description";
 import {InstructionState } from "@/state/slices/stepper/instruction";
-import { resetAllState } from "@/state/slices/stepper/reset-action";
 import { DataType, IngredientAutocomplite, NewDataRecipe, SaveFormResult } from "@/app/(main)/new-recipe/types";
 import { Unit } from "@/app/(main)/cook/types";
+import { PatchIngredientInput, PatchIngredientsSuccessSchema } from "@/app/api/ingredients/schema";
+import { resetAllState } from "@/state/slices/stepper/reset-action";
+import { resetStateRecipes } from "@/state/slices/recipe-slice";
+import { PostFileClientSchema } from "@/app/api/cloudinary-upload/schema";
 
 
 
 async function uploadFile(data: DataType): Promise<string>{ 
-    const { id, idRecipe, media_id, media_url } = data;
-    
+    try{
+        const parsed = PostFileClientSchema.safeParse(data);
 
-    try {
+        if (!parsed.success) {
+            throw new Error("Invalid upload data");
+        }
+
+        const { user_id, recipe_id, media_id, media_url } = parsed.data;
+
         const response = await fetch(media_url);
-
         if (!response.ok) {
-            throw new Error(`Failed to fetch media: ${response.statusText}`);
+            throw new Error(`Failed to fetch media`);
         }
 
         const blob = await response.blob();
-        // console.log(response, blob)
 
         const formData = new FormData();
         formData.append("file", blob, media_id);
-        formData.append("id", id);
-        formData.append("idRecipe", idRecipe);
+        formData.append("user_id", user_id);
+        formData.append("recipe_id", recipe_id);
         formData.append("media_id", media_id);
 
         const cloudinaryResponse = await fetch("/api/cloudinary-upload", {
             method: "POST",
             body: formData,
         });
-        
 
         if (!cloudinaryResponse.ok) {
             const errorResult = await cloudinaryResponse.json();
-            throw new Error(errorResult.error?.message || 'Cloudinary upload failed');
+            throw new Error(errorResult.message || "Upload failed");
         }
-
-
-        const result = await cloudinaryResponse.json();
-
         // console.log(result)
 
-        return result;
+        return cloudinaryResponse.json();
 
       
     } catch (error) {
@@ -58,7 +58,6 @@ async function uploadFile(data: DataType): Promise<string>{
         throw new Error(`Media upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
 }
-
 
 export async function saveForm(
     stepTypeRecommendation: TypeRecommendState,
@@ -78,8 +77,8 @@ export async function saveForm(
         const uploadPromises = stepMedia.media.map(file => {
             if (typeof file.media_url === 'string') {
                 const data = {
-                    id: userId,
-                    idRecipe,
+                    user_id: userId,
+                    recipe_id:idRecipe,
                     media_id: file.media_id,
                     media_url: file.media_url,
                 };
@@ -167,14 +166,8 @@ export async function saveForm(
                 ], (item) => item !== null),
                 creator: null
             };
-
-            interface fetchIngredients {
-                name: string,
-                unit: string,
-                new_ingredient: boolean
-            }
             
-            const ingredientsData: fetchIngredients[] = ingredientsWithValues.map(el => ({
+            const ingredientsData: PatchIngredientInput[] = ingredientsWithValues.map(el => ({
                 name: el.name,
                 unit: 'list' in el.units && el.units.choice ? el.units.choice : '',
                 new_ingredient: el.new_ingredient ?? false
@@ -188,20 +181,22 @@ export async function saveForm(
                     },
                     body: JSON.stringify(ingredientsData)
                 });
-                
-                if (!response.ok) {
-                    throw new Error(`Failed to update ingredients: ${response.statusText}`);
-                }
-                
-                const result = await response.json();
 
-                if (result.body && result.body.length > 0) {
+                const json = await response.json();
+
+                const result = PatchIngredientsSuccessSchema.safeParse(json);
+
+                if (!result.success) {
+                    throw new Error(`Failed to update ingredients: ${response.statusText}`); 
+                }
+
+                if (result.data.body.newIngredients.length > 0) {
                     const newIngredientResponse = await fetch('/api/ingredients', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify(result.body)
+                        body: JSON.stringify(result.data.body.newIngredients)
                     });
                     
                     if (!newIngredientResponse.ok) {
@@ -224,9 +219,8 @@ export async function saveForm(
                     throw new Error(`Failed to save recipe: ${recipeResponse.statusText}`);
                 }
 
-                // const recipeData = await recipeResponse.json();
                 await recipeResponse.json();
-                // console.log('Recipe saved successfully:', recipeData);
+
                 dispatch(resetAllState());
                 dispatch(resetStateRecipes());
                 
@@ -255,8 +249,7 @@ export async function saveForm(
                     throw new Error(`Failed to save recipe: ${response.statusText}`);
                 }
                 await response.json();
-                // const recipeData = await response.json();
-                // console.log('Recipe saved successfully:', recipeData);
+
                 dispatch(resetAllState());
                 dispatch(resetStateRecipes());
                 

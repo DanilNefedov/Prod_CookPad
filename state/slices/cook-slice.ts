@@ -27,7 +27,7 @@ const initialState: CookState = {
         name:'',
         time: {
             hours:'',
-            minutes:'' ,
+            minutes:'',
         },
         recipe_type:'',
         description: '',
@@ -49,7 +49,7 @@ export const fetchCook = createAsyncThunk<CookFetchRes, CookFetchReq, { rejectVa
     'cook/fetchCook',
     async function ({ id, recipe_id }, { rejectWithValue }) {
         try {
-            const url = `/api/cook?connection_id=${id}&recipe=${recipe_id}`
+            const url = `/api/cook?connection_id=${id}&recipe_id=${recipe_id}`
             const responseCook = await fetch(url);
 
             if (!responseCook.ok) return rejectWithValue('Server Error!');
@@ -71,7 +71,7 @@ export const fetchCook = createAsyncThunk<CookFetchRes, CookFetchReq, { rejectVa
 
 export const changeNewInfo = createAsyncThunk<ChangeInfoFetchRes, ChangeInfoFetchReq, { rejectValue: string }>(
     'cook/changeNewInfo',
-    async function ({recipe_id, user_id}, { rejectWithValue, getState, dispatch  }) {
+    async function ({recipe_id, user_id}, { rejectWithValue, getState, dispatch }) {
         try {
             
             const state = getState() as RootState;
