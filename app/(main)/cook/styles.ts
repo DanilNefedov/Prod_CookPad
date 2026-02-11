@@ -5,13 +5,13 @@ import { theme } from "@/config/ThemeMUI/theme";
 export const mainBoxCook = {
     display: 'flex',
     height: 'calc(100dvh - 20px)',
-    
+
     [theme.breakpoints.down("md")]: {
-        flexDirection:'column',
-        overflow:'auto',
-        scrollbarWidth: 'none', 
+        flexDirection: 'column',
+        overflow: 'auto',
+        scrollbarWidth: 'none',
         '&::-webkit-scrollbar': {
-            display: 'none', 
+            display: 'none',
         },
     }
 }
@@ -24,9 +24,9 @@ export const headerCookContainer = {
     display: 'flex',
     height: '100%',
     borderRadius: '15px',
-    maxWidth:'200px',
+    maxWidth: '200px',
     width: '100%',
-    padding:'15px 0',
+    padding: '15px 0',
     overflow: "hidden",
 }
 
@@ -35,8 +35,8 @@ export const scrollBox = {
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
-    height:'100%',
-    msOverflowStyle: "none",  
+    height: '100%',
+    msOverflowStyle: "none",
     scrollbarWidth: "none",
 
     '&::-webkit-scrollbar': {
@@ -47,29 +47,29 @@ export const scrollBox = {
 }
 
 export const elementHeader = {
-    mb:'15px', 
-    gap:'5px'
+    mb: '15px',
+    gap: '5px'
 }
 
 export const skeletonContainer = {
-    width: "100%", 
-    display: "flex", 
-    flexDirection: "column", 
-    overflow:'hidden'
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    overflow: 'hidden'
 }
 
 export const links = {
-    cursor:'pointer',
-    width:'80%',
+    cursor: 'pointer',
+    width: '80%',
     padding: '0 5px',
     borderRadius: '10px',
-    height:'35px',
+    height: '35px',
 }
 
 export const labelLink = {
-    '& .MuiChip-label':{
-        width:'100%',
-        textAlign:'center',
+    '& .MuiChip-label': {
+        width: '100%',
+        textAlign: 'center',
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
@@ -79,16 +79,16 @@ export const labelLink = {
 export const adaptiveLink = {
     width: '100%',
     justifyContent: 'space-between',
-    p:'0 5px',
-    borderRadius:'10px',
-    height:'33px',
+    p: '0 5px',
+    borderRadius: '10px',
+    height: '33px',
 }
 
-export const adaptiveHeaderContainer ={
+export const adaptiveHeaderContainer = {
     position: 'relative',
     width: 'fit-content',
     overscrollBehavior: "contain",
-    overflow:'auto',
+    overflow: 'auto',
     m: '0 auto',
 
     '& .PrivateSwipeArea-root': {
@@ -96,11 +96,11 @@ export const adaptiveHeaderContainer ={
         right: '0',
         left: 'initial',
         overscrollBehavior: "contain",
-        overflow:'auto',
+        overflow: 'auto',
         background: 'linear-gradient(to right, rgba(21,22,26, 0.02), rgba(21,22,26, 0.6), rgba(21,22,26, 0.02))',
         borderBottomLeftRadius: "50% 100%",
         borderBottomRightRadius: " 50% 100%",
-        
+
         [theme.breakpoints.down('sm')]: {
             width: '100%',
         },
@@ -170,19 +170,19 @@ export const headerItem = {
 //-------- main content --------//
 
 export const containerContent = {
-    width:'calc(100% - 200px)',
-    m:'0',
-    borderRadius:'20px',
-    backgroundColor:'background.default',
-    ml:"20px",
-    p:'10px',
-    
+    width: 'calc(100% - 200px)',
+    m: '0',
+    borderRadius: '20px',
+    backgroundColor: 'background.default',
+    ml: "20px",
+    p: '10px',
+
     [theme.breakpoints.down("md")]: {
-        width:'100%',
-        ml:"0px",
-        mt:'20px',
+        width: '100%',
+        ml: "0px",
+        mt: '20px',
         flexGrow: 1,
-        msOverflowStyle: "none",  
+        msOverflowStyle: "none",
         scrollbarWidth: "none",
 
         '&::-webkit-scrollbar': {
@@ -193,34 +193,34 @@ export const containerContent = {
     },
 
     [theme.breakpoints.down("sm")]: {
-        mb:'20px'
+        mb: '20px'
     }
 
 }
 
 export const scrollContainer = {
     scrollbarColor: `${theme.palette.background.paper} ${theme.palette.background.default}`,
-    height: '100%', 
-    overflow: 'auto', 
+    height: '100%',
+    overflow: 'auto',
     [theme.breakpoints.down("md")]: {
         p: '5px 0',
         overflow: 'hidden',
-        position:'relative'
+        position: 'relative'
     }
 }
 
 export const containerSwiperInfo = {
-    display: 'flex', 
-    height: 'auto', 
-    justifyContent: 'center', 
+    display: 'flex',
+    height: 'auto',
+    justifyContent: 'center',
     gap: '10px',
-    '& .swiper':{
+    '& .swiper': {
         marginLeft: 0,
         marginRight: 0,
-        m:'0 auto'
+        m: '0 auto'
     },
     [theme.breakpoints.between(900, 1100)]: {
-      display: 'block',
+        display: 'block',
     },
     [theme.breakpoints.down(700)]: {
         display: 'block',
@@ -229,26 +229,26 @@ export const containerSwiperInfo = {
 }
 
 export const skeletonMedia = {
-    objectFit: "cover", 
-    width:'100%', 
-    height:'100%', 
-    maxWidth: "465px", 
-    aspectRatio:" 4 / 5",
+    objectFit: "cover",
+    width: '100%',
+    height: '100%',
+    maxWidth: "465px",
+    aspectRatio: " 4 / 5",
 }
 
 export const mediaContainer = {
-    width:'100%',
-    height:'100%',
-    aspectRatio:'4/5',
-    maxWidth:'465px',
+    width: '100%',
+    height: '100%',
+    aspectRatio: '4/5',
+    maxWidth: '465px',
     bgcolor: "background.paper",
-    position:'relative',
+    position: 'relative',
 }
 
 export const containerInfo = {
-    width: '100%', 
-    pr: '20px', 
-    
+    width: '100%',
+    pr: '20px',
+
     [theme.breakpoints.down("md")]: {
         pr: '5px',
         mt: '20px'
@@ -256,11 +256,11 @@ export const containerInfo = {
 }
 
 export const actionInfoBox = {
-    width:"100%", 
+    width: "100%",
     maxWidth: "464px",
-    gap:'20px',
+    gap: '20px',
     [theme.breakpoints.between(900, 1100)]: {
-      maxWidth: "100%",
+        maxWidth: "100%",
     },
     [theme.breakpoints.down("md")]: {
         maxWidth: "100%",
@@ -268,18 +268,18 @@ export const actionInfoBox = {
 }
 
 export const actionBtns = {
-    maxWidth:'80px', 
-    width:'100%',
+    maxWidth: '80px',
+    width: '100%',
 
     [theme.breakpoints.down("md")]: {
-        p:'5px 13px',
-        maxWidth:'75px',
+        p: '5px 13px',
+        maxWidth: '75px',
     }
 }
 
 export const nameRecipe = {
-    textAlign:"center",
-    fontSize:'2rem',
+    textAlign: "center",
+    fontSize: '2rem',
     [theme.breakpoints.down("md")]: {
         fontSize: '22px'
     },
@@ -287,31 +287,31 @@ export const nameRecipe = {
 
 
 
-export const containerTime = { 
-    display: 'flex', 
+export const containerTime = {
+    display: 'flex',
     justifyContent: 'space-between',
-    alignItems:'center',
-    m: '10px 0' 
+    alignItems: 'center',
+    m: '10px 0'
 }
 
 
 
 export const descriptionInstruction = {
-    wordWrap: "break-word", 
-    wordBreak: 'break-all', 
+    wordWrap: "break-word",
+    wordBreak: 'break-all',
 }
 
 export const containerIngr = {
-    maxWidth: '938px', 
-    m: '0 auto', 
-    p: "0 20px", 
+    maxWidth: '938px',
+    m: '0 auto',
+    p: "0 20px",
     [theme.breakpoints.down(700)]: {
         p: "0"
     },
 }
 
 export const secondHeader = {
-    textAlign:'center',
+    textAlign: 'center',
     fontSize: '1.4rem',
     mt: '35px',
     [theme.breakpoints.down("md")]: {
@@ -320,30 +320,30 @@ export const secondHeader = {
     },
 }
 
-export const swiperContainer = { 
-    p: '0', 
+export const swiperContainer = {
+    p: '0',
     position: 'relative',
-    '& .swiper': { 
-        position: 'static', 
-        m: '0 15px' 
-    }, 
+    '& .swiper': {
+        position: 'static',
+        m: '0 15px'
+    },
 }
 
 export const instruction = {
-    mt: '5px', 
+    mt: '5px',
 }
 
-export const ingredinetsArrow = { 
-    fontSize: 35, 
-    [theme.breakpoints.down("md")]: { 
-        fontSize: 30 
-    } 
+export const ingredinetsArrow = {
+    fontSize: 35,
+    [theme.breakpoints.down("md")]: {
+        fontSize: 30
+    }
 }
 
 export const avatarIngr = {
-    width: '40px', 
-    height: '40px', 
-    borderRadius: '50%', 
+    width: '40px',
+    height: '40px',
+    borderRadius: '50%',
     minWidth: '0',
     m: '0 auto',
     [theme.breakpoints.down("md")]: {
@@ -360,8 +360,8 @@ export const avatarImg = {
 }
 
 export const nameIngr = {
-    textAlign: 'center', 
-    mb: '0', 
+    textAlign: 'center',
+    mb: '0',
     '& span': {
         overflow: 'hidden',
         textOverflow: 'ellipsis',
@@ -370,49 +370,49 @@ export const nameIngr = {
 }
 
 export const containerUnit = {
-    textAlign: 'center', 
-    opacity: '0.6', 
+    textAlign: 'center',
+    opacity: '0.6',
 }
 
-export const containerButtons = { 
-    display: 'flex', 
-    justifyContent: 'center' 
+export const containerButtons = {
+    display: 'flex',
+    justifyContent: 'center'
 }
 
 export const skeletonIngredients = {
-    width: '100%', 
-    height: 301, 
-    mt:'10px', 
-    borderRadius:'10px',
+    width: '100%',
+    height: 301,
+    mt: '10px',
+    borderRadius: '10px',
 
     [theme.breakpoints.down("md")]: {
-        height: 269, 
+        height: 269,
     }
 }
 
 export const buttonList = {
-    width:'40%',
-    p:'2px 7px',
-    display:'block',
-    mt:'10px',
-    color:'text.disabled',
-    [theme.breakpoints.down(1100)]: {  
-        width:"75px"
+    width: '40%',
+    p: '2px 7px',
+    display: 'block',
+    mt: '10px',
+    color: 'text.disabled',
+    [theme.breakpoints.down(1100)]: {
+        width: "75px"
     },
-    [theme.breakpoints.down("md")]: {    
-        minWidth:'0',
+    [theme.breakpoints.down("md")]: {
+        minWidth: '0',
     },
     '@media (hover: hover) and (pointer: fine)': {
         '&:hover': {
-            color:'text.primary',
+            color: 'text.primary',
         },
     },
 }
 
 export const menuContainer = {
-    '& .MuiPaper-root': { 
-        backgroundColor: "supportBackground.light" 
-    }, 
+    '& .MuiPaper-root': {
+        backgroundColor: "supportBackground.light"
+    },
     '@media (hover: hover) and (pointer: fine)': {
         '& .MuiMenuItem-root:hover': {
             backgroundColor: 'background.paper',
@@ -423,66 +423,66 @@ export const menuContainer = {
         p: '5px 10px'
     },
 
-    
+
 }
 
-export const headerMenu = { 
-    opacity: "1 !important", 
-    display: 'block', 
-    minHeight: '0' 
+export const headerMenu = {
+    opacity: "1 !important",
+    display: 'block',
+    minHeight: '0'
 }
 
 
 export const menuListItems = {
-    width:'100%',
-    borderRadius:'10px',
-    m:'7px auto',
-    minHeight:'0',
+    width: '100%',
+    borderRadius: '10px',
+    m: '7px auto',
+    minHeight: '0',
 }
 
 export const btnListItem = {
     pointerEvents: 'auto',
     '@media (hover: hover) and (pointer: fine)': {
-        '&:hover':{
-            backgroundColor:'primary.dark'
+        '&:hover': {
+            backgroundColor: 'primary.dark'
         },
-        '& svg:hover':{
-            color:'text.primary'
+        '& svg:hover': {
+            color: 'text.primary'
         },
     },
 
-    
-    p:'4px 4px',
-    width:'auto',
-    minWidth:'auto',
-    ml:'auto',
+
+    p: '4px 4px',
+    width: 'auto',
+    minWidth: 'auto',
+    ml: 'auto',
     [theme.breakpoints.down("md")]: {
-        width:'20px',
-        height:'20px'
+        width: '20px',
+        height: '20px'
     }
 }
 
 export const boxOr = {
-    opacity: "1 !important", 
-    display: 'block', 
-    pt: '5px', 
+    opacity: "1 !important",
+    display: 'block',
+    pt: '5px',
     minHeight: "0"
 }
 
 export const chipMenu = {
-    width:'100%',
-    maxWidth:'138px',
-    borderRadius:'10px',
-    justifyContent:'space-between',
+    width: '100%',
+    maxWidth: '138px',
+    borderRadius: '10px',
+    justifyContent: 'space-between',
     '@media (hover: hover) and (pointer: fine)': {
         '&:hover': {
             backgroundColor: theme.palette.background.paper,
         },
     },
 
-    '& .MuiChip-label':{
-        textAlign:'center',
-        width:'100%',
+    '& .MuiChip-label': {
+        textAlign: 'center',
+        width: '100%',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap',
@@ -490,33 +490,33 @@ export const chipMenu = {
 }
 
 export const addIcon = {
-    
-    [theme.breakpoints.down("md")]: { 
-        width: '20px', 
-        height: '20px' 
-    } 
+
+    [theme.breakpoints.down("md")]: {
+        width: '20px',
+        height: '20px'
+    }
 }
 
-export const emptyUnits = { 
-    display: 'block', 
-    textAlign: 'center', 
-    [theme.breakpoints.down("md")]: { 
-        fontSize: '14px' 
-    }, 
-    '&.Mui-disabled': { 
-        opacity: '1' 
-    } 
+export const emptyUnits = {
+    display: 'block',
+    textAlign: 'center',
+    [theme.breakpoints.down("md")]: {
+        fontSize: '14px'
+    },
+    '&.Mui-disabled': {
+        opacity: '1'
+    }
 }
 
 export const scrollItems = {
-    maxHeight:'145px',
-    overflow:'auto',
+    maxHeight: '145px',
+    overflow: 'auto',
 
 }
 
 export const editNameBox = {
-    display:'flex', 
-    justifyContent:'center', 
+    display: 'flex',
+    justifyContent: 'center',
     height: '38px',
     [theme.breakpoints.down("md")]: {
         height: '26px'
@@ -549,19 +549,19 @@ export const editNameInput = {
         textAlign: 'center',
         boxSizing: 'border-box',
     },
-    
+
     [theme.breakpoints.down("md")]: {
         height: '26px'
     },
 }
 
 export const changeTypeInput = {
-    '& .MuiSelect-select':{
-        p:'0 32px 1px 15px'
+    '& .MuiSelect-select': {
+        p: '0 32px 1px 15px'
     },
-    '& .MuiOutlinedInput-notchedOutline':{
-        borderWidth:'0 0 1px 0',
-        borderRadius:'0'
+    '& .MuiOutlinedInput-notchedOutline': {
+        borderWidth: '0 0 1px 0',
+        borderRadius: '0'
     },
     '& .MuiOutlinedInput-root': {
         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
@@ -571,33 +571,45 @@ export const changeTypeInput = {
 }
 
 export const changeTypeItems = {
-    borderRadius:'10px',
-    '& .Mui-selected':{
+    borderRadius: '10px',
+    '& .Mui-selected': {
         bgcolor: 'primary.dark',
     },
-    '& .MuiButtonBase-root:hover':{
+    '& .MuiButtonBase-root:hover': {
         '@media (hover: hover) and (pointer: fine)': {
             '&:hover': {
-                bgcolor:'primary.main'
+                bgcolor: 'primary.main'
             },
         },
     }
 }
 
 export const changeTimeInput = {
-    maxWidth:'100px',
-    '& .MuiInputBase-input':{
-        p:'0 12px 2px 12px'
+    maxWidth: '100px',
+    '& .MuiInputBase-input': {
+        p: '0 12px 2px 12px'
     },
-    '& .MuiOutlinedInput-notchedOutline':{
-        borderWidth:'0 0 1px 0',
-        borderRadius:'0'
+    '& .MuiOutlinedInput-notchedOutline': {
+        borderWidth: '0 0 1px 0',
+        borderRadius: '0'
     },
     '& .MuiOutlinedInput-root': {
         '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderWidth: '0 0 2px 0',
         },
-    }
+    },
+
+    '& input[type=number]': {
+        MozAppearance: 'textfield',
+    },
+    '& input[type=number]::-webkit-outer-spin-button': {
+        WebkitAppearance: 'none',
+        margin: 0,
+    },
+    '& input[type=number]::-webkit-inner-spin-button': {
+        WebkitAppearance: 'none',
+        margin: 0,
+    },
 }
 
 //-------- main content --------//

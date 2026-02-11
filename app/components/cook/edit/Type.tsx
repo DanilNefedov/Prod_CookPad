@@ -42,7 +42,7 @@ const Type = memo(({recipe_id, isEditing}:Props) => {
 
     function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         const value = e.target.value
-
+ 
         const newSorting = recipeSorting.map(item =>
             item === recipeType ? value.toLowerCase() : item
         );
@@ -62,7 +62,7 @@ const Type = memo(({recipe_id, isEditing}:Props) => {
                     onChange={e => { handleChange(e) }}
                     id="outlined-select-currency"
                     select
-                    value={modifiedType === '' ? recipeType : modifiedType}
+                    value={!modifiedType ? recipeType : modifiedType}
                     sx={changeTypeInput}
                     slotProps={{
                         select: {

@@ -39,7 +39,7 @@ const Instruction = memo(({recipe_id, isEditing}:Props) => {
                 isEditing ? 
                     <TextField
                         id="outlined-multiline-flexible"
-                        value={modifiedInstruction === '' ? recipeInstruction : modifiedInstruction}
+                        value={!modifiedInstruction ? recipeInstruction : modifiedInstruction}
                         multiline
                         name="instruction"
                         maxRows={8}

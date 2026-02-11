@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
-import { ChangeDescription, ChangeHours, ChangeInfoFetchReq, ChangeInfoFetchRes, ChangeInstruction, 
+import {
+    ChangeDescription, ChangeHours, ChangeInfoFetchReq, ChangeInfoFetchRes, ChangeInstruction,
     ChangeMinutes, ChangeName, ChangeTypeSorting, CookFetchReq, CookFetchRes, CookRootState, DeleteCookFetch,
-    DeleteCookFetchRes, } from "@/app/(main)/cook/types";
+    DeleteCookFetchRes,
+} from "@/app/(main)/cook/types";
 import { FavoriteRecipeFetch } from "@/app/(main)/types";
 import { RootState } from "../store";
 import { changeHistory, deleteCookHistory } from "./cook-history";
@@ -11,9 +13,17 @@ import { changeNameRecipe, deleteRecipeData } from "./recipe-slice";
 
 
 export type CookOperationKey =
-  | 'fetchCook'
-  | 'deleteRecipe'
-  | 'changeNewInfo'
+    | 'fetchCook'
+    | 'deleteRecipe'
+    | 'changeNewInfo'
+
+
+export type ModifiedError =
+    | 'name'
+    | 'time'
+    | 'type'
+    | 'description'
+    | 'instruction'
 
 
 interface CookState extends CookRootState {
@@ -23,19 +33,20 @@ interface CookState extends CookRootState {
 const initialState: CookState = {
     connection_id: '',
     recipes: {},
-    modified:{
-        name:'',
-        time: {
-            hours:'',
-            minutes:'',
-        },
-        recipe_type:'',
-        description: '',
-        instruction:'',
-        sorting:[]
+    modified: {
+        // name:'',
+        // time: {
+        //     hours:'',
+        //     minutes:'',
+        // },
+        // recipe_type:'',
+        // description: '',
+        // instruction:'',
+        // sorting:[]
     },
-    redirect_to:'',
-    operations:createOperations<CookOperationKey>(
+    modifiedError: [],
+    redirect_to: '',
+    operations: createOperations<CookOperationKey>(
         ['fetchCook', 'deleteRecipe', 'changeNewInfo'],
         (key) => {
             return createOperationStatus();
@@ -56,7 +67,7 @@ export const fetchCook = createAsyncThunk<CookFetchRes, CookFetchReq, { rejectVa
 
             const data = await responseCook.json()
 
-            const {dataCook} = data
+            const { dataCook } = data
 
             return { recipe: dataCook, connection_id: id }
 
@@ -71,38 +82,39 @@ export const fetchCook = createAsyncThunk<CookFetchRes, CookFetchReq, { rejectVa
 
 export const changeNewInfo = createAsyncThunk<ChangeInfoFetchRes, ChangeInfoFetchReq, { rejectValue: string }>(
     'cook/changeNewInfo',
-    async function ({recipe_id, user_id}, { rejectWithValue, getState, dispatch }) {
+    async function ({ recipe_id, user_id }, { rejectWithValue, getState, dispatch }) {
         try {
-            
+
             const state = getState() as RootState;
             const modified = state.cook.modified
 
-            const url = '/api/cook/modify'
-            const data = {
-                recipe_id,
-                modified
-            }
+            console.log(modified)
 
-            const response = await fetch(url, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+            // const data = {
+            //     recipe_id,
+            //     modified
+            // }
 
-            if (!response.ok) {
-                return rejectWithValue('Request failed!');
-            }
+            // const response = await fetch('/api/cook/modify', {
+            //     method: 'PATCH',
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //     },
+            //     body: JSON.stringify(data),
+            // });
 
-            const resData = await response.json()
+            // if (!response.ok) {
+            //     return rejectWithValue('Request failed!');
+            // }
 
-            if (modified.name.trim() !== '') {
-                dispatch(changeHistory({ recipe_id, user_id, name:resData.name}));
-                dispatch(changeNameRecipe({recipe_id, name:resData.name}))
-            }
+            // const resData = await response.json()
 
-            return {resData, recipe_id}
+            // if (modified.name.trim() !== '') {
+            //     dispatch(changeHistory({ recipe_id, user_id, name:resData.name}));
+            //     dispatch(changeNameRecipe({recipe_id, name:resData.name}))
+            // }
+
+            return { resData: modified, recipe_id }
 
         } catch (error) {
             console.error(error)
@@ -115,7 +127,7 @@ export const changeNewInfo = createAsyncThunk<ChangeInfoFetchRes, ChangeInfoFetc
 
 export const deleteRecipe = createAsyncThunk<DeleteCookFetchRes, DeleteCookFetch, { rejectValue: string }>(
     'cook/deleteRecipe',
-    async function ({connection_id, recipe_id}, { rejectWithValue, dispatch }) {
+    async function ({ connection_id, recipe_id }, { rejectWithValue, dispatch }) {
         try {
 
             const url = `/api/cook?connection_id=${connection_id}&recipe_id=${recipe_id}`
@@ -131,8 +143,8 @@ export const deleteRecipe = createAsyncThunk<DeleteCookFetchRes, DeleteCookFetch
             }
             const respDelete = await response.json();
 
-            dispatch(deleteCookHistory({connection_id, recipe_id}))
-            dispatch(deleteRecipeData({recipe_id}))
+            dispatch(deleteCookHistory({ connection_id, recipe_id }))
+            dispatch(deleteRecipeData({ recipe_id }))
 
             console.log(respDelete)
 
@@ -162,24 +174,32 @@ const fetchCookHandlers = createReducerHandlers('fetchCook');
 const deleteRecipeHandlers = createReducerHandlers('deleteRecipe');
 const changeNewInfoHandlers = createReducerHandlers('changeNewInfo');
 
-  
+
 
 const cookSlice = createSlice({
     name: 'cook',
     initialState,
-    
     reducers: {
-        changeName(state, action: PayloadAction<ChangeName, string>){
-
+        changeName(state, action: PayloadAction<ChangeName, string>) {
             const recipe = state.recipes[action.payload.recipe_id];
+            if (!recipe) return;
 
-            if (recipe) {
-                state.modified.name = action.payload.name;
+            const value = action.payload.name;
+
+            const hasError = value.length > 150 || value.trim().length === 0;
+
+            if (hasError) {
+                if (!state.modifiedError.includes('name')) {
+                    state.modifiedError.push('name');
+                }
+            } else {
+                state.modifiedError = state.modifiedError.filter(key => key !== 'name');
             }
 
+            state.modified.name = value;
         },
 
-        changeType(state, action: PayloadAction<ChangeTypeSorting, string>){
+        changeType(state, action: PayloadAction<ChangeTypeSorting, string>) {
 
             const recipe = state.recipes[action.payload.recipe_id];
 
@@ -190,7 +210,7 @@ const cookSlice = createSlice({
 
         },
 
-        changeDescription(state, action: PayloadAction<ChangeDescription, string>){
+        changeDescription(state, action: PayloadAction<ChangeDescription, string>) {
 
             const recipe = state.recipes[action.payload.recipe_id];
 
@@ -200,7 +220,7 @@ const cookSlice = createSlice({
 
         },
 
-        changeInstruction(state, action: PayloadAction<ChangeInstruction, string>){
+        changeInstruction(state, action: PayloadAction<ChangeInstruction, string>) {
 
             const recipe = state.recipes[action.payload.recipe_id];
 
@@ -210,20 +230,26 @@ const cookSlice = createSlice({
 
         },
 
-        changeHours(state, action: PayloadAction<ChangeHours, string>){
+        changeHours(state, action: PayloadAction<ChangeHours, string>) {
             const recipe = state.recipes[action.payload.recipe_id];
+            if (!recipe) return;
 
-            if (recipe) {
-                state.modified.time.hours = action.payload.hours;
+            if (!state.modified.time) {
+                state.modified.time = {};
             }
+
+            state.modified.time.hours = action.payload.hours;
         },
-        
-        changeMinutes(state, action: PayloadAction<ChangeMinutes, string>){
-            const recipe = state.recipes[action.payload.recipe_id];
 
-            if (recipe) {
-                state.modified.time.minutes = action.payload.minutes;
+        changeMinutes(state, action: PayloadAction<ChangeMinutes, string>) {
+            const recipe = state.recipes[action.payload.recipe_id];
+            if (!recipe) return;
+
+            if (!state.modified.time) {
+                state.modified.time = {};
             }
+
+            state.modified.time.minutes = action.payload.minutes;
         },
 
         setFavoriteCook(state, action: PayloadAction<FavoriteRecipeFetch, string>) {
@@ -235,7 +261,7 @@ const cookSlice = createSlice({
             }
         },
 
-        closeAlertCook(state, action: PayloadAction<CookOperationKey>){
+        closeAlertCook(state, action: PayloadAction<CookOperationKey>) {
             const key = action.payload
 
             if (state.operations[key]) {
@@ -276,7 +302,7 @@ const cookSlice = createSlice({
                 state.operations.deleteRecipe.loading = false;
 
                 const { name, description, instruction, recipe_type, time, sorting } = action.payload.resData;
-    
+
                 const recipe_id = action.payload.recipe_id;
 
                 const recipe = state.recipes[recipe_id];
@@ -287,10 +313,13 @@ const cookSlice = createSlice({
                 if (instruction !== undefined) recipe.instruction = instruction;
                 if (recipe_type !== undefined) recipe.recipe_type = recipe_type;
                 if (time !== undefined && (time.hours?.trim() || time.minutes?.trim())) {
-                    recipe.time = time;
+                    recipe.time = {
+                        ...recipe.time,
+                        ...time,
+                    };
                 }
                 if (sorting !== undefined && Array.isArray(sorting)) recipe.sorting = sorting;
-                
+
             })
 
 
@@ -310,8 +339,8 @@ const cookSlice = createSlice({
     }
 })
 
-export const { setFavoriteCook, closeAlertCook, changeName, changeType, 
-    changeDescription, changeInstruction, changeHours, changeMinutes,setRedirect } = cookSlice.actions
+export const { setFavoriteCook, closeAlertCook, changeName, changeType,
+    changeDescription, changeInstruction, changeHours, changeMinutes, setRedirect } = cookSlice.actions
 
 
 export default cookSlice.reducer

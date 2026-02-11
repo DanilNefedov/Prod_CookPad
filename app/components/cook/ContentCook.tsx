@@ -64,7 +64,6 @@ export function ContentCook(props:Props) {
     }, [redirectTo]);
 
 
-
     const handleEdit = () => {
         if(isEditing){
             dispatch(changeNewInfo({recipe_id, user_id}))

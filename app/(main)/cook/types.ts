@@ -1,6 +1,7 @@
 // *S - start
 // *E - end
 
+import { ModifiedError } from "@/state/slices/cook-slice";
 import { RecipeMedia } from "../types";
 
 
@@ -12,21 +13,24 @@ import { RecipeMedia } from "../types";
 export interface CookRootState {
     connection_id:string
     recipes:Record<string, CookRecipe>;
-    modified:Modified
+    modified:Partial<Modified>
+    modifiedError:ModifiedError[]
     redirect_to:string
     // recipes:CookRecipe[]
 }
 
 export interface Modified {
     name:string,
-    time: {
-        hours:string
-        minutes:string 
-    },
+    time:Partial<TimeModefied>;
     recipe_type:string
     description: string
     instruction:string,
     sorting:string[]
+}
+
+export interface TimeModefied {
+    hours: string;
+    minutes: string;
 }
 
 export interface ModifiedRoute {
@@ -129,7 +133,7 @@ export interface ChangeMinutes{
 }
 
 export interface ChangeInfoFetchRes {
-    resData:Modified, 
+    resData:Partial<Modified>, 
     recipe_id:string
 }
 
