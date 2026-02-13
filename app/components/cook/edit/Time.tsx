@@ -1,9 +1,10 @@
 import { Box, InputAdornment, TextField, Typography } from "@mui/material";
-import { ChangeEvent, memo } from "react";
+import { memo, useEffect } from "react";
 import { SkeletonInfo } from "../SkeletonInfo";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { changeHours, changeMinutes } from "@/state/slices/cook-slice";
+import { changeTime } from "@/state/slices/cook-slice";
 import { changeTimeInput } from "@/app/(main)/cook/styles";
+import { useTimeInput } from "@/app/hooks/useTime";
 
 
 
@@ -21,20 +22,32 @@ const Time = memo(({ recipe_id, isEditing }: Props) => {
     const modifiedTime = useAppSelector(state => state.cook.modified.time)
     const dispatch = useAppDispatch()
 
+    const hours = modifiedTime?.hours ?? Number(recipeTime?.hours) ?? 0;
+    const minutes = modifiedTime?.minutes ?? Number(recipeTime?.minutes) ?? 0;
 
-    function handleChangeHours(e: ChangeEvent<HTMLInputElement>) {
-        const value = e.target.value;
-        if (value === '' || (!isNaN(parseInt(value)) && parseInt(value) >= 0 && parseInt(value) <= 60 && value.length <= 2)) {
-            dispatch(changeHours({ recipe_id, hours: value }))
+    const {
+        displayHours,
+        displayMinutes,
+        value,
+        handleHoursChange,
+        handleMinutesChange,
+        handleHoursBlur,
+        handleMinutesBlur,
+    } = useTimeInput({
+        initialValue: {
+            hours,
+            minutes,
         }
-    }
+    });
 
-    function handleChangeMinutes(e: ChangeEvent<HTMLInputElement>) {
-        const value = e.target.value;
-        if (value === '' || (!isNaN(parseInt(value)) && parseInt(value) >= 0 && parseInt(value) <= 60 && value.length <= 2)) {
-            dispatch(changeMinutes({ recipe_id, minutes: value }))
+    useEffect(() => {
+        if(value.hours !== hours || value.minutes !== minutes){
+            console.log(value.hours, hours, value.minutes, minutes)
+            dispatch(changeTime({hours:value.hours, minutes:value.minutes, recipe_id}));
         }
-    }
+        
+    }, [displayHours, displayMinutes]);
+
 
     return (
         <Typography sx={{ display: 'flex', flexGrow: 1 }} component='span'>
@@ -45,12 +58,9 @@ const Time = memo(({ recipe_id, isEditing }: Props) => {
                         <TextField
                             id="outlined-basic"
                             variant="outlined"
-                            value={
-                                modifiedTime?.hours !== undefined
-                                    ? modifiedTime.hours
-                                    : recipeTime.hours
-                            }
-                            onChange={handleChangeHours}
+                            value={displayHours}
+                            onChange={handleHoursChange}
+                            onBlur={handleHoursBlur}
                             type="number"
                             onKeyDown={(e) => {
                                 if (['-', '+', 'e', ',', '.'].includes(e.key)) {
@@ -60,7 +70,7 @@ const Time = memo(({ recipe_id, isEditing }: Props) => {
                             slotProps={{
                                 input: {
                                     endAdornment: (
-                                        <InputAdornment component={'span'} position="end" sx={{'& p':{color:'text.primary'}}}>
+                                        <InputAdornment component={'span'} position="end" sx={{ '& p': { color: 'text.primary' } }}>
                                             h :
                                         </InputAdornment>
                                     ),
@@ -71,12 +81,9 @@ const Time = memo(({ recipe_id, isEditing }: Props) => {
                         <TextField
                             id="outlined-basic"
                             variant="outlined"
-                            value={
-                                modifiedTime?.minutes !== undefined
-                                    ? modifiedTime.minutes
-                                    : recipeTime.minutes
-                            }
-                            onChange={handleChangeMinutes}
+                            value={displayMinutes}
+                            onChange={handleMinutesChange}
+                            onBlur={handleMinutesBlur}
                             type="number"
                             onKeyDown={(e) => {
                                 if (['-', '+', 'e', ',', '.'].includes(e.key)) {
@@ -86,7 +93,7 @@ const Time = memo(({ recipe_id, isEditing }: Props) => {
                             slotProps={{
                                 input: {
                                     endAdornment: (
-                                        <InputAdornment component={'span'} position="end" sx={{'& p':{color:'text.primary'}}}>
+                                        <InputAdornment component={'span'} position="end" sx={{ '& p': { color: 'text.primary' } }}>
                                             m
                                         </InputAdornment>
                                     ),

@@ -1,9 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createOperations, createOperationStatus, OperationState } from "@/app/types";
 import {
-    ChangeDescription, ChangeHours, ChangeInfoFetchReq, ChangeInfoFetchRes, ChangeInstruction,
-    ChangeMinutes, ChangeName, ChangeTypeSorting, CookFetchReq, CookFetchRes, CookRootState, DeleteCookFetch,
-    DeleteCookFetchRes,
+    ChangeDescription, ChangeInfoFetchReq, ChangeInfoFetchRes, ChangeInstruction, ChangeName,
+    ChangeTime, ChangeTypeSorting, CookFetchReq, CookFetchRes, CookRootState, DeleteCookFetch, DeleteCookFetchRes,
 } from "@/app/(main)/cook/types";
 import { FavoriteRecipeFetch } from "@/app/(main)/types";
 import { RootState } from "../store";
@@ -185,15 +184,16 @@ const cookSlice = createSlice({
             if (!recipe) return;
 
             const value = action.payload.name;
+            const key = 'name'
 
             const hasError = value.length > 150 || value.trim().length === 0;
 
             if (hasError) {
-                if (!state.modifiedError.includes('name')) {
-                    state.modifiedError.push('name');
+                if (!state.modifiedError.includes(key)) {
+                    state.modifiedError.push(key);
                 }
             } else {
-                state.modifiedError = state.modifiedError.filter(key => key !== 'name');
+                state.modifiedError = state.modifiedError.filter(el => el !== key);
             }
 
             state.modified.name = value;
@@ -211,45 +211,79 @@ const cookSlice = createSlice({
         },
 
         changeDescription(state, action: PayloadAction<ChangeDescription, string>) {
-
             const recipe = state.recipes[action.payload.recipe_id];
+            if (!recipe) return;
 
-            if (recipe) {
-                state.modified.description = action.payload.description;
+            const value = action.payload.description;
+            const key = 'description'
+
+            const hasError = value.length > 150 || value.trim().length === 0;
+
+            if (hasError) {
+                if (!state.modifiedError.includes(key)) {
+                    state.modifiedError.push(key);
+                }
+            } else {
+                state.modifiedError = state.modifiedError.filter(el => el !== key);
             }
+
+            state.modified.description = value;
 
         },
 
         changeInstruction(state, action: PayloadAction<ChangeInstruction, string>) {
 
             const recipe = state.recipes[action.payload.recipe_id];
+            if (!recipe) return;
 
-            if (recipe) {
-                state.modified.instruction = action.payload.instruction;
+            const value = action.payload.instruction;
+            const key = 'instruction'
+
+            const hasError = value.length > 300 || value.trim().length === 0;
+
+            if (hasError) {
+                if (!state.modifiedError.includes(key)) {
+                    state.modifiedError.push(key);
+                }
+            } else {
+                state.modifiedError = state.modifiedError.filter(el => el !== key);
             }
+
+            state.modified.instruction = value;
 
         },
 
-        changeHours(state, action: PayloadAction<ChangeHours, string>) {
+        changeTime(state, action: PayloadAction<ChangeTime>) {
             const recipe = state.recipes[action.payload.recipe_id];
             if (!recipe) return;
 
-            if (!state.modified.time) {
-                state.modified.time = {};
+            let { hours, minutes } = action.payload;
+
+            const hoursValue = hours ?? 0;
+            const minutesValue = minutes ?? 0;
+            const key = 'time'
+
+            const error =
+                hours === null ||
+                minutes === null ||
+                isNaN(hoursValue) ||
+                isNaN(minutesValue) ||
+                (hoursValue === 0 && minutesValue === 0);
+
+            if (error) {
+                if (!state.modifiedError.includes(key)) {
+                    state.modifiedError.push(key);
+                }
+            } else {
+                state.modifiedError = state.modifiedError.filter(el => el !== key);
             }
 
-            state.modified.time.hours = action.payload.hours;
-        },
-
-        changeMinutes(state, action: PayloadAction<ChangeMinutes, string>) {
-            const recipe = state.recipes[action.payload.recipe_id];
-            if (!recipe) return;
-
             if (!state.modified.time) {
-                state.modified.time = {};
+                state.modified.time = { hours: 0, minutes: 0 };
             }
 
-            state.modified.time.minutes = action.payload.minutes;
+            state.modified.time.hours = hoursValue;
+            state.modified.time.minutes = minutesValue;
         },
 
         setFavoriteCook(state, action: PayloadAction<FavoriteRecipeFetch, string>) {
@@ -340,7 +374,7 @@ const cookSlice = createSlice({
 })
 
 export const { setFavoriteCook, closeAlertCook, changeName, changeType,
-    changeDescription, changeInstruction, changeHours, changeMinutes, setRedirect } = cookSlice.actions
+    changeDescription, changeInstruction, changeTime, setRedirect } = cookSlice.actions
 
 
 export default cookSlice.reducer

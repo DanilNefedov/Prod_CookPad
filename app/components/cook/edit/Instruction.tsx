@@ -24,10 +24,6 @@ const Instruction = memo(({recipe_id, isEditing}:Props) => {
     function handleChange(e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
         const value = e.target.value;
 
-        if (value.length > 300) {
-            return; 
-        }
-
         dispatch(changeInstruction({recipe_id, instruction:value}))
     }
 
@@ -39,7 +35,7 @@ const Instruction = memo(({recipe_id, isEditing}:Props) => {
                 isEditing ? 
                     <TextField
                         id="outlined-multiline-flexible"
-                        value={!modifiedInstruction ? recipeInstruction : modifiedInstruction}
+                        value={modifiedInstruction !== undefined ? modifiedInstruction : recipeInstruction}
                         multiline
                         name="instruction"
                         maxRows={8}

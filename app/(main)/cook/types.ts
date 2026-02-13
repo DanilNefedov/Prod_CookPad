@@ -29,8 +29,8 @@ export interface Modified {
 }
 
 export interface TimeModefied {
-    hours: string;
-    minutes: string;
+    hours: number;
+    minutes: number;
 }
 
 export interface ModifiedRoute {
@@ -122,14 +122,10 @@ export interface ChangeInstruction {
     instruction:string
 }
 
-export interface ChangeHours{
-    recipe_id:string
-    hours:string
-}
-
-export interface ChangeMinutes{
-    recipe_id:string
-    minutes:string
+export interface ChangeTime{
+    recipe_id:string,
+    hours:number | null
+    minutes:number | null
 }
 
 export interface ChangeInfoFetchRes {

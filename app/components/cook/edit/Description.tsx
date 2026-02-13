@@ -25,9 +25,9 @@ const Description = memo(({recipe_id, isEditing}:Props) => {
     function handleChange(e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
         const value = e.target.value;
 
-        if (value.length > 150) {
-            return; 
-        }
+        // if (value.length > 150) {
+        //     return; 
+        // }
 
         dispatch(changeDescription({recipe_id, description:value}))
     }
@@ -39,13 +39,13 @@ const Description = memo(({recipe_id, isEditing}:Props) => {
             {isEditing ?
                 <TextField
                     id="outlined-multiline-flexible"
-                    value={!modifiedDescription ? recipeDescription : modifiedDescription}
+                    value={modifiedDescription !== undefined ? modifiedDescription : recipeDescription}
+                    onChange={handleChange}
                     multiline
                     name="description"
                     maxRows={8}
                     minRows={4}
                     // helperText='max lenght 150 symbols'
-                    onChange={e => handleChange(e)}
                     sx={{
                         width:'70%',
                         ml:'5px',

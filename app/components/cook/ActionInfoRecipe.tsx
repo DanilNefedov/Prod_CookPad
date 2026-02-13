@@ -58,7 +58,6 @@ const ActionInfoRecipe = memo(({ recipe_id, isEditing, handleEdit }: Props) => {
     }
 
 
-
     return (
         <Box sx={[columnSpaceBetween, actionInfoBox]}>
             <Box sx={containerInfo}>
@@ -118,8 +117,8 @@ const ActionInfoRecipe = memo(({ recipe_id, isEditing, handleEdit }: Props) => {
                                     }
                                 }}
                             >
-                                <Typography sx={{ maxWidth: '250px', p: '10px' }}>
-                                    Please fix the following fields: {modifiedError.join(', ')}
+                                <Typography sx={{ maxWidth: '250px', p: '10px', '& span':{fontWeight:800} }}>
+                                    Please fix the following fields: <span>{modifiedError.join(', ')}</span>
                                 </Typography>
                             </Popover>
                         </Box>

@@ -3,7 +3,7 @@ import { SkeletonInfo } from "../SkeletonInfo";
 import { textMaxWidth } from "@/app/styles";
 import { editNameBox, editNameInput, nameRecipe } from "@/app/(main)/cook/styles";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { ChangeEvent, memo, useState } from "react";
+import { ChangeEvent, memo } from "react";
 import { changeName } from "@/state/slices/cook-slice";
 
 
