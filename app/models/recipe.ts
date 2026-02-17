@@ -58,8 +58,8 @@ const RecipeSchema = new Schema(
       required: true
     },
     time: {
-      hours: String,
-      minutes: String
+      hours: Number,
+      minutes: Number
     },
     media: [MediaRecipeSchema],
     recipe_type: {

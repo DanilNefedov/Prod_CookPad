@@ -52,7 +52,7 @@ export function useTimeInput( options?: UseTimeInputOptions): UseTimeInputReturn
 
         if (cleaned !== "" && Number(cleaned) > 99) return;
 
-        setState((prev) => ({ ...prev, displayHours: cleaned, }));
+        setState((prev) => ({ ...prev, displayHours: cleaned === '' ? '0' : cleaned, }));
 
     },[state.displayMinutes, getTimeValue]);
 
@@ -66,7 +66,7 @@ export function useTimeInput( options?: UseTimeInputOptions): UseTimeInputReturn
 
         if (cleaned !== "" && Number(cleaned) > 59) return;
 
-        setState((prev) => ({ ...prev, displayMinutes: cleaned,  }));
+        setState((prev) => ({ ...prev, displayMinutes: cleaned === '' ? '0' : cleaned,  }));
 
     },[state.displayHours, getTimeValue]);
 

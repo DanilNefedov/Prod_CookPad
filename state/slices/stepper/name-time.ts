@@ -10,8 +10,8 @@ export interface NameTimeState{
         value:string
     },
     time:{
-        minutes: string,
-        hours: string,
+        minutes: number,
+        hours: number,
     }
 }
 
@@ -20,8 +20,8 @@ const initialState: NameTimeState = {
         value:''
     },
     time:{
-        minutes: '0',
-        hours: '0',
+        minutes: 0,
+        hours: 0,
     }
 }
 
@@ -36,11 +36,11 @@ const nameTimeSlice = createSlice({
             state.name.value = action.payload
         },
 
-        changeHours(state, action: PayloadAction<string>) {
+        changeHours(state, action: PayloadAction<number>) {
             state.time.hours = action.payload
         },
 
-        changeMinutes(state, action: PayloadAction<string>) {
+        changeMinutes(state, action: PayloadAction<number>) {
             state.time.minutes = action.payload
         },
     },

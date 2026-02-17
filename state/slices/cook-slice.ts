@@ -8,6 +8,7 @@ import { FavoriteRecipeFetch } from "@/app/(main)/types";
 import { RootState } from "../store";
 import { changeHistory, deleteCookHistory } from "./cook-history";
 import { changeNameRecipe, deleteRecipeData } from "./recipe-slice";
+import { isObjDeepEmpty } from "@/app/utils/isObjDeepEmpty";
 
 
 
@@ -87,31 +88,31 @@ export const changeNewInfo = createAsyncThunk<ChangeInfoFetchRes, ChangeInfoFetc
             const state = getState() as RootState;
             const modified = state.cook.modified
 
-            console.log(modified)
+            if (isObjDeepEmpty(modified)) {
+                return { resData: {}, recipe_id }
+            }
 
-            // const data = {
-            //     recipe_id,
-            //     modified
-            // }
+            const response = await fetch('/api/cook/modify', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    recipe_id,
+                    modified
+                }),
+            });
 
-            // const response = await fetch('/api/cook/modify', {
-            //     method: 'PATCH',
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //     },
-            //     body: JSON.stringify(data),
-            // });
+            if (!response.ok) {
+                return rejectWithValue('Request failed!');
+            }
 
-            // if (!response.ok) {
-            //     return rejectWithValue('Request failed!');
-            // }
+            const resData = await response.json()
 
-            // const resData = await response.json()
-
-            // if (modified.name.trim() !== '') {
-            //     dispatch(changeHistory({ recipe_id, user_id, name:resData.name}));
-            //     dispatch(changeNameRecipe({recipe_id, name:resData.name}))
-            // }
+            if (typeof modified.name === 'string' && modified.name.trim() !== '') {
+                dispatch(changeHistory({ recipe_id, user_id, name:resData.name}));
+                dispatch(changeNameRecipe({recipe_id, name:resData.name}))
+            }
 
             return { resData: modified, recipe_id }
 
@@ -303,6 +304,13 @@ const cookSlice = createSlice({
                 state.operations[key].loading = false
             }
         },
+
+        resetModifiedTime(state){
+            if (state.modified.time) {
+                state.modified.time = {};
+            }
+        },
+
         setRedirect(state, action: PayloadAction<string>) {
             state.redirect_to = action.payload;
         },
@@ -334,6 +342,7 @@ const cookSlice = createSlice({
             .addCase(changeNewInfo.fulfilled, (state, action: PayloadAction<ChangeInfoFetchRes, string>) => {
                 state.operations.deleteRecipe.error = false;
                 state.operations.deleteRecipe.loading = false;
+                console.log(action.payload)
 
                 const { name, description, instruction, recipe_type, time, sorting } = action.payload.resData;
 
@@ -346,13 +355,16 @@ const cookSlice = createSlice({
                 if (description !== undefined) recipe.description = description;
                 if (instruction !== undefined) recipe.instruction = instruction;
                 if (recipe_type !== undefined) recipe.recipe_type = recipe_type;
-                if (time !== undefined && (time.hours?.trim() || time.minutes?.trim())) {
+                if (time !== undefined && (time.hours !== undefined || time.minutes !== undefined)) {
                     recipe.time = {
                         ...recipe.time,
                         ...time,
                     };
                 }
                 if (sorting !== undefined && Array.isArray(sorting)) recipe.sorting = sorting;
+
+                state.modified = {};
+                state.modifiedError = [];
 
             })
 
@@ -374,7 +386,7 @@ const cookSlice = createSlice({
 })
 
 export const { setFavoriteCook, closeAlertCook, changeName, changeType,
-    changeDescription, changeInstruction, changeTime, setRedirect } = cookSlice.actions
+    changeDescription, changeInstruction, changeTime, setRedirect, resetModifiedTime } = cookSlice.actions
 
 
 export default cookSlice.reducer

@@ -33,24 +33,12 @@ export interface TimeModefied {
     minutes: number;
 }
 
-export interface ModifiedRoute {
-    name?:string,
-    time?: {
-        hours?:string
-        minutes?:string 
-    },
-    recipe_type?:string
-    description?: string
-    instruction?:string,
-    sorting?:string[]
-}
-
 export interface TempalateRecipeCook {
     recipe_id:string 
     name:string
     time: {
-        hours:string
-        minutes:string 
+        hours:number
+        minutes:number 
     }
     media:RecipeMedia[]
     recipe_type:string

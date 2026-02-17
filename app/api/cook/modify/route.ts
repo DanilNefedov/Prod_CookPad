@@ -1,6 +1,7 @@
 import connectDB from "@/app/lib/mongoose";
 import { NextResponse } from "next/server";
 import { updateRecipe } from "./services";
+import { PatchRecipeSchema } from "./schema";
 
 
 
@@ -8,15 +9,20 @@ import { updateRecipe } from "./services";
 
 export async function PATCH(request: Request) {
     try {
-        await connectDB();
-        const { recipe_id, modified } = await request.json();
+        const raw = await request.json();
 
-        if (!recipe_id) {
+        const parsed = PatchRecipeSchema.safeParse(raw);
+
+        if (!parsed.success) {
             return NextResponse.json(
-                { message: "Invalid request data" },
+                { message: 'Invalid request data' },
                 { status: 400 }
             );
         }
+
+        const { recipe_id, modified } = parsed.data;
+
+        await connectDB();
 
         const result = await updateRecipe(recipe_id, modified);
 

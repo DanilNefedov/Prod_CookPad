@@ -25,10 +25,6 @@ const Description = memo(({recipe_id, isEditing}:Props) => {
     function handleChange(e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>){
         const value = e.target.value;
 
-        // if (value.length > 150) {
-        //     return; 
-        // }
-
         dispatch(changeDescription({recipe_id, description:value}))
     }
 

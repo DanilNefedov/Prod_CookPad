@@ -2,7 +2,7 @@ import { Box, InputAdornment, TextField, Typography } from "@mui/material";
 import { memo, useEffect } from "react";
 import { SkeletonInfo } from "../SkeletonInfo";
 import { useAppDispatch, useAppSelector } from "@/state/hook";
-import { changeTime } from "@/state/slices/cook-slice";
+import { changeTime, resetModifiedTime } from "@/state/slices/cook-slice";
 import { changeTimeInput } from "@/app/(main)/cook/styles";
 import { useTimeInput } from "@/app/hooks/useTime";
 
@@ -41,12 +41,15 @@ const Time = memo(({ recipe_id, isEditing }: Props) => {
     });
 
     useEffect(() => {
+        if(isEditing){
+            dispatch(resetModifiedTime())
+        }
+
         if(value.hours !== hours || value.minutes !== minutes){
-            console.log(value.hours, hours, value.minutes, minutes)
             dispatch(changeTime({hours:value.hours, minutes:value.minutes, recipe_id}));
         }
         
-    }, [displayHours, displayMinutes]);
+    }, [value.hours, value.minutes, dispatch, recipe_id, isEditing]);
 
 
     return (

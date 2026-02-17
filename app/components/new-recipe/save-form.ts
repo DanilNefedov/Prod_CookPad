@@ -149,7 +149,7 @@ export async function saveForm(
             const descrF = stepDescription.description.trim().length < 100 ? stepDescription.description.trim().length / 100 : 1;
             const instF = stepInstruction.instruction.trim().length < 250 ? stepInstruction.instruction.trim().length / 250 : 1;
             const nameF = stepNameTime.name.value.trim() !== '' ? 1 : 0;
-            const timeF = stepNameTime.time.hours !== '' && stepNameTime.time.minutes !== '' ? 1 : 0;
+            const timeF = stepNameTime.time.hours !== 0 && stepNameTime.time.minutes !== 0 ? 1 : 0;
             const typeF = stepTypeRecommendation.type_recipe !== '' ? 1 : 0;
             const ingrF = ingredientsCopy.length >= 1 ? 1 : 0;
 
