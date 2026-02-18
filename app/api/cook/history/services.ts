@@ -1,14 +1,12 @@
 import CookHistory from "@/app/models/cook-history";
 import Recipe from "@/app/models/recipe";
+import { HistoryLinkDTO } from "./schema";
 
 
 
-interface linkT {
-    recipe_id: string
-    recipe_name: string
-    _id: string
+interface HistoryLinkDB extends HistoryLinkDTO {
+    _id: string;
 }
-
 
 
 export async function getCookHistoryWithRecipe(connection_id: string, recipe_id: string) {
@@ -21,9 +19,7 @@ export async function getCookHistoryWithRecipe(connection_id: string, recipe_id:
         return null;
     }
 
-    const exists = cook.history_links.some(
-        (link: linkT) => link.recipe_id === recipe_id
-    );
+    const exists = cook.history_links.some((link: HistoryLinkDB) => link.recipe_id === recipe_id);
 
     if (exists) {
         return { cook, newCook: null };
@@ -39,7 +35,7 @@ export async function getCookHistoryWithRecipe(connection_id: string, recipe_id:
 
 
 
-export async function addRecipeToCookHistory(connection_id: string, history_link: linkT) {
+export async function addRecipeToCookHistory(connection_id: string, history_link:HistoryLinkDTO) {
     const exists = await CookHistory.exists({ connection_id });
 
     if (!exists) {

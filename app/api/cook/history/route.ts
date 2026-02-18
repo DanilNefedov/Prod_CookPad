@@ -2,6 +2,7 @@ import connectDB from "@/app/lib/mongoose";
 import CookHistory from "@/app/models/cook-history";
 import { NextResponse } from "next/server";
 import { addRecipeToCookHistory, getCookHistoryWithRecipe } from "./services";
+import { GetCookHistoryQuerySchema, PatchRecipeToHistorySchema, PostCookHistorySchema } from "./schema";
 
 
 
@@ -10,11 +11,24 @@ import { addRecipeToCookHistory, getCookHistoryWithRecipe } from "./services";
 
 export async function POST(req: Request) {
     try {
+        const body = await req.json();
+
+        const parsed = PostCookHistorySchema.safeParse(body);
+
+        if (!parsed.success) {
+            return NextResponse.json(
+                { message: 'Invalid request data' },
+                { status: 400 }
+            );
+        }
+
         await connectDB();
+        
+        const newHistory = new CookHistory({
+            connection_id: parsed.data.connection_id,
+            history_links: [],
+        });
 
-        const data = await req.json();
-
-        const newHistory = new CookHistory(data);
         await newHistory.save();
 
         return NextResponse.json({ data: newHistory });
@@ -31,18 +45,25 @@ export async function POST(req: Request) {
 
 export async function GET(request: Request) {
     try {
-        await connectDB();
-
         const { searchParams } = new URL(request.url);
-        const connection_id = searchParams.get('connection_id');
-        const recipe_id = searchParams.get('recipe_id');
 
-        if (!connection_id || !recipe_id) {
+        const queryObject = {
+            connection_id: searchParams.get("connection_id"),
+            recipe_id: searchParams.get("recipe_id"),
+        };
+
+        const parsed = GetCookHistoryQuerySchema.safeParse(queryObject);
+
+        if (!parsed.success) {
             return NextResponse.json(
                 { message: 'Invalid request data' },
                 { status: 400 }
             );
         }
+
+        const { connection_id, recipe_id } = parsed.data;
+        
+        await connectDB();
 
         const result = await getCookHistoryWithRecipe(
             connection_id,
@@ -72,14 +93,18 @@ export async function PATCH(request: Request) {
     try {
         await connectDB();
 
-        const { connection_id, history_links } = await request.json();
+        const body = await request.json();
 
-        if (!connection_id || !history_links?.recipe_id) {
+        const parsed = PatchRecipeToHistorySchema.safeParse(body);
+
+        if (!parsed.success) {
             return NextResponse.json(
                 { message: 'Invalid request data' },
                 { status: 400 }
             );
         }
+
+        const { connection_id, history_links } = parsed.data;
 
         const result = await addRecipeToCookHistory(
             connection_id,

@@ -16,15 +16,15 @@ export const RecipeMediaBaseSchema = z.object({
     user_id: z.string().min(1),
     recipe_id: z.string().min(1),
     media_id: z.string().min(1),
-});
+}).strict();
 
 export const PostRecipeMediaSchema = RecipeMediaBaseSchema.extend({
     file: z.instanceof(File),
-});
+}).strict();
 
 export const PostFileClientSchema = RecipeMediaBaseSchema.extend({
     media_url: z.url()
-});
+}).strict();
 
 
 export type PostRecipeMediaInput = z.infer<typeof PostRecipeMediaSchema>;

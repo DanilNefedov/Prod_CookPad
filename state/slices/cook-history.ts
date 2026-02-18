@@ -37,9 +37,7 @@ export const fetchHistoryCook = createAsyncThunk<CookHistoryRootState, HistoryLi
     'cook-history/fetchHistoryCook',
     async function ({connection_id, recipe_id,}, {rejectWithValue, dispatch }){
         try{
-
-            const url = `/api/cook/history?connection_id=${connection_id}&recipe_id=${recipe_id}`
-            const response = await fetch(url);
+            const response = await fetch(`/api/cook/history?connection_id=${connection_id}&recipe_id=${recipe_id}`);
 
             if (!response.ok) {
                 return rejectWithValue('Server Error!');

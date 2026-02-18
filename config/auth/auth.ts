@@ -117,7 +117,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               url: `${process.env.APP_MAIN_URL}/api/cook/history`,
               data: {
                 connection_id:account.providerAccountId,
-                history_links:[]
               },
             });
             // const responseData = await response.json();

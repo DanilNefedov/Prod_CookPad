@@ -1,6 +1,7 @@
 import connectDB from "@/app/lib/mongoose";
-import CookHistory from "@/app/models/cook-history";
 import { NextResponse } from "next/server";
+import { PatchHistoryRecipeNameSchema } from "./schema";
+import { updateHistoryRecipeName } from "./services";
 
 
 
@@ -11,26 +12,26 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request) {
     try {
+        const body = await request.json();
+
+        const parsed = PatchHistoryRecipeNameSchema.safeParse(body);
+
+        if (!parsed.success) {
+            return NextResponse.json(
+                { message: 'Invalid request data' },
+                { status: 400 }
+            );
+        }
+
+        const { user_id, recipe_id, name } = parsed.data;
+
         await connectDB();
 
-        const data = await request.json();
-        const { user_id, recipe_id, name } = data;
+        const result = await updateHistoryRecipeName({user_id, recipe_id, name});
 
-        if (!user_id || !recipe_id || !name ) {
-            return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
-        }
-
-        const result = await CookHistory.updateOne(
-            { connection_id: user_id },
-            { $set: { "history_links.$[elem].recipe_name": name } },
-            { arrayFilters: [{ "elem.recipe_id": recipe_id }] }
-        );
-
-        if (result.matchedCount === 0) {
+        if(!result) {
             return NextResponse.json({ message: "No matching user or recipe found" }, { status: 404 });
         }
-
-    
 
         return NextResponse.json({recipe_id, name});
 

@@ -1,5 +1,6 @@
 import connectDB from "@/app/lib/mongoose";
 import { NextResponse } from "next/server";
+import { PatchRemoveRecipeSchema } from "./schema";
 import { removeRecipeFromHistory } from "./services";
 
 
@@ -8,21 +9,22 @@ import { removeRecipeFromHistory } from "./services";
 
 export async function PATCH(request: Request) {
     try {
-        await connectDB();
+        const body = await request.json();
 
-        const { connection_id, recipe_id } = await request.json();
+        const parsed = PatchRemoveRecipeSchema.safeParse(body);
 
-        if (!connection_id || !recipe_id) {
+        if (!parsed.success) {
             return NextResponse.json(
-                { message: "Missing required fields" },
+                { message: "Invalid request data" },
                 { status: 400 }
             );
         }
 
-        const result = await removeRecipeFromHistory(
-            connection_id,
-            recipe_id
-        );
+        const { connection_id, recipe_id } = parsed.data;
+
+        await connectDB();
+
+        const result = await removeRecipeFromHistory({ connection_id, recipe_id });
 
         switch (result.status) {
             case 'HISTORY_NOT_FOUND':

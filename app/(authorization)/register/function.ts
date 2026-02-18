@@ -89,8 +89,7 @@ export async function handleRegister(formData: RegisterFormData): Promise<Regist
                 "Content-Type": "application/json" 
             },
             body: JSON.stringify({
-                connection_id:connection_id,
-                history_links:[]
+                connection_id:connection_id
             }),
         })
 
