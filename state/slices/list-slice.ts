@@ -677,8 +677,9 @@ const listSlice = createSlice({
 
                     for (const item of action.payload) {
                         if (item.type === "created") {
-                            const newUnit = item.units; 
+                            const newUnit = item.new_unit; 
                             const newUnitId = newUnit.unit_id;
+                            
 
                             state.units[newUnitId] = {
                                 unit_id: newUnitId,

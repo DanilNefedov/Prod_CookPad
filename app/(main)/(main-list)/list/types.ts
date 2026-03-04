@@ -196,7 +196,7 @@ export interface CreatedIngredientResult {
     media: string;
     shop_ingr: boolean;
     list: string[];           
-    units: UnitCreateIngr;             
+    new_unit: UnitCreateIngr;             
 }
 
 export interface UpdatedIngredientResult {

@@ -1,17 +1,17 @@
 import connectDB from "@/app/lib/mongoose";
-import ListIngredients from "@/app/models/list";
-import { cloneDeep, omit } from "lodash";
 import { NextResponse } from "next/server";
-
+import { PatchCookIngredientSchema, PostCookIngredientSchema } from "./schema";
+import { appendUnitToCookIngredient, createCookIngredient, findCookIngredient } from "./services";
 
 
 
 export async function PATCH(request: Request) {
     try {
-        const dataUnit = await request.json();
-        const { connection_id, name, units } = dataUnit;
+        const body = await request.json();
 
-        if (!connection_id || !name || !units ) {
+        const parsed = PatchCookIngredientSchema.safeParse(body);
+
+        if (!parsed.success) {
             return NextResponse.json(
                 { message: 'Invalid request data' },
                 { status: 400 }
@@ -20,81 +20,67 @@ export async function PATCH(request: Request) {
 
         await connectDB();
 
-        const document = await ListIngredients.findOne({ connection_id, name });
+        const existing = await findCookIngredient(parsed.data);
 
-        if (!document) {
-            return Response.json({ error: 'Document not found' }, { status: 404 });
+        if (!existing) {
+            return NextResponse.json(
+                { error: "Document not found" },
+                { status: 404 }
+            );
         }
 
-        const updatedDoc = await ListIngredients.findOneAndUpdate(
-            { connection_id, name:name.trim() },
-            { 
-                $push: { units: units } 
-            },
-            { new: true } 
-        );        
+        const updatedDoc = await appendUnitToCookIngredient(parsed.data);
 
         if (!updatedDoc) {
-            return NextResponse.json({ error: "Failed to update document" }, { status: 500 });
+            return NextResponse.json(
+                { error: "Failed to update document" },
+                { status: 500 }
+            );
         }
 
-        return NextResponse.json({unit:updatedDoc.units[updatedDoc.units.length - 1], _id:updatedDoc._id}, { status: 200 });
+        const lastUnit = updatedDoc.units[updatedDoc.units.length - 1];
 
+        return NextResponse.json(
+            {
+                unit: lastUnit,
+                _id: updatedDoc._id,
+            },
+            { status: 200 }
+        );
     } catch (error) {
-        console.error(error)
-         return NextResponse.json(
-            { error: "An internal error occurred" },
+        console.error(error);
+        return NextResponse.json(
+            { error: "Internal server error" },
             { status: 500 }
         );
     }
 }
 
 
-
-
 export async function POST(request: Request) {
-    try{
-        const dataUnit = await request.json();
-        
-        if (!dataUnit.connection_id || !dataUnit.name) {
+    try {
+        const body = await request.json();
+
+        const parsed = PostCookIngredientSchema.safeParse(body);
+
+        if (!parsed.success) {
             return NextResponse.json(
                 { message: 'Invalid request data' },
                 { status: 400 }
-            );
+            )
         }
-        
+
         await connectDB();
 
-        const newIngredient = new ListIngredients(dataUnit);
-        await newIngredient.save();
+        const created = await createCookIngredient(parsed.data);
 
+        return NextResponse.json(created, { status: 201 });
 
-        // if detailed error handling is required
-        // try {
-        //     await newIngredient.save();
-        // } catch (saveError) {
-        //     console.error(saveError);
-        //     return NextResponse.json(
-        //         { error: 'Failed to save new ingredient' },
-        //         { status: 500 }
-        //     );
-        // }
-
-
-        const filteredData = omit(cloneDeep(newIngredient.toObject()), ["connection_id", "updatedAt", "createdAt", "__v"]);
-        // const { connection_id, updatedAt, createdAt, __v, ...filteredData } = newIngredient.toObject();
-
-        
-
-        return NextResponse.json(filteredData, { status: 201 });
-
-    }catch(error){
+    } catch (error) {
         console.error(error);
         return NextResponse.json(
-            { error: "An internal error occurred" },
+            { error: "Internal server error" },
             { status: 500 }
         );
-
     }
-
 }

@@ -1,6 +1,7 @@
 import connectDB from "@/app/lib/mongoose";
-import ListIngredients from "@/app/models/list";
 import { NextResponse } from "next/server";
+import { PatchAmountSchema } from "./schema";
+import { updateAmount } from "./services";
 
 
 
@@ -8,22 +9,22 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request) {
     try {
-        const { ingredient_id, unit_id, amount } = await request.json();
+        const body = await request.json();
 
-        if (!ingredient_id || !unit_id || amount === undefined) {
+        const parsed = PatchAmountSchema.safeParse(body);
+
+        if (!parsed.success) {
             return NextResponse.json(
                 { message: 'Invalid request data' }, 
                 { status: 400 }
             );
         }
 
+        const { ingredient_id, unit_id, amount } = parsed.data;
+
         await connectDB();
 
-        const updatedDoc = await ListIngredients.findOneAndUpdate(
-            { _id: ingredient_id, "units._id": unit_id }, 
-            { $set: { "units.$.amount": amount } }, 
-            // { new: true } 
-        );
+        const updatedDoc = await updateAmount({ ingredient_id, unit_id, amount });
 
         if (!updatedDoc) {
             return NextResponse.json({ error: "Document or unit not found" }, { status: 404 });

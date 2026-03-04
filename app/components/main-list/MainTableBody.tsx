@@ -60,7 +60,6 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
 
 
     const contextValues = useMemo(() => {
-
         return thisIngredient.unit_ids.map((elem) => ({ 
             recipe_id,
             ingredient_id: thisIngredient.ingredient_id,
@@ -71,7 +70,6 @@ const MainTableBody = memo(({ props }: { props: Props }) => {
 
     if (!thisIngredient) return null;
 
-    console.log(thisIngredient)
     return (
         <>
             <TableRow sx={[ingredientRow, {

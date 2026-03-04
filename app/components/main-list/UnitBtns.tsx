@@ -46,6 +46,7 @@ const UnitBtns = memo(({isInsideMenu, state_shop, handleOpenInput, isIputOpen, c
 
 
     function deleteUnitIngr(ingredient_id: string, unit_id: string | undefined) {
+        console.log(id, unit_id)
         if (id !== '' && unit_id) {
             if (pathName === '/list') {
                 dispatch(deleteUnitIngrFetch({ ingredient_id, unit_id }))

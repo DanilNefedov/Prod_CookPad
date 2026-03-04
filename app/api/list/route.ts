@@ -1,6 +1,8 @@
 import connectDB from "@/app/lib/mongoose";
-import ListIngredients from "@/app/models/list";
 import { NextResponse } from "next/server";
+import { DeleteListSchema, GetListQuerySchema } from "./schema";
+import { getListByConnection } from "./services";
+import ListIngredients from "@/app/models/list";
 
 
 
@@ -8,43 +10,29 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);
-        const connection_id = searchParams.get("connection_id");
-        const page_list = searchParams.get("page_list");
-        const page = Number(page_list);
+        const rawQuery = {
+            connection_id: searchParams.get("connection_id"),
+            page_list: searchParams.get("page_list"),
+        };
 
-        if (!connection_id || !page || isNaN(page) || page < 1) {
+        const parsed = GetListQuerySchema.safeParse(rawQuery);
+
+        if (!parsed.success) {
             return NextResponse.json(
                 { message: 'Invalid request data' }, 
                 { status: 400 }
             );
         }
 
+        const { connection_id, page_list } = parsed.data;
+
         await connectDB();
 
-        const limit = 20;
-        const skip = (page - 1) * limit;
-
-        const [result, totalCount] = await Promise.all([
-            ListIngredients.find({ connection_id })
-                .select("-createdAt -updatedAt -__v -connection_id")
-                .sort({ createdAt: -1 })
-                .skip(skip)
-                .limit(limit)
-                .lean(),
-            ListIngredients.countDocuments({ connection_id })
-        ]);
-
-        const hasMore = skip + result.length < totalCount;
-        const nextPage = hasMore ? page + 1 : NaN;
-
+        const result = await getListByConnection({ connection_id, page_list });
 
         return NextResponse.json({
             status: 200,
-            data: {
-                connection_id,
-                list_ingr: result,
-                page_list: nextPage
-            },
+            data: result,
         });
 
     } catch (error) {
@@ -63,18 +51,22 @@ export async function GET(request: Request) {
 
 export async function DELETE(request: Request) {
     try {
-        const { _id } = await request.json();
+        const body = await request.json();
 
-        if (!_id) {
+        const parsed = DeleteListSchema.safeParse(body);
+
+        if (!parsed.success) {
             return NextResponse.json(
                 { message: 'Invalid request data' }, 
                 { status: 400 }
             );
         }
 
+        const { _id } = parsed.data;
+
         await connectDB();
 
-        const deletedDoc = await ListIngredients.findByIdAndDelete(_id);
+        const deletedDoc = await ListIngredients.findByIdAndDelete(_id)
 
         if (!deletedDoc) {
             return NextResponse.json({ error: 'Document not found' }, { status: 404 });

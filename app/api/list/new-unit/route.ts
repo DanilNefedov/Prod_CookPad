@@ -1,6 +1,7 @@
 import connectDB from "@/app/lib/mongoose";
-import ListIngredients from "@/app/models/list";
 import { NextResponse } from "next/server";
+import { PatchNewUnitSchema } from "./schema";
+import { addUnitToIngredient } from "./services";
 
 
 
@@ -10,24 +11,22 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request) {
     try{
-        const { ingredient_id, new_unit } = await request.json();
+        const body = await request.json();
 
-        if (!ingredient_id || !new_unit) {
+        const parsed = PatchNewUnitSchema.safeParse(body);
+
+        if (!parsed.success) {
             return NextResponse.json(
                 { message: 'Invalid request data' }, 
                 { status: 400 }
             );
         }
 
+        const { ingredient_id, new_unit } = parsed.data;
+
         await connectDB();
 
-        const updatedIngredient = await ListIngredients.findOneAndUpdate(
-            { _id: ingredient_id},
-            {
-                $push: { units: new_unit }, 
-            },
-            { new: true }
-        )
+        const updatedIngredient = await addUnitToIngredient({ ingredient_id, new_unit });
 
 
         if (!updatedIngredient) {

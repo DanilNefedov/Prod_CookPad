@@ -1,6 +1,7 @@
 import connectDB from "@/app/lib/mongoose";
-import ListIngredients from "@/app/models/list";
 import { NextResponse } from "next/server";
+import { PatchUnitRemovalSchema } from "./schema";
+import { removeUnitFromIngredient } from "./services";
 
 
 
@@ -8,22 +9,22 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request) {
     try {
-        const { ingredient_id, unit_id } = await request.json();
+        const body = await request.json();
 
-        if (!ingredient_id || !unit_id) {
+        const parsed = PatchUnitRemovalSchema.safeParse(body);
+
+        if (!parsed.success) {
             return NextResponse.json(
                 { message: 'Invalid request data' }, 
                 { status: 400 }
             );
         }
 
+        const { ingredient_id, unit_id } = parsed.data;
+
         await connectDB();
 
-        const updatedDoc = await ListIngredients.findOneAndUpdate(
-            { _id: ingredient_id },
-            { $pull: { units: { _id: unit_id } } },
-            // { new: true } 
-        );
+        const updatedDoc = await removeUnitFromIngredient({ ingredient_id, unit_id });
 
         if (!updatedDoc) {
             return NextResponse.json({ error: "Document not found" }, { status: 404 });

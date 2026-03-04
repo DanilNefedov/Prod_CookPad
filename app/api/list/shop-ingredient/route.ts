@@ -1,6 +1,7 @@
 import connectDB from "@/app/lib/mongoose";
-import ListIngredients from "@/app/models/list";
 import { NextResponse } from "next/server";
+import { PatchShopIngredientSchema } from "./schema";
+import { toggleShopIngredient } from "./services";
 
 
 
@@ -11,22 +12,22 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request) {
     try {
-        const { _id, shop_ingr } = await request.json();
+        const body = await request.json();
 
-        if (!_id || typeof shop_ingr !== "boolean") {
+        const parsed = PatchShopIngredientSchema.safeParse(body);
+
+        if (!parsed.success) {
             return NextResponse.json(
                 { message: 'Invalid request data' }, 
                 { status: 400 }
             );
         }
 
+        const { _id, shop_ingr } = parsed.data;
+
         await connectDB();
 
-        const updatedDoc = await ListIngredients.findOneAndUpdate(
-            { _id },
-            { $set: { shop_ingr: !shop_ingr } },
-            // { new: true }//if I need to return an updated object or do something with it
-        );
+        const updatedDoc = await toggleShopIngredient({ _id, shop_ingr });
 
         if (!updatedDoc) {
             return NextResponse.json({ error: "Document or unit not found" }, { status: 404 });
