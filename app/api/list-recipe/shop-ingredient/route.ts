@@ -1,7 +1,8 @@
 import { ListIngrDataFetch } from "@/app/(main)/(main-list)/list-recipe/types";
 import connectDB from "@/app/lib/mongoose";
-import ListRecipe from "@/app/models/list-recipe";
 import { NextResponse } from "next/server";
+import { PatchShopIngredientSchema } from "./schema";
+import { toggleRecipeIngredientShop } from "./services";
 
 
 
@@ -12,29 +13,27 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request) {
     try {
-        const { connection_id, ingredient_id, shop_ingr, _id } = await request.json();
+        const body = await request.json();
 
+        const parsed = PatchShopIngredientSchema.safeParse(body);
 
-        if (!connection_id || !_id || !ingredient_id || typeof shop_ingr !== "boolean") {
+        if (!parsed.success) {
             return NextResponse.json(
                 { message: 'Invalid request data' }, 
                 { status: 400 }
             );
         }
 
+        const { connection_id, ingredient_id, shop_ingr, _id } = parsed.data;
+
         await connectDB();
 
-        const updatedDocument = await ListRecipe.findOneAndUpdate(
-            {
-                connection_id,
-                _id: _id,
-                "recipe.ingredients_list._id": ingredient_id,
-            },
-            {
-                $set: { "recipe.ingredients_list.$.shop_ingr": !shop_ingr }, 
-            },
-            { new: true }
-        );
+        const updatedDocument = await toggleRecipeIngredientShop({
+            connection_id,
+            ingredient_id,
+            shop_ingr,
+            _id,
+        });
 
 
         if (!updatedDocument) {

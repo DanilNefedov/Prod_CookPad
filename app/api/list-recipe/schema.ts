@@ -21,7 +21,7 @@ export const GetListRecipeQuerySchema = z.object({
             .transform((value) => Number(value))
             .refine((value) => value >= 1)
     ),
-}).strict();
+});
 
 export const DeleteListRecipeSchema = z.object({
     connection_id: z.string().min(1),

@@ -1,7 +1,8 @@
 import { ListIngrDataFetch } from "@/app/(main)/(main-list)/list-recipe/types";
 import connectDB from "@/app/lib/mongoose";
-import ListRecipe from "@/app/models/list-recipe";
 import { NextResponse } from "next/server";
+import { PatchNewUnitSchema } from "./schema";
+import { appendRecipeIngredientUnit } from "./services";
 
 
 
@@ -9,31 +10,27 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request) {
     try{
-        const data = await request.json();
-        const { connection_id,  ingredient_id, updated_unit, _id } = data;
+        const body = await request.json();
         
-        if (!ingredient_id || !connection_id || !_id ) {
+        const parsed = PatchNewUnitSchema.safeParse(body);
+
+        if (!parsed.success) {
             return NextResponse.json(
                 { message: 'Invalid request data' }, 
                 { status: 400 }
             );
         }
 
-        
+        const { connection_id, ingredient_id, updated_unit, _id } = parsed.data;
 
         await connectDB();
 
-        const updatedRecipe = await ListRecipe.findOneAndUpdate(
-            {
-                connection_id,
-                _id: _id,
-                "recipe.ingredients_list._id": ingredient_id
-            },
-            {
-                $push: { "recipe.ingredients_list.$.units": updated_unit }
-            },
-            { new: true }
-        );
+        const updatedRecipe = await appendRecipeIngredientUnit({
+            connection_id,
+            ingredient_id,
+            updated_unit,
+            _id,
+        });
 
         if (!updatedRecipe) {
             return NextResponse.json({ error: "Document not found" }, { status: 404 });

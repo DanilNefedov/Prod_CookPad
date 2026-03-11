@@ -1,7 +1,8 @@
 import { ListIngrDataFetch, UnitsIdFetch } from "@/app/(main)/(main-list)/list-recipe/types";
 import connectDB from "@/app/lib/mongoose";
-import ListRecipe from "@/app/models/list-recipe";
 import { NextResponse } from "next/server";
+import { PatchNewAmountSchema } from "./schema";
+import { updateRecipeUnitAmount } from "./services";
 
 
 
@@ -9,35 +10,28 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request) {
     try{
-        const data = await request.json();
-        const { connection_id, ingredient_id, unit_id, amount, _id } = data;
+        const body = await request.json();
 
+        const parsed = PatchNewAmountSchema.safeParse(body);
 
-        if (!connection_id || !_id || !ingredient_id || !unit_id || typeof amount !== "number") {
+        if (!parsed.success) {
             return NextResponse.json(
                 { message: 'Invalid request data' }, 
                 { status: 400 }
             );
         }
 
+        const { connection_id, ingredient_id, unit_id, amount, _id } = parsed.data;
+
         await connectDB();
 
-        const updatedDocument = await ListRecipe.findOneAndUpdate(
-            { _id: _id, "connection_id": connection_id },
-            {
-                $set: {
-                    "recipe.ingredients_list.$[ing].units.$[unit].amount": amount
-                }
-            },
-            {
-                arrayFilters: [
-                    { "ing._id": ingredient_id },
-                    { "unit._id": unit_id }
-                ],
-                new: true,
-                projection: { "recipe.ingredients_list": 1 }
-            }
-        );
+        const updatedDocument = await updateRecipeUnitAmount({
+            connection_id,
+            ingredient_id,
+            unit_id,
+            amount,
+            _id,
+        });
 
 
         if (!updatedDocument || !updatedDocument.recipe || !Array.isArray(updatedDocument.recipe.ingredients_list)) {
